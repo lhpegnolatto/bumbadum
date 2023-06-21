@@ -1,0 +1,13 @@
+{
+  "name": "bumbadum",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Luiz Henrique Pegnolatto <lhpegnolatto@gmail.com>",
+  "license": "MIT",
+  "private": true,
+  "workspaces": {
+    "packages": [
+      "apps/*"
+    ]
+  }
+}
