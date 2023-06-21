@@ -9,5 +9,15 @@
     "packages": [
       "apps/*"
     ]
+  },
+  "scripts": {
+    "dev:web": "yarn workspace @bumbadum/web dev",
+    "build:web": "yarn workspace @bumbadum/web build",
+    "start:web": "yarn workspace @bumbadum/web start"
+  },
+  "devDependencies": {
+    "eslint": "8.43.0",
+    "eslint-config-next": "13.4.7",
+    "eslint-plugin-tailwindcss": "^3.12.1"
   }
 }
