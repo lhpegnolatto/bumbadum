@@ -13,7 +13,8 @@
   "scripts": {
     "dev:web": "yarn workspace @bumbadum/web dev",
     "build:web": "yarn workspace @bumbadum/web build",
-    "start:web": "yarn workspace @bumbadum/web start"
+    "start:web": "yarn workspace @bumbadum/web start",
+    "dev:server": "yarn workspace @bumbadum/server start:dev"
   },
   "devDependencies": {
     "eslint": "8.43.0",

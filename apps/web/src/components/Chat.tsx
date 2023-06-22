@@ -1,5 +1,9 @@
+"use client";
+
 import Image from "next/image";
-import { CaretDown, MapTrifold, Smiley, SkipForward } from "@/components/Icons";
+import { CaretDown, MapTrifold, Smiley } from "@/components/Icons";
+import { ChangeEvent, KeyboardEvent, useEffect, useState } from "react";
+import { io } from "socket.io-client";
 
 type Message = {
   sendedAt: string;
@@ -8,130 +12,55 @@ type Message = {
   message: string;
 };
 
-const mockMessages: Message[] = [
-  {
-    sendedAt: "14h52",
-    author: "Madrugadex",
-    authorColor: "blue",
-    message: "Incrível como ninguém ta zuando aqui, algum adm na sala?",
-  },
-  {
-    sendedAt: "14h54",
-    author: "theghostboy",
-    authorColor: "green",
-    message: "Sim, eu! Estou moderando essa sala pessoal",
-  },
-  {
-    sendedAt: "14h55",
-    author: "theghostboy",
-    authorColor: "green",
-    message: "A próxima vocês vão gostar",
-  },
-  {
-    sendedAt: "14h57",
-    author: "Madrugadex",
-    authorColor: "blue",
-    message: "Essa é lendária",
-  },
-  {
-    sendedAt: "14h57",
-    author: "Madrugadex",
-    authorColor: "blue",
-    message: "Não ouvia a tempos",
-  },
-  {
-    sendedAt: "14h57",
-    author: "Madrugadex",
-    authorColor: "blue",
-    message: "Bom demais",
-  },
-  {
-    sendedAt: "14h58",
-    author: "AlexiaMands",
-    authorColor: "pink",
-    message: "Eu que adicionei essa",
-  },
-  {
-    sendedAt: "15h00",
-    author: "AlexiaMands",
-    authorColor: "pink",
-    message: "Saindo aqui, volto em breve galera!",
-  },
-  {
-    sendedAt: "15h03",
-    author: "theghostboy",
-    authorColor: "green",
-    message: "Bora por Metallica nessa playlist, please haha!",
-  },
-  {
-    sendedAt: "15h10",
-    author: "Keanu Reeves",
-    authorColor: "blue",
-    message: "Hi everyone!",
-  },
-  {
-    sendedAt: "15h11",
-    author: "theghostboy",
-    authorColor: "green",
-    message: "I can't believe it, are you Keanu?",
-  },
-  {
-    sendedAt: "15h14",
-    author: "Keanu Reeves",
-    authorColor: "blue",
-    message: "Yes, I'm here for true :)",
-  },
-  {
-    sendedAt: "15h15",
-    author: "Keanu Reeves",
-    authorColor: "blue",
-    message: "And wow, this sound is epic!",
-  },
-  {
-    sendedAt: "15h19",
-    author: "paiN Dynkas",
-    authorColor: "orange",
-    message: "Salve salve galera ✌️✌️",
-  },
-  {
-    sendedAt: "15h21",
-    author: "paiN Dynkas",
-    authorColor: "orange",
-    message: "Essa acho que vão gostar",
-  },
-  {
-    sendedAt: "15h22",
-    author: "theghostboy",
-    authorColor: "green",
-    message: "Agora sim, música boa 🔥",
-  },
-  {
-    sendedAt: "15h23",
-    author: "Madrugadex",
-    authorColor: "blue",
-    message: "Essa é boa mesmo em",
-  },
-  {
-    sendedAt: "15h23",
-    author: "AlexiaMands",
-    authorColor: "pink",
-    message: "Muito legal mesmo, to de volta xD",
-  },
-  {
-    sendedAt: "15h24",
-    author: "Madrugadex",
-    authorColor: "blue",
-    message: "Boaa 🎉",
-  },
-];
-
 export function Chat() {
+  const [currentSocket, setCurrentSocket] = useState<any>(null);
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [inputValue, setInputValue] = useState<string>("");
+
   const authorColorsStyles = {
     pink: "text-pink-400",
     blue: "text-blue-400",
     green: "text-green-400",
     orange: "text-orange-400",
   };
+
+  function handleOnInputKeyDown(event: KeyboardEvent<HTMLInputElement>) {
+    if (event.key === "Enter") {
+      currentSocket.emit("message", {
+        author: currentSocket.id,
+        authorColor: "blue",
+        message: inputValue,
+      });
+      setInputValue("");
+    }
+  }
+
+  function handleOnInputChange(event: ChangeEvent<HTMLInputElement>) {
+    setInputValue(event.target.value);
+  }
+
+  useEffect(() => {
+    const socket = io("http://localhost:3333", {
+      extraHeaders: { "Access-Control-Allow-Origin": "*" },
+    });
+
+    setCurrentSocket(socket);
+
+    socket.on("connect", () => {
+      console.log("SOCKET CONNECTED!", socket.id);
+    });
+
+    const newMessageEvent = (payload: any) => {
+      setMessages((curr) => [...curr, payload]);
+    };
+
+    socket.on("message", newMessageEvent);
+
+    return () => {
+      socket.off("message", newMessageEvent);
+      socket.disconnect();
+    };
+  }, []);
 
   return (
     <div className="flex w-80 flex-col gap-6 overflow-hidden rounded-xl bg-gray-800 shadow">
@@ -152,25 +81,32 @@ export function Chat() {
         id="chat"
         className="relative flex h-full max-h-full flex-col gap-2 overflow-hidden px-6"
       >
-        {mockMessages.map(
-          ({ sendedAt, author, authorColor, message }, index) => (
-            <p key={index} className="leading-none">
-              <text className="mr-1 text-xs text-gray-400">{sendedAt}</text>
-              <text className="mr-1 text-xs text-gray-50">
-                <strong className={authorColorsStyles[authorColor]}>
-                  {author}
-                </strong>
-                :
-              </text>
-              <text className="text-xs text-gray-50">{message}</text>
-            </p>
-          )
-        )}
+        {messages.map(({ sendedAt, author, authorColor, message }, index) => (
+          <p key={index} className="leading-none">
+            <text className="mr-1 text-xs text-gray-400">
+              {new Date(sendedAt).toLocaleTimeString("pt", {
+                hour: "2-digit",
+                minute: "2-digit",
+              })}
+            </text>
+            <text className="mr-1 text-xs text-gray-50">
+              <strong className={authorColorsStyles[authorColor]}>
+                {author}
+              </strong>
+              :
+            </text>
+            <text className="text-xs text-gray-50">{message}</text>
+          </p>
+        ))}
       </div>
       <div className="relative px-6">
-        <div className="flex h-10 w-full cursor-text items-center rounded-lg bg-gray-700 px-4 text-xs font-semibold text-gray-400 shadow">
-          {"Type here your message :)"}
-        </div>
+        <input
+          className="flex h-10 w-full cursor-text items-center rounded-lg bg-gray-700 px-4 text-xs font-semibold text-gray-400 shadow"
+          placeholder="Type here your message :)"
+          onKeyDown={handleOnInputKeyDown}
+          value={inputValue}
+          onChange={handleOnInputChange}
+        />
         <button className="absolute right-6 top-[50%] translate-y-[-50%] rounded-lg bg-gray-700 p-3 transition-colors hover:bg-gray-600">
           <Smiley className="text-white" />
         </button>
