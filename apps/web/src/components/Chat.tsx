@@ -13,6 +13,10 @@ type Message = {
 };
 
 export function Chat() {
+  const profileStorage = JSON.parse(
+    localStorage.getItem("bumbadum-profile") || "{}"
+  );
+
   const [currentSocket, setCurrentSocket] = useState<any>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState<string>("");
@@ -27,8 +31,8 @@ export function Chat() {
   function handleOnInputKeyDown(event: KeyboardEvent<HTMLInputElement>) {
     if (event.key === "Enter") {
       currentSocket.emit("message", {
-        author: currentSocket.id,
-        authorColor: "blue",
+        author: profileStorage.name,
+        authorColor: profileStorage.color,
         message: inputValue,
       });
       setInputValue("");
