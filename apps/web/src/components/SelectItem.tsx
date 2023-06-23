@@ -1,7 +1,6 @@
 import * as RadixSelect from "@radix-ui/react-select";
 import classnames from "classnames";
 import { Check } from "@/components/Icons";
-import { ReactNode } from "react";
 
 export function SelectItem({
   children,
