@@ -21,11 +21,12 @@ export class Person extends GameObject {
       this.updatePosition();
     } else {
       if (
-        (this.isPlayerControlled && state.arrow) ||
-        (state.forceUpdate && state.arrow)
+        (this.isPlayerControlled && state.direction) ||
+        (state.eventUpdate && state.direction)
       ) {
-        this.startBehavior(state, { type: "walk", direction: state.arrow });
+        this.startBehavior(state, { type: "walk", direction: state.direction });
       }
+
       this.updateSprite(state);
     }
   }
@@ -43,10 +44,13 @@ export class Person extends GameObject {
       }
 
       if (this.isPlayerControlled) {
-        state.socket.emit("ON_USER_MOVE", {
-          id: state.socket.id,
+        state.socket.emit("event", {
+          userId: this.id,
+          userX: this.x,
+          userY: this.y,
+          type: "walk",
           direction: this.direction,
-          size: 16,
+          avatarType: state.avatarType,
         });
       }
 

@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { CaretDown, MapTrifold, Smiley } from "@/components/Icons";
 import { ChangeEvent, KeyboardEvent, useEffect, useState } from "react";
-import { io } from "socket.io-client";
+import { useSocket } from "@/hooks/useSocket";
 
 type Message = {
   sendedAt: string;
@@ -17,7 +17,7 @@ export function Chat() {
     localStorage.getItem("bumbadum-profile") || "{}"
   );
 
-  const [currentSocket, setCurrentSocket] = useState<any>(null);
+  const { socket } = useSocket({ namespace: "chat" });
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState<string>("");
 
@@ -30,11 +30,12 @@ export function Chat() {
 
   function handleOnInputKeyDown(event: KeyboardEvent<HTMLInputElement>) {
     if (event.key === "Enter") {
-      currentSocket.emit("message", {
-        author: profileStorage.name,
-        authorColor: profileStorage.color,
-        message: inputValue,
-      });
+      socket &&
+        socket.emit("message", {
+          author: profileStorage.name,
+          authorColor: profileStorage.color,
+          message: inputValue,
+        });
       setInputValue("");
     }
   }
@@ -44,27 +45,16 @@ export function Chat() {
   }
 
   useEffect(() => {
-    const socket = io("http://localhost:3333", {
-      extraHeaders: { "Access-Control-Allow-Origin": "*" },
-    });
-
-    setCurrentSocket(socket);
-
-    socket.on("connect", () => {
-      console.log("SOCKET CONNECTED!", socket.id);
-    });
-
     const newMessageEvent = (payload: any) => {
       setMessages((curr) => [...curr, payload]);
     };
 
-    socket.on("message", newMessageEvent);
+    socket && socket.on("message", newMessageEvent);
 
     return () => {
-      socket.off("message", newMessageEvent);
-      socket.disconnect();
+      socket && socket.off("message", newMessageEvent);
     };
-  }, []);
+  }, [socket]);
 
   return (
     <div className="flex w-80 flex-col gap-6 overflow-hidden rounded-xl bg-gray-800 shadow">

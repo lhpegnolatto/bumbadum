@@ -11,6 +11,10 @@ export function ProfileDialog() {
 
   function handleOnSubmit() {
     localStorage.setItem("bumbadum-profile", JSON.stringify(formValue));
+
+    const spawnUser = new CustomEvent("spawnUser");
+    document.dispatchEvent(spawnUser);
+
     setIsOpen(false);
   }
 
@@ -19,6 +23,11 @@ export function ProfileDialog() {
 
     if (!profileStorage) {
       setIsOpen(true);
+    } else {
+      setTimeout(() => {
+        const spawnUser = new CustomEvent("spawnUser");
+        document.dispatchEvent(spawnUser);
+      }, 500);
     }
   }, []);
 
@@ -53,11 +62,8 @@ export function ProfileDialog() {
             />
           </fieldset>
           <fieldset className="mb-[15px] flex items-center gap-5">
-            <label
-              className="w-[90px] text-right text-[15px] text-white"
-              htmlFor="username"
-            >
-              Color
+            <label className="w-[90px] text-right text-[15px] text-white">
+              Chat color
             </label>
             <Select
               value={formValue.color}
@@ -89,6 +95,25 @@ export function ProfileDialog() {
                   label: "orange",
                   className: "data-[highlighted]:text-orange-400",
                 },
+              ]}
+            />
+          </fieldset>
+          <fieldset className="mb-[15px] flex items-center gap-5">
+            <label className="w-[90px] text-right text-[15px] text-white">
+              Avatar type
+            </label>
+            <Select
+              value={formValue.avatarType}
+              onValueChange={(selectedValue) => {
+                setFormValue((curr: any) => ({
+                  ...curr,
+                  avatarType: selectedValue,
+                }));
+              }}
+              placeholder="Select a avatar for you.."
+              options={[
+                { value: "gentleman", label: "gentleman" },
+                { value: "cute-girl", label: "cute girl" },
               ]}
             />
           </fieldset>

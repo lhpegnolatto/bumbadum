@@ -4,13 +4,9 @@ export class DirectionInput {
 
     this.map = {
       ArrowUp: "up",
-      KeyW: "up",
       ArrowDown: "down",
-      KeyS: "down",
       ArrowLeft: "left",
-      KeyA: "left",
       ArrowRight: "right",
-      KeyD: "right",
     };
   }
 

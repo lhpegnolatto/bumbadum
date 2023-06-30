@@ -11,7 +11,7 @@ type MessagePayload = {
   message: string;
 };
 
-@WebSocketGateway({ cors: true })
+@WebSocketGateway({ cors: true, namespace: "chat" })
 export class ChatGateway {
   @WebSocketServer()
   server;

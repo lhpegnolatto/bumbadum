@@ -1,4 +1,3 @@
-import { Person } from "./Person";
 import { asGridCoors, nextPosition, withGrid } from "./utils";
 
 export class OverworldMap {
@@ -17,16 +16,16 @@ export class OverworldMap {
   drawLowerImage(ctx, cameraPerson) {
     ctx.drawImage(
       this.lowerImage,
-      withGrid(10.5) - cameraPerson.x,
-      withGrid(6) - cameraPerson.y
+      withGrid(6.5) - cameraPerson.x,
+      withGrid(6.5) - cameraPerson.y
     );
   }
 
   drawUpperImage(ctx, cameraPerson) {
     ctx.drawImage(
       this.upperImage,
-      withGrid(10.5) - cameraPerson.x,
-      withGrid(6) - cameraPerson.y
+      withGrid(6.5) - cameraPerson.x,
+      withGrid(6.5) - cameraPerson.y
     );
   }
 
@@ -70,45 +69,45 @@ export const overworldMaps = {
     upperSrc: "",
     spawn: { x: withGrid(15), y: withGrid(13) },
     gameObjects: {
-      npc1: new Person({
-        x: withGrid(20),
-        y: withGrid(13),
-        behaviorLoop: [
-          { type: "stand", direction: "down", time: 1200 },
-          { type: "walk", direction: "left" },
-          { type: "walk", direction: "down" },
-          { type: "walk", direction: "down" },
-          { type: "walk", direction: "right" },
-          { type: "walk", direction: "right" },
-          { type: "walk", direction: "right" },
-          { type: "walk", direction: "up" },
-          { type: "walk", direction: "up" },
-          { type: "walk", direction: "left" },
-          { type: "walk", direction: "left" },
-        ],
-        layers: [
-          { src: "/char.png", variant: 3 },
-          { src: "/hairs/extra_long.png", variant: 8 },
-          { src: "/tops/shirt.png", variant: 9 },
-          { src: "/bottoms/skirt.png", variant: 7 },
-          { src: "/footwear/shoes.png", variant: 7 },
-        ],
-      }),
-      npc2: new Person({
-        x: withGrid(16),
-        y: withGrid(18),
-        behaviorLoop: [
-          { type: "stand", direction: "down", time: 2000 },
-          { type: "stand", direction: "left", time: 400 },
-          { type: "stand", direction: "right", time: 400 },
-        ],
-        layers: [
-          { src: "/char.png", variant: 3 },
-          { src: "/hairs/extra_long.png" },
-          { src: "/tops/dress.png", variant: 8 },
-          { src: "/footwear/shoes.png", variant: 8 },
-        ],
-      }),
+      // npc1: new Person({
+      //   x: withGrid(20),
+      //   y: withGrid(13),
+      //   behaviorLoop: [
+      //     { type: "stand", direction: "down", time: 1200 },
+      //     { type: "walk", direction: "left" },
+      //     { type: "walk", direction: "down" },
+      //     { type: "walk", direction: "down" },
+      //     { type: "walk", direction: "right" },
+      //     { type: "walk", direction: "right" },
+      //     { type: "walk", direction: "right" },
+      //     { type: "walk", direction: "up" },
+      //     { type: "walk", direction: "up" },
+      //     { type: "walk", direction: "left" },
+      //     { type: "walk", direction: "left" },
+      //   ],
+      //   layers: [
+      //     { src: "/char.png", variant: 3 },
+      //     { src: "/hairs/extra_long.png", variant: 8 },
+      //     { src: "/tops/shirt.png", variant: 9 },
+      //     { src: "/bottoms/skirt.png", variant: 7 },
+      //     { src: "/footwear/shoes.png", variant: 7 },
+      //   ],
+      // }),
+      // npc2: new Person({
+      //   x: withGrid(16),
+      //   y: withGrid(18),
+      //   behaviorLoop: [
+      //     { type: "stand", direction: "down", time: 2000 },
+      //     { type: "stand", direction: "left", time: 400 },
+      //     { type: "stand", direction: "right", time: 400 },
+      //   ],
+      //   layers: [
+      //     { src: "/char.png", variant: 3 },
+      //     { src: "/hairs/extra_long.png" },
+      //     { src: "/tops/dress.png", variant: 8 },
+      //     { src: "/footwear/shoes.png", variant: 8 },
+      //   ],
+      // }),
     },
     walls: {
       ...Array.from(Array(15)).reduce(

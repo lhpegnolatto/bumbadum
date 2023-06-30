@@ -4,15 +4,33 @@ import { useEffect, useRef } from "react";
 import { OverworldMap, overworldMaps } from "./OverworldMap";
 import { DirectionInput } from "./DirectionInput";
 import { Person } from "./Person";
-import { io } from "socket.io-client";
+import { useSocket } from "@/hooks/useSocket";
 
-export function Game() {
+const assets = {
+  "cute-girl": [
+    { src: "/char.png", variant: 3 },
+    { src: "/hairs/extra_long.png" },
+    { src: "/tops/dress.png", variant: 8 },
+    { src: "/footwear/shoes.png", variant: 8 },
+  ],
+  gentleman: [
+    { src: "/char.png" },
+    { src: "/hairs/gentleman.png", variant: 1 },
+    { src: "/tops/shirt.png", variant: 5 },
+    { src: "/bottoms/pants.png" },
+    { src: "/footwear/shoes.png" },
+  ],
+};
+
+export function GameEngine() {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const usersRef = useRef<Person[]>([]);
 
+  const { socket } = useSocket({ namespace: "game" });
+
   useEffect(() => {
-    function startGameLoop(map: OverworldMap, socket: any) {
+    function startGameLoop(map: OverworldMap) {
       const directionInput = new DirectionInput();
       directionInput.init();
 
@@ -34,11 +52,20 @@ export function Game() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
         const cameraPerson = usersRef.current.find(
-          (user) => user.id === socket.id
+          (user) => user.id === socket?.id
         );
         if (cameraPerson) {
+          const profileStorage = JSON.parse(
+            localStorage.getItem("bumbadum-profile") || "{}"
+          );
+
           Object.values(map.gameObjects).forEach((object: any) => {
-            object.update({ arrow: directionInput.direction, map, socket });
+            object.update({
+              direction: directionInput.direction,
+              map,
+              socket,
+              avatarType: profileStorage?.avatarType,
+            });
           });
 
           map.drawLowerImage(ctx, cameraPerson);
@@ -60,81 +87,69 @@ export function Game() {
       const map = new OverworldMap(overworldMaps.default);
       map.mountObjects();
 
-      const socket = io("https://coffadio-api-production.up.railway.app", {
-        extraHeaders: { "Access-Control-Allow-Origin": "*" },
-      });
+      document.addEventListener("spawnUser", () => {
+        const profileStorage = JSON.parse(
+          localStorage.getItem("bumbadum-profile") || "{}"
+        );
 
-      socket.on("connect", () => {
-        console.log("SOCKET CONNECTED!", socket.id);
-      });
-
-      socket.on("ON_USERS_UPDATE", (updatedUsers) => {
-        const newUsers = JSON.parse(updatedUsers);
-
-        usersRef.current
-          .filter(
-            (person) =>
-              !Object.values(newUsers).some(
-                (user: any) => user.id === person.id
-              )
-          )
-          .forEach((person) => {
-            map.removeObject(person.id);
+        socket &&
+          socket.emit("event", {
+            userId: socket.id,
+            userX: map.spawn.x,
+            userY: map.spawn.y,
+            type: "spawn",
+            avatarType: profileStorage?.avatarType,
           });
+      });
 
-        Object.values(newUsers).forEach((user: any) => {
-          const personIndex = usersRef.current.findIndex(
-            (person) => person.id === user.id
-          );
-
-          if (personIndex >= 0) {
-            if (
-              usersRef.current[personIndex].x !== user.x ||
-              usersRef.current[personIndex].y !== user.y
-            ) {
-              usersRef.current[personIndex].update({
-                forceUpdate: true,
-                arrow: user.direction,
-                map,
-              });
-            }
-          } else {
+      socket &&
+        socket.on("event", (event) => {
+          if (
+            event.type === "spawn" ||
+            !usersRef.current.some((user) => user.id === event.userId)
+          ) {
             const person = new Person({
-              x: user.x,
-              y: user.y,
-              layers: [
-                { src: "/char.png" },
-                { src: "/hairs/gentleman.png", variant: 1 },
-                { src: "/tops/shirt.png", variant: 5 },
-                { src: "/bottoms/pants.png" },
-                { src: "/footwear/shoes.png" },
-              ],
-              isPlayerControlled: user.id === socket.id,
+              x: event.userX,
+              y: event.userY,
+              layers: assets[event.avatarType as "gentleman" | "cute-girl"],
+              isPlayerControlled: event.userId === socket.id,
             });
-            person.id = user.id;
+            person.id = event.userId;
             usersRef.current.push(person);
-            map.addObject(user.id, person);
+            map.addObject(event.userId, person);
+          }
+
+          if (event.userId === socket.id) {
+            return;
+          }
+
+          if (event.type === "disconnect") {
+            usersRef.current = usersRef.current.filter(
+              (user) => user.id !== event.userId
+            );
+          } else if (event.type === "walk") {
+            const user = usersRef.current.find(
+              (user) => user.id === event.userId
+            );
+
+            user &&
+              user.update({
+                map,
+                direction: event.direction,
+                eventUpdate: true,
+              });
           }
         });
-      });
 
-      socket.emit("ON_USER_SPAWN", {
-        id: socket.id,
-        x: map.spawn.x,
-        y: map.spawn.y,
-        direction: "down",
-      });
-
-      startGameLoop(map, socket);
+      startGameLoop(map);
     }
     init();
-  }, []);
+  }, [socket]);
 
   return (
     <div ref={containerRef} style={{ height: "100%", width: "100%" }}>
       <canvas
         ref={canvasRef}
-        className="relative"
         style={{
           imageRendering: "pixelated",
           transform: "scale(4)",
