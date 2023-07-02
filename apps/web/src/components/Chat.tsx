@@ -1,9 +1,9 @@
 "use client";
 
-import Image from "next/image";
 import { CaretDown, MapTrifold, Smiley } from "@/components/Icons";
 import { ChangeEvent, KeyboardEvent, useEffect, useState } from "react";
 import { useSocket } from "@/hooks/useSocket";
+import { Player } from "./Player";
 
 type Message = {
   sendedAt: string;
@@ -105,29 +105,7 @@ export function Chat() {
           <Smiley className="text-white" />
         </button>
       </div>
-      <div className="bg-gray-700">
-        <div className="h-1 w-full bg-gray-500">
-          <div className="h-1 w-[65%] bg-indigo-600" />
-        </div>
-
-        <div className="flex items-center gap-3 p-6">
-          <div className="h-10 w-10 overflow-hidden rounded-lg">
-            <Image
-              src="/smells_like_teen_spirit.jpg"
-              width={40}
-              height={40}
-              alt="Nevermind album cover"
-            />
-          </div>
-          <div className="flex flex-1 flex-col justify-center">
-            <p className="text-sm font-semibold text-white">
-              Smells Like Teen Spirit
-            </p>
-            <p className="text-xs text-gray-400">Nirvana • Nevermind</p>
-          </div>
-          <div className="text-xs text-gray-400">3:27/4:38</div>
-        </div>
-      </div>
+      <Player />
     </div>
   );
 }
