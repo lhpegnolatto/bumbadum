@@ -56,7 +56,7 @@ export function GameEngine() {
         );
         if (cameraPerson) {
           const profileStorage = JSON.parse(
-            localStorage.getItem("bumbadum-profile") || "{}"
+            localStorage?.getItem("bumbadum-profile") || "{}"
           );
 
           Object.values(map.gameObjects).forEach((object: any) => {
@@ -89,7 +89,7 @@ export function GameEngine() {
 
       document.addEventListener("spawnUser", () => {
         const profileStorage = JSON.parse(
-          localStorage.getItem("bumbadum-profile") || "{}"
+          localStorage?.getItem("bumbadum-profile") || "{}"
         );
 
         socket &&

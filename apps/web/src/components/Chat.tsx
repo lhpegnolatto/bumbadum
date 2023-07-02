@@ -14,7 +14,7 @@ type Message = {
 
 export function Chat() {
   const profileStorage = JSON.parse(
-    localStorage.getItem("bumbadum-profile") || "{}"
+    localStorage?.getItem("bumbadum-profile") || "{}"
   );
 
   const { socket } = useSocket({ namespace: "chat" });

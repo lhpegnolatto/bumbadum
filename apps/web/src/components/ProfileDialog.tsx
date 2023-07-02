@@ -10,7 +10,7 @@ export function ProfileDialog() {
   const [formValue, setFormValue] = useState<any>({});
 
   function handleOnSubmit() {
-    localStorage.setItem("bumbadum-profile", JSON.stringify(formValue));
+    localStorage?.setItem("bumbadum-profile", JSON.stringify(formValue));
 
     const spawnUser = new CustomEvent("spawnUser");
     document.dispatchEvent(spawnUser);
