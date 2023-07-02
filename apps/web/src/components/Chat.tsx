@@ -13,10 +13,6 @@ type Message = {
 };
 
 export function Chat() {
-  const profileStorage = JSON.parse(
-    localStorage?.getItem("bumbadum-profile") || "{}"
-  );
-
   const { socket } = useSocket({ namespace: "chat" });
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState<string>("");
@@ -29,6 +25,10 @@ export function Chat() {
   };
 
   function handleOnInputKeyDown(event: KeyboardEvent<HTMLInputElement>) {
+    const profileStorage = JSON.parse(
+      localStorage?.getItem("bumbadum-profile") || "{}"
+    );
+
     if (event.key === "Enter") {
       socket &&
         socket.emit("message", {
