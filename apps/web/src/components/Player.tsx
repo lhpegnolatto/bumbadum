@@ -23,7 +23,7 @@ export function Player() {
   const playerRef = useRef<YouTubePlayerType | null>(null);
   const [duration, setDuration] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
-  const [music, setMusic] = useState<any>({});
+  const [music, setMusic] = useState<any>(null);
 
   const percent = Math.round((currentTime / duration) * 100);
 
@@ -34,6 +34,14 @@ export function Player() {
       height: 0,
     });
     playerRef.current.playVideo();
+
+    playerRef.current.on("stateChange", (e) => {
+      if (e.data === 0) {
+        setMusic(null);
+        setDuration(0);
+        setCurrentTime(0);
+      }
+    });
 
     (async () => {
       playerRef.current && setDuration(await playerRef.current.getDuration());
@@ -64,36 +72,48 @@ export function Player() {
   }, []);
 
   return (
-    <>
+    <div>
       <Head>
         <script src="https://www.youtube.com/iframe_api" async />
       </Head>
 
       <div id="youtube-player" style={{ height: 0 }} />
 
-      <div className="bg-gray-700">
-        <div className="h-1 w-full bg-gray-500">
-          <div className="h-1 bg-indigo-600" style={{ width: `${percent}%` }} />
-        </div>
+      <div
+        data-state={music ? "playing" : "waiting"}
+        className="h-[0px] bg-gray-700 transition-all data-[state=playing]:h-[108px]"
+      >
+        {music && (
+          <>
+            <div className="h-1 w-full bg-gray-500">
+              <div
+                className="h-1 bg-indigo-600"
+                style={{ width: `${percent}%` }}
+              />
+            </div>
 
-        <div className="flex items-center gap-3 p-6">
-          <div className="h-10 w-10 overflow-hidden rounded-lg">
-            <Image
-              src={music?.thumb}
-              width={40}
-              height={40}
-              alt="Nevermind album cover"
-            />
-          </div>
-          <div className="flex flex-1 flex-col justify-center">
-            <p className="text-sm font-semibold text-white">{music?.title}</p>
-            <p className="text-xs text-gray-400">{music?.channel}</p>
-          </div>
-          <div className="text-xs text-gray-400">
-            {formatTime(currentTime)}/{formatTime(duration)}
-          </div>
-        </div>
+            <div className="flex items-center gap-3 p-6">
+              <div className="h-10 w-10 overflow-hidden rounded-lg">
+                <Image
+                  src={music?.thumb}
+                  width={40}
+                  height={40}
+                  alt="Nevermind album cover"
+                />
+              </div>
+              <div className="flex flex-1 flex-col justify-center">
+                <p className="text-sm font-semibold text-white">
+                  {music?.title}
+                </p>
+                <p className="text-xs text-gray-400">{music?.channel}</p>
+              </div>
+              <div className="text-xs text-gray-400">
+                {formatTime(currentTime)}/{formatTime(duration)}
+              </div>
+            </div>
+          </>
+        )}
       </div>
-    </>
+    </div>
   );
 }

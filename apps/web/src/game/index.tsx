@@ -55,16 +55,11 @@ export function GameEngine() {
           (user) => user.id === socket?.id
         );
         if (cameraPerson) {
-          const profileStorage = JSON.parse(
-            localStorage?.getItem("bumbadum-profile") || "{}"
-          );
-
           Object.values(map.gameObjects).forEach((object: any) => {
             object.update({
               direction: directionInput.direction,
               map,
               socket,
-              avatarType: profileStorage?.avatarType,
             });
           });
 
@@ -104,29 +99,30 @@ export function GameEngine() {
 
       socket &&
         socket.on("event", (event) => {
-          if (
-            event.type === "spawn" ||
-            !usersRef.current.some((user) => user.id === event.userId)
-          ) {
-            const person = new Person({
-              x: event.userX,
-              y: event.userY,
-              layers: assets[event.avatarType as "gentleman" | "cute-girl"],
-              isPlayerControlled: event.userId === socket.id,
-            });
-            person.id = event.userId;
-            usersRef.current.push(person);
-            map.addObject(event.userId, person);
-          }
-
           if (event.userId === socket.id) {
             return;
           }
 
-          if (event.type === "disconnect") {
+          if (event.type === "spawn") {
+            (event.players || []).forEach((player: any) => {
+              if (!usersRef.current.some((user) => user.id === player.userId)) {
+                const person = new Person({
+                  x: player.userX,
+                  y: player.userY,
+                  layers:
+                    assets[player.avatarType as "gentleman" | "cute-girl"],
+                  isPlayerControlled: player.userId === socket.id,
+                });
+                person.id = player.userId;
+                usersRef.current.push(person);
+                map.addObject(player.userId, person);
+              }
+            });
+          } else if (event.type === "disconnect") {
             usersRef.current = usersRef.current.filter(
               (user) => user.id !== event.userId
             );
+            map.removeObject(event.userId);
           } else if (event.type === "walk") {
             const user = usersRef.current.find(
               (user) => user.id === event.userId

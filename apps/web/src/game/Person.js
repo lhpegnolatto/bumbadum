@@ -44,13 +44,17 @@ export class Person extends GameObject {
       }
 
       if (this.isPlayerControlled) {
+        const profileStorage = JSON.parse(
+          localStorage?.getItem("bumbadum-profile") || "{}"
+        );
+
         state.socket.emit("event", {
           userId: this.id,
           userX: this.x,
           userY: this.y,
           type: "walk",
           direction: this.direction,
-          avatarType: state.avatarType,
+          avatarType: profileStorage.avatarType,
         });
       }
 
