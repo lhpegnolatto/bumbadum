@@ -27,7 +27,7 @@ export function ProfileDialog() {
       setTimeout(() => {
         const spawnUser = new CustomEvent("spawnUser");
         document.dispatchEvent(spawnUser);
-      }, 500);
+      }, 1000);
     }
   }, []);
 
