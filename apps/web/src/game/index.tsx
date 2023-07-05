@@ -84,6 +84,7 @@ export function GameEngine() {
       map.mountObjects();
 
       document.addEventListener("spawnUser", () => {
+        console.log("spawn user triggered");
         const tries = 3;
 
         function emitUserSpawn(remainingTries: number) {
@@ -91,6 +92,8 @@ export function GameEngine() {
             const profileStorage = JSON.parse(
               localStorage?.getItem("bumbadum-profile") || "{}"
             );
+
+            console.log("spawn user emmited");
 
             socket &&
               socket.emit("event", {
