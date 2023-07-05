@@ -93,7 +93,7 @@ export function GameEngine() {
               localStorage?.getItem("bumbadum-profile") || "{}"
             );
 
-            console.log("spawn user emmited");
+            console.log("spawn user emmited", socket);
 
             socket &&
               socket.emit("event", {
