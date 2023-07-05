@@ -129,6 +129,8 @@ export function GameEngine() {
 
       socket &&
         socket.on("event", (event) => {
+          console.log("event received", event);
+
           if (event.userId === socket.id) {
             return;
           }
