@@ -11,6 +11,7 @@ type Player = {
   userX: number;
   userY: number;
   avatarType: string;
+  name: string;
 };
 
 type EventPayload = {
@@ -18,6 +19,7 @@ type EventPayload = {
   userX: number;
   userY: number;
   avatarType: string;
+  name: string;
   type: "spawn" | "walk" | "stand" | "dance";
 };
 
