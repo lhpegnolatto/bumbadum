@@ -83,28 +83,54 @@ export function Chat() {
         // eslint-disable-next-line tailwindcss/no-custom-classname
         className="scrollbar scrollbar-w-[8px] relative flex h-full max-h-full flex-col gap-2 overflow-auto px-6"
       >
-        {messages.map(({ sendedAt, author, authorColor, message }, index) => (
-          <p key={index} className="leading-none">
-            <text className="mr-1 text-xs text-gray-400">
-              {new Date(sendedAt).toLocaleTimeString("pt", {
-                hour: "2-digit",
-                minute: "2-digit",
-              })}
-            </text>
-            <text className="mr-1 text-xs text-gray-50">
-              <strong className={authorColorsStyles[authorColor]}>
-                {author}
-              </strong>
-              :
-            </text>
-            <text className="text-xs text-gray-50">{message}</text>
-          </p>
-        ))}
+        <p className="leading-none">
+          <text className="mr-1 text-xs text-gray-400">
+            {new Date().toLocaleTimeString("pt", {
+              hour: "2-digit",
+              minute: "2-digit",
+            })}
+          </text>
+          <text className="mr-1 text-xs text-gray-50">
+            <strong className="text-indigo-400">bumbadum:</strong>
+          </text>
+          <text className="text-xs text-gray-400">
+            {'you are connected on "Room 1" chat'}
+          </text>
+        </p>
+        {messages.map(({ sendedAt, author, authorColor, message }, index) => {
+          const asCommand = message.includes("/play");
+
+          return (
+            <p key={index} className="leading-none">
+              <text className="mr-1 text-xs text-gray-400">
+                {new Date(sendedAt).toLocaleTimeString("pt", {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}
+              </text>
+              <text className="mr-1 text-xs text-gray-50">
+                <strong className={authorColorsStyles[authorColor]}>
+                  {author}
+                </strong>
+                :
+              </text>
+              <text
+                className={`text-xs ${
+                  asCommand ? "text-orange-300" : "text-gray-50"
+                }`}
+              >
+                {message}
+              </text>
+            </p>
+          );
+        })}
       </div>
       <div className="px-6">
         <div className="relative ">
           <input
-            className="flex h-10 w-full cursor-text items-center rounded-lg bg-gray-700 pl-4 pr-14 text-xs font-semibold text-gray-400 shadow"
+            className={`flex h-10 w-full cursor-text items-center rounded-lg bg-gray-700 pl-4 pr-14 text-xs font-semibold ${
+              inputValue.includes("/play") ? "text-orange-300" : "text-gray-400"
+            } shadow`}
             placeholder="Type here your message :)"
             onKeyDown={handleOnInputKeyDown}
             value={inputValue}
