@@ -106,7 +106,6 @@ export function GameEngine() {
           }
 
           if (remainingTries - 1 >= 0) {
-            console.log(remainingTries, (remainingTries - tries) * -1 * 1000);
             setTimeout(
               () => emitUserSpawn(remainingTries - 1),
               (remainingTries - tries) * -1 * 1000
@@ -122,7 +121,7 @@ export function GameEngine() {
 
       socket &&
         socket.on("connect", () => {
-          // socketConnected.current = true;
+          socketConnected.current = true;
         });
 
       socket &&
