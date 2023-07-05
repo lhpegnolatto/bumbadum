@@ -5,6 +5,7 @@ import { OverworldMap, overworldMaps } from "./OverworldMap";
 import { DirectionInput } from "./DirectionInput";
 import { Person } from "./Person";
 import { useSocket } from "@/hooks/useSocket";
+import { Socket } from "socket.io-client";
 
 const assets = {
   "cute-girl": [
@@ -26,7 +27,7 @@ export function GameEngine() {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const usersRef = useRef<Person[]>([]);
-  const socketConnected = useRef<boolean>(false);
+  const currentSocket = useRef<Socket | null>(null);
 
   const { socket } = useSocket({ namespace: "game" });
 
@@ -83,46 +84,44 @@ export function GameEngine() {
       const map = new OverworldMap(overworldMaps.default);
       map.mountObjects();
 
-      socket &&
-        document.addEventListener("spawnUser", () => {
-          const tries = 3;
+      document.addEventListener("spawnUser", () => {
+        const tries = 3;
 
-          function emitUserSpawn(remainingTries: number) {
-            if (socketConnected.current) {
-              const profileStorage = JSON.parse(
-                localStorage?.getItem("bumbadum-profile") || "{}"
-              );
+        function emitUserSpawn(remainingTries: number) {
+          if (currentSocket.current) {
+            const profileStorage = JSON.parse(
+              localStorage?.getItem("bumbadum-profile") || "{}"
+            );
 
-              socket &&
-                socket.emit("event", {
-                  userId: socket.id,
-                  userX: map.spawn.x,
-                  userY: map.spawn.y,
-                  type: "spawn",
-                  avatarType: profileStorage?.avatarType,
-                  name: profileStorage?.name,
-                });
+            currentSocket.current.emit("event", {
+              userId: currentSocket.current.id,
+              userX: map.spawn.x,
+              userY: map.spawn.y,
+              type: "spawn",
+              avatarType: profileStorage?.avatarType,
+              name: profileStorage?.name,
+            });
 
-              return;
-            }
-
-            if (remainingTries - 1 >= 0) {
-              setTimeout(
-                () => emitUserSpawn(remainingTries - 1),
-                (remainingTries - tries) * -1 * 1000
-              );
-            } else {
-              return;
-            }
+            return;
           }
 
-          let remainingTries = 3;
-          emitUserSpawn(remainingTries);
-        });
+          if (remainingTries - 1 >= 0) {
+            setTimeout(
+              () => emitUserSpawn(remainingTries - 1),
+              (remainingTries - tries) * -1 * 1000
+            );
+          } else {
+            return;
+          }
+        }
+
+        let remainingTries = 3;
+        emitUserSpawn(remainingTries);
+      });
 
       socket &&
         socket.on("connect", () => {
-          socketConnected.current = true;
+          currentSocket.current = socket;
         });
 
       socket &&
