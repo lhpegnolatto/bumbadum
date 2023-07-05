@@ -1,10 +1,75 @@
 import { withGrid } from "./utils";
+import bitmapData from "./assets/fonts/3x3-bitmap.json";
+
+function renderSpriteName(ctx, name, x, y) {
+  const scale = 1;
+  const charWidth = 3 * scale;
+  const charHeight = 3 * scale;
+  const charSpacing = 1 * scale;
+  const margin = 2 * scale;
+
+  // Calcula a largura total da palavra com a margem
+  const totalWidth =
+    name.length * charWidth + (name.length - 1) * charSpacing + 2 * margin;
+
+  // Calcula a posição inicial de renderização para centralizar
+  const startX = x - Math.floor(totalWidth / 2);
+
+  let currentX = startX;
+
+  // Salva o valor atual de opacidade
+  const previousAlpha = ctx.globalAlpha;
+
+  // Define a opacidade desejada
+  ctx.globalAlpha = 0.4;
+
+  // Define o fundo preto com a altura ajustada
+  ctx.fillStyle = "black";
+  ctx.fillRect(
+    startX - margin,
+    y - margin,
+    totalWidth,
+    charHeight + 2 * margin
+  );
+
+  // Restaura o valor anterior de opacidade
+  ctx.globalAlpha = previousAlpha;
+
+  // Define as letras como brancas
+  ctx.fillStyle = "white";
+
+  for (let i = 0; i < name.length; i++) {
+    const character = name[i].toUpperCase();
+    const bitmap = bitmapData[character];
+
+    if (bitmap) {
+      for (let row = 0; row < bitmap.length; row++) {
+        const rowData = bitmap[row];
+
+        for (let col = 0; col < rowData.length; col++) {
+          const bit = rowData[col]; // Mantém a ordem dos bits
+
+          if (bit === 1) {
+            const pixelX = currentX + col * scale;
+            const pixelY = y + row * scale;
+
+            ctx.fillRect(pixelX, pixelY, scale, scale);
+          }
+        }
+      }
+    }
+
+    currentX += charWidth + charSpacing;
+  }
+}
 
 export class Sprite {
   constructor(config) {
     if (typeof window === "undefined") {
       return;
     }
+
+    this.name = config.name;
 
     this.layers = config.layers || [];
     this.loadedLayers =
@@ -126,6 +191,8 @@ export class Sprite {
         32
       )
     );
+
+    this.name && renderSpriteName(ctx, this.name, x + 16, y + 3);
 
     this.updateAnimationProgress();
   }

@@ -94,6 +94,7 @@ export function GameEngine() {
             userY: map.spawn.y,
             type: "spawn",
             avatarType: profileStorage?.avatarType,
+            name: profileStorage?.name,
           });
       });
 
@@ -112,6 +113,7 @@ export function GameEngine() {
                   layers:
                     assets[player.avatarType as "gentleman" | "cute-girl"],
                   isPlayerControlled: player.userId === socket.id,
+                  name: player.name,
                 });
                 person.id = player.userId;
                 usersRef.current.push(person);

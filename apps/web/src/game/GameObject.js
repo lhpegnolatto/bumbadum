@@ -11,6 +11,7 @@ export class GameObject {
     this.sprite = new Sprite({
       gameObject: this,
       layers: config.layers,
+      name: config.name,
     });
 
     this.behaviorLoop = config.behaviorLoop || [];
