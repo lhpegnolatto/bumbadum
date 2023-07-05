@@ -83,44 +83,42 @@ export function GameEngine() {
       const map = new OverworldMap(overworldMaps.default);
       map.mountObjects();
 
-      document.addEventListener("spawnUser", () => {
-        console.log("spawn user triggered");
-        const tries = 3;
+      socket &&
+        document.addEventListener("spawnUser", () => {
+          const tries = 3;
 
-        function emitUserSpawn(remainingTries: number) {
-          if (socketConnected.current) {
-            const profileStorage = JSON.parse(
-              localStorage?.getItem("bumbadum-profile") || "{}"
-            );
+          function emitUserSpawn(remainingTries: number) {
+            if (socketConnected.current) {
+              const profileStorage = JSON.parse(
+                localStorage?.getItem("bumbadum-profile") || "{}"
+              );
 
-            console.log("spawn user emmited", socket);
+              socket &&
+                socket.emit("event", {
+                  userId: socket.id,
+                  userX: map.spawn.x,
+                  userY: map.spawn.y,
+                  type: "spawn",
+                  avatarType: profileStorage?.avatarType,
+                  name: profileStorage?.name,
+                });
 
-            socket &&
-              socket.emit("event", {
-                userId: socket.id,
-                userX: map.spawn.x,
-                userY: map.spawn.y,
-                type: "spawn",
-                avatarType: profileStorage?.avatarType,
-                name: profileStorage?.name,
-              });
+              return;
+            }
 
-            return;
+            if (remainingTries - 1 >= 0) {
+              setTimeout(
+                () => emitUserSpawn(remainingTries - 1),
+                (remainingTries - tries) * -1 * 1000
+              );
+            } else {
+              return;
+            }
           }
 
-          if (remainingTries - 1 >= 0) {
-            setTimeout(
-              () => emitUserSpawn(remainingTries - 1),
-              (remainingTries - tries) * -1 * 1000
-            );
-          } else {
-            return;
-          }
-        }
-
-        let remainingTries = 3;
-        emitUserSpawn(remainingTries);
-      });
+          let remainingTries = 3;
+          emitUserSpawn(remainingTries);
+        });
 
       socket &&
         socket.on("connect", () => {
@@ -129,8 +127,6 @@ export function GameEngine() {
 
       socket &&
         socket.on("event", (event) => {
-          console.log("event received", event);
-
           if (event.userId === socket.id) {
             return;
           }
@@ -173,6 +169,8 @@ export function GameEngine() {
       startGameLoop(map);
     }
     init();
+
+    return () => {};
   }, [socket]);
 
   return (
