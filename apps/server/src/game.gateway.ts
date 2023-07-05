@@ -39,7 +39,10 @@ export class GameGateway {
       const playerIndex = this.players.findIndex(
         (p) => p.userId === payload.userId
       );
-      this.players.splice(playerIndex, 1, { ...payload });
+      this.players.splice(playerIndex, 1, {
+        ...this.players[playerIndex],
+        ...payload,
+      });
 
       this.server.emit("event", { ...payload });
     }
