@@ -26,6 +26,7 @@ export function GameEngine() {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const usersRef = useRef<Person[]>([]);
+  const socketConnected = useRef<boolean>(false);
 
   const { socket } = useSocket({ namespace: "game" });
 
@@ -83,20 +84,46 @@ export function GameEngine() {
       map.mountObjects();
 
       document.addEventListener("spawnUser", () => {
-        const profileStorage = JSON.parse(
-          localStorage?.getItem("bumbadum-profile") || "{}"
-        );
+        const tries = 3;
 
-        socket &&
-          socket.emit("event", {
-            userId: socket.id,
-            userX: map.spawn.x,
-            userY: map.spawn.y,
-            type: "spawn",
-            avatarType: profileStorage?.avatarType,
-            name: profileStorage?.name,
-          });
+        function emitUserSpawn(remainingTries: number) {
+          if (socketConnected.current) {
+            const profileStorage = JSON.parse(
+              localStorage?.getItem("bumbadum-profile") || "{}"
+            );
+
+            socket &&
+              socket.emit("event", {
+                userId: socket.id,
+                userX: map.spawn.x,
+                userY: map.spawn.y,
+                type: "spawn",
+                avatarType: profileStorage?.avatarType,
+                name: profileStorage?.name,
+              });
+
+            return;
+          }
+
+          if (remainingTries - 1 >= 0) {
+            console.log(remainingTries, (remainingTries - tries) * -1 * 1000);
+            setTimeout(
+              () => emitUserSpawn(remainingTries - 1),
+              (remainingTries - tries) * -1 * 1000
+            );
+          } else {
+            return;
+          }
+        }
+
+        let remainingTries = 3;
+        emitUserSpawn(remainingTries);
       });
+
+      socket &&
+        socket.on("connect", () => {
+          // socketConnected.current = true;
+        });
 
       socket &&
         socket.on("event", (event) => {

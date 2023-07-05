@@ -24,10 +24,8 @@ export function ProfileDialog() {
     if (!profileStorage) {
       setIsOpen(true);
     } else {
-      setTimeout(() => {
-        const spawnUser = new CustomEvent("spawnUser");
-        document.dispatchEvent(spawnUser);
-      }, 1000);
+      const spawnUser = new CustomEvent("spawnUser");
+      document.dispatchEvent(spawnUser);
     }
   }, []);
 
