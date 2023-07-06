@@ -4,28 +4,25 @@ import React, { useEffect, useState } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { Select } from "@/components/Select";
 
-export function ProfileDialog() {
-  const [isOpen, setIsOpen] = useState(false);
+export type ProfileForm = { name: string; color: string; avatarType: string };
 
-  const [formValue, setFormValue] = useState<any>({});
+interface ProfileDialogProps {
+  isOpen: boolean;
+  onSubmit: (data: ProfileForm) => void;
+}
 
-  function handleOnSubmit() {
-    localStorage?.setItem("bumbadum-profile", JSON.stringify(formValue));
-
-    const spawnUser = new CustomEvent("spawnUser");
-    document.dispatchEvent(spawnUser);
-
-    setIsOpen(false);
-  }
+export function ProfileDialog({ isOpen, onSubmit }: ProfileDialogProps) {
+  const [formValue, setFormValue] = useState<ProfileForm>({
+    name: "",
+    color: "",
+    avatarType: "",
+  });
 
   useEffect(() => {
     const profileStorage = localStorage.getItem("bumbadum-profile");
 
-    if (!profileStorage) {
-      setIsOpen(true);
-    } else {
-      const spawnUser = new CustomEvent("spawnUser");
-      document.dispatchEvent(spawnUser);
+    if (profileStorage) {
+      setFormValue(JSON.parse(profileStorage));
     }
   }, []);
 
@@ -120,7 +117,7 @@ export function ProfileDialog() {
               <button
                 disabled={!formValue.name || !formValue.color}
                 className="inline-flex h-[35px] items-center justify-center rounded-[4px] bg-blue-400 px-[15px] font-medium leading-none text-white hover:bg-blue-500 focus:shadow-[0_0_0_2px] focus:shadow-blue-600 focus:outline-none disabled:opacity-30"
-                onClick={handleOnSubmit}
+                onClick={() => onSubmit(formValue)}
               >
                 Save changes
               </button>

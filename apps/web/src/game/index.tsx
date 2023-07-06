@@ -84,6 +84,32 @@ export function GameEngine() {
       const map = new OverworldMap(overworldMaps.default);
       map.mountObjects();
 
+      document.addEventListener("respawnUser", () => {
+        function emitUserRespawn() {
+          if (currentSocket.current) {
+            const profileStorage = JSON.parse(
+              localStorage?.getItem("bumbadum-profile") || "{}"
+            );
+
+            const user = usersRef.current.find(
+              (user) => user.id === currentSocket.current?.id
+            );
+
+            user &&
+              currentSocket.current.emit("event", {
+                userId: user.id,
+                userX: user.x,
+                userY: user.y,
+                type: "respawn",
+                avatarType: profileStorage?.avatarType,
+                name: profileStorage?.name,
+              });
+          }
+        }
+
+        emitUserRespawn();
+      });
+
       document.addEventListener("spawnUser", () => {
         const tries = 3;
 
@@ -126,10 +152,6 @@ export function GameEngine() {
 
       socket &&
         socket.on("event", (event) => {
-          if (event.userId === socket.id) {
-            return;
-          }
-
           if (event.type === "spawn") {
             (event.players || []).forEach((player: any) => {
               if (!usersRef.current.some((user) => user.id === player.userId)) {
@@ -146,6 +168,26 @@ export function GameEngine() {
                 map.addObject(player.userId, person);
               }
             });
+          } else if (event.type === "respawn") {
+            const userIndex = usersRef.current.findIndex(
+              (user) => user.id === event.userId
+            );
+
+            map.removeObject(event.userId);
+            usersRef.current.splice(userIndex, 1);
+
+            const person = new Person({
+              x: event.userX,
+              y: event.userY,
+              layers: assets[event.avatarType as "gentleman" | "cute-girl"],
+              isPlayerControlled: event.userId === socket.id,
+              name: event.name,
+            });
+            person.id = event.userId;
+            usersRef.current.push(person);
+            map.addObject(event.userId, person);
+          } else if (event.userId === socket.id) {
+            return;
           } else if (event.type === "disconnect") {
             usersRef.current = usersRef.current.filter(
               (user) => user.id !== event.userId
