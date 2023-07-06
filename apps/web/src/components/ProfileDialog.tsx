@@ -12,11 +12,7 @@ interface ProfileDialogProps {
 }
 
 export function ProfileDialog({ isOpen, onSubmit }: ProfileDialogProps) {
-  const [formValue, setFormValue] = useState<ProfileForm>({
-    name: "",
-    color: "",
-    avatarType: "",
-  });
+  const [formValue, setFormValue] = useState<ProfileForm>({} as ProfileForm);
 
   useEffect(() => {
     const profileStorage = localStorage.getItem("bumbadum-profile");
