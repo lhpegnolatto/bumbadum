@@ -9,42 +9,32 @@ interface HomeLoaderProps {
 export function HomeLoader({ children }: HomeLoaderProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [isAvailable, setIsAvailable] = useState(true);
-  const tries = useRef(0);
 
   useEffect(() => {
     setIsLoading(true);
+
+    const startTime = new Date().getTime();
+
+    const intervalId = setInterval(() => {
+      const currentTime = new Date().getTime();
+      const elapsedTime = currentTime - startTime;
+      const elapsedSeconds = elapsedTime / 1000;
+
+      setIsAvailable(elapsedSeconds <= 10);
+    }, 1000);
 
     function handleAvailableApi() {
       setIsLoading(false);
       setIsAvailable(true);
     }
 
-    function handleUnavailableApi() {
-      setIsLoading(true);
-
-      if (tries.current > 1) {
-        setIsAvailable(false);
-      }
-
-      setTimeout(() => {
-        checkApiHealth();
-      }, 5000);
-    }
-
     function checkApiHealth() {
-      tries.current += 1;
-
-      fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/health`)
-        .then(({ ok }) => {
-          if (ok) {
-            handleAvailableApi();
-          } else {
-            handleUnavailableApi();
-          }
-        })
-        .catch(() => {
-          handleUnavailableApi();
-        });
+      fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/health`).then(({ ok }) => {
+        if (ok) {
+          clearInterval(intervalId);
+          handleAvailableApi();
+        }
+      });
     }
 
     checkApiHealth();
