@@ -49,9 +49,9 @@ export class Person extends GameObject {
         );
 
         state.socket.emit("event", {
-          userId: this.id,
-          userX: this.x,
-          userY: this.y,
+          id: this.id,
+          x: this.x,
+          y: this.y,
           type: "walk",
           direction: this.direction,
           avatarType: profileStorage.avatarType,

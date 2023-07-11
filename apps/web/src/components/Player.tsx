@@ -104,7 +104,7 @@ export function Player() {
 
       <div
         data-state={music ? "playing" : "waiting"}
-        className="h-[0px] bg-gray-700 transition-all data-[state=playing]:h-[108px]"
+        className="h-[0px] bg-gray-700 transition-all data-[state=playing]:h-[88px]"
       >
         {music && (
           <>

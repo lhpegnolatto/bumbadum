@@ -7,20 +7,22 @@ import {
 import { Socket } from "socket.io";
 
 type Player = {
-  userId: string;
-  userX: number;
-  userY: number;
+  id: string;
+  x: number;
+  y: number;
   avatarType: string;
   name: string;
 };
 
+type EventType = "spawn" | "walk" | "stand" | "dance";
+
 type EventPayload = {
-  userId: string;
-  userX: number;
-  userY: number;
+  id: string;
+  x: number;
+  y: number;
   avatarType: string;
   name: string;
-  type: "spawn" | "walk" | "stand" | "dance";
+  type: EventType;
 };
 
 @WebSocketGateway({ cors: true, namespace: "game" })
@@ -34,11 +36,10 @@ export class GameGateway {
   handleMessage(@MessageBody() payload: EventPayload): void {
     if (payload.type === "spawn") {
       this.players.push({ ...payload });
+
       this.server.emit("event", { type: "spawn", players: this.players });
     } else {
-      const playerIndex = this.players.findIndex(
-        (p) => p.userId === payload.userId
-      );
+      const playerIndex = this.players.findIndex((p) => p.id === payload.id);
       this.players.splice(playerIndex, 1, {
         ...this.players[playerIndex],
         ...payload,
@@ -49,9 +50,9 @@ export class GameGateway {
   }
 
   handleDisconnect(client: Socket) {
-    const playerIndex = this.players.findIndex((p) => p.userId === client.id);
+    const playerIndex = this.players.findIndex((p) => p.id === client.id);
     this.players.splice(playerIndex, 1);
 
-    this.server.emit("event", { type: "disconnect", userId: client.id });
+    this.server.emit("event", { type: "disconnect", id: client.id });
   }
 }

@@ -97,9 +97,9 @@ export function GameEngine() {
 
             user &&
               currentSocket.current.emit("event", {
-                userId: user.id,
-                userX: user.x,
-                userY: user.y,
+                id: user.id,
+                x: user.x,
+                y: user.y,
                 type: "respawn",
                 avatarType: profileStorage?.avatarType,
                 name: profileStorage?.name,
@@ -120,9 +120,9 @@ export function GameEngine() {
             );
 
             currentSocket.current.emit("event", {
-              userId: currentSocket.current.id,
-              userX: map.spawn.x,
-              userY: map.spawn.y,
+              id: currentSocket.current.id,
+              x: map.spawn.x,
+              y: map.spawn.y,
               type: "spawn",
               avatarType: profileStorage?.avatarType,
               name: profileStorage?.name,
@@ -154,49 +154,47 @@ export function GameEngine() {
         socket.on("event", (event) => {
           if (event.type === "spawn") {
             (event.players || []).forEach((player: any) => {
-              if (!usersRef.current.some((user) => user.id === player.userId)) {
+              if (!usersRef.current.some((user) => user.id === player.id)) {
                 const person = new Person({
-                  x: player.userX,
-                  y: player.userY,
+                  x: player.x,
+                  y: player.y,
                   layers:
                     assets[player.avatarType as "gentleman" | "cute-girl"],
-                  isPlayerControlled: player.userId === socket.id,
+                  isPlayerControlled: player.id === socket.id,
                   name: player.name,
                 });
-                person.id = player.userId;
+                person.id = player.id;
                 usersRef.current.push(person);
-                map.addObject(player.userId, person);
+                map.addObject(player.id, person);
               }
             });
           } else if (event.type === "respawn") {
             const userIndex = usersRef.current.findIndex(
-              (user) => user.id === event.userId
+              (user) => user.id === event.id
             );
 
-            map.removeObject(event.userId);
+            map.removeObject(event.id);
             usersRef.current.splice(userIndex, 1);
 
             const person = new Person({
-              x: event.userX,
-              y: event.userY,
+              x: event.x,
+              y: event.y,
               layers: assets[event.avatarType as "gentleman" | "cute-girl"],
-              isPlayerControlled: event.userId === socket.id,
+              isPlayerControlled: event.id === socket.id,
               name: event.name,
             });
-            person.id = event.userId;
+            person.id = event.id;
             usersRef.current.push(person);
-            map.addObject(event.userId, person);
-          } else if (event.userId === socket.id) {
+            map.addObject(event.id, person);
+          } else if (event.id === socket.id) {
             return;
           } else if (event.type === "disconnect") {
             usersRef.current = usersRef.current.filter(
-              (user) => user.id !== event.userId
+              (user) => user.id !== event.id
             );
-            map.removeObject(event.userId);
+            map.removeObject(event.id);
           } else if (event.type === "walk") {
-            const user = usersRef.current.find(
-              (user) => user.id === event.userId
-            );
+            const user = usersRef.current.find((user) => user.id === event.id);
 
             user &&
               user.update({
