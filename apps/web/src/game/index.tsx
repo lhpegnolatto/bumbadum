@@ -65,6 +65,8 @@ export function GameEngine() {
             });
           });
 
+          map.drawBgImage(ctx);
+
           map.drawLowerImage(ctx, cameraPerson);
 
           Object.values(map.gameObjects)

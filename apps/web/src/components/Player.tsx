@@ -7,6 +7,7 @@ import YouTubePlayer from "youtube-player";
 import { YouTubePlayer as YouTubePlayerType } from "youtube-player/dist/types";
 import { useSocket } from "@/hooks/useSocket";
 import { SpeakerSimpleHigh, SpeakerSimpleSlash } from "@/components/Icons";
+import { Progress } from "@/components/ui/progress";
 
 function formatTime(time: number): string {
   const minutes = Math.floor(time / 60);
@@ -104,16 +105,14 @@ export function Player() {
 
       <div
         data-state={music ? "playing" : "waiting"}
-        className="h-[0px] bg-gray-700 transition-all data-[state=playing]:h-[88px]"
+        className="h-[0px] bg-slate-800 transition-all data-[state=playing]:h-[88px]"
       >
         {music && (
-          <>
-            <div className="h-1 w-full bg-gray-500">
-              <div
-                className="h-1 bg-indigo-600"
-                style={{ width: `${percent}%` }}
-              />
-            </div>
+          <div className="relative">
+            <Progress
+              value={percent}
+              className="absolute top-0 h-1 rounded-none"
+            />
 
             <div className="flex items-center gap-3 p-6">
               <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-lg bg-black">
@@ -132,10 +131,10 @@ export function Player() {
                 >
                   {music?.title}
                 </p>
-                <p className="text-xs text-gray-400">{music?.channel}</p>
+                <p className="text-xs text-slate-400">{music?.channel}</p>
               </div>
               <div className="flex flex-col items-end justify-center">
-                <div className="text-xs text-gray-400">
+                <div className="text-xs text-slate-400">
                   {formatTime(currentTime)}/{formatTime(duration)}
                 </div>
 
@@ -147,7 +146,7 @@ export function Player() {
                 </button>
               </div>
             </div>
-          </>
+          </div>
         )}
       </div>
     </div>

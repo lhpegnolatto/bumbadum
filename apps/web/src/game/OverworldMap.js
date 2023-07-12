@@ -6,11 +6,18 @@ export class OverworldMap {
     this.walls = config.walls || {};
     this.spawn = config.spawn || { x: 0, y: 0 };
 
+    this.bgSrc = new Image();
+    this.bgSrc.src = config.bgSrc;
+
     this.lowerImage = new Image();
     this.lowerImage.src = config.lowerSrc;
 
     this.upperImage = new Image();
     this.upperImage.src = config.upperSrc;
+  }
+
+  drawBgImage(ctx) {
+    ctx.drawImage(this.bgSrc, 0, 0);
   }
 
   drawLowerImage(ctx, cameraPerson) {
@@ -65,50 +72,11 @@ export class OverworldMap {
 
 export const overworldMaps = {
   default: {
+    bgSrc: "/stars_background.png",
     lowerSrc: "/room_map.png",
     upperSrc: "",
     spawn: { x: withGrid(15), y: withGrid(13) },
-    gameObjects: {
-      // npc1: new Person({
-      //   x: withGrid(20),
-      //   y: withGrid(13),
-      //   behaviorLoop: [
-      //     { type: "stand", direction: "down", time: 1200 },
-      //     { type: "walk", direction: "left" },
-      //     { type: "walk", direction: "down" },
-      //     { type: "walk", direction: "down" },
-      //     { type: "walk", direction: "right" },
-      //     { type: "walk", direction: "right" },
-      //     { type: "walk", direction: "right" },
-      //     { type: "walk", direction: "up" },
-      //     { type: "walk", direction: "up" },
-      //     { type: "walk", direction: "left" },
-      //     { type: "walk", direction: "left" },
-      //   ],
-      //   layers: [
-      //     { src: "/char.png", variant: 3 },
-      //     { src: "/hairs/extra_long.png", variant: 8 },
-      //     { src: "/tops/shirt.png", variant: 9 },
-      //     { src: "/bottoms/skirt.png", variant: 7 },
-      //     { src: "/footwear/shoes.png", variant: 7 },
-      //   ],
-      // }),
-      // npc2: new Person({
-      //   x: withGrid(16),
-      //   y: withGrid(18),
-      //   behaviorLoop: [
-      //     { type: "stand", direction: "down", time: 2000 },
-      //     { type: "stand", direction: "left", time: 400 },
-      //     { type: "stand", direction: "right", time: 400 },
-      //   ],
-      //   layers: [
-      //     { src: "/char.png", variant: 3 },
-      //     { src: "/hairs/extra_long.png" },
-      //     { src: "/tops/dress.png", variant: 8 },
-      //     { src: "/footwear/shoes.png", variant: 8 },
-      //   ],
-      // }),
-    },
+    gameObjects: {},
     walls: {
       ...Array.from(Array(15)).reduce(
         (acc, _, index) => ({

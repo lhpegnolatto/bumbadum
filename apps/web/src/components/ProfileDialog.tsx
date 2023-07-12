@@ -1,10 +1,69 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import * as Dialog from "@radix-ui/react-dialog";
-import { Select } from "@/components/Select";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
+
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 export type ProfileForm = { name: string; color: string; avatarType: string };
+
+const colorsOptions = [
+  {
+    value: "blue",
+    label: "blue",
+  },
+  {
+    value: "green",
+    label: "green",
+  },
+  {
+    value: "pink",
+    label: "pink",
+  },
+  {
+    value: "orange",
+    label: "orange",
+  },
+];
+
+const FormSchema = z.object({
+  name: z
+    .string({
+      required_error: "You need to type a name",
+    })
+    .min(1, "You need to type a name"),
+  color: z.string({
+    required_error: "You need to select a color",
+  }),
+  avatarType: z.string({
+    required_error: "You need to select a avatar type",
+  }),
+});
 
 interface ProfileDialogProps {
   isOpen: boolean;
@@ -12,115 +71,118 @@ interface ProfileDialogProps {
 }
 
 export function ProfileDialog({ isOpen, onSubmit }: ProfileDialogProps) {
-  const [formValue, setFormValue] = useState<ProfileForm>({} as ProfileForm);
+  const form = useForm<z.infer<typeof FormSchema>>({
+    resolver: zodResolver(FormSchema),
+    defaultValues: {
+      name: "",
+      color: "blue",
+      avatarType: "gentleman",
+    },
+  });
+  const { reset } = form;
 
   useEffect(() => {
     const profileStorage = localStorage.getItem("bumbadum-profile");
 
     if (profileStorage) {
-      setFormValue(JSON.parse(profileStorage));
+      reset(JSON.parse(profileStorage));
     }
-  }, []);
+  }, [reset]);
 
   return (
-    <Dialog.Root open={isOpen}>
-      <Dialog.Portal>
-        <Dialog.Overlay className="bg-black-alpha-500 data-[state=open]:animate-overlayShow fixed inset-0" />
-        <Dialog.Content className="data-[state=open]:animate-contentShow fixed left-[50%] top-[50%] max-h-[85vh] w-[90vw] max-w-[450px] translate-x-[-50%] translate-y-[-50%] rounded-[6px] bg-gray-700 p-[25px] shadow-[hsl(206_22%_7%_/_35%)_0px_10px_38px_-10px,_hsl(206_22%_7%_/_20%)_0px_10px_20px_-15px] focus:outline-none">
-          <Dialog.Title className="m-0 text-[17px] font-medium text-gray-50">
-            Let we know you
-          </Dialog.Title>
-          <Dialog.Description className="mb-5 mt-[10px] text-[15px] leading-normal text-gray-400">
-            We need to know who you are my boy, or girl, or... ok, you
-            understand my issue now? :(
-          </Dialog.Description>
-          <fieldset className="mb-[15px] flex items-center gap-5">
-            <label
-              className="w-[90px] text-right text-[15px] text-white"
-              htmlFor="name"
-            >
-              Username
-            </label>
-            <input
-              className="inline-flex h-[35px] w-full flex-1 items-center justify-center rounded-[4px] px-[10px] text-[15px] leading-none shadow-[0_0_0_1px] outline-none focus:shadow-[0_0_0_2px]"
-              id="name"
-              placeholder="Kurt Cobain"
-              value={formValue.name}
-              onChange={(e) => {
-                const inputValue = e.target.value;
-                setFormValue((curr: any) => ({ ...curr, name: inputValue }));
-              }}
+    <Dialog open={isOpen}>
+      <DialogContent>
+        <DialogTitle>Let we know you</DialogTitle>
+        <DialogDescription>
+          We need to know who you are my boy, or girl, or... ok, you understand
+          my issue now? :(
+        </DialogDescription>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Kurt Cobain" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </fieldset>
-          <fieldset className="mb-[15px] flex items-center gap-5">
-            <label className="w-[90px] text-right text-[15px] text-white">
-              Chat color
-            </label>
-            <Select
-              value={formValue.color}
-              onValueChange={(selectedValue) => {
-                setFormValue((curr: any) => ({
-                  ...curr,
-                  color: selectedValue,
-                }));
-              }}
-              placeholder="Select a color to use on chat..."
-              options={[
-                {
-                  value: "blue",
-                  label: "blue",
-                  className: "data-[highlighted]:text-blue-400",
-                },
-                {
-                  value: "green",
-                  label: "green",
-                  className: "data-[highlighted]:text-green-400",
-                },
-                {
-                  value: "pink",
-                  label: "pink",
-                  className: "data-[highlighted]:text-pink-400",
-                },
-                {
-                  value: "orange",
-                  label: "orange",
-                  className: "data-[highlighted]:text-orange-400",
-                },
-              ]}
+            <FormField
+              control={form.control}
+              name="color"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Color</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a color to use on chat" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {colorsOptions.map((color) => (
+                        <SelectItem
+                          key={color.value}
+                          value={color.value}
+                          className="cursor-pointer"
+                        >
+                          {color.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </fieldset>
-          <fieldset className="mb-[15px] flex items-center gap-5">
-            <label className="w-[90px] text-right text-[15px] text-white">
-              Avatar type
-            </label>
-            <Select
-              value={formValue.avatarType}
-              onValueChange={(selectedValue) => {
-                setFormValue((curr: any) => ({
-                  ...curr,
-                  avatarType: selectedValue,
-                }));
-              }}
-              placeholder="Select a avatar for you.."
-              options={[
-                { value: "gentleman", label: "gentleman" },
-                { value: "cute-girl", label: "cute girl" },
-              ]}
+            <FormField
+              control={form.control}
+              name="avatarType"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Avatar type</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select your avatar type" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {[
+                        { value: "gentleman", label: "gentleman" },
+                        { value: "cute-girl", label: "cute girl" },
+                      ].map((type) => (
+                        <SelectItem
+                          key={type.value}
+                          value={type.value}
+                          className="cursor-pointer"
+                        >
+                          {type.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </fieldset>
-          <div className="mt-[25px] flex justify-end">
-            <Dialog.Close asChild>
-              <button
-                disabled={!formValue.name || !formValue.color}
-                className="inline-flex h-[35px] items-center justify-center rounded-[4px] bg-blue-400 px-[15px] font-medium leading-none text-white hover:bg-blue-500 focus:shadow-[0_0_0_2px] focus:shadow-blue-600 focus:outline-none disabled:opacity-30"
-                onClick={() => onSubmit(formValue)}
-              >
-                Save changes
-              </button>
-            </Dialog.Close>
-          </div>
-        </Dialog.Content>
-      </Dialog.Portal>
-    </Dialog.Root>
+            <div className="flex justify-end">
+              <Button type="submit">Submit</Button>
+            </div>
+          </form>
+        </Form>
+      </DialogContent>
+    </Dialog>
   );
 }

@@ -31,8 +31,6 @@ export class ChatGateway {
   server;
 
   async handleGetYoutubeVideoByQuery(query: string): Promise<YoutubeMusic> {
-    console.log(process.env.YOUTUBE_DATA_API_KEY);
-
     const searchRequest = this.httpService
       .get("https://youtube.googleapis.com/youtube/v3/search", {
         params: {
