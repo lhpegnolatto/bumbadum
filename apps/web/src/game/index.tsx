@@ -6,22 +6,7 @@ import { DirectionInput } from "./DirectionInput";
 import { Person } from "./Person";
 import { useSocket } from "@/hooks/useSocket";
 import { Socket } from "socket.io-client";
-
-const assets = {
-  "cute-girl": [
-    { src: "/char.png", variant: 3 },
-    { src: "/hairs/extra_long.png" },
-    { src: "/tops/dress.png", variant: 8 },
-    { src: "/footwear/shoes.png", variant: 8 },
-  ],
-  gentleman: [
-    { src: "/char.png" },
-    { src: "/hairs/gentleman.png", variant: 1 },
-    { src: "/tops/shirt.png", variant: 5 },
-    { src: "/bottoms/pants.png" },
-    { src: "/footwear/shoes.png" },
-  ],
-};
+import { getLayersFromAvatar } from "@/utils/getLayersFromAvatar";
 
 export function GameEngine() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -92,6 +77,9 @@ export function GameEngine() {
             const profileStorage = JSON.parse(
               localStorage?.getItem("bumbadum-profile") || "{}"
             );
+            const avatarStorage = JSON.parse(
+              localStorage?.getItem("bumbadum-avatar") || "{}"
+            );
 
             const user = usersRef.current.find(
               (user) => user.id === currentSocket.current?.id
@@ -103,7 +91,7 @@ export function GameEngine() {
                 x: user.x,
                 y: user.y,
                 type: "respawn",
-                avatarType: profileStorage?.avatarType,
+                avatar: avatarStorage,
                 name: profileStorage?.name,
               });
           }
@@ -120,13 +108,16 @@ export function GameEngine() {
             const profileStorage = JSON.parse(
               localStorage?.getItem("bumbadum-profile") || "{}"
             );
+            const avatarStorage = JSON.parse(
+              localStorage?.getItem("bumbadum-avatar") || "{}"
+            );
 
             currentSocket.current.emit("event", {
               id: currentSocket.current.id,
               x: map.spawn.x,
               y: map.spawn.y,
               type: "spawn",
-              avatarType: profileStorage?.avatarType,
+              avatar: avatarStorage,
               name: profileStorage?.name,
             });
 
@@ -161,7 +152,7 @@ export function GameEngine() {
                   x: player.x,
                   y: player.y,
                   layers:
-                    assets[player.avatarType as "gentleman" | "cute-girl"],
+                    getLayersFromAvatar(player.avatar),
                   isPlayerControlled: player.id === socket.id,
                   name: player.name,
                 });
@@ -181,7 +172,7 @@ export function GameEngine() {
             const person = new Person({
               x: event.x,
               y: event.y,
-              layers: assets[event.avatarType as "gentleman" | "cute-girl"],
+              layers: getLayersFromAvatar(event.avatar),
               isPlayerControlled: event.id === socket.id,
               name: event.name,
             });
@@ -211,7 +202,7 @@ export function GameEngine() {
     }
     init();
 
-    return () => {};
+    return () => { };
   }, [socket]);
 
   return (

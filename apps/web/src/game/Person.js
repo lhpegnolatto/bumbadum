@@ -47,6 +47,10 @@ export class Person extends GameObject {
         const profileStorage = JSON.parse(
           localStorage?.getItem("bumbadum-profile") || "{}"
         );
+        const avatarStorage = JSON.parse(
+          localStorage?.getItem("bumbadum-avatar") || "{}"
+        );
+
 
         state.socket.emit("event", {
           id: this.id,
@@ -54,7 +58,7 @@ export class Person extends GameObject {
           y: this.y,
           type: "walk",
           direction: this.direction,
-          avatarType: profileStorage.avatarType,
+          avatar: avatarStorage,
         });
       }
 

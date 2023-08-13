@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -8,7 +8,6 @@ import * as z from "zod";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -29,8 +28,9 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { AvatarSelect } from "@/components/AvatarSelect";
 
-export type ProfileForm = { name: string; color: string; avatarType: string };
+export type ProfileForm = { name: string; color: string; };
 
 const colorsOptions = [
   {
@@ -60,9 +60,6 @@ const FormSchema = z.object({
   color: z.string({
     required_error: "You need to select a color",
   }),
-  avatarType: z.string({
-    required_error: "You need to select a avatar type",
-  }),
 });
 
 interface ProfileDialogProps {
@@ -76,7 +73,6 @@ export function ProfileDialog({ isOpen, onSubmit }: ProfileDialogProps) {
     defaultValues: {
       name: "",
       color: "blue",
-      avatarType: "gentleman",
     },
   });
   const { reset } = form;
@@ -143,40 +139,7 @@ export function ProfileDialog({ isOpen, onSubmit }: ProfileDialogProps) {
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="avatarType"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Avatar type</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select your avatar type" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {[
-                        { value: "gentleman", label: "gentleman" },
-                        { value: "cute-girl", label: "cute girl" },
-                      ].map((type) => (
-                        <SelectItem
-                          key={type.value}
-                          value={type.value}
-                          className="cursor-pointer"
-                        >
-                          {type.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <AvatarSelect />
             <div className="flex justify-end">
               <Button type="submit">Submit</Button>
             </div>

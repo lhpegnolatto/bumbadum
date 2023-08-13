@@ -6,12 +6,20 @@ import {
 } from "@nestjs/websockets";
 import { Socket } from "socket.io";
 
+type Avatar = {
+  skin: number;
+  hair: { type: number; color: number };
+  top: { type: number; color: number };
+  bottom: { type: number; color: number };
+  footwear: { type: number; color: number };
+}
+
 type Player = {
   id: string;
+  name: string;
   x: number;
   y: number;
-  avatarType: string;
-  name: string;
+  avatar: Avatar
 };
 
 type EventType = "spawn" | "walk" | "stand" | "dance";
@@ -20,7 +28,7 @@ type EventPayload = {
   id: string;
   x: number;
   y: number;
-  avatarType: string;
+  avatar: Avatar;
   name: string;
   type: EventType;
 };
