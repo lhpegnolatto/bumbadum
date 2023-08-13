@@ -14,19 +14,19 @@ export const footwearsTypesFiles = ["shoes.png", ""];
 export const getLayersFromAvatar = ({ skin, hair, top, bottom, footwear }: AvatarOptions) => [
   { src: "/char.png", variant: skin },
   {
-    src: `/hairs/${hairTypesFiles[hair.type]}`,
-    variant: hair.color
+    src: `/hairs/${hairTypesFiles[hair?.type]}`,
+    variant: hair?.color
   },
   {
-    src: `/tops/${topsTypesFiles[top.type]}`,
-    variant: top.color
+    src: `/tops/${topsTypesFiles[top?.type]}`,
+    variant: top?.color
   },
   {
-    src: `/bottoms/${bottomsTypesFiles[bottom.type]}`,
-    variant: bottom.color
+    src: `/bottoms/${bottomsTypesFiles[bottom?.type]}`,
+    variant: bottom?.color
   },
   {
-    src: `/footwear/${footwearsTypesFiles[footwear.type]}`,
-    variant: footwear.color
+    src: `/footwear/${footwearsTypesFiles[footwear?.type]}`,
+    variant: footwear?.color
   },
 ]

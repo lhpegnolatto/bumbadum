@@ -10,7 +10,14 @@ export function useAvatarSelect() {
   const [avatarOptions, setAvatarOptions] = useState<AvatarOptions>(() => {
     const storageAvatarOptions = JSON.parse(localStorage.getItem("bumbadum-avatar") || "null");
 
-    return storageAvatarOptions ? convertToFields(storageAvatarOptions) : getRandomAvatarFields()
+    if (!storageAvatarOptions) {
+      const randomAvatarOptions = getRandomAvatarFields()
+      localStorage.setItem("bumbadum-avatar", JSON.stringify(convertToApiData(randomAvatarOptions)))
+
+      return randomAvatarOptions
+    }
+
+    return convertToFields(storageAvatarOptions)
   });
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
