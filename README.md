@@ -35,12 +35,12 @@ Bumbadum is a creative endeavor that strives to establish a congenial environmen
 
 ## Some TODOs
 
-- [] fix wrong animation on others players
-- [] fix spawn of others users (x and y wrong based on camera person)
-- [] add playlist functionality
-- [] add functionality to new users get what music is playing now
-- [] add skip vote support
-- [] add dance event
+- [ ] fix wrong animation on others players
+- [ ] fix spawn of others users (x and y wrong based on camera person)
+- [ ] add playlist functionality
+- [ ] add functionality to new users get what music is playing now
+- [ ] add skip vote support
+- [ ] add dance event
 
 ## Contributing
 
