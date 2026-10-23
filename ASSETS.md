@@ -19,7 +19,7 @@ The assets are provided separately from this project's source code and may be su
 
 ### Files
 
-The pack lives in `apps/web/public/sprites/`, renamed to kebab-case. Every sheet uses 32×32 frames in 24 columns: 4 directions of 6 walking frames each.
+The pack lives in `apps/web/public/sprites/`, renamed to kebab-case. Every sheet uses 32×32 frames in 24 columns: 4 directions of 6 walking frames each, the first standing still. Columns 0–5 face down, 6–11 right, 12–17 up and 18–23 left; the left columns mirror the right ones, except the first left frame of hairs 6–8 (rows 6–8 of `hairs.png`), which is a copy of the right-facing one. The game therefore draws left by flipping columns 6–11 (`packages/avatar/src/sprite-manifest.ts`) and never reads columns 18–23.
 
 | In this repo | In the pack | Contents |
 |---|---|---|
