@@ -1,6 +1,6 @@
 # Radio by URL
 
-Status: ready-for-human
+Status: resolved
 Type: task
 Blocked by: 05, 06
 
@@ -19,7 +19,7 @@ See [spec](../spec.md): Radio, Layout and keyboard.
 - [x] Announcements for a track queued and a new track on air.
 - [x] Volume and mute are local and stored in `localStorage`.
 - [x] E2E with the fake screen player: `/play` in one browser, both show the same track and position.
-- [ ] Manual checklist for real YouTube playback written and run before deploy. Written: [docs/checklists/real-youtube-playback.md](../../../docs/checklists/real-youtube-playback.md); the run is the human's.
+- [x] Manual checklist for real YouTube playback written and run before deploy. Written: [docs/checklists/real-youtube-playback.md](../../../docs/checklists/real-youtube-playback.md); run by the human with a real API key.
 
 ## Comments
 
