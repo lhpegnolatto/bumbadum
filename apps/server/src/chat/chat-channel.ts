@@ -1,4 +1,4 @@
-import { appendToHistory, commands, readChatInput } from "@bumbadum/chat";
+import { appendToHistory, type CommandId, commands, readChatInput } from "@bumbadum/chat";
 import {
   ANNOUNCEMENT,
   type Announcement,
@@ -20,14 +20,19 @@ export interface ChatRoom {
   broadcast(type: string, message: unknown): void;
 }
 
+/** Runs a command a player typed; the room wires each one to its domain. */
+export type CommandHandler = (client: Client, nickname: string, args: string) => void;
+
 /** A room's chat: messages, history, announcements and notices. */
 export class ChatChannel {
   readonly #room: ChatRoom;
+  readonly #commands: Readonly<Record<CommandId, CommandHandler>>;
   readonly #rateLimits = new Map<string, TokenBucket>();
   #history: ChatHistory = [];
 
-  constructor(room: ChatRoom) {
+  constructor(room: ChatRoom, commandHandlers: Readonly<Record<CommandId, CommandHandler>>) {
     this.#room = room;
+    this.#commands = commandHandlers;
   }
 
   /** Gives a joining player the recent messages and tells everyone they arrived. */
@@ -57,7 +62,7 @@ export class ChatChannel {
         notify(client, { code: "unknown-command", params: { name: input.name } });
         return;
       case "command":
-        // No commands are registered yet; radio and help wire theirs here.
+        this.#commands[input.command](client, nickname, input.args);
         return;
       case "invalid":
         // The client never sends these; nothing to say.

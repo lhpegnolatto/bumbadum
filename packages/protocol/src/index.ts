@@ -12,6 +12,14 @@ export {
 } from "./chat/chat-messages.ts";
 export { NOTICE, type Notice, type NoticeCode } from "./chat/notice.ts";
 export {
+  CLOCK_PING,
+  CLOCK_PONG,
+  type ClockPing,
+  type ClockPong,
+  clockPingSchema,
+} from "./radio/clock-ping.ts";
+export { NowPlayingState, RadioState, TrackState } from "./radio/radio-state.ts";
+export {
   type JoinOptions,
   type JoinOptionsResult,
   NICKNAME_MAX_LENGTH,

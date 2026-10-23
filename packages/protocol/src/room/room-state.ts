@@ -1,6 +1,7 @@
 import type { Direction } from "@bumbadum/world";
 import { type SchemaType, schema, t } from "@colyseus/schema";
 import { AvatarState } from "../avatar/avatar-state.ts";
+import { RadioState } from "../radio/radio-state.ts";
 
 /** A player present in the room, positioned in tile coordinates. */
 export const PlayerState = schema(
@@ -25,6 +26,7 @@ export const RoomState = schema(
   {
     /** Keyed by the player's session id. */
     players: t.map(PlayerState),
+    radio: t.ref(RadioState),
   },
   "RoomState",
 );

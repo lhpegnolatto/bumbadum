@@ -51,11 +51,24 @@
     "inputPlaceholder": "Press Enter to chat",
     "announcement": {
       "player-joined": "{nickname} joined the room.",
-      "player-left": "{nickname} left the room."
+      "player-left": "{nickname} left the room.",
+      "track-queued": "{nickname} queued “{title}”.",
+      "now-playing": "Now playing: “{title}”, from {nickname}."
     },
     "notice": {
       "unknown-command": "There is no /{name} command.",
-      "rate-limited": "Easy there: at most 5 messages every 5 seconds."
+      "rate-limited": "Easy there: at most 5 messages every 5 seconds.",
+      "play-missing-track": "Tell /play what to play: a YouTube link or video ID.",
+      "play-not-a-video": "That link doesn't point to a YouTube video.",
+      "play-search-unavailable": "Searching by name isn't available yet. Paste a YouTube link instead.",
+      "track-not-found": "Couldn't find that video on YouTube.",
+      "track-lookup-unavailable": "Can't look up tracks right now. Try again in a little while.",
+      "track-live": "Live streams can't play on the radio.",
+      "track-not-embeddable": "That video can't be played outside YouTube.",
+      "track-too-long": "That track is longer than 10 minutes.",
+      "track-on-air": "That track is on air right now.",
+      "track-already-queued": "That track is already in the queue.",
+      "track-too-many-waiting": "You already have 3 tracks waiting. Let one play first."
     }
   },
   "avatar": {

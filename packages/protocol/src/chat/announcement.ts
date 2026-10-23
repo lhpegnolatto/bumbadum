@@ -7,6 +7,9 @@ export const ANNOUNCEMENT = "announcement";
 
 export type Announcement =
   | { code: "player-joined"; params: { nickname: string } }
-  | { code: "player-left"; params: { nickname: string } };
+  | { code: "player-left"; params: { nickname: string } }
+  /** `nickname` is the submitter's. */
+  | { code: "track-queued"; params: { title: string; nickname: string } }
+  | { code: "now-playing"; params: { title: string; nickname: string } };
 
 export type AnnouncementCode = Announcement["code"];

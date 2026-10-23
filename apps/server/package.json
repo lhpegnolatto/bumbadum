@@ -24,6 +24,7 @@
     "@bumbadum/avatar": "workspace:*",
     "@bumbadum/chat": "workspace:*",
     "@bumbadum/protocol": "workspace:*",
+    "@bumbadum/radio": "workspace:*",
     "@bumbadum/world": "workspace:*",
     "@colyseus/core": "0.18.23",
     "@colyseus/schema": "5.0.42",

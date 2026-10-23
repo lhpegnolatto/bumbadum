@@ -51,11 +51,24 @@
     "inputPlaceholder": "Aperte Enter para conversar",
     "announcement": {
       "player-joined": "{nickname} entrou na sala.",
-      "player-left": "{nickname} saiu da sala."
+      "player-left": "{nickname} saiu da sala.",
+      "track-queued": "{nickname} colocou “{title}” na fila.",
+      "now-playing": "Tocando agora: “{title}”, de {nickname}."
     },
     "notice": {
       "unknown-command": "Não existe o comando /{name}.",
-      "rate-limited": "Calma: no máximo 5 mensagens a cada 5 segundos."
+      "rate-limited": "Calma: no máximo 5 mensagens a cada 5 segundos.",
+      "play-missing-track": "Diga ao /tocar o que tocar: um link ou ID de vídeo do YouTube.",
+      "play-not-a-video": "Esse link não aponta para um vídeo do YouTube.",
+      "play-search-unavailable": "A busca por nome ainda não está disponível. Cole um link do YouTube.",
+      "track-not-found": "Não encontrei esse vídeo no YouTube.",
+      "track-lookup-unavailable": "Não dá para buscar músicas agora. Tente de novo daqui a pouco.",
+      "track-live": "Transmissões ao vivo não tocam no rádio.",
+      "track-not-embeddable": "Esse vídeo não pode ser tocado fora do YouTube.",
+      "track-too-long": "Essa música passa de 10 minutos.",
+      "track-on-air": "Essa música está tocando agora.",
+      "track-already-queued": "Essa música já está na fila.",
+      "track-too-many-waiting": "Você já tem 3 músicas esperando. Deixe uma tocar primeiro."
     }
   },
   "avatar": {

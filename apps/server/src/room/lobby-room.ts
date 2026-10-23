@@ -1,7 +1,9 @@
 import {
   AVATAR_MESSAGE,
   CHAT_INPUT,
+  CLOCK_PING,
   chatInputSchema,
+  clockPingSchema,
   type JoinOptions,
   type JoinRejection,
   LOBBY_SLUG,
@@ -13,9 +15,11 @@ import {
   RoomState,
   STEP_MESSAGE,
 } from "@bumbadum/protocol";
+import type { TrackCatalog } from "@bumbadum/radio";
 import { lobbyMap, STEPS_PER_SECOND, step } from "@bumbadum/world";
 import { type Client, ErrorCode, matchMaker, Room, ServerError, validate } from "@colyseus/core";
 import { ChatChannel } from "../chat/chat-channel.ts";
+import { RadioStation } from "../radio/radio-station.ts";
 import { TokenBucket } from "../rate-limit/token-bucket.ts";
 
 const MAX_PLAYERS = 16;
@@ -36,11 +40,17 @@ function reject(code: JoinRejection): never {
 
 type LobbyClient = Client<{ auth: JoinOptions }>;
 
+/** What the server hands every room it creates (see `createServer`). */
+export interface LobbyRoomOptions {
+  catalog: TrackCatalog;
+}
+
 export class LobbyRoom extends Room<{ state: RoomState; client: LobbyClient }> {
   override maxClients = MAX_PLAYERS;
   override autoDispose = false;
   override state = new RoomState();
-  readonly #chat = new ChatChannel(this);
+  #radio!: RadioStation;
+  #chat!: ChatChannel;
 
   private readonly stepLimits = new Map<string, TokenBucket>();
   private readonly avatarChangeLimits = new Map<string, TokenBucket>();
@@ -48,6 +58,9 @@ export class LobbyRoom extends Room<{ state: RoomState; client: LobbyClient }> {
   override messages = {
     [CHAT_INPUT]: validate(chatInputSchema, (client: LobbyClient, { text }) => {
       this.#chat.receive(client, nicknameOf(client), text, performance.now());
+    }),
+    [CLOCK_PING]: validate(clockPingSchema, (client: LobbyClient, { sentAt }) => {
+      this.#radio.answerPing(client, sentAt);
     }),
     [STEP_MESSAGE]: (client: LobbyClient, payload: unknown) => {
       const direction = parseStepIntent(payload);
@@ -70,6 +83,20 @@ export class LobbyRoom extends Room<{ state: RoomState; client: LobbyClient }> {
       player.avatar.assign(avatar);
     },
   };
+
+  override onCreate({ catalog }: LobbyRoomOptions) {
+    // The room is the composition root: chat commands reach the radio here (ADR-0003).
+    this.#radio = new RadioStation(this, catalog);
+    this.#chat = new ChatChannel(this, {
+      play: (client, nickname, args) => {
+        this.#radio
+          .play(client, { id: client.sessionId, nickname }, args)
+          .catch((error: unknown) => {
+            console.error("/play failed", error);
+          });
+      },
+    });
+  }
 
   /** Runs during matchmaking, before a seat is reserved. */
   static override async onAuth(_token: string, options: unknown): Promise<JoinOptions> {
@@ -99,6 +126,7 @@ export class LobbyRoom extends Room<{ state: RoomState; client: LobbyClient }> {
       new TokenBucket(AVATAR_CHANGE_RATE, performance.now()),
     );
     this.#chat.welcome(client, nickname, performance.now());
+    this.#radio.welcome(client);
   }
 
   override onDrop(client: LobbyClient) {
@@ -120,6 +148,7 @@ export class LobbyRoom extends Room<{ state: RoomState; client: LobbyClient }> {
     this.stepLimits.delete(client.sessionId);
     this.avatarChangeLimits.delete(client.sessionId);
     this.#chat.farewell(client, nicknameOf(client));
+    this.#radio.farewell(client);
   }
 }
 

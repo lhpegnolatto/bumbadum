@@ -11,6 +11,7 @@ services:
       paths:
         - apps/server/**
         - packages/protocol/**
+        - packages/radio/**
         - packages/tooling/**
         - package.json
         - pnpm-lock.yaml
@@ -22,3 +23,8 @@ services:
       # Node 24 still ships corepack, which provides the pnpm pinned in package.json.
       - key: NODE_VERSION
         value: "24"
+      # YouTube Data API key for videos.list (ADR-0005). A secret: set it in the
+      # Render dashboard; it never reaches the client. Without it, /play answers
+      # with a notice.
+      - key: YOUTUBE_API_KEY
+        sync: false

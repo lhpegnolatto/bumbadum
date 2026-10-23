@@ -8,6 +8,9 @@ import {
   CHAT_MESSAGE,
   type ChatHistory,
   type ChatMessage,
+  CLOCK_PING,
+  CLOCK_PONG,
+  type ClockPong,
   LOBBY_SLUG,
   NOTICE,
   type Notice,
@@ -20,13 +23,14 @@ import { matchMaker } from "@colyseus/core";
 import { type Room as ClientRoom, CloseCode } from "@colyseus/sdk";
 import { boot, type ColyseusTestServer } from "@colyseus/testing";
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
+import { createFakeTrackCatalog } from "../radio/fake-track-catalog.ts";
 import { createServer } from "../server.ts";
 import { openLobby } from "./lobby-room.ts";
 
 let colyseus: ColyseusTestServer;
 
 beforeAll(async () => {
-  colyseus = await boot(createServer());
+  colyseus = await boot(createServer({ catalog: createFakeTrackCatalog() }));
 });
 afterAll(async () => {
   await colyseus.shutdown();
@@ -357,5 +361,168 @@ describe("lobby-room avatars", () => {
 
     expect(avatarOf(ana, ana)).toEqual(changed);
     expect(avatarOf(bia, bia)).toEqual(changed);
+  });
+});
+
+/** What `room` shows on air: the video and who submitted it. */
+function onAir(room: ClientRoom<unknown, RoomState>) {
+  const nowPlaying = room.state.radio?.nowPlaying;
+  return (
+    nowPlaying && { videoId: nowPlaying.track.videoId, by: nowPlaying.track.submitterNickname }
+  );
+}
+
+function waiting(room: ClientRoom<unknown, RoomState>): string[] {
+  return [...(room.state.radio?.queue ?? [])].map((track) => track.videoId);
+}
+
+/** Ana and Bia in the lobby, collecting what reaches them. */
+async function anaAndBia() {
+  const ana = await joinLobby("Ana");
+  const bia = await joinLobby("Bia");
+  return {
+    ana,
+    bia,
+    noticesToAna: received<Notice>(ana, NOTICE),
+    noticesToBia: received<Notice>(bia, NOTICE),
+    toBia: received<Announcement>(bia, ANNOUNCEMENT),
+  };
+}
+
+describe("lobby-room radio", () => {
+  it("puts a track sent with /play on air for everyone, by its submitter, starting now", async () => {
+    const { ana, bia } = await anaAndBia();
+    const before = Date.now();
+
+    say(ana, "/play https://www.youtube.com/watch?v=song0000001&list=PL123");
+
+    await expect.poll(() => onAir(bia)).toEqual({ videoId: "song0000001", by: "Ana" });
+    expect(onAir(ana)).toEqual({ videoId: "song0000001", by: "Ana" });
+    const nowPlaying = bia.state.radio.nowPlaying;
+    expect(nowPlaying?.track).toMatchObject({
+      title: "Fake track song0000001",
+      durationMs: 180_000,
+      submitterId: ana.sessionId,
+    });
+    expect(nowPlaying?.startedAt).toBeGreaterThanOrEqual(before);
+    expect(nowPlaying?.startedAt).toBeLessThanOrEqual(Date.now());
+  });
+
+  it("queues tracks behind the one on air, with /play or /tocar", async () => {
+    const { ana, bia } = await anaAndBia();
+
+    say(ana, "/play song0000001");
+    await expect.poll(() => onAir(bia)?.videoId).toBe("song0000001");
+    say(bia, "/tocar song0000002");
+    await expect.poll(() => waiting(bia)).toEqual(["song0000002"]);
+    say(ana, "/play song0000003");
+
+    await expect.poll(() => waiting(ana)).toEqual(["song0000002", "song0000003"]);
+    expect(bia.state.radio.queue[0]?.submitterNickname).toBe("Bia");
+  });
+
+  it("announces to everyone a track queued and a track going on air", async () => {
+    const { ana, bia, toBia } = await anaAndBia();
+    const radioAnnouncements = () => toBia.filter((a) => !a.code.startsWith("player-"));
+
+    say(ana, "/play song0000001");
+    await expect.poll(() => onAir(bia)).toBeDefined();
+    say(bia, "/play song0000002");
+
+    const title = (id: string) => `Fake track ${id}`;
+    await expect.poll(radioAnnouncements).toEqual([
+      { code: "track-queued", params: { title: title("song0000001"), nickname: "Ana" } },
+      { code: "now-playing", params: { title: title("song0000001"), nickname: "Ana" } },
+      { code: "track-queued", params: { title: title("song0000002"), nickname: "Bia" } },
+    ]);
+  });
+
+  it("advances by the clock when a track ends, also with the room empty", async () => {
+    const ana = await joinLobby("Ana");
+    say(ana, "/play tiny0000001");
+    say(ana, "/play tiny0000002");
+    await expect.poll(() => waiting(ana)).toEqual(["tiny0000002"]);
+    const firstStart = ana.state.radio.nowPlaying?.startedAt ?? 0;
+    const server = colyseus.getRoomById<RoomState>(ana.roomId).state.radio;
+    await ana.leave();
+
+    await expect.poll(() => server.nowPlaying?.track.videoId).toBe("tiny0000002");
+    // The next track starts the moment the previous one ends, by the clock.
+    expect(server.nowPlaying?.startedAt).toBe(firstStart + 500);
+    expect(server.queue).toHaveLength(0);
+    await expect.poll(() => server.nowPlaying).toBeUndefined();
+  });
+
+  it("gives a joining player what is on air and when it started", async () => {
+    const ana = await joinLobby("Ana");
+    say(ana, "/play song0000001");
+    await expect.poll(() => onAir(ana)).toBeDefined();
+
+    const bia = await joinLobby("Bia");
+
+    await expect.poll(() => onAir(bia)).toEqual({ videoId: "song0000001", by: "Ana" });
+    expect(bia.state.radio.nowPlaying?.startedAt).toBe(ana.state.radio.nowPlaying?.startedAt);
+  });
+
+  it.each([
+    ["/play live0000001", "track-live"],
+    ["/play lock0000001", "track-not-embeddable"],
+    ["/play long0000001", "track-too-long"],
+    ["/play gone0000001", "track-not-found"],
+    ["/play down0000001", "track-lookup-unavailable"],
+    ["/play", "play-missing-track"],
+    ["/play https://www.youtube.com/playlist?list=PL123", "play-not-a-video"],
+    ["/play never gonna give you up", "play-search-unavailable"],
+  ])("refuses %s with a %s notice to the sender only", async (command, code) => {
+    const { ana, bia, noticesToAna, noticesToBia } = await anaAndBia();
+
+    say(ana, command);
+
+    await expect.poll(() => noticesToAna).toEqual([{ code }]);
+    expect(onAir(bia)).toBeUndefined();
+    expect(noticesToBia).toEqual([]);
+  });
+
+  it("refuses a track on air or already queued, and a fourth waiting track from one player", async () => {
+    const { ana, bia, noticesToAna, noticesToBia } = await anaAndBia();
+    for (const id of ["song0000001", "song0000002", "song0000003", "song0000004"]) {
+      say(ana, `/play ${id}`);
+    }
+    await expect.poll(() => waiting(ana)).toHaveLength(3);
+
+    say(bia, "/play song0000001");
+    say(bia, "/play song0000003");
+    say(ana, "/play song0000005");
+
+    await expect
+      .poll(() => noticesToBia)
+      .toEqual([{ code: "track-on-air" }, { code: "track-already-queued" }]);
+    await expect.poll(() => noticesToAna).toEqual([{ code: "track-too-many-waiting" }]);
+    expect(waiting(bia)).toEqual(["song0000002", "song0000003", "song0000004"]);
+  });
+
+  it("answers a clock ping with its send time and the server time", async () => {
+    const ana = await joinLobby("Ana");
+    const pongs = received<ClockPong>(ana, CLOCK_PONG);
+    const before = Date.now();
+
+    ana.send(CLOCK_PING, { sentAt: 42.5 });
+
+    await expect.poll(() => pongs).toHaveLength(1);
+    expect(pongs[0]?.sentAt).toBe(42.5);
+    expect(pongs[0]?.serverTime).toBeGreaterThanOrEqual(before);
+    expect(pongs[0]?.serverTime).toBeLessThanOrEqual(Date.now());
+  });
+
+  it("answers at most a few bursts of pings at once", async () => {
+    const ana = await joinLobby("Ana");
+    const pongs = received<ClockPong>(ana, CLOCK_PONG);
+
+    for (let i = 0; i < 40; i++) ana.send(CLOCK_PING, { sentAt: i });
+    ana.send(CHAT_INPUT, { text: "after" });
+
+    const toAna = received<ChatMessage>(ana, CHAT_MESSAGE);
+    await expect.poll(() => toAna).toHaveLength(1);
+    expect(pongs).toHaveLength(16);
   });
 });

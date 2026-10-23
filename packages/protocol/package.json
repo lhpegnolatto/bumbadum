@@ -13,6 +13,7 @@
   "dependencies": {
     "@bumbadum/avatar": "workspace:*",
     "@bumbadum/chat": "workspace:*",
+    "@bumbadum/radio": "workspace:*",
     "@bumbadum/world": "workspace:*",
     "@colyseus/schema": "5.0.42",
     "zod": "4.6.7"
