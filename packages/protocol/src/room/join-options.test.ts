@@ -58,6 +58,15 @@ describe("parseJoinOptions", () => {
     ).toEqual(invalid);
   });
 
+  it("rejects a slug that is too long or not kebab-case with invalid-room", () => {
+    const invalid = { ok: false, rejection: "invalid-room" };
+    const nickname = "Ana";
+    expect(parseJoinOptions({ slug: "a".repeat(65), nickname, avatar })).toEqual(invalid);
+    expect(parseJoinOptions({ slug: "Lobby Room", nickname, avatar })).toEqual(invalid);
+    expect(parseJoinOptions({ slug: "", nickname, avatar })).toEqual(invalid);
+    expect(parseJoinOptions({ slug: "a".repeat(64), nickname, avatar }).ok).toBe(true);
+  });
+
   it("keeps only the avatar's three layers", () => {
     const result = parseJoinOptions({
       slug: "lobby",

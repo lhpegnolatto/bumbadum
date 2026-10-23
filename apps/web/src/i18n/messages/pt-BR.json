@@ -16,10 +16,13 @@
     "players": "Na sala ({count})",
     "you": "{nickname} (você)",
     "canvasLabel": "A sala",
-    "backHome": "Voltar ao início"
+    "backHome": "Voltar ao início",
+    "joinGate": "Pronto para entrar na sala como {nickname}?",
+    "join": "Entrar"
   },
   "joinRejection": {
     "room-full": "A sala está cheia. Tente de novo daqui a pouco.",
+    "invalid-room": "Essa sala não existe. Volte ao início e entre no lobby.",
     "invalid-nickname": "Esse apelido não pode ser usado. Escolha um com 1 a 16 caracteres.",
     "invalid-avatar": "Esse avatar não pode ser usado. Escolha outro na página inicial."
   },

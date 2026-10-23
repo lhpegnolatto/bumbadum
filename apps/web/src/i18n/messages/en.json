@@ -16,10 +16,13 @@
     "players": "In the room ({count})",
     "you": "{nickname} (you)",
     "canvasLabel": "The room",
-    "backHome": "Back to home"
+    "backHome": "Back to home",
+    "joinGate": "Ready to join the room as {nickname}?",
+    "join": "Join"
   },
   "joinRejection": {
     "room-full": "The room is full. Try again in a little while.",
+    "invalid-room": "That room doesn't exist. Head back home and join the lobby.",
     "invalid-nickname": "That nickname can't be used. Pick one with 1 to 16 characters.",
     "invalid-avatar": "That avatar can't be used. Pick another one on the home page."
   },
