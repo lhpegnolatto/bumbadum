@@ -8,7 +8,7 @@
   "files": {
     "includes": [
       "**",
-      "!!**/.claude",
+      "!!.claude",
       "!**/*.md",
       "!**/*.svg",
       "!**/pnpm-lock.yaml",
