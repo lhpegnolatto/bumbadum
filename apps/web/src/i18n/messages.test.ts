@@ -1,3 +1,4 @@
+import { commands } from "@bumbadum/chat";
 import { joinRejections } from "@bumbadum/protocol";
 import { describe, expect, it } from "vitest";
 import { locales } from "./locale.ts";
@@ -29,6 +30,17 @@ describe("messages", () => {
   it("names every language in every language", () => {
     for (const locale of locales) {
       expect(Object.keys(messages[locale].languages).sort()).toEqual([...locales].sort());
+    }
+  });
+
+  it("describes every command in every language, for help and the autocomplete", () => {
+    for (const locale of locales) {
+      const help: Partial<Record<string, { args: string; description: string }>> =
+        messages[locale].chat.commands;
+      for (const command of commands.all) {
+        expect(help[command.id]?.description, `${locale}: /${command.id}`).toBeTruthy();
+        expect(typeof help[command.id]?.args, `${locale}: /${command.id}`).toBe("string");
+      }
     }
   });
 });

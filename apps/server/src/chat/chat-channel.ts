@@ -23,14 +23,17 @@ export interface ChatRoom {
 /** Runs a command a player typed; the room wires each one to its domain. */
 export type CommandHandler = (client: Client, nickname: string, args: string) => void;
 
+/** The commands the room wires; the chat answers `/help` itself. */
+export type RoomCommandId = Exclude<CommandId, "help">;
+
 /** A room's chat: messages, history, announcements and notices. */
 export class ChatChannel {
   readonly #room: ChatRoom;
-  readonly #commands: Readonly<Record<CommandId, CommandHandler>>;
+  readonly #commands: Readonly<Record<RoomCommandId, CommandHandler>>;
   readonly #rateLimits = new Map<string, TokenBucket>();
   #history: ChatHistory = [];
 
-  constructor(room: ChatRoom, commandHandlers: Readonly<Record<CommandId, CommandHandler>>) {
+  constructor(room: ChatRoom, commandHandlers: Readonly<Record<RoomCommandId, CommandHandler>>) {
     this.#room = room;
     this.#commands = commandHandlers;
   }
@@ -62,7 +65,8 @@ export class ChatChannel {
         notify(client, { code: "unknown-command", params: { name: input.name } });
         return;
       case "command":
-        this.#commands[input.command](client, nickname, input.args);
+        if (input.command === "help") notify(client, { code: "help" });
+        else this.#commands[input.command](client, nickname, input.args);
         return;
       case "invalid":
         // The client never sends these; nothing to say.

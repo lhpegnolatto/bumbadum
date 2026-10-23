@@ -10,6 +10,8 @@ export const NOTICE = "notice";
 export type Notice =
   | { code: "unknown-command"; params: { name: string } }
   | { code: "rate-limited"; params?: undefined }
+  /** `/help`: the client lists the commands from the command table, in its own language. */
+  | { code: "help"; params?: undefined }
   /** `/play` with nothing after it. */
   | { code: "play-missing-track"; params?: undefined }
   /** A link that names no YouTube video. */

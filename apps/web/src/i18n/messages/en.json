@@ -49,6 +49,21 @@
     "historyLabel": "Chat",
     "inputLabel": "Message",
     "inputPlaceholder": "Press Enter to chat",
+    "suggestionsLabel": "Commands",
+    "commands": {
+      "play": {
+        "args": "link or name",
+        "description": "Puts a track in the queue: a YouTube link, or a name to search for."
+      },
+      "skip": {
+        "args": "",
+        "description": "Votes to skip the track on air."
+      },
+      "help": {
+        "args": "",
+        "description": "Lists the commands you can use."
+      }
+    },
     "announcement": {
       "player-joined": "{nickname} joined the room.",
       "player-left": "{nickname} left the room.",
@@ -60,6 +75,7 @@
     "notice": {
       "unknown-command": "There is no /{name} command.",
       "rate-limited": "Easy there: at most 5 messages every 5 seconds.",
+      "help": "Commands you can use:",
       "play-missing-track": "Tell /play what to play: a YouTube link, or a name to search for.",
       "play-not-a-video": "That link doesn't point to a YouTube video.",
       "search-nothing-found": "Couldn't find any video by that name on YouTube.",

@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import { useTranslations } from "use-intl";
 import type { ChatEntry } from "./chat-feed.ts";
+import { HelpNotice } from "./command-help.tsx";
 
 export function ChatHistory({ entries }: { entries: readonly ChatEntry[] }) {
   const t = useTranslations("chat");
@@ -46,6 +47,7 @@ function ChatLine({ entry }: { entry: ChatEntry }) {
         </p>
       );
     case "notice":
+      if (entry.notice.code === "help") return <HelpNotice />;
       return (
         <p className="border-l-2 border-primary/40 pl-2 text-muted-foreground">
           {t(`notice.${entry.notice.code}`, entry.notice.params)}

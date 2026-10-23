@@ -49,6 +49,21 @@
     "historyLabel": "Chat",
     "inputLabel": "Mensagem",
     "inputPlaceholder": "Aperte Enter para conversar",
+    "suggestionsLabel": "Comandos",
+    "commands": {
+      "play": {
+        "args": "link ou nome",
+        "description": "Coloca uma música na fila: um link do YouTube, ou um nome para buscar."
+      },
+      "skip": {
+        "args": "",
+        "description": "Vota para pular a música que está tocando."
+      },
+      "help": {
+        "args": "",
+        "description": "Lista os comandos que você pode usar."
+      }
+    },
     "announcement": {
       "player-joined": "{nickname} entrou na sala.",
       "player-left": "{nickname} saiu da sala.",
@@ -60,6 +75,7 @@
     "notice": {
       "unknown-command": "Não existe o comando /{name}.",
       "rate-limited": "Calma: no máximo 5 mensagens a cada 5 segundos.",
+      "help": "Comandos que você pode usar:",
       "play-missing-track": "Diga ao /tocar o que tocar: um link do YouTube, ou um nome para buscar.",
       "play-not-a-video": "Esse link não aponta para um vídeo do YouTube.",
       "search-nothing-found": "Não encontrei nenhum vídeo com esse nome no YouTube.",

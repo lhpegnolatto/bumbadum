@@ -295,6 +295,22 @@ describe("lobby-room chat", () => {
     expect(noticesToBia).toEqual([]);
   });
 
+  it("answers /help and /ajuda with a help notice to the sender only", async () => {
+    const ana = await joinLobby("Ana");
+    const bia = await joinLobby("Bia");
+    const noticesToAna = received<Notice>(ana, NOTICE);
+    const noticesToBia = received<Notice>(bia, NOTICE);
+    const toBia = received<ChatMessage>(bia, CHAT_MESSAGE);
+
+    say(ana, "/help");
+    say(ana, "/ajuda");
+    say(ana, "after");
+
+    await expect.poll(() => toBia.map((message) => message.text)).toEqual(["after"]);
+    expect(noticesToAna).toEqual([{ code: "help" }, { code: "help" }]);
+    expect(noticesToBia).toEqual([]);
+  });
+
   it("ignores blank input", async () => {
     const ana = await joinLobby("Ana");
     const toAna = received<ChatMessage>(ana, CHAT_MESSAGE);
