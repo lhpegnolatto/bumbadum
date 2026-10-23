@@ -41,7 +41,7 @@ Owns changes to the domain model: a new term, two words for one concept, a term 
 ## React
 
 ### `react-composition-patterns`
-Structure and API of components in `apps/web`: compound components, context providers, avoiding boolean-prop sprawl. Typical cases: the chat panel, the avatar editor, the screen overlay.
+Structure and API of components in `apps/web`: compound components, context providers, avoiding boolean-prop sprawl. Typical cases: the chat panel, the avatar editor, the screen column.
 Neighbour: `react-best-practices` for performance.
 
 ### `react-best-practices`

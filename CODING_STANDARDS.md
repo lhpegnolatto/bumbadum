@@ -20,7 +20,7 @@ Rules Biome already enforces are not repeated here; run `pnpm check` and trust i
 - A domain package imports no other domain package. The composition root (the server room, the web feature) wires domains together.
 - Each package exposes one public entry (`src/index.ts`); consumers import only from it. Internal packages export TypeScript source directly (`"exports": { ".": "./src/index.ts" }`), with no build step: Next consumes them via `transpilePackages`, the server is bundled for production.
 - `protocol` mirrors domain state into Colyseus schemas and defines message types; it holds no rules of its own.
-- `game-engine` owns the PixiJS lifecycle. React mounts it (`mount`, `applyState`, events) and renders only UI around it: chat, menus, the screen overlay.
+- `game-engine` owns the PixiJS lifecycle. React mounts it (`mount`, `applyState`, events) and renders only UI around it: chat, menus, the screen column.
 
 ## Server
 
@@ -31,8 +31,8 @@ Rules Biome already enforces are not repeated here; run `pnpm check` and trust i
 ## Web
 
 - Tailwind + shadcn/ui for all UI. Components live under `apps/web/src/features/<domain>/`.
-- The YouTube player is the room's **screen**: always visible, at least 200×200 px, and nothing renders on top of it ([ADR-0006](docs/adr/0006-youtube-player-as-visible-screen.md)).
-- `localStorage` holds only the player's nickname and avatar, under a versioned key, parsed with a schema on read.
+- The YouTube player is the room's **screen**: always visible, at least 200×200 px, and nothing renders on top of it; it lives in a column beside the canvas ([ADR-0006](docs/adr/0006-youtube-player-as-visible-screen.md), [ADR-0010](docs/adr/0010-screen-in-side-column.md)).
+- `localStorage` holds only the player's nickname, avatar, language and volume settings, under a versioned key, parsed with a schema on read.
 
 ## Tests
 

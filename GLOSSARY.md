@@ -36,6 +36,10 @@ _Avoid_: cell, square
 A player's move of exactly one tile in one direction.
 _Avoid_: movement, walk
 
+**Spawn point**:
+The tile where a player appears when joining or reconnecting to a room.
+_Avoid_: entrance, start
+
 **Direction**:
 Where a player is facing: up, down, left or right.
 _Avoid_: orientation, heading
@@ -47,8 +51,12 @@ A room's shared music playback: what is on air, what comes next, and when it sta
 _Avoid_: player, jukebox, music
 
 **Track**:
-A single YouTube video submitted to the radio.
+A single YouTube video submitted to the radio by a player, its submitter.
 _Avoid_: song, music, video
+
+**Submitter**:
+The player who put a track in the queue.
+_Avoid_: owner, requester, DJ
 
 **Queue**:
 The ordered tracks waiting to go on air after the current one.
@@ -59,7 +67,7 @@ The track currently on air, together with the moment it started.
 _Avoid_: current song
 
 **Skip vote**:
-A player's vote to end the current track early. The track is skipped once more than half of the players present have voted.
+A player's vote to end the current track early. The track is skipped once more than half of the players present have voted, or at once when its submitter votes.
 _Avoid_: skip request
 
 **Screen**:
@@ -77,8 +85,16 @@ Text a player sends to everyone in the room.
 _Avoid_: chat line, post
 
 **Command**:
-A message starting with `/` that asks the room to do something, such as `/play` or `/skip`.
+A message starting with `/` that asks the room to do something. Each command has a name in every supported language, such as `/play` or `/tocar`, and any of them works for every player.
 _Avoid_: action, slash message
+
+**Notice**:
+Room text shown to a single player only, such as the reply to a refused command.
+_Avoid_: error, alert, toast
+
+**Announcement**:
+A room event shown to every player in the chat history, such as a player joining, a track being queued or a new track on air.
+_Avoid_: system message, log
 
 ### Avatar
 

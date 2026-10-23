@@ -12,7 +12,7 @@ TypeScript end to end, pnpm workspaces + Turborepo. Next.js (App Router) + Tailw
 
 ```
 apps/
-  web/          Next.js shell: home (nickname + avatar editor), /r/[slug], chat UI, screen overlay
+  web/          Next.js shell: home (nickname + avatar editor), /r/[slug], chat UI, screen column
   server/       Colyseus: lobby-room, YouTube adapter, rate limiting
 packages/
   world/        pure domain: map, tiles, collision, movement
