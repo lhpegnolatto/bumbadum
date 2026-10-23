@@ -1,5 +1,6 @@
 "use client";
 
+import type { Avatar } from "@bumbadum/avatar";
 import { isJoinRejection, ROOM_TYPE, type RoomState } from "@bumbadum/protocol";
 import { Callbacks, Client, MatchMakeError, type Room } from "@colyseus/sdk";
 import { useEffect, useRef, useState } from "react";
@@ -7,7 +8,7 @@ import { watchChat } from "@/features/chat/chat-feed.ts";
 import { isServerAwake } from "@/lib/server-health.ts";
 import { SERVER_URL } from "@/lib/server-url.ts";
 import {
-  type Clock,
+  browserClock,
   type ConnectionStatus,
   connectToRoom,
   type JoinOutcome,
@@ -23,20 +24,19 @@ export interface PresentPlayer {
   nickname: string;
 }
 
-const browserClock: Clock = {
-  now: () => Date.now(),
-  setTimeout: (run, ms) => setTimeout(run, ms),
-  clearTimeout: (id) => clearTimeout(id as ReturnType<typeof setTimeout>),
-};
-
 /**
  * Joins the room and keeps the player in it, waiting for a sleeping server to
  * wake and reconnecting after a drop (see `connectToRoom`).
  */
-export function useRoom(slug: string, nickname: string) {
+export function useRoom(slug: string, nickname: string, avatar: Avatar) {
   const [status, setStatus] = useState<RoomStatus | undefined>();
   const [players, setPlayers] = useState<PresentPlayer[]>([]);
   const connection = useRef<RoomConnection>(undefined);
+  // Read at each join, so a rejoin wears the latest avatar without the avatar itself reconnecting.
+  const worn = useRef(avatar);
+  useEffect(() => {
+    worn.current = avatar;
+  }, [avatar]);
 
   useEffect(() => {
     const client = new Client(SERVER_URL);
@@ -44,7 +44,7 @@ export function useRoom(slug: string, nickname: string) {
     async function join(): Promise<JoinOutcome<LobbyRoom>> {
       let room: LobbyRoom;
       try {
-        room = await client.join<RoomState>(ROOM_TYPE, { slug, nickname });
+        room = await client.join<RoomState>(ROOM_TYPE, { slug, nickname, avatar: worn.current });
       } catch (error) {
         if (error instanceof MatchMakeError && isJoinRejection(error.message)) {
           return { kind: "rejected", rejection: error.message };

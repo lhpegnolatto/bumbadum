@@ -20,7 +20,8 @@
   },
   "joinRejection": {
     "room-full": "A sala está cheia. Tente de novo daqui a pouco.",
-    "invalid-nickname": "Esse apelido não pode ser usado. Escolha um com 1 a 16 caracteres."
+    "invalid-nickname": "Esse apelido não pode ser usado. Escolha um com 1 a 16 caracteres.",
+    "invalid-avatar": "Esse avatar não pode ser usado. Escolha outro na página inicial."
   },
   "waiting": {
     "title": {
@@ -56,5 +57,26 @@
       "unknown-command": "Não existe o comando /{name}.",
       "rate-limited": "Calma: no máximo 5 mensagens a cada 5 segundos."
     }
+  },
+  "avatar": {
+    "label": "Avatar",
+    "layers": {
+      "skinTone": "Tom de pele",
+      "hair": "Cabelo",
+      "outfit": "Roupa"
+    },
+    "choice": {
+      "skinTone": "Tom de pele {number}",
+      "hair": "Cabelo {number}",
+      "outfit": "Roupa {number}"
+    }
+  },
+  "wardrobe": {
+    "open": "Guarda-roupa",
+    "shortcut": "Tecle C",
+    "title": "Guarda-roupa",
+    "hint": "Só você vê essas mudanças até vesti-las.",
+    "wear": "Vestir",
+    "close": "Fechar o guarda-roupa"
   }
 }

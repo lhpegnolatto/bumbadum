@@ -37,6 +37,12 @@ export interface Clock {
   clearTimeout(id: unknown): void;
 }
 
+export const browserClock: Clock = {
+  now: () => Date.now(),
+  setTimeout: (run, ms) => setTimeout(run, ms),
+  clearTimeout: (id) => clearTimeout(id as ReturnType<typeof setTimeout>),
+};
+
 export interface ConnectionDeps<R extends JoinedRoom> {
   clock: Clock;
   /** Resolves false when the server does not answer (asleep, waking, unreachable). */

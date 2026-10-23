@@ -1,18 +1,24 @@
+import { type Avatar, parseAvatar } from "@bumbadum/avatar";
 import { useSyncExternalStore } from "react";
 import { z } from "zod";
 import { type Locale, locales } from "../i18n/locale.ts";
 
-/** Bump the version when the stored shape changes incompatibly. */
+/**
+ * Bump the version when the stored shape changes incompatibly. Adding an
+ * optional field (as `avatar` was) keeps older settings valid, so needs none.
+ */
 export const SETTINGS_KEY = "bumbadum:settings:v1";
 
 const settingsSchema = z.object({
   nickname: z.string().optional().catch(undefined),
   locale: z.enum(locales).optional().catch(undefined),
+  avatar: z.unknown().transform(parseAvatar).optional(),
 });
 
 export interface Settings {
   nickname?: string;
   locale?: Locale;
+  avatar?: Avatar;
 }
 
 export function parseSettings(raw: string | null): Settings {
@@ -24,10 +30,11 @@ export function parseSettings(raw: string | null): Settings {
   }
   const result = settingsSchema.safeParse(json);
   if (!result.success) return {};
-  const { nickname, locale } = result.data;
+  const { nickname, locale, avatar } = result.data;
   return {
     ...(nickname !== undefined && { nickname }),
     ...(locale !== undefined && { locale }),
+    ...(avatar !== undefined && { avatar }),
   };
 }
 

@@ -20,6 +20,22 @@ describe("parseSettings", () => {
     });
   });
 
+  it("reads the avatar", () => {
+    const avatar = { skinTone: 6, hair: 8, outfit: 2 };
+    expect(parseSettings(JSON.stringify({ nickname: "Ana", avatar }))).toEqual({
+      nickname: "Ana",
+      avatar,
+    });
+  });
+
+  it("drops an invalid avatar, keeping the rest", () => {
+    for (const avatar of [{ skinTone: 7, hair: 1, outfit: 1 }, { hair: 1, outfit: 1 }, "1,1,1"]) {
+      expect(parseSettings(JSON.stringify({ nickname: "Ana", avatar }))).toEqual({
+        nickname: "Ana",
+      });
+    }
+  });
+
   it("lives under a versioned key", () => {
     expect(SETTINGS_KEY).toMatch(/v\d+$/);
   });

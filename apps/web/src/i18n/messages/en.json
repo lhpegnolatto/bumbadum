@@ -20,7 +20,8 @@
   },
   "joinRejection": {
     "room-full": "The room is full. Try again in a little while.",
-    "invalid-nickname": "That nickname can't be used. Pick one with 1 to 16 characters."
+    "invalid-nickname": "That nickname can't be used. Pick one with 1 to 16 characters.",
+    "invalid-avatar": "That avatar can't be used. Pick another one on the home page."
   },
   "waiting": {
     "title": {
@@ -56,5 +57,26 @@
       "unknown-command": "There is no /{name} command.",
       "rate-limited": "Easy there: at most 5 messages every 5 seconds."
     }
+  },
+  "avatar": {
+    "label": "Avatar",
+    "layers": {
+      "skinTone": "Skin tone",
+      "hair": "Hair",
+      "outfit": "Outfit"
+    },
+    "choice": {
+      "skinTone": "Skin tone {number}",
+      "hair": "Hair {number}",
+      "outfit": "Outfit {number}"
+    }
+  },
+  "wardrobe": {
+    "open": "Wardrobe",
+    "shortcut": "Press C",
+    "title": "Wardrobe",
+    "hint": "Only you see these changes until you wear them.",
+    "wear": "Wear",
+    "close": "Close the wardrobe"
   }
 }

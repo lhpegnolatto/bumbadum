@@ -1,6 +1,6 @@
 "use client";
 
-import type { DrawnPlayer } from "@bumbadum/game-engine";
+import type { DrawnPlayer, GameEngine } from "@bumbadum/game-engine";
 import { CHAT_MESSAGE, type ChatMessage, type RoomState, STEP_MESSAGE } from "@bumbadum/protocol";
 import type { Room } from "@colyseus/sdk";
 import { useEffect, useRef } from "react";
@@ -17,9 +17,23 @@ declare global {
  * Mounts the PixiJS engine and feeds it every state patch and chat message
  * (as speech bubbles), without re-rendering React.
  */
-export function GameCanvas({ room }: { room: Room<unknown, RoomState> }) {
+export function GameCanvas({
+  room,
+  walking,
+}: {
+  room: Room<unknown, RoomState>;
+  /** Whether the walking keys move the local player; off while a panel such as the wardrobe is open. */
+  walking: boolean;
+}) {
   const t = useTranslations("room");
   const containerRef = useRef<HTMLDivElement>(null);
+  const engineRef = useRef<GameEngine>(undefined);
+  const walkingRef = useRef(walking);
+
+  useEffect(() => {
+    walkingRef.current = walking;
+    engineRef.current?.setWalking(walking);
+  }, [walking]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -37,6 +51,8 @@ export function GameCanvas({ room }: { room: Room<unknown, RoomState> }) {
         engine.destroy();
         return;
       }
+      engine.setWalking(walkingRef.current);
+      engineRef.current = engine;
       const onStateChange = (state: RoomState) => engine.applyState(state);
       onStateChange(room.state);
       room.onStateChange(onStateChange);
@@ -47,6 +63,7 @@ export function GameCanvas({ room }: { room: Room<unknown, RoomState> }) {
         window.bumbadumE2E = { drawnPlayers: () => engine.drawnPlayers() };
       }
       stop = () => {
+        engineRef.current = undefined;
         room.onStateChange.remove(onStateChange);
         stopBubbles();
         engine.destroy();

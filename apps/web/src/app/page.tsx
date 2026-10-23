@@ -6,7 +6,7 @@ import { JoinForm } from "@/features/room/join-form.tsx";
 
 export default function HomePage() {
   return (
-    <main className="mx-auto flex min-h-dvh max-w-sm flex-col justify-center gap-6 p-6">
+    <main className="mx-auto flex min-h-dvh max-w-3xl flex-col justify-center gap-6 p-6">
       <header className="flex flex-col gap-1">
         <h1 className="font-heading text-3xl font-semibold">bumbadum</h1>
         <HomeTagline />
