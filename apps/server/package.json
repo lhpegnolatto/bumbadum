@@ -21,6 +21,7 @@
     "vitest": "5.0.5"
   },
   "dependencies": {
+    "@bumbadum/chat": "workspace:*",
     "@bumbadum/protocol": "workspace:*",
     "@bumbadum/world": "workspace:*",
     "@colyseus/core": "0.18.23",

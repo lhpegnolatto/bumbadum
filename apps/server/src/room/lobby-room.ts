@@ -1,4 +1,6 @@
 import {
+  CHAT_INPUT,
+  chatInputSchema,
   type JoinOptions,
   type JoinRejection,
   LOBBY_SLUG,
@@ -10,7 +12,8 @@ import {
   STEP_MESSAGE,
 } from "@bumbadum/protocol";
 import { lobbyMap, STEPS_PER_SECOND, step } from "@bumbadum/world";
-import { type Client, ErrorCode, matchMaker, Room, ServerError } from "@colyseus/core";
+import { type Client, ErrorCode, matchMaker, Room, ServerError, validate } from "@colyseus/core";
+import { ChatChannel } from "../chat/chat-channel.ts";
 import { TokenBucket } from "../rate-limit/token-bucket.ts";
 
 const MAX_PLAYERS = 16;
@@ -32,10 +35,14 @@ export class LobbyRoom extends Room<{ state: RoomState; client: LobbyClient }> {
   override maxClients = MAX_PLAYERS;
   override autoDispose = false;
   override state = new RoomState();
+  readonly #chat = new ChatChannel(this);
 
   private readonly stepLimits = new Map<string, TokenBucket>();
 
   override messages = {
+    [CHAT_INPUT]: validate(chatInputSchema, (client: LobbyClient, { text }) => {
+      this.#chat.receive(client, nicknameOf(client), text, performance.now());
+    }),
     [STEP_MESSAGE]: (client: LobbyClient, payload: unknown) => {
       const direction = parseStepIntent(payload);
       const player = this.state.players.get(client.sessionId);
@@ -63,8 +70,7 @@ export class LobbyRoom extends Room<{ state: RoomState; client: LobbyClient }> {
   }
 
   override onJoin(client: LobbyClient) {
-    // Colyseus types auth as optional, but onAuth resolves it before every join.
-    const { nickname } = client.auth as JoinOptions;
+    const nickname = nicknameOf(client);
     const player = new PlayerState();
     player.nickname = nickname;
     player.x = lobbyMap.spawnPoint.x;
@@ -73,6 +79,7 @@ export class LobbyRoom extends Room<{ state: RoomState; client: LobbyClient }> {
     player.stepIntents = 0;
     this.state.players.set(client.sessionId, player);
     this.stepLimits.set(client.sessionId, new TokenBucket(STEP_RATE, performance.now()));
+    this.#chat.welcome(client, nickname, performance.now());
   }
 
   override onDrop(client: LobbyClient) {
@@ -92,7 +99,13 @@ export class LobbyRoom extends Room<{ state: RoomState; client: LobbyClient }> {
   override onLeave(client: LobbyClient) {
     this.state.players.delete(client.sessionId);
     this.stepLimits.delete(client.sessionId);
+    this.#chat.farewell(client, nicknameOf(client));
   }
+}
+
+function nicknameOf(client: LobbyClient): string {
+  // Colyseus types auth as optional, but onAuth resolves it before every join.
+  return (client.auth as JoinOptions).nickname;
 }
 
 /** The lobby always exists (ADR-0008), so a full lobby never spawns a second one. */

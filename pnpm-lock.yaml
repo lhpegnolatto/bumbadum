@@ -20,6 +20,9 @@ importers:
 
   apps/server:
     dependencies:
+      '@bumbadum/chat':
+        specifier: workspace:*
+        version: link:../../packages/chat
       '@bumbadum/protocol':
         specifier: workspace:*
         version: link:../../packages/protocol
@@ -179,6 +182,9 @@ importers:
 
   packages/protocol:
     dependencies:
+      '@bumbadum/chat':
+        specifier: workspace:*
+        version: link:../chat
       '@bumbadum/world':
         specifier: workspace:*
         version: link:../world

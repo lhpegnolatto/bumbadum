@@ -1,4 +1,18 @@
-import { LOBBY_SLUG, ROOM_TYPE, type RoomState, STEP_MESSAGE } from "@bumbadum/protocol";
+import {
+  ANNOUNCEMENT,
+  type Announcement,
+  CHAT_HISTORY,
+  CHAT_INPUT,
+  CHAT_MESSAGE,
+  type ChatHistory,
+  type ChatMessage,
+  LOBBY_SLUG,
+  NOTICE,
+  type Notice,
+  ROOM_TYPE,
+  type RoomState,
+  STEP_MESSAGE,
+} from "@bumbadum/protocol";
 import { type Direction, lobbyMap } from "@bumbadum/world";
 import { matchMaker } from "@colyseus/core";
 import { type Room as ClientRoom, CloseCode } from "@colyseus/sdk";
@@ -164,5 +178,117 @@ describe("lobby-room", () => {
 
       expect(me(ana)).toEqual({ x: spawn.x - 6, y: spawn.y, direction: "left" });
     });
+  });
+});
+
+/** Everything `room` receives of one message type, in arrival order. */
+function received<T>(room: ClientRoom<unknown, RoomState>, type: string): T[] {
+  const messages: T[] = [];
+  room.onMessage<T>(type, (message) => messages.push(message));
+  return messages;
+}
+
+function say(room: ClientRoom<unknown, RoomState>, text: unknown) {
+  room.send(CHAT_INPUT, { text });
+}
+
+describe("lobby-room chat", () => {
+  it("sends a player's message to everyone, with who sent it", async () => {
+    const ana = await joinLobby("Ana");
+    const bia = await joinLobby("Bia");
+    const toAna = received<ChatMessage>(ana, CHAT_MESSAGE);
+    const toBia = received<ChatMessage>(bia, CHAT_MESSAGE);
+
+    say(ana, "  hi there ");
+
+    const expected = { senderId: ana.sessionId, nickname: "Ana", text: "hi there" };
+    await expect.poll(() => toAna).toEqual([expected]);
+    await expect.poll(() => toBia).toEqual([expected]);
+  });
+
+  it("gives a joining player the messages sent before they arrived", async () => {
+    const ana = await joinLobby("Ana");
+    const toAna = received<ChatMessage>(ana, CHAT_MESSAGE);
+    say(ana, "first");
+    say(ana, "second");
+    await expect.poll(() => toAna).toHaveLength(2);
+
+    const bia = await joinLobby("Bia");
+    const history = received<ChatHistory>(bia, CHAT_HISTORY);
+
+    await expect
+      .poll(() => history)
+      .toEqual([
+        [
+          { senderId: ana.sessionId, nickname: "Ana", text: "first" },
+          { senderId: ana.sessionId, nickname: "Ana", text: "second" },
+        ],
+      ]);
+  });
+
+  it("announces to everyone a player joining and leaving, as codes", async () => {
+    const ana = await joinLobby("Ana");
+    const toAna = received<Announcement>(ana, ANNOUNCEMENT);
+
+    const bia = await joinLobby("Bia");
+    await bia.leave();
+
+    await expect
+      .poll(() => toAna)
+      .toEqual([
+        { code: "player-joined", params: { nickname: "Ana" } },
+        { code: "player-joined", params: { nickname: "Bia" } },
+        { code: "player-left", params: { nickname: "Bia" } },
+      ]);
+  });
+
+  it("answers an unknown command with a notice to the sender only", async () => {
+    const ana = await joinLobby("Ana");
+    const bia = await joinLobby("Bia");
+    const noticesToAna = received<Notice>(ana, NOTICE);
+    const noticesToBia = received<Notice>(bia, NOTICE);
+    const toBia = received<ChatMessage>(bia, CHAT_MESSAGE);
+
+    say(ana, "/fly high");
+    say(ana, "after");
+
+    await expect.poll(() => toBia.map((message) => message.text)).toEqual(["after"]);
+    expect(noticesToAna).toEqual([{ code: "unknown-command", params: { name: "fly" } }]);
+    expect(noticesToBia).toEqual([]);
+  });
+
+  it("ignores blank input", async () => {
+    const ana = await joinLobby("Ana");
+    const toAna = received<ChatMessage>(ana, CHAT_MESSAGE);
+
+    say(ana, "   ");
+    say(ana, "after");
+
+    await expect.poll(() => toAna.map((message) => message.text)).toEqual(["after"]);
+  });
+
+  it("refuses a sixth input within 5 seconds with a notice, and keeps it from the room", async () => {
+    const ana = await joinLobby("Ana");
+    const bia = await joinLobby("Bia");
+    const noticesToAna = received<Notice>(ana, NOTICE);
+    const toBia = received<ChatMessage>(bia, CHAT_MESSAGE);
+
+    for (let i = 1; i <= 6; i++) say(ana, `message ${i}`);
+
+    await expect.poll(() => noticesToAna).toEqual([{ code: "rate-limited" }]);
+    await expect.poll(() => toBia).toHaveLength(5);
+    expect(toBia.at(-1)?.text).toBe("message 5");
+  });
+
+  it("never passes on input that breaks the message schema", async () => {
+    const ana = await joinLobby("Ana");
+    const bia = await joinLobby("Bia");
+    const toBia = received<ChatMessage>(bia, CHAT_MESSAGE);
+
+    say(ana, "a".repeat(201));
+    say(ana, 42);
+    say(bia, "after");
+
+    await expect.poll(() => toBia.map((message) => message.text)).toEqual(["after"]);
   });
 });
