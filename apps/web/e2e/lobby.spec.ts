@@ -1,5 +1,8 @@
 import { drawnPlayer, expect, test } from "./join-lobby.ts";
 
+/** Where the web app keeps a player's settings (`apps/web/src/lib/local-settings.ts`). */
+const SETTINGS_KEY = "bumbadum:settings:v1";
+
 test("two players in the lobby see each other", async ({ joinLobby }) => {
   const ana = await joinLobby("Ana");
   const bia = await joinLobby("Bia");
@@ -24,22 +27,32 @@ test("one player walks and the other sees it", async ({ joinLobby }) => {
   await expect.poll(() => drawnPlayer(duda, "Cris")).toMatchObject(walked);
 });
 
-test("a reload asks for a click before joining, so the screen may play", async ({ joinLobby }) => {
-  const elis = await joinLobby("Elis");
-  await elis.evaluate(() => window.bumbadumE2E?.leave?.());
+test("a shared link opened without a click asks for one before joining, so the screen may play", async ({
+  browser,
+}) => {
+  // A fresh browser that saved a nickname earlier but has not clicked on this page yet.
+  const context = await browser.newContext({ locale: "en-US" });
+  await context.addInitScript(([key, settings]) => window.localStorage.setItem(key, settings), [
+    SETTINGS_KEY,
+    JSON.stringify({ nickname: "Elis" }),
+  ] as const);
+  const elis = await context.newPage();
 
-  await elis.reload();
+  await elis.goto("/r/lobby");
 
   await expect(elis.getByText("Ready to join the room as Elis?")).toBeVisible();
   await expect(elis.getByRole("img", { name: "The room" })).toBeHidden();
   await elis.getByRole("button", { name: "Join" }).click();
   await expect(elis.getByRole("img", { name: "The room" })).toBeVisible();
+  await elis.evaluate(() => window.bumbadumE2E?.leave?.());
+  await context.close();
 });
 
 test("after the volume controls are used with the mouse, the room's keys work again", async ({
   joinLobby,
 }) => {
   const fabi = await joinLobby("Fabi");
+  await expect.poll(() => drawnPlayer(fabi, "Fabi")).toBeDefined();
   const start = await drawnPlayer(fabi, "Fabi");
   if (!start) throw new Error("Fabi's canvas does not draw her");
 
