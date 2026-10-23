@@ -4,15 +4,19 @@ import {
   LOBBY_SLUG,
   PlayerState,
   parseJoinOptions,
+  parseStepIntent,
   ROOM_TYPE,
   RoomState,
+  STEP_MESSAGE,
 } from "@bumbadum/protocol";
+import { lobbyMap, STEPS_PER_SECOND, step } from "@bumbadum/world";
 import { type Client, ErrorCode, matchMaker, Room, ServerError } from "@colyseus/core";
+import { TokenBucket } from "../rate-limit/token-bucket.ts";
 
 const MAX_PLAYERS = 16;
 
-/** Fixed until the world brings a map with its own spawn point. */
-export const SPAWN_POINT = { x: 10, y: 7 };
+/** A second's worth of steps may arrive at once, bunched up by network jitter. */
+const STEP_RATE = { capacity: STEPS_PER_SECOND, perSecond: STEPS_PER_SECOND };
 
 /** Seconds a dropped player keeps their seat while the client reconnects. */
 const RECONNECTION_WINDOW = 20;
@@ -28,6 +32,24 @@ export class LobbyRoom extends Room<{ state: RoomState; client: LobbyClient }> {
   override maxClients = MAX_PLAYERS;
   override autoDispose = false;
   override state = new RoomState();
+
+  private readonly stepLimits = new Map<string, TokenBucket>();
+
+  override messages = {
+    [STEP_MESSAGE]: (client: LobbyClient, payload: unknown) => {
+      const direction = parseStepIntent(payload);
+      const player = this.state.players.get(client.sessionId);
+      if (!direction || !player) return;
+
+      // Counted even when refused, so the client knows which of its steps the room has judged.
+      player.stepIntents += 1;
+      if (!this.stepLimits.get(client.sessionId)?.take(performance.now())) return;
+      const { tile } = step(lobbyMap, player, direction);
+      player.x = tile.x;
+      player.y = tile.y;
+      player.direction = direction;
+    },
+  };
 
   /** Runs during matchmaking, before a seat is reserved. */
   static override async onAuth(_token: string, options: unknown): Promise<JoinOptions> {
@@ -45,9 +67,12 @@ export class LobbyRoom extends Room<{ state: RoomState; client: LobbyClient }> {
     const { nickname } = client.auth as JoinOptions;
     const player = new PlayerState();
     player.nickname = nickname;
-    player.x = SPAWN_POINT.x;
-    player.y = SPAWN_POINT.y;
+    player.x = lobbyMap.spawnPoint.x;
+    player.y = lobbyMap.spawnPoint.y;
+    player.direction = "down";
+    player.stepIntents = 0;
     this.state.players.set(client.sessionId, player);
+    this.stepLimits.set(client.sessionId, new TokenBucket(STEP_RATE, performance.now()));
   }
 
   override onDrop(client: LobbyClient) {
@@ -57,6 +82,7 @@ export class LobbyRoom extends Room<{ state: RoomState; client: LobbyClient }> {
 
   override onLeave(client: LobbyClient) {
     this.state.players.delete(client.sessionId);
+    this.stepLimits.delete(client.sessionId);
   }
 }
 

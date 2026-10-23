@@ -22,6 +22,7 @@
   },
   "dependencies": {
     "@bumbadum/protocol": "workspace:*",
+    "@bumbadum/world": "workspace:*",
     "@colyseus/core": "0.18.23",
     "@colyseus/schema": "5.0.42",
     "@colyseus/tools": "0.18.10",
