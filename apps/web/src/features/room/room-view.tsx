@@ -18,6 +18,7 @@ import { QueueList } from "@/features/radio/queue-list.tsx";
 import { RadioProvider } from "@/features/radio/radio-provider.tsx";
 import { RadioScreen } from "@/features/radio/radio-screen.tsx";
 import { VolumeControl } from "@/features/radio/volume-control.tsx";
+import { ThemeToggle } from "@/features/theme/theme-toggle.tsx";
 import { useSettings } from "@/lib/local-settings.ts";
 import { GameCanvas } from "./game-canvas.tsx";
 import { PlayerList } from "./player-list.tsx";
@@ -36,8 +37,20 @@ export function RoomView({ slug }: { slug: string }) {
   }, [nickname, router]);
 
   if (!nickname) return null;
-  if (!clickedJoin) return <JoinGate nickname={nickname} onJoin={() => setClickedJoin(true)} />;
-  return <ConnectedRoom slug={slug} nickname={nickname} avatar={avatar} />;
+  return (
+    <div className="flex min-h-dvh flex-col">
+      <header className="flex h-12 shrink-0 items-center justify-end px-6">
+        <ThemeToggle />
+      </header>
+      <div className="min-h-0 flex-1">
+        {clickedJoin ? (
+          <ConnectedRoom slug={slug} nickname={nickname} avatar={avatar} />
+        ) : (
+          <JoinGate nickname={nickname} onJoin={() => setClickedJoin(true)} />
+        )}
+      </div>
+    </div>
+  );
 }
 
 /**
@@ -52,7 +65,7 @@ function hasClickedOnPage(): boolean {
 function JoinGate({ nickname, onJoin }: { nickname: string; onJoin: () => void }) {
   const t = useTranslations("room");
   return (
-    <main className="mx-auto flex min-h-dvh max-w-md flex-col justify-center gap-4 p-6">
+    <main className="mx-auto flex h-full max-w-md flex-col justify-center gap-4 p-6">
       <p>{t("joinGate", { nickname })}</p>
       <Button onClick={onJoin}>{t("join")}</Button>
     </main>
@@ -76,7 +89,7 @@ function ConnectedRoom({
   if (status.kind === "timed-out") return <WaitingTimedOut onRetry={retry} />;
   if (status.kind === "rejected") {
     return (
-      <main className="mx-auto flex min-h-dvh max-w-md flex-col justify-center gap-4 p-6">
+      <main className="mx-auto flex h-full max-w-md flex-col justify-center gap-4 p-6">
         <Alert variant="destructive">
           <AlertDescription>{t(`joinRejection.${status.rejection}`)}</AlertDescription>
         </Alert>
@@ -114,7 +127,7 @@ function JoinedRoom({
   }, []);
 
   return (
-    <main className="flex min-h-dvh gap-6 p-6">
+    <main className="flex h-full gap-6 px-6 pb-6">
       {/* The wardrobe opens over the canvas, never over the side column (ADR-0010). */}
       <div className="relative min-w-0 flex-1">
         <GameCanvas room={room} walking={!wardrobeOpen} />
@@ -135,7 +148,7 @@ function JoinedRoom({
         )}
       </div>
       {/* The side column (ADR-0010): the screen on top, always visible, then the queue and the chat. */}
-      <aside className="flex h-[calc(100dvh-3rem)] w-[400px] shrink-0 flex-col gap-4">
+      <aside className="flex h-full w-[400px] shrink-0 flex-col gap-4">
         <RadioProvider room={room}>
           <div className="flex shrink-0 flex-col gap-2">
             <RadioScreen />

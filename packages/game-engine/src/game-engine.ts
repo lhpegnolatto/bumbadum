@@ -1,4 +1,4 @@
-import { type Avatar, IDLE_FRAME_MS } from "@bumbadum/avatar";
+import { type Avatar, FRAME_SIZE, IDLE_FRAME_MS } from "@bumbadum/avatar";
 import type { AvatarState, PlayerState, RoomState } from "@bumbadum/protocol";
 import {
   type Direction,
@@ -18,10 +18,13 @@ import { AvatarSprite, FrameTextures } from "./sprites/avatar-sprite.ts";
 
 /** Pixels per tile, before the whole-number scale that fits the map to its container. */
 const TILE_SIZE = 16;
-/** World pixels from an avatar's feet to just over its head, where the nickname sits. */
-const HEAD_HEIGHT = 30;
+/** Screen pixels between the top of an avatar's frame and their nickname. */
+const LABEL_GAP = 3;
 /** Screen pixels between a player's nickname and their speech bubble. */
 const BUBBLE_GAP = 2;
+const LABEL_PADDING_X = 4;
+const LABEL_PADDING_Y = 2;
+const LABEL_CORNER_RADIUS = 4;
 
 // The movement feel chosen in the movement prototype (ticket 02).
 const STEP_INTERVAL_MS = 1000 / STEPS_PER_SECOND;
@@ -38,6 +41,7 @@ const COLORS = {
   furnitureTop: "#a3876f",
   spawnPoint: "#c9b08a",
   label: "#ffffff",
+  labelBackground: "#000000",
 } as const;
 
 export interface GameEngineOptions {
@@ -69,7 +73,7 @@ export interface GameEngine {
 interface PlayerView {
   nickname: string;
   sprite: AvatarSprite;
-  label: Text;
+  label: Container;
   glide: Glide;
   animation: AvatarAnimation;
   direction: Direction;
@@ -126,17 +130,7 @@ export async function mountGameEngine(
 
   const addAvatar = (id: string, player: PlayerState): PlayerView => {
     const sprite = new AvatarSprite(textures, avatarOf(player.avatar));
-    const label = new Text({
-      text: player.nickname,
-      // Outlined, so the name reads on the light floor as well as on the walls.
-      style: {
-        fontFamily: "sans-serif",
-        fontSize: 12,
-        fill: COLORS.label,
-        stroke: { color: COLORS.background, width: 3, join: "round" },
-      },
-    });
-    label.anchor.set(0.5, 1);
+    const label = drawNickname(player.nickname);
     players.addChild(sprite.view);
     labels.addChild(label);
     const avatar: PlayerView = {
@@ -179,8 +173,11 @@ export async function mountGameEngine(
         reducedMotion.matches,
       );
       avatar.sprite.draw(avatar.direction, frame.cycle, frame.frame);
-      // Labels live outside the scaled world, so text renders at screen resolution.
-      avatar.label.position.set(view.x * world.scale.x, (view.y - HEAD_HEIGHT) * world.scale.y);
+      // Labels live outside the scaled world, so their size and gap render in screen pixels.
+      avatar.label.position.set(
+        view.x * world.scale.x,
+        (view.y - FRAME_SIZE) * world.scale.y - LABEL_GAP,
+      );
     }
     bubbles.update(now, (id) => {
       const label = avatars.get(id)?.label;
@@ -194,7 +191,7 @@ export async function mountGameEngine(
       for (const [id, avatar] of avatars) {
         if (!state.players.has(id)) {
           avatar.sprite.view.destroy({ children: true });
-          avatar.label.destroy();
+          avatar.label.destroy({ children: true });
           avatars.delete(id);
         }
       }
@@ -243,6 +240,31 @@ export async function mountGameEngine(
       app.destroy({ removeView: true }, { children: true });
     },
   };
+}
+
+function drawNickname(nickname: string): Container {
+  const text = new Text({
+    text: nickname,
+    style: {
+      fontFamily: "sans-serif",
+      fontSize: 12,
+      fill: COLORS.label,
+    },
+  });
+  text.position.set(LABEL_PADDING_X, LABEL_PADDING_Y);
+  const background = new Graphics()
+    .roundRect(
+      0,
+      0,
+      text.width + LABEL_PADDING_X * 2,
+      text.height + LABEL_PADDING_Y * 2,
+      LABEL_CORNER_RADIUS,
+    )
+    .fill({ color: COLORS.labelBackground, alpha: 0.65 });
+  const label = new Container();
+  label.addChild(background, text);
+  label.pivot.set(label.width / 2, label.height);
+  return label;
 }
 
 /** The largest whole-number scale at which the map fits, so pixels stay square. */

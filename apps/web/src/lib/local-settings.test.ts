@@ -51,6 +51,17 @@ describe("parseSettings", () => {
     });
   });
 
+  it("reads an explicit light or dark theme", () => {
+    expect(parseSettings(JSON.stringify({ theme: "light" }))).toEqual({ theme: "light" });
+    expect(parseSettings(JSON.stringify({ theme: "dark" }))).toEqual({ theme: "dark" });
+  });
+
+  it("drops an invalid theme without losing the valid settings", () => {
+    expect(parseSettings(JSON.stringify({ nickname: "Ana", theme: "system" }))).toEqual({
+      nickname: "Ana",
+    });
+  });
+
   it("drops a volume outside 0 to 100 or a mute that is not a yes or no, keeping the rest", () => {
     for (const volume of [-1, 101, 50.5, "50"]) {
       expect(parseSettings(JSON.stringify({ nickname: "Ana", volume }))).toEqual({

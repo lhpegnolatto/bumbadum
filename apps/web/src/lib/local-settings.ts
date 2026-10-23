@@ -2,13 +2,14 @@ import { type Avatar, parseAvatar } from "@bumbadum/avatar";
 import { useSyncExternalStore } from "react";
 import { z } from "zod";
 import { type Locale, locales } from "../i18n/locale.ts";
+import { SETTINGS_KEY } from "./settings-key.ts";
 
 /**
  * Bump the version when the stored shape changes incompatibly. Adding an
  * optional field (as `avatar`, `volume` and `muted` were) keeps older settings
  * valid, so needs none.
  */
-export const SETTINGS_KEY = "bumbadum:settings:v1";
+export { SETTINGS_KEY } from "./settings-key.ts";
 
 const settingsSchema = z.object({
   nickname: z.string().optional().catch(undefined),
@@ -26,7 +27,10 @@ const settingsSchema = z.object({
   /** The radio's volume for this player only, 0 to 100. */
   volume: z.number().int().min(0).max(100).optional().catch(undefined),
   muted: z.boolean().optional().catch(undefined),
+  theme: z.enum(["light", "dark"]).optional().catch(undefined),
 });
+
+export type Theme = "light" | "dark";
 
 export interface Settings {
   nickname?: string;
@@ -34,6 +38,7 @@ export interface Settings {
   avatar?: Avatar;
   volume?: number;
   muted?: boolean;
+  theme?: Theme;
 }
 
 export function parseSettings(raw: string | null): Settings {
@@ -45,13 +50,14 @@ export function parseSettings(raw: string | null): Settings {
   }
   const result = settingsSchema.safeParse(json);
   if (!result.success) return {};
-  const { nickname, locale, avatar, volume, muted } = result.data;
+  const { nickname, locale, avatar, volume, muted, theme } = result.data;
   return {
     ...(nickname !== undefined && { nickname }),
     ...(locale !== undefined && { locale }),
     ...(avatar !== undefined && { avatar }),
     ...(volume !== undefined && { volume }),
     ...(muted !== undefined && { muted }),
+    ...(theme !== undefined && { theme }),
   };
 }
 

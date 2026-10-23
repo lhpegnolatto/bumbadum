@@ -76,11 +76,6 @@ export function GameCanvas({
   }, [room]);
 
   return (
-    <div
-      ref={containerRef}
-      role="img"
-      aria-label={t("canvasLabel")}
-      className="h-[calc(100dvh-3rem)] w-full"
-    />
+    <div ref={containerRef} role="img" aria-label={t("canvasLabel")} className="h-full w-full" />
   );
 }

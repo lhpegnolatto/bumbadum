@@ -12,6 +12,10 @@
     "en": "English",
     "pt-BR": "Português (Brasil)"
   },
+  "theme": {
+    "useLight": "Usar modo claro",
+    "useDark": "Usar modo escuro"
+  },
   "room": {
     "players": "Na sala ({count})",
     "you": "{nickname} (você)",

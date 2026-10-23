@@ -12,6 +12,10 @@
     "en": "English",
     "pt-BR": "Português (Brasil)"
   },
+  "theme": {
+    "useLight": "Use light mode",
+    "useDark": "Use dark mode"
+  },
   "room": {
     "players": "In the room ({count})",
     "you": "{nickname} (you)",
