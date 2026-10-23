@@ -22,6 +22,16 @@ describe("Glide", () => {
     expect(glide.target).toEqual({ x: 1, y: 1 });
   });
 
+  it("is moving only until it reaches its target", () => {
+    const glide = new Glide({ x: 0, y: 0 });
+    expect(glide.moving(0)).toBe(false);
+    glide.to({ x: 1, y: 0 }, 1000, 100);
+
+    expect(glide.moving(1000)).toBe(true);
+    expect(glide.moving(1099)).toBe(true);
+    expect(glide.moving(1100)).toBe(false);
+  });
+
   it("jumps at once with no duration", () => {
     const glide = new Glide({ x: 0, y: 0 });
     glide.to({ x: 3, y: 4 }, 0, 0);

@@ -30,6 +30,11 @@ export class Glide {
     this.durationMs = durationMs;
   }
 
+  /** Whether the avatar is still on its way to the target at `now`. */
+  moving(now: number): boolean {
+    return this.durationMs > 0 && now - this.startedAt < this.durationMs;
+  }
+
   at(now: number): Point {
     const progress = this.durationMs > 0 ? (now - this.startedAt) / this.durationMs : 1;
     if (progress >= 1) return { ...this.destination };

@@ -1,4 +1,5 @@
-import type { PlayerState, RoomState } from "@bumbadum/protocol";
+import type { Avatar } from "@bumbadum/avatar";
+import type { AvatarState, PlayerState, RoomState } from "@bumbadum/protocol";
 import {
   type Direction,
   type GameMap,
@@ -12,10 +13,13 @@ import { type Bump, bumpOffset, Glide } from "./movement/glide.ts";
 import { type Pose, StepPredictor } from "./movement/step-predictor.ts";
 import { StepRepeater } from "./movement/step-repeater.ts";
 import { SpeechBubbles } from "./speech-bubbles.ts";
+import { AvatarSprite, FrameTextures } from "./sprites/avatar-sprite.ts";
+import { WalkCycle } from "./sprites/walk-cycle.ts";
 
 /** Pixels per tile, before the whole-number scale that fits the map to its container. */
 const TILE_SIZE = 16;
-const DOT_RADIUS = 5;
+/** World pixels from an avatar's feet to just over its head, where the nickname sits. */
+const HEAD_HEIGHT = 30;
 /** Screen pixels between a player's nickname and their speech bubble. */
 const BUBBLE_GAP = 2;
 
@@ -23,6 +27,8 @@ const BUBBLE_GAP = 2;
 const STEP_INTERVAL_MS = 1000 / STEPS_PER_SECOND;
 const REPEAT_DELAY_MS = 200;
 const CORRECTION_SLIDE_MS = 120;
+/** Half a walking cycle per step: one stride, from standing to standing. */
+const WALK_TIMING = { frameMs: STEP_INTERVAL_MS / 3, graceMs: 60 };
 
 const COLORS = {
   background: "#2b2238",
@@ -32,19 +38,8 @@ const COLORS = {
   furniture: "#8a6f5a",
   furnitureTop: "#a3876f",
   spawnPoint: "#c9b08a",
-  me: "#7fd1b9",
-  others: "#f4a259",
-  outline: "#2a2433",
   label: "#ffffff",
 } as const;
-
-/** Rotation of the direction marker, which points up when unrotated. */
-const ANGLE: Record<Direction, number> = {
-  up: 0,
-  right: Math.PI / 2,
-  down: Math.PI,
-  left: -Math.PI / 2,
-};
 
 export interface GameEngineOptions {
   /** The local player's session id: their steps are predicted and sent. */
@@ -57,6 +52,7 @@ export interface GameEngineOptions {
 export interface DrawnPlayer extends Pose {
   sessionId: string;
   nickname: string;
+  avatar: Avatar;
 }
 
 export interface GameEngine {
@@ -66,14 +62,17 @@ export interface GameEngine {
   drawnPlayers(): DrawnPlayer[];
   /** Shows `text` in a bubble over the player for a few seconds. */
   showBubble(sessionId: string, text: string): void;
+  /** Lets the walking keys move the local player, or stops them, as while the wardrobe is open. */
+  setWalking(enabled: boolean): void;
   destroy(): void;
 }
 
-interface Avatar {
+interface PlayerView {
   nickname: string;
-  body: Container;
+  sprite: AvatarSprite;
   label: Text;
   glide: Glide;
+  walk: WalkCycle;
   direction: Direction;
   bump?: Bump;
 }
@@ -96,9 +95,12 @@ export async function mountGameEngine(
     autoDensity: true,
   });
   container.appendChild(app.canvas);
+  const textures = await FrameTextures.load();
 
   const world = new Container();
-  world.addChild(drawMap(map));
+  // Players lower on the map are drawn in front of the ones above them.
+  const players = new Container({ sortableChildren: true });
+  world.addChild(drawMap(map), players);
   const labels = new Container();
   app.stage.addChild(world, labels);
   // Last on the stage, so bubbles stay above every avatar and label.
@@ -113,28 +115,36 @@ export async function mountGameEngine(
   const resizeObserver = new ResizeObserver(fitToContainer);
   resizeObserver.observe(container);
 
-  const avatars = new Map<string, Avatar>();
+  const avatars = new Map<string, PlayerView>();
   let predictor: StepPredictor | undefined;
   const repeater = new StepRepeater({
     stepIntervalMs: STEP_INTERVAL_MS,
     repeatDelayMs: REPEAT_DELAY_MS,
   });
-  const stopListening = listenToDirectionKeys(repeater);
+  let walking = true;
+  const stopListening = listenToDirectionKeys(repeater, () => walking);
 
-  const addAvatar = (id: string, player: PlayerState): Avatar => {
-    const body = createDot(id === sessionId ? COLORS.me : COLORS.others);
+  const addAvatar = (id: string, player: PlayerState): PlayerView => {
+    const sprite = new AvatarSprite(textures, avatarOf(player.avatar));
     const label = new Text({
       text: player.nickname,
-      style: { fontFamily: "sans-serif", fontSize: 12, fill: COLORS.label },
+      // Outlined, so the name reads on the light floor as well as on the walls.
+      style: {
+        fontFamily: "sans-serif",
+        fontSize: 12,
+        fill: COLORS.label,
+        stroke: { color: COLORS.background, width: 3, join: "round" },
+      },
     });
     label.anchor.set(0.5, 1);
-    world.addChild(body);
+    players.addChild(sprite.view);
     labels.addChild(label);
-    const avatar: Avatar = {
+    const avatar: PlayerView = {
       nickname: player.nickname,
-      body,
+      sprite,
       label,
       glide: new Glide({ x: player.x, y: player.y }),
+      walk: new WalkCycle(WALK_TIMING),
       direction: player.direction,
     };
     avatars.set(id, avatar);
@@ -158,15 +168,13 @@ export async function mountGameEngine(
     for (const avatar of avatars.values()) {
       const at = avatar.glide.at(now);
       const nudge = avatar.bump ? bumpOffset(avatar.bump, now) : { x: 0, y: 0 };
-      avatar.body.position.set(
-        (at.x + nudge.x + 0.5) * TILE_SIZE,
-        (at.y + nudge.y + 0.5) * TILE_SIZE,
-      );
-      avatar.body.rotation = ANGLE[avatar.direction];
-      avatar.label.position.set(
-        avatar.body.x * world.scale.x,
-        (avatar.body.y - DOT_RADIUS - 2) * world.scale.y,
-      );
+      const { view } = avatar.sprite;
+      // Feet on the bottom edge of the tile, centred across it.
+      view.position.set((at.x + nudge.x + 0.5) * TILE_SIZE, (at.y + nudge.y + 1) * TILE_SIZE);
+      view.zIndex = view.y;
+      avatar.sprite.draw(avatar.direction, avatar.walk.frame(avatar.glide.moving(now), now));
+      // Labels live outside the scaled world, so text renders at screen resolution.
+      avatar.label.position.set(view.x * world.scale.x, (view.y - HEAD_HEIGHT) * world.scale.y);
     }
     bubbles.update(now, (id) => {
       const label = avatars.get(id)?.label;
@@ -179,13 +187,16 @@ export async function mountGameEngine(
       const now = performance.now();
       for (const [id, avatar] of avatars) {
         if (!state.players.has(id)) {
-          avatar.body.destroy({ children: true });
+          avatar.sprite.view.destroy({ children: true });
           avatar.label.destroy();
           avatars.delete(id);
         }
       }
       state.players.forEach((player, id) => {
         const avatar = avatars.get(id) ?? addAvatar(id, player);
+        if (!sameAvatar(avatar.sprite.avatar, player.avatar)) {
+          avatar.sprite.wear(avatarOf(player.avatar));
+        }
         if (id === sessionId) {
           if (!predictor) {
             predictor = new StepPredictor(map, player, player.stepIntents);
@@ -208,12 +219,17 @@ export async function mountGameEngine(
       return [...avatars].map(([id, avatar]) => ({
         sessionId: id,
         nickname: avatar.nickname,
+        avatar: avatar.sprite.avatar,
         ...avatar.glide.target,
         direction: avatar.direction,
       }));
     },
     showBubble(id, text) {
       bubbles.show(id, text, performance.now());
+    },
+    setWalking(enabled) {
+      walking = enabled;
+      if (!enabled) repeater.releaseAll();
     },
     destroy() {
       stopListening();
@@ -254,16 +270,10 @@ function drawMap(map: GameMap): Graphics {
   return g;
 }
 
-/** A dot with a notch pointing where the player faces (sprites come with the avatar). */
-function createDot(color: string): Container {
-  const dot = new Container();
-  dot.addChild(
-    new Graphics()
-      .circle(0, 0, DOT_RADIUS)
-      .fill(color)
-      .stroke({ width: 1, color: COLORS.outline })
-      .poly([0, -DOT_RADIUS - 3, -3, -DOT_RADIUS + 1, 3, -DOT_RADIUS + 1])
-      .fill(COLORS.outline),
-  );
-  return dot;
+function avatarOf({ skinTone, hair, outfit }: AvatarState): Avatar {
+  return { skinTone, hair, outfit };
+}
+
+function sameAvatar(a: Avatar, b: AvatarState): boolean {
+  return a.skinTone === b.skinTone && a.hair === b.hair && a.outfit === b.outfit;
 }

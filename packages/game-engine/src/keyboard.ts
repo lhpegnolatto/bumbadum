@@ -19,12 +19,15 @@ function isTextField(target: EventTarget | null): boolean {
   return target.isContentEditable || target.closest("input, textarea, select") !== null;
 }
 
-/** Feeds WASD and the arrow keys to `repeater`. Returns a function that stops listening. */
-export function listenToDirectionKeys(repeater: StepRepeater): () => void {
+/**
+ * Feeds WASD and the arrow keys to `repeater` while `enabled()` says so.
+ * Returns a function that stops listening.
+ */
+export function listenToDirectionKeys(repeater: StepRepeater, enabled: () => boolean): () => void {
   const onKeyDown = (event: KeyboardEvent) => {
     const direction = DIRECTION_KEYS[event.code];
     if (!direction || event.ctrlKey || event.metaKey || event.altKey) return;
-    if (isTextField(event.target)) return;
+    if (!enabled() || isTextField(event.target)) return;
     event.preventDefault(); // keeps the arrows from scrolling the page
     repeater.press(direction, event.timeStamp);
   };
