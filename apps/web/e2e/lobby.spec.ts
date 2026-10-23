@@ -30,8 +30,14 @@ test("one player walks and the other sees it", async ({ joinLobby }) => {
 test("a shared link opened without a click asks for one before joining, so the screen may play", async ({
   browser,
 }) => {
-  // A fresh browser that saved a nickname earlier but has not clicked on this page yet.
+  // A browser that saved a nickname earlier but has not activated this page yet.
   const context = await browser.newContext({ locale: "en-US" });
+  await context.addInitScript(() => {
+    Object.defineProperty(navigator, "userActivation", {
+      configurable: true,
+      value: { hasBeenActive: false, isActive: false },
+    });
+  });
   await context.addInitScript(([key, settings]) => window.localStorage.setItem(key, settings), [
     SETTINGS_KEY,
     JSON.stringify({ nickname: "Elis" }),
@@ -56,7 +62,8 @@ test("after the volume controls are used with the mouse, the room's keys work ag
   const start = await drawnPlayer(fabi, "Fabi");
   if (!start) throw new Error("Fabi's canvas does not draw her");
 
-  await fabi.getByRole("slider").click();
+  await fabi.getByRole("group", { name: "Volume" }).click();
+  await expect.poll(() => fabi.evaluate(() => document.activeElement?.tagName)).toBe("BODY");
   await fabi.keyboard.press("KeyA");
   await expect.poll(() => drawnPlayer(fabi, "Fabi")).toMatchObject({ x: start.x - 1 });
 
