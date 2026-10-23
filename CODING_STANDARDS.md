@@ -20,11 +20,11 @@ Rules Biome already enforces are not repeated here; run `pnpm check` and trust i
 - A domain package imports no other domain package. The composition root (the server room, the web feature) wires domains together.
 - Each package exposes one public entry (`src/index.ts`); consumers import only from it. Internal packages export TypeScript source directly (`"exports": { ".": "./src/index.ts" }`), with no build step: Next consumes them via `transpilePackages`, the server is bundled for production.
 - `protocol` mirrors domain state into Colyseus schemas and defines message types together with the schemas that validate them (shape and size limits, such as a nickname's 1–16 characters); it holds no game rules of its own. Colyseus schemas use `schema()` with `t.*` fields, not `@type()` decorators.
-- `game-engine` owns the PixiJS lifecycle. React mounts it (`mount`, `applyState`, events) and renders only UI around it: chat, menus, the screen column.
+- `game-engine` owns the PixiJS lifecycle and the walking keys (ignored while a text field has focus). React mounts it (`mount`, `applyState`, events) and renders only UI around it: chat, menus, the screen column.
 
 ## Server
 
-- The server is authoritative. Clients send intents (`move`, `chat`); the room validates them and updates state. Never trust a client-sent position, timestamp or track.
+- The server is authoritative. Clients send intents (`step`, `chat`); the room validates them and updates state. Never trust a client-sent position, timestamp or track. A step intent carries only a direction; the room applies it from the tile it holds and counts every intent it handles, which the client uses to reconcile its predicted steps.
 - Every client message is schema-validated and rate-limited per player before it reaches a domain.
 - Secrets (the YouTube API key) live only in `apps/server` env vars.
 
@@ -44,7 +44,7 @@ Tests are the agent's feedback loop: each one proves a behaviour still holds aft
 - Domain packages carry most of the coverage, built test-first with `tdd`.
 - Server rooms get integration tests with `@colyseus/testing`; external services are replaced by in-memory fakes of their port (a fake `MusicSearch`), never by network calls.
 - `game-engine` tests cover logic only (interpolation, sprite frame selection), not pixels.
-- Playwright covers a few multi-client flows: two browsers in the lobby, one moves and the other sees it, `/play` syncs both.
+- Playwright covers a few multi-client flows: two browsers in the lobby, one moves and the other sees it, `/play` syncs both. Tests cannot read the canvas, so in e2e runs (`NEXT_PUBLIC_E2E=1`, set by `playwright.config.ts`) the page exposes what it draws as `window.bumbadumE2E`.
 
 ## Commits
 

@@ -36,6 +36,10 @@ _Avoid_: cell, square
 A player's move of exactly one tile in one direction.
 _Avoid_: movement, walk
 
+**Step intent**:
+A player's request to take one step in a direction. The room decides whether it becomes a step, or only turns the player.
+_Avoid_: move, move message
+
 **Spawn point**:
 The tile where a player appears when joining or reconnecting to a room.
 _Avoid_: entrance, start
