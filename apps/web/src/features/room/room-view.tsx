@@ -10,6 +10,7 @@ import { useSettings } from "@/lib/local-settings.ts";
 import { GameCanvas } from "./game-canvas.tsx";
 import { PlayerList } from "./player-list.tsx";
 import { useRoom } from "./use-room.ts";
+import { WaitingScreen, WaitingTimedOut } from "./waiting-screen.tsx";
 
 export function RoomView({ slug }: { slug: string }) {
   const nickname = useSettings()?.nickname;
@@ -24,13 +25,16 @@ export function RoomView({ slug }: { slug: string }) {
 
 function ConnectedRoom({ slug, nickname }: { slug: string; nickname: string }) {
   const t = useTranslations();
-  const { status, players } = useRoom(slug, nickname);
+  const { status, players, retry } = useRoom(slug, nickname);
 
+  if (!status) return null;
+  if (status.kind === "waiting") return <WaitingScreen {...status} />;
+  if (status.kind === "timed-out") return <WaitingTimedOut onRetry={retry} />;
   if (status.kind === "rejected") {
     return (
       <main className="mx-auto flex min-h-dvh max-w-md flex-col justify-center gap-4 p-6">
         <Alert variant="destructive">
-          <AlertDescription>{t(`joinRejection.${status.reason}`)}</AlertDescription>
+          <AlertDescription>{t(`joinRejection.${status.rejection}`)}</AlertDescription>
         </Alert>
         <Button render={<Link href="/" />} nativeButton={false} variant="outline">
           {t("room.backHome")}
@@ -42,16 +46,10 @@ function ConnectedRoom({ slug, nickname }: { slug: string; nickname: string }) {
   return (
     <main className="flex min-h-dvh gap-6 p-6">
       <div className="min-w-0 flex-1">
-        {status.kind === "joined" ? (
-          <GameCanvas room={status.room} />
-        ) : (
-          <p role="status">
-            {t(status.kind === "connecting" ? "room.connecting" : "room.reconnecting")}
-          </p>
-        )}
+        <GameCanvas room={status.room} />
       </div>
       <aside className="w-[400px] shrink-0">
-        {status.kind === "joined" && <PlayerList players={players} me={status.room.sessionId} />}
+        <PlayerList players={players} me={status.room.sessionId} />
       </aside>
     </main>
   );

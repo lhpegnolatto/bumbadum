@@ -1,65 +1,55 @@
 "use client";
 
-import { isJoinRejection, type JoinRejection, ROOM_TYPE, type RoomState } from "@bumbadum/protocol";
+import { isJoinRejection, ROOM_TYPE, type RoomState } from "@bumbadum/protocol";
 import { Callbacks, Client, MatchMakeError, type Room } from "@colyseus/sdk";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { isServerAwake } from "@/lib/server-health.ts";
 import { SERVER_URL } from "@/lib/server-url.ts";
+import {
+  type Clock,
+  type ConnectionStatus,
+  connectToRoom,
+  type JoinOutcome,
+  type RoomConnection,
+} from "./connection.ts";
 
-/** Wait before trying to join again after a failed join or a lost room. */
-const RETRY_DELAY_MS = 3000;
+type LobbyRoom = Room<unknown, RoomState>;
 
-export type RoomStatus =
-  | { kind: "connecting" }
-  | { kind: "joined"; room: Room<unknown, RoomState> }
-  | { kind: "reconnecting" }
-  | { kind: "rejected"; reason: JoinRejection };
+export type RoomStatus = ConnectionStatus<LobbyRoom>;
 
 export interface PresentPlayer {
   sessionId: string;
   nickname: string;
 }
 
+const browserClock: Clock = {
+  now: () => Date.now(),
+  setTimeout: (run, ms) => setTimeout(run, ms),
+  clearTimeout: (id) => clearTimeout(id as ReturnType<typeof setTimeout>),
+};
+
 /**
- * Joins the room and keeps trying: the SDK reconnects short drops by itself;
- * when the room is lost (e.g. the server restarted) this joins it again.
+ * Joins the room and keeps the player in it, waiting for a sleeping server to
+ * wake and reconnecting after a drop (see `connectToRoom`).
  */
 export function useRoom(slug: string, nickname: string) {
-  const [status, setStatus] = useState<RoomStatus>({ kind: "connecting" });
+  const [status, setStatus] = useState<RoomStatus | undefined>();
   const [players, setPlayers] = useState<PresentPlayer[]>([]);
+  const connection = useRef<RoomConnection>(undefined);
 
   useEffect(() => {
     const client = new Client(SERVER_URL);
-    let disposed = false;
-    let current: Room<unknown, RoomState> | undefined;
-    let retryTimer: ReturnType<typeof setTimeout> | undefined;
 
-    let joinedOnce = false;
-
-    const retry = () => {
-      setStatus({ kind: joinedOnce ? "reconnecting" : "connecting" });
-      retryTimer = setTimeout(join, RETRY_DELAY_MS);
-    };
-
-    async function join() {
-      let room: Room<unknown, RoomState>;
+    async function join(): Promise<JoinOutcome<LobbyRoom>> {
+      let room: LobbyRoom;
       try {
         room = await client.join<RoomState>(ROOM_TYPE, { slug, nickname });
       } catch (error) {
-        if (disposed) return;
         if (error instanceof MatchMakeError && isJoinRejection(error.message)) {
-          setStatus({ kind: "rejected", reason: error.message });
-        } else {
-          retry();
+          return { kind: "rejected", rejection: error.message };
         }
-        return;
+        return { kind: "failed" };
       }
-      if (disposed) {
-        room.leave();
-        return;
-      }
-
-      current = room;
-      joinedOnce = true;
       setPlayers([]);
       const callbacks = Callbacks.get(room);
       callbacks.onAdd("players", (player, sessionId) => {
@@ -68,21 +58,19 @@ export function useRoom(slug: string, nickname: string) {
       callbacks.onRemove("players", (_player, sessionId) => {
         setPlayers((list) => list.filter((p) => p.sessionId !== sessionId));
       });
-      room.onDrop(() => setStatus({ kind: "reconnecting" }));
-      room.onReconnect(() => setStatus({ kind: "joined", room }));
-      room.onLeave(() => {
-        if (!disposed) retry();
-      });
-      setStatus({ kind: "joined", room });
+      return { kind: "joined", room };
     }
 
-    join();
-    return () => {
-      disposed = true;
-      clearTimeout(retryTimer);
-      current?.leave();
-    };
+    // Every attempt, including a rejoin after a lost room, uses the same nickname.
+    const current = connectToRoom({
+      clock: browserClock,
+      isServerAwake,
+      join,
+      onChange: setStatus,
+    });
+    connection.current = current;
+    return () => current.close();
   }, [slug, nickname]);
 
-  return { status, players };
+  return { status, players, retry: () => connection.current?.retry() };
 }

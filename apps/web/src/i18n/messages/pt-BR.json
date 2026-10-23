@@ -13,8 +13,6 @@
     "pt-BR": "Português (Brasil)"
   },
   "room": {
-    "connecting": "Entrando na sala…",
-    "reconnecting": "Conexão perdida. Reconectando…",
     "players": "Na sala ({count})",
     "you": "{nickname} (você)",
     "canvasLabel": "A sala",
@@ -23,5 +21,27 @@
   "joinRejection": {
     "room-full": "A sala está cheia. Tente de novo daqui a pouco.",
     "invalid-nickname": "Esse apelido não pode ser usado. Escolha um com 1 a 16 caracteres."
+  },
+  "waiting": {
+    "title": {
+      "connecting": "Preparando a sala",
+      "reconnecting": "Reconectando…"
+    },
+    "stages": {
+      "waking": "Acordando o servidor",
+      "joining": "Entrando na sala"
+    },
+    "elapsed": "Aguardando há {time}",
+    "usually": "Nosso servidor tira uma soneca quando não tem ninguém por perto. Acordá-lo costuma levar até um minuto.",
+    "lines": {
+      "radio": "Sintonizando o rádio…",
+      "records": "Tirando a poeira dos discos…",
+      "cushions": "Afofando as almofadas…",
+      "cables": "Desenrolando o fio dos fones…",
+      "kettle": "Passando um cafezinho…",
+      "speakers": "Esquentando as caixas de som…"
+    },
+    "timedOut": "O servidor está demorando bem mais que o normal para acordar. Foi mal!",
+    "tryAgain": "Tentar de novo"
   }
 }

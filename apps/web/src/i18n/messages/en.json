@@ -13,8 +13,6 @@
     "pt-BR": "Português (Brasil)"
   },
   "room": {
-    "connecting": "Joining the room…",
-    "reconnecting": "Connection lost. Reconnecting…",
     "players": "In the room ({count})",
     "you": "{nickname} (you)",
     "canvasLabel": "The room",
@@ -23,5 +21,27 @@
   "joinRejection": {
     "room-full": "The room is full. Try again in a little while.",
     "invalid-nickname": "That nickname can't be used. Pick one with 1 to 16 characters."
+  },
+  "waiting": {
+    "title": {
+      "connecting": "Getting the room ready",
+      "reconnecting": "Reconnecting…"
+    },
+    "stages": {
+      "waking": "Waking the server",
+      "joining": "Joining the room"
+    },
+    "elapsed": "Waiting for {time}",
+    "usually": "Our server takes a nap when nobody's around. Waking it usually takes up to a minute.",
+    "lines": {
+      "radio": "Tuning the radio…",
+      "records": "Dusting off the records…",
+      "cushions": "Fluffing the cushions…",
+      "cables": "Untangling the headphone cables…",
+      "kettle": "Putting the kettle on…",
+      "speakers": "Warming up the speakers…"
+    },
+    "timedOut": "The server is taking much longer than usual to wake up. Sorry about that!",
+    "tryAgain": "Try again"
   }
 }

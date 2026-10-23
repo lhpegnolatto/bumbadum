@@ -7,6 +7,8 @@ const WEB_PORT = Number(process.env.E2E_WEB_PORT ?? 3100);
 export default defineConfig({
   testDir: "e2e",
   fullyParallel: false,
+  // Every test joins the one lobby, so tests in different files must not overlap.
+  workers: 1,
   forbidOnly: Boolean(process.env.CI),
   retries: process.env.CI ? 1 : 0,
   reporter: process.env.CI ? "github" : "list",
