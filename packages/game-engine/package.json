@@ -1,0 +1,20 @@
+{
+  "name": "@bumbadum/game-engine",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc"
+  },
+  "dependencies": {
+    "@bumbadum/protocol": "workspace:*",
+    "pixi.js": "8.22.0"
+  },
+  "devDependencies": {
+    "@bumbadum/tooling": "workspace:*",
+    "typescript": "7.0.2"
+  }
+}

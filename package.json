@@ -1,0 +1,20 @@
+{
+  "name": "bumbadum",
+  "private": true,
+  "packageManager": "pnpm@11.22.0",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "check": "biome check . && turbo run typecheck test",
+    "test:e2e": "pnpm --filter @bumbadum/web test:e2e",
+    "format": "biome check --write ."
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.6.2",
+    "turbo": "2.11.10",
+    "typescript": "7.0.2"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "extends": "@bumbadum/tooling/tsconfig/base.json",
+  "compilerOptions": {
+    "types": ["node"]
+  },
+  "include": ["src", "*.mjs"]
+}

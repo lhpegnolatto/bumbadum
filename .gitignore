@@ -11,3 +11,6 @@ test-results/
 *.log
 .DS_Store
 .claude/settings.local.json
+.claude/worktrees/
+*.tsbuildinfo
+next-env.d.ts

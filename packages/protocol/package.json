@@ -1,0 +1,23 @@
+{
+  "name": "@bumbadum/protocol",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@colyseus/schema": "5.0.42",
+    "zod": "4.6.7"
+  },
+  "devDependencies": {
+    "@bumbadum/tooling": "workspace:*",
+    "@types/node": "26.6.5",
+    "typescript": "7.0.2",
+    "vitest": "5.0.5"
+  }
+}

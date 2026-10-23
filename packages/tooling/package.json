@@ -1,0 +1,11 @@
+{
+  "name": "@bumbadum/tooling",
+  "private": true,
+  "version": "0.0.0",
+  "files": [
+    "tsconfig"
+  ],
+  "exports": {
+    "./tsconfig/base.json": "./tsconfig/base.json"
+  }
+}

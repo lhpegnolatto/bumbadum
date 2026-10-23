@@ -1,0 +1,7 @@
+{
+  "extends": "@bumbadum/tooling/tsconfig/base.json",
+  "compilerOptions": {
+    "lib": ["es2023", "dom", "dom.iterable"]
+  },
+  "include": ["src"]
+}
