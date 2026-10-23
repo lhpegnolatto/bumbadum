@@ -1,0 +1,27 @@
+{
+  "home": {
+    "tagline": "Um cantinho aconchegante para ouvir música com os amigos.",
+    "nicknameLabel": "Apelido",
+    "nicknamePlaceholder": "Como podemos te chamar?",
+    "nicknameInvalid": "Escolha um apelido com 1 a 16 caracteres.",
+    "join": "Entrar",
+    "languageLabel": "Idioma",
+    "desktopOnly": "O bumbadum foi feito para computadores. Abra este link em um desktop ou notebook para entrar."
+  },
+  "languages": {
+    "en": "English",
+    "pt-BR": "Português (Brasil)"
+  },
+  "room": {
+    "connecting": "Entrando na sala…",
+    "reconnecting": "Conexão perdida. Reconectando…",
+    "players": "Na sala ({count})",
+    "you": "{nickname} (você)",
+    "canvasLabel": "A sala",
+    "backHome": "Voltar ao início"
+  },
+  "joinRejection": {
+    "room-full": "A sala está cheia. Tente de novo daqui a pouco.",
+    "invalid-nickname": "Esse apelido não pode ser usado. Escolha um com 1 a 16 caracteres."
+  }
+}
