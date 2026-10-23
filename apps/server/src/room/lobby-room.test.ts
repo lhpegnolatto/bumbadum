@@ -718,4 +718,20 @@ describe("lobby-room skip vote", () => {
 
     await expect.poll(() => onAir(ana)?.videoId).toBe("song0000002");
   });
+
+  it("does not count a dropped player, still holding their seat, as present", async () => {
+    const { ana, bia } = await anaAndBia();
+    const cris = await joinLobby("Cris");
+    const duda = await joinLobby("Duda");
+    say(ana, "/play song0000001");
+    say(ana, "/play song0000002");
+    await expect.poll(() => waiting(duda)).toEqual(["song0000002"]);
+    say(bia, "/skip");
+    say(cris, "/skip");
+    await expect.poll(() => skipVote(ana)).toEqual({ votes: 2, needed: 3 });
+
+    duda.connection.close(CloseCode.MAY_TRY_RECONNECT);
+
+    await expect.poll(() => onAir(ana)?.videoId).toBe("song0000002");
+  });
 });

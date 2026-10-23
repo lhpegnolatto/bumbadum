@@ -130,12 +130,14 @@ export class LobbyRoom extends Room<{ state: RoomState; client: LobbyClient }> {
   }
 
   override onDrop(client: LobbyClient) {
+    this.#radio.drop(client);
     // Rejects when the window expires or the room is shutting down; Colyseus then calls onLeave.
     this.allowReconnection(client, RECONNECTION_WINDOW).catch(() => {});
   }
 
   /** A reconnecting player appears on the spawn point, like a joining one. */
   override onReconnect(client: LobbyClient) {
+    this.#radio.reconnect(client);
     const player = this.state.players.get(client.sessionId);
     if (!player) return;
     player.x = lobbyMap.spawnPoint.x;

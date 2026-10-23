@@ -76,6 +76,8 @@ export class RadioStation {
   readonly #now: () => number;
   readonly #pingLimits = new Map<string, TokenBucket>();
   readonly #searchLimits = new Map<string, SlidingWindow>();
+  /** Session ids whose connection dropped and may still come back. */
+  readonly #dropped = new Set<string>();
   #radio: Radio = silentRadio;
   #timer: { clear(): void } | undefined;
 
@@ -97,6 +99,19 @@ export class RadioStation {
   farewell(client: Client) {
     this.#pingLimits.delete(client.sessionId);
     this.#searchLimits.delete(client.sessionId);
+    this.#dropped.delete(client.sessionId);
+    this.#recountSkipVotes();
+  }
+
+  /** Call when the player's connection drops: while it is down they are not present. */
+  drop(client: Client) {
+    this.#dropped.add(client.sessionId);
+    this.#recountSkipVotes();
+  }
+
+  /** Call when a dropped player reconnects: they are present again. */
+  reconnect(client: Client) {
+    this.#dropped.delete(client.sessionId);
     this.#recountSkipVotes();
   }
 
@@ -199,8 +214,9 @@ export class RadioStation {
     return search;
   }
 
+  /** Players with a seat and a live connection; a dropped seat waiting for its player does not count. */
   #present(): string[] {
-    return [...this.#room.state.players.keys()];
+    return [...this.#room.state.players.keys()].filter((id) => !this.#dropped.has(id));
   }
 
   #recountSkipVotes() {
