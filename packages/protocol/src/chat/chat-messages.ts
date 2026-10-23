@@ -2,7 +2,7 @@ import { MESSAGE_MAX_LENGTH } from "@bumbadum/chat";
 import { z } from "zod";
 
 /** Client → server: what a player typed in the chat, a message or a command. */
-export const CHAT_INPUT = "chat-input";
+export const CHAT_INPUT = "chat";
 
 /** Bounds the payload only; the chat domain decides what the text means. */
 export const chatInputSchema = z.object({
