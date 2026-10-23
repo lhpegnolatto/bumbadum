@@ -1,7 +1,7 @@
 import { LOBBY_SLUG, ROOM_TYPE, type RoomState, STEP_MESSAGE } from "@bumbadum/protocol";
 import { type Direction, lobbyMap } from "@bumbadum/world";
 import { matchMaker } from "@colyseus/core";
-import type { Room as ClientRoom } from "@colyseus/sdk";
+import { type Room as ClientRoom, CloseCode } from "@colyseus/sdk";
 import { boot, type ColyseusTestServer } from "@colyseus/testing";
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
 import { createServer } from "../server.ts";
@@ -76,6 +76,29 @@ describe("lobby-room", () => {
     await bia.leave();
 
     await expect.poll(() => nicknames(ana)).toEqual(["Ana"]);
+  });
+
+  it("puts a player who reconnects after a drop back on the spawn point", async () => {
+    const room = await joinLobby("Ana");
+    room.reconnection.minUptime = 0;
+    await room.waitForNextPatch();
+    // No step intent exists yet, so the player is moved on the server directly.
+    const seat = colyseus.getRoomById<RoomState>(room.roomId).state.players.get(room.sessionId);
+    if (!seat) throw new Error("expected Ana's seat");
+    seat.x = SPAWN_POINT.x + 3;
+    await expect.poll(() => room.state.players.get(room.sessionId)?.x).toBe(SPAWN_POINT.x + 3);
+
+    const reconnected = new Promise<void>((resolve) => room.onReconnect(resolve));
+    room.connection.close(CloseCode.MAY_TRY_RECONNECT);
+    await reconnected;
+
+    await expect
+      .poll(() => {
+        const me = room.state.players.get(room.sessionId);
+        return { x: me?.x, y: me?.y };
+      })
+      .toEqual(SPAWN_POINT);
+    expect(nicknames(room)).toEqual(["Ana"]);
   });
 
   it("rejects an invalid nickname with a code", async () => {

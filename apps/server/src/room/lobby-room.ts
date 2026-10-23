@@ -80,6 +80,14 @@ export class LobbyRoom extends Room<{ state: RoomState; client: LobbyClient }> {
     this.allowReconnection(client, RECONNECTION_WINDOW).catch(() => {});
   }
 
+  /** A reconnecting player appears on the spawn point, like a joining one. */
+  override onReconnect(client: LobbyClient) {
+    const player = this.state.players.get(client.sessionId);
+    if (!player) return;
+    player.x = SPAWN_POINT.x;
+    player.y = SPAWN_POINT.y;
+  }
+
   override onLeave(client: LobbyClient) {
     this.state.players.delete(client.sessionId);
     this.stepLimits.delete(client.sessionId);
