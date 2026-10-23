@@ -20,6 +20,9 @@ importers:
 
   apps/server:
     dependencies:
+      '@bumbadum/avatar':
+        specifier: workspace:*
+        version: link:../../packages/avatar
       '@bumbadum/chat':
         specifier: workspace:*
         version: link:../../packages/chat
@@ -197,6 +200,9 @@ importers:
 
   packages/protocol:
     dependencies:
+      '@bumbadum/avatar':
+        specifier: workspace:*
+        version: link:../avatar
       '@bumbadum/chat':
         specifier: workspace:*
         version: link:../chat

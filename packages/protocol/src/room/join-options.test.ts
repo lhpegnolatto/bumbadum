@@ -31,16 +31,39 @@ describe("parseNickname", () => {
 });
 
 describe("parseJoinOptions", () => {
-  it("returns the slug and trimmed nickname", () => {
-    expect(parseJoinOptions({ slug: "lobby", nickname: " Ana " })).toEqual({
-      slug: "lobby",
-      nickname: "Ana",
+  const avatar = { skinTone: 2, hair: 3, outfit: 4 };
+
+  it("returns the slug, trimmed nickname and avatar", () => {
+    expect(parseJoinOptions({ slug: "lobby", nickname: " Ana ", avatar })).toEqual({
+      ok: true,
+      options: { slug: "lobby", nickname: "Ana", avatar },
     });
   });
 
-  it("rejects options without a valid nickname", () => {
-    expect(parseJoinOptions({ slug: "lobby", nickname: "" })).toBeUndefined();
-    expect(parseJoinOptions({ slug: "lobby" })).toBeUndefined();
-    expect(parseJoinOptions(undefined)).toBeUndefined();
+  it("rejects options without a valid nickname with invalid-nickname", () => {
+    const invalid = { ok: false, rejection: "invalid-nickname" };
+    expect(parseJoinOptions({ slug: "lobby", nickname: "", avatar })).toEqual(invalid);
+    expect(parseJoinOptions({ slug: "lobby", avatar })).toEqual(invalid);
+    expect(parseJoinOptions(undefined)).toEqual(invalid);
+  });
+
+  it("rejects options without a valid avatar with invalid-avatar", () => {
+    const invalid = { ok: false, rejection: "invalid-avatar" };
+    expect(parseJoinOptions({ slug: "lobby", nickname: "Ana" })).toEqual(invalid);
+    expect(
+      parseJoinOptions({ slug: "lobby", nickname: "Ana", avatar: { ...avatar, hair: 9 } }),
+    ).toEqual(invalid);
+    expect(
+      parseJoinOptions({ slug: "lobby", nickname: "Ana", avatar: { skinTone: 1, hair: 1 } }),
+    ).toEqual(invalid);
+  });
+
+  it("keeps only the avatar's three layers", () => {
+    const result = parseJoinOptions({
+      slug: "lobby",
+      nickname: "Ana",
+      avatar: { ...avatar, crown: true },
+    });
+    expect(result.ok && result.options.avatar).toEqual(avatar);
   });
 });

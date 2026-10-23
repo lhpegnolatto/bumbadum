@@ -1,10 +1,12 @@
 import type { Direction } from "@bumbadum/world";
 import { type SchemaType, schema, t } from "@colyseus/schema";
+import { AvatarState } from "../avatar/avatar-state.ts";
 
 /** A player present in the room, positioned in tile coordinates. */
 export const PlayerState = schema(
   {
     nickname: t.string(),
+    avatar: t.ref(AvatarState),
     x: t.uint8(),
     y: t.uint8(),
     direction: t.string<Direction>(),
