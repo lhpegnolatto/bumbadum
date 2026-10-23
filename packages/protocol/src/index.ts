@@ -1,3 +1,14 @@
+export { ANNOUNCEMENT, type Announcement, type AnnouncementCode } from "./chat/announcement.ts";
+export {
+  CHAT_HISTORY,
+  CHAT_INPUT,
+  CHAT_MESSAGE,
+  type ChatHistory,
+  type ChatInputPayload,
+  type ChatMessage,
+  chatInputSchema,
+} from "./chat/chat-messages.ts";
+export { NOTICE, type Notice, type NoticeCode } from "./chat/notice.ts";
 export {
   type JoinOptions,
   NICKNAME_MAX_LENGTH,
