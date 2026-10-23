@@ -42,9 +42,9 @@ Tests are the agent's feedback loop: each one proves a behaviour still holds aft
 - Co-locate tests with code: `queue.ts` + `queue.test.ts`.
 - Test through the package's public interface, asserting on behaviour, not internals.
 - Domain packages carry most of the coverage, built test-first with `tdd`.
-- Server rooms get integration tests with `@colyseus/testing`; external services are replaced by in-memory fakes of their port (a fake `MusicSearch`), never by network calls.
+- Server rooms get integration tests with `@colyseus/testing`; external services are replaced by in-memory fakes of their port (a fake `TrackCatalog` or `MusicSearch`), never by network calls.
 - `game-engine` tests cover logic only (interpolation, sprite frame selection), not pixels.
-- Playwright covers a few multi-client flows: two browsers in the lobby, one moves and the other sees it, `/play` syncs both. Tests cannot read the canvas, so in e2e runs (`NEXT_PUBLIC_E2E=1`, set by `playwright.config.ts`) the page exposes what it draws as `window.bumbadumE2E`.
+- Playwright covers a few multi-client flows: two browsers in the lobby, one moves and the other sees it, `/play` syncs both. Tests cannot read the canvas, so in e2e runs (`NEXT_PUBLIC_E2E=1`, set by `playwright.config.ts`) the page exposes what it draws as `window.bumbadumE2E`. E2E never touches YouTube: the screen is a fake player behind the same `ScreenPlayer` interface, and the e2e server uses the fake track catalog (`TRACK_CATALOG=fake`). Real playback is checked by hand with [the checklist](docs/checklists/real-youtube-playback.md) before each deploy.
 - Every e2e test joins the same lobby on one server. Join through the `joinLobby` fixture (`apps/web/e2e/join-lobby.ts`), which closes its browsers after the test; give players nicknames no other test uses, and never assume the lobby is empty, since a closed browser keeps its seat for the reconnection window.
 
 ## Commits

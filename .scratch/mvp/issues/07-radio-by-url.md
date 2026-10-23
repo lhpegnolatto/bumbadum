@@ -1,6 +1,6 @@
 # Radio by URL
 
-Status: ready-for-agent
+Status: ready-for-human
 Type: task
 Blocked by: 05, 06
 
@@ -12,11 +12,20 @@ See [spec](../spec.md): Radio, Layout and keyboard.
 
 ## Acceptance criteria
 
-- [ ] `packages/radio` covers queue, now playing, advancing by clock, the 3-tracks-per-player cap and the refusal rules, test-first.
-- [ ] Refused with a notice: live streams, non-embeddable videos, tracks over 10 minutes, a track already queued or on air. A playlist URL plays only its video.
-- [ ] The screen is 16:9, at least 400×225 px, always visible; it shows "nothing playing" when the queue is empty.
-- [ ] A late joiner lands at the right position; the radio keeps advancing with the room empty.
-- [ ] Announcements for a track queued and a new track on air.
-- [ ] Volume and mute are local and stored in `localStorage`.
-- [ ] E2E with the fake screen player: `/play` in one browser, both show the same track and position.
-- [ ] Manual checklist for real YouTube playback written and run before deploy.
+- [x] `packages/radio` covers queue, now playing, advancing by clock, the 3-tracks-per-player cap and the refusal rules, test-first.
+- [x] Refused with a notice: live streams, non-embeddable videos, tracks over 10 minutes, a track already queued or on air. A playlist URL plays only its video.
+- [x] The screen is 16:9, at least 400×225 px, always visible; it shows "nothing playing" when the queue is empty.
+- [x] A late joiner lands at the right position; the radio keeps advancing with the room empty.
+- [x] Announcements for a track queued and a new track on air.
+- [x] Volume and mute are local and stored in `localStorage`.
+- [x] E2E with the fake screen player: `/play` in one browser, both show the same track and position.
+- [ ] Manual checklist for real YouTube playback written and run before deploy. Written: [docs/checklists/real-youtube-playback.md](../../../docs/checklists/real-youtube-playback.md); the run is the human's.
+
+## Comments
+
+Built and tested; what is left needs a human:
+
+1. Create a YouTube Data API v3 key (Google Cloud console, API restricted to "YouTube Data API v3") and set it as `YOUTUBE_API_KEY` on the Render service (`render.yaml` declares it with `sync: false`). Without it, `/play` answers "can't look up tracks right now" and the server logs a warning.
+2. Run the [manual checklist](../../../docs/checklists/real-youtube-playback.md) against real YouTube before deploying, then tick the last box and resolve this ticket.
+
+Notes for later tickets: `/play` with a name answers `play-search-unavailable` until ticket 08 adds `MusicSearch`; an 11-character single word is read as a video ID (so it gets "couldn't find that video" if it is not one), which ticket 08 may want to fall back to a search.
