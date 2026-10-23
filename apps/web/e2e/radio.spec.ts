@@ -1,13 +1,6 @@
 import type { Page } from "@playwright/test";
 import { expect, test } from "./join-lobby.ts";
-
-/**
- * A video ID no other run has used, so the radio never refuses it as already
- * queued. The e2e server's fake catalog answers any ID with a 3-minute track.
- */
-function freshVideoId(): string {
-  return `e2e${Math.random().toString(36).slice(2, 10).padEnd(8, "0")}`;
-}
+import { freshVideoId, randomLetters, say } from "./radio-helpers.ts";
 
 /**
  * What `page`'s screen plays, with both its position and the radio's expected
@@ -28,9 +21,7 @@ function screenOf(page: Page) {
 }
 
 async function play(page: Page, request: string) {
-  const chatInput = page.getByLabel("Message");
-  await chatInput.fill(`/play ${request}`);
-  await chatInput.press("Enter");
+  await say(page, `/play ${request}`);
 }
 
 test("/play puts a track on every screen at the same position, a late joiner's too; a refusal reaches only its sender", async ({
@@ -64,8 +55,7 @@ test("/play puts a track on every screen at the same position, a late joiner's t
   expect(Math.abs(onIvo.screenStartedAt - onIvo.radioStartedAt)).toBeLessThan(250);
   expect(Math.abs(onJuno.screenStartedAt - onJuno.radioStartedAt)).toBeLessThan(250);
 
-  // A refusal is a notice for the sender alone. (One test for both keeps the
-  // run under the lobby's 16 seats, which closed browsers hold for a while.)
+  // A refusal is a notice for the sender alone.
   await play(juno, "live0000001");
   await juno.getByLabel("Message").fill("after the refusal");
   await juno.getByLabel("Message").press("Enter");
@@ -74,4 +64,22 @@ test("/play puts a track on every screen at the same position, a late joiner's t
   );
   await expect(ivo.getByRole("log", { name: "Chat" })).toContainText("Juno: after the refusal");
   await expect(ivo.getByRole("log", { name: "Chat" })).not.toContainText("Live streams");
+});
+
+test("/play with a name plays what the search finds, for every player", async ({ joinLobby }) => {
+  // The e2e server's fake search finds `srch` plus the query's last 7 letters.
+  const tail = randomLetters(7);
+  const title = `Fake track srch${tail}`;
+  const kai = await joinLobby("Kai");
+  const lia = await joinLobby("Lia");
+
+  await play(kai, `lofi beats ${tail}`);
+
+  await expect(lia.getByRole("log", { name: "Chat" })).toContainText(`Kai queued “${title}”.`);
+  // On air or waiting behind another test's track: either way both players see it.
+  for (const page of [kai, lia]) {
+    const onAir = page.getByText(title, { exact: true });
+    const waiting = page.getByRole("region", { name: /Up next/ }).getByText(title);
+    await expect(onAir.or(waiting)).toBeVisible();
+  }
 });

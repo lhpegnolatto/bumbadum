@@ -5,6 +5,7 @@ import { isJoinRejection, ROOM_TYPE, type RoomState } from "@bumbadum/protocol";
 import { Callbacks, Client, MatchMakeError, type Room } from "@colyseus/sdk";
 import { useEffect, useRef, useState } from "react";
 import { watchChat } from "@/features/chat/chat-feed.ts";
+import { exposeToE2E } from "@/lib/e2e.ts";
 import { isServerAwake } from "@/lib/server-health.ts";
 import { SERVER_URL } from "@/lib/server-url.ts";
 import {
@@ -16,6 +17,16 @@ import {
 } from "./connection.ts";
 
 type LobbyRoom = Room<unknown, RoomState>;
+
+declare global {
+  interface BumbadumE2E {
+    /**
+     * Leaves the room for good, resolving once the server has let the seat go:
+     * a closed browser would hold it for the whole reconnection window.
+     */
+    leave?(): Promise<void>;
+  }
+}
 
 export type RoomStatus = ConnectionStatus<LobbyRoom>;
 
@@ -40,6 +51,7 @@ export function useRoom(slug: string, nickname: string, avatar: Avatar) {
 
   useEffect(() => {
     const client = new Client(SERVER_URL);
+    let joined: LobbyRoom | undefined;
 
     async function join(): Promise<JoinOutcome<LobbyRoom>> {
       let room: LobbyRoom;
@@ -61,6 +73,7 @@ export function useRoom(slug: string, nickname: string, avatar: Avatar) {
       callbacks.onRemove("players", (_player, sessionId) => {
         setPlayers((list) => list.filter((p) => p.sessionId !== sessionId));
       });
+      joined = room;
       return { kind: "joined", room };
     }
 
@@ -72,6 +85,15 @@ export function useRoom(slug: string, nickname: string, avatar: Avatar) {
       onChange: setStatus,
     });
     connection.current = current;
+    exposeToE2E({
+      leave: () =>
+        new Promise((resolve) => {
+          const room = joined;
+          if (!room?.connection.isOpen) return resolve();
+          room.onLeave(() => resolve());
+          current.close();
+        }),
+    });
     return () => current.close();
   }, [slug, nickname]);
 

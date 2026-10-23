@@ -1,5 +1,5 @@
 import type { RadioState, RoomState, TrackState } from "@bumbadum/protocol";
-import type { NowPlaying, Track } from "@bumbadum/radio";
+import type { NowPlaying, SkipTally, Track } from "@bumbadum/radio";
 import type { Room } from "@colyseus/sdk";
 import { useSyncExternalStore } from "react";
 
@@ -7,9 +7,11 @@ import { useSyncExternalStore } from "react";
 export interface RadioSnapshot {
   nowPlaying?: NowPlaying;
   queue: readonly Track[];
+  /** The skip vote against the track on air, as the server counts it. */
+  skipVote: SkipTally;
 }
 
-const silent: RadioSnapshot = { queue: [] };
+const silent: RadioSnapshot = { queue: [], skipVote: { votes: 0, needed: 1 } };
 
 type LobbyRoom = Room<unknown, RoomState>;
 
@@ -46,7 +48,7 @@ function keyOf(radio: RadioState | undefined): string {
   if (!radio) return "";
   const onAir = radio.nowPlaying;
   const queue = [...radio.queue].map((track) => track.videoId).join(",");
-  return `${onAir?.track.videoId ?? ""}@${onAir?.startedAt ?? ""}|${queue}`;
+  return `${onAir?.track.videoId ?? ""}@${onAir?.startedAt ?? ""}|${queue}|${radio.skipVotes}/${radio.skipVotesNeeded}`;
 }
 
 function readRadio(radio: RadioState | undefined): RadioSnapshot {
@@ -55,6 +57,7 @@ function readRadio(radio: RadioState | undefined): RadioSnapshot {
   return {
     ...(onAir && { nowPlaying: { track: readTrack(onAir.track), startedAt: onAir.startedAt } }),
     queue: [...radio.queue].map(readTrack),
+    skipVote: { votes: radio.skipVotes, needed: radio.skipVotesNeeded },
   };
 }
 

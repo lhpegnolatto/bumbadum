@@ -1,7 +1,7 @@
 "use client";
 
 import type { RoomState } from "@bumbadum/protocol";
-import type { NowPlaying, Track } from "@bumbadum/radio";
+import type { NowPlaying, SkipTally, Track } from "@bumbadum/radio";
 import type { Room } from "@colyseus/sdk";
 import { createContext, use, useState } from "react";
 import { updateSettings, useSettings } from "@/lib/local-settings.ts";
@@ -14,6 +14,7 @@ interface RadioContextValue {
   state: {
     nowPlaying?: NowPlaying;
     queue: readonly Track[];
+    skipVote: SkipTally;
     /** This player's volume, 0 to 100: it affects nobody else. */
     volume: number;
     muted: boolean;
@@ -37,13 +38,13 @@ export function RadioProvider({
   room: Room<unknown, RoomState>;
   children: React.ReactNode;
 }) {
-  const { nowPlaying, queue } = useRadio(room);
+  const { nowPlaying, queue, skipVote } = useRadio(room);
   const settings = useSettings();
   const [volume, setVolume] = useState(() => settings?.volume ?? DEFAULT_VOLUME);
   const [muted, setMutedState] = useState(() => settings?.muted ?? false);
 
   const value: RadioContextValue = {
-    state: { nowPlaying, queue, volume, muted },
+    state: { nowPlaying, queue, skipVote, volume, muted },
     actions: {
       setVolume,
       keepVolume(kept) {
