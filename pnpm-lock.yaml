@@ -29,6 +29,9 @@ importers:
       '@bumbadum/protocol':
         specifier: workspace:*
         version: link:../../packages/protocol
+      '@bumbadum/radio':
+        specifier: workspace:*
+        version: link:../../packages/radio
       '@bumbadum/world':
         specifier: workspace:*
         version: link:../../packages/world
@@ -212,6 +215,9 @@ importers:
       '@bumbadum/chat':
         specifier: workspace:*
         version: link:../chat
+      '@bumbadum/radio':
+        specifier: workspace:*
+        version: link:../radio
       '@bumbadum/world':
         specifier: workspace:*
         version: link:../world
@@ -228,6 +234,18 @@ importers:
       '@types/node':
         specifier: 26.6.5
         version: 26.6.5
+      typescript:
+        specifier: 7.0.2
+        version: 7.0.2
+      vitest:
+        specifier: 5.0.5
+        version: 5.0.5(@types/node@26.6.5)(vite@8.3.5(@types/node@26.6.5)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15))
+
+  packages/radio:
+    devDependencies:
+      '@bumbadum/tooling':
+        specifier: workspace:*
+        version: link:../tooling
       typescript:
         specifier: 7.0.2
         version: 7.0.2
