@@ -9,10 +9,14 @@ services:
     healthCheckPath: /health
     buildFilter:
       paths:
+        # Every workspace package the server depends on.
         - apps/server/**
+        - packages/avatar/**
+        - packages/chat/**
         - packages/protocol/**
         - packages/radio/**
         - packages/tooling/**
+        - packages/world/**
         - package.json
         - pnpm-lock.yaml
         - pnpm-workspace.yaml
