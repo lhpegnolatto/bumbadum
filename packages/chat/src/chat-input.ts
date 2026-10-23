@@ -3,7 +3,7 @@ import type { CommandTable } from "./command-table.ts";
 /** The most characters a message or command may have, after trimming. */
 export const MESSAGE_MAX_LENGTH = 200;
 
-const COMMAND_PREFIX = "/";
+export const COMMAND_PREFIX = "/";
 
 /** What a player's chat input turns out to be. */
 export type ChatInput<Id extends string = string> =

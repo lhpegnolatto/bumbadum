@@ -8,8 +8,10 @@ export interface Command<Id extends string = string> {
   names: Readonly<Record<Language, string>>;
 }
 
-/** Finds a command by any of its names, in any language. */
 export interface CommandTable<Id extends string = string> {
+  /** Every command, in the order help lists them. */
+  readonly all: readonly Command<Id>[];
+  /** Finds a command by any of its names, in any language. */
   find(name: string): Id | undefined;
 }
 
@@ -33,6 +35,7 @@ export function createCommandTable<Id extends string>(
     }
   }
   return {
+    all: commands,
     find: (name) => byName.get(normalize(name)),
   };
 }

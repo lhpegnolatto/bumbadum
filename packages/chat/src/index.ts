@@ -1,4 +1,5 @@
 export { type ChatInput, MESSAGE_MAX_LENGTH, readChatInput } from "./chat-input.ts";
+export { type CommandSuggestion, suggestCommands } from "./command-suggestions.ts";
 export {
   type Command,
   type CommandTable,
