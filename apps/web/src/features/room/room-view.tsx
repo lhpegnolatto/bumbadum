@@ -37,20 +37,8 @@ export function RoomView({ slug }: { slug: string }) {
   }, [nickname, router]);
 
   if (!nickname) return null;
-  return (
-    <div className="flex min-h-dvh flex-col">
-      <header className="flex h-12 shrink-0 items-center justify-end px-6">
-        <ThemeToggle />
-      </header>
-      <div className="min-h-0 flex-1">
-        {clickedJoin ? (
-          <ConnectedRoom slug={slug} nickname={nickname} avatar={avatar} />
-        ) : (
-          <JoinGate nickname={nickname} onJoin={() => setClickedJoin(true)} />
-        )}
-      </div>
-    </div>
-  );
+  if (!clickedJoin) return <JoinGate nickname={nickname} onJoin={() => setClickedJoin(true)} />;
+  return <ConnectedRoom slug={slug} nickname={nickname} avatar={avatar} />;
 }
 
 /**
@@ -65,7 +53,8 @@ function hasClickedOnPage(): boolean {
 function JoinGate({ nickname, onJoin }: { nickname: string; onJoin: () => void }) {
   const t = useTranslations("room");
   return (
-    <main className="mx-auto flex h-full max-w-md flex-col justify-center gap-4 p-6">
+    <main className="mx-auto flex min-h-dvh max-w-md flex-col justify-center gap-4 p-6">
+      <FloatingThemeToggle />
       <p>{t("joinGate", { nickname })}</p>
       <Button onClick={onJoin}>{t("join")}</Button>
     </main>
@@ -85,11 +74,26 @@ function ConnectedRoom({
   const { status, players, retry } = useRoom(slug, nickname, avatar);
 
   if (!status) return null;
-  if (status.kind === "waiting") return <WaitingScreen {...status} />;
-  if (status.kind === "timed-out") return <WaitingTimedOut onRetry={retry} />;
+  if (status.kind === "waiting") {
+    return (
+      <>
+        <FloatingThemeToggle />
+        <WaitingScreen {...status} />
+      </>
+    );
+  }
+  if (status.kind === "timed-out") {
+    return (
+      <>
+        <FloatingThemeToggle />
+        <WaitingTimedOut onRetry={retry} />
+      </>
+    );
+  }
   if (status.kind === "rejected") {
     return (
-      <main className="mx-auto flex h-full max-w-md flex-col justify-center gap-4 p-6">
+      <main className="mx-auto flex min-h-dvh max-w-md flex-col justify-center gap-4 p-6">
+        <FloatingThemeToggle />
         <Alert variant="destructive">
           <AlertDescription>{t(`joinRejection.${status.rejection}`)}</AlertDescription>
         </Alert>
@@ -127,7 +131,7 @@ function JoinedRoom({
   }, []);
 
   return (
-    <main className="flex h-full gap-6 px-6 pb-6">
+    <main className="flex min-h-dvh gap-6 p-6">
       {/* The wardrobe opens over the canvas, never over the side column (ADR-0010). */}
       <div className="relative min-w-0 flex-1">
         <GameCanvas room={room} walking={!wardrobeOpen} />
@@ -148,13 +152,14 @@ function JoinedRoom({
         )}
       </div>
       {/* The side column (ADR-0010): the screen on top, always visible, then the queue and the chat. */}
-      <aside className="flex h-full w-[400px] shrink-0 flex-col gap-4">
+      <aside className="flex h-[calc(100dvh-3rem)] w-[400px] shrink-0 flex-col gap-4">
         <RadioProvider room={room}>
           <div className="flex shrink-0 flex-col gap-2">
             <RadioScreen />
             <div className="flex items-center justify-end gap-2">
               <NowPlayingCaption />
               <VolumeControl />
+              <ThemeToggle />
             </div>
           </div>
           <QueueList />
@@ -163,6 +168,14 @@ function JoinedRoom({
         <ChatPanel room={room} />
       </aside>
     </main>
+  );
+}
+
+function FloatingThemeToggle() {
+  return (
+    <div className="fixed top-6 right-6 z-10">
+      <ThemeToggle />
+    </div>
   );
 }
 

@@ -20,6 +20,8 @@ import { AvatarSprite, FrameTextures } from "./sprites/avatar-sprite.ts";
 const TILE_SIZE = 16;
 /** Screen pixels between the top of an avatar's frame and their nickname. */
 const LABEL_GAP = 3;
+/** Transparent world pixels above every avatar's highest visible pixel. */
+const AVATAR_TOP_INSET = 8;
 /** Screen pixels between a player's nickname and their speech bubble. */
 const BUBBLE_GAP = 2;
 const LABEL_PADDING_X = 4;
@@ -176,7 +178,7 @@ export async function mountGameEngine(
       // Labels live outside the scaled world, so their size and gap render in screen pixels.
       avatar.label.position.set(
         view.x * world.scale.x,
-        (view.y - FRAME_SIZE) * world.scale.y - LABEL_GAP,
+        (view.y - FRAME_SIZE + AVATAR_TOP_INSET) * world.scale.y - LABEL_GAP,
       );
     }
     bubbles.update(now, (id) => {

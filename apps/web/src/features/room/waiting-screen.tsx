@@ -41,7 +41,7 @@ export function WaitingScreen({
   const current = STAGES.indexOf(stage);
 
   return (
-    <main className="mx-auto flex h-full max-w-md flex-col justify-center gap-6 p-6">
+    <main className="mx-auto flex min-h-dvh max-w-md flex-col justify-center gap-6 p-6">
       <div role="status" className="flex flex-col gap-4">
         <h1 className="font-heading text-2xl font-semibold">{t(`title.${reason}`)}</h1>
         <ol className="flex flex-col gap-2">
@@ -105,7 +105,7 @@ function WaitingTicker({ since }: { since: number }) {
 export function WaitingTimedOut({ onRetry }: { onRetry: () => void }) {
   const t = useTranslations();
   return (
-    <main className="mx-auto flex h-full max-w-md flex-col justify-center gap-4 p-6">
+    <main className="mx-auto flex min-h-dvh max-w-md flex-col justify-center gap-4 p-6">
       <Alert variant="destructive">
         <AlertDescription>{t("waiting.timedOut")}</AlertDescription>
       </Alert>

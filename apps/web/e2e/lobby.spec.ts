@@ -7,6 +7,11 @@ test("two players in the lobby see each other", async ({ joinLobby }) => {
   const ana = await joinLobby("Ana");
   const bia = await joinLobby("Bia");
 
+  const viewport = ana.viewportSize();
+  if (!viewport) throw new Error("Ana's page has no viewport");
+  const room = await ana.getByRole("img", { name: "The room" }).boundingBox();
+  if (!room) throw new Error("Ana's room has no visible bounds");
+  expect(room.y).toBe(viewport.height - room.y - room.height);
   await expect(ana.getByRole("listitem")).toContainText(["Ana (you)", "Bia"]);
   await expect(bia.getByRole("listitem")).toContainText(["Ana", "Bia (you)"]);
 });
