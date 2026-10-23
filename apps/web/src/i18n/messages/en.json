@@ -53,14 +53,19 @@
       "player-joined": "{nickname} joined the room.",
       "player-left": "{nickname} left the room.",
       "track-queued": "{nickname} queued “{title}”.",
-      "now-playing": "Now playing: “{title}”, from {nickname}."
+      "now-playing": "Now playing: “{title}”, from {nickname}.",
+      "skip-vote-cast": "{nickname} voted to skip ({votes} of {needed}).",
+      "track-skipped": "Skipped “{title}”, from {nickname}."
     },
     "notice": {
       "unknown-command": "There is no /{name} command.",
       "rate-limited": "Easy there: at most 5 messages every 5 seconds.",
-      "play-missing-track": "Tell /play what to play: a YouTube link or video ID.",
+      "play-missing-track": "Tell /play what to play: a YouTube link, or a name to search for.",
       "play-not-a-video": "That link doesn't point to a YouTube video.",
-      "play-search-unavailable": "Searching by name isn't available yet. Paste a YouTube link instead.",
+      "search-nothing-found": "Couldn't find any video by that name on YouTube.",
+      "search-quota-exhausted": "Searching by name is out for today (it resets at midnight Pacific Time). Paste a YouTube link instead: links still work.",
+      "search-failed": "Can't search by name right now. Try again in a little while, or paste a YouTube link.",
+      "search-rate-limited": "Easy there: at most 3 name searches a minute. Paste a YouTube link, or try again shortly.",
       "track-not-found": "Couldn't find that video on YouTube.",
       "track-lookup-unavailable": "Can't look up tracks right now. Try again in a little while.",
       "track-live": "Live streams can't play on the radio.",
@@ -68,7 +73,9 @@
       "track-too-long": "That track is longer than 10 minutes.",
       "track-on-air": "That track is on air right now.",
       "track-already-queued": "That track is already in the queue.",
-      "track-too-many-waiting": "You already have 3 tracks waiting. Let one play first."
+      "track-too-many-waiting": "You already have 3 tracks waiting. Let one play first.",
+      "skip-nothing-on-air": "Nothing is playing, so there's nothing to skip.",
+      "skip-already-voted": "You already voted to skip this track ({votes} of {needed})."
     }
   },
   "avatar": {
@@ -95,9 +102,10 @@
   "radio": {
     "screenLabel": "Screen",
     "nothingPlaying": "Nothing playing",
-    "nothingPlayingHint": "Type /play and a YouTube link in the chat to start the radio.",
+    "nothingPlayingHint": "Type /play and a YouTube link or a song name in the chat to start the radio.",
     "nowPlaying": "Now playing:",
     "from": "from {nickname}",
+    "skipVotes": "Skip votes: {votes} of {needed}",
     "volume": "Volume",
     "mute": "Mute",
     "queue": "Up next ({count})",

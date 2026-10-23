@@ -18,19 +18,31 @@ import {
   type RoomState,
   STEP_MESSAGE,
 } from "@bumbadum/protocol";
+import type { MusicSearch } from "@bumbadum/radio";
 import { type Direction, lobbyMap } from "@bumbadum/world";
 import { matchMaker } from "@colyseus/core";
 import { type Room as ClientRoom, CloseCode } from "@colyseus/sdk";
 import { boot, type ColyseusTestServer } from "@colyseus/testing";
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
+import { createFakeMusicSearch } from "../radio/fake-music-search.ts";
 import { createFakeTrackCatalog } from "../radio/fake-track-catalog.ts";
 import { createServer } from "../server.ts";
 import { openLobby } from "./lobby-room.ts";
 
 let colyseus: ColyseusTestServer;
 
+/** Every query that reached the music search, which is what costs quota. */
+const searched: string[] = [];
+const fakeSearch = createFakeMusicSearch();
+const search: MusicSearch = {
+  search(query) {
+    searched.push(query);
+    return fakeSearch.search(query);
+  },
+};
+
 beforeAll(async () => {
-  colyseus = await boot(createServer({ catalog: createFakeTrackCatalog() }));
+  colyseus = await boot(createServer({ catalog: createFakeTrackCatalog(), search }));
 });
 afterAll(async () => {
   await colyseus.shutdown();
@@ -38,6 +50,7 @@ afterAll(async () => {
 beforeEach(async () => {
   await colyseus.cleanup();
   await openLobby();
+  searched.length = 0;
 });
 
 const AVATAR: Avatar = { skinTone: 2, hair: 3, outfit: 4 };
@@ -468,11 +481,13 @@ describe("lobby-room radio", () => {
     ["/play live0000001", "track-live"],
     ["/play lock0000001", "track-not-embeddable"],
     ["/play long0000001", "track-too-long"],
-    ["/play gone0000001", "track-not-found"],
+    ["/play https://youtu.be/gone0000001", "track-not-found"],
     ["/play down0000001", "track-lookup-unavailable"],
     ["/play", "play-missing-track"],
     ["/play https://www.youtube.com/playlist?list=PL123", "play-not-a-video"],
-    ["/play never gonna give you up", "play-search-unavailable"],
+    ["/play nothing like this", "search-nothing-found"],
+    ["/play quota is gone", "search-quota-exhausted"],
+    ["/play broken search", "search-failed"],
   ])("refuses %s with a %s notice to the sender only", async (command, code) => {
     const { ana, bia, noticesToAna, noticesToBia } = await anaAndBia();
 
@@ -524,5 +539,167 @@ describe("lobby-room radio", () => {
     const toAna = received<ChatMessage>(ana, CHAT_MESSAGE);
     await expect.poll(() => toAna).toHaveLength(1);
     expect(pongs).toHaveLength(16);
+  });
+});
+
+describe("lobby-room name search", () => {
+  it("plays the first video a name search finds, for everyone", async () => {
+    const { ana, bia } = await anaAndBia();
+
+    say(ana, "/play lofi beats abc0001");
+
+    await expect.poll(() => onAir(bia)).toEqual({ videoId: "srchabc0001", by: "Ana" });
+    expect(searched).toEqual(["lofi beats abc0001"]);
+  });
+
+  it("searches a name once: the same name in other case or spacing costs nothing, and still meets the refusal rules", async () => {
+    const { ana, bia, noticesToBia } = await anaAndBia();
+
+    say(ana, "/play lofi beats abc0001");
+    await expect.poll(() => onAir(bia)?.videoId).toBe("srchabc0001");
+    say(bia, "/tocar   LOFI Beats  abc0001 ");
+
+    await expect.poll(() => noticesToBia).toEqual([{ code: "track-on-air" }]);
+    expect(searched).toEqual(["lofi beats abc0001"]);
+  });
+
+  it("allows each player 3 name searches a minute; a cached name does not count", async () => {
+    const { ana, bia, noticesToAna } = await anaAndBia();
+
+    say(ana, "/play song abc0001");
+    say(ana, "/play song abc0002");
+    say(ana, "/play song abc0001");
+    say(ana, "/play song abc0003");
+    say(ana, "/play song abc0004");
+
+    // The third input joins the first's search, so it plays the same track: on air by then.
+    await expect
+      .poll(() => noticesToAna.map((notice) => notice.code).sort())
+      .toEqual(["search-rate-limited", "track-on-air"]);
+    expect(waiting(ana)).toEqual(["srchabc0002", "srchabc0003"]);
+    say(bia, "/play song abc0005");
+    await expect.poll(() => waiting(ana)).toContain("srchabc0005");
+    expect(searched).toEqual(["song abc0001", "song abc0002", "song abc0003", "song abc0005"]);
+  });
+
+  it("still plays links once the daily search quota has run out", async () => {
+    const { ana, bia, noticesToAna } = await anaAndBia();
+
+    say(ana, "/play quota is gone");
+    await expect.poll(() => noticesToAna).toEqual([{ code: "search-quota-exhausted" }]);
+    say(ana, "/play https://youtu.be/song0000001");
+
+    await expect.poll(() => onAir(bia)?.videoId).toBe("song0000001");
+  });
+
+  it("searches a bare 11-character word as a name when no video has that ID", async () => {
+    const { ana, bia } = await anaAndBia();
+
+    say(ana, "/play gonewiththe");
+
+    await expect.poll(() => onAir(bia)).toEqual({ videoId: "srchwiththe", by: "Ana" });
+    expect(searched).toEqual(["gonewiththe"]);
+  });
+});
+
+/** The skip vote as `room` sees it in the radio state. */
+function skipVote(room: ClientRoom<unknown, RoomState>) {
+  const radio = room.state.radio;
+  return radio && { votes: radio.skipVotes, needed: radio.skipVotesNeeded };
+}
+
+describe("lobby-room skip vote", () => {
+  it("skips the track on air once more than half of the players present vote, with /skip or /pular", async () => {
+    const { ana, bia, toBia } = await anaAndBia();
+    const cris = await joinLobby("Cris");
+    say(ana, "/play song0000001");
+    say(ana, "/play song0000002");
+    await expect.poll(() => waiting(cris)).toEqual(["song0000002"]);
+
+    say(bia, "/skip");
+    await expect.poll(() => skipVote(cris)).toEqual({ votes: 1, needed: 2 });
+    expect(onAir(cris)?.videoId).toBe("song0000001");
+    say(cris, "/pular");
+
+    await expect.poll(() => onAir(bia)?.videoId).toBe("song0000002");
+    expect(skipVote(bia)).toEqual({ votes: 0, needed: 2 });
+    const title = (id: string) => `Fake track ${id}`;
+    await expect
+      .poll(() => toBia.filter((a) => a.code.startsWith("skip") || a.code === "track-skipped"))
+      .toEqual([
+        { code: "skip-vote-cast", params: { nickname: "Bia", votes: 1, needed: 2 } },
+        { code: "track-skipped", params: { title: title("song0000001"), nickname: "Ana" } },
+      ]);
+    expect(toBia.at(-1)).toEqual({
+      code: "now-playing",
+      params: { title: title("song0000002"), nickname: "Ana" },
+    });
+  });
+
+  it("skips at once when the submitter votes", async () => {
+    const { ana, bia, toBia } = await anaAndBia();
+    say(bia, "/play song0000001");
+    await expect.poll(() => onAir(ana)?.videoId).toBe("song0000001");
+
+    say(bia, "/skip");
+
+    await expect.poll(() => onAir(ana)).toBeUndefined();
+    expect(toBia.at(-1)).toEqual({
+      code: "track-skipped",
+      params: { title: "Fake track song0000001", nickname: "Bia" },
+    });
+  });
+
+  it("answers a vote with nothing on air, and a second vote on the same track, with a notice", async () => {
+    const { ana, bia, noticesToAna, noticesToBia } = await anaAndBia();
+    await joinLobby("Cris");
+
+    say(bia, "/skip");
+    await expect.poll(() => noticesToBia).toEqual([{ code: "skip-nothing-on-air" }]);
+    say(ana, "/play song0000001");
+    await expect.poll(() => onAir(bia)).toBeDefined();
+    say(bia, "/skip");
+    say(bia, "/skip");
+
+    await expect
+      .poll(() => noticesToBia)
+      .toEqual([
+        { code: "skip-nothing-on-air" },
+        { code: "skip-already-voted", params: { votes: 1, needed: 2 } },
+      ]);
+    expect(onAir(bia)?.videoId).toBe("song0000001");
+    expect(noticesToAna).toEqual([]);
+  });
+
+  it("recounts on every join and leave: a leaving voter's vote leaves with them", async () => {
+    const { ana, bia } = await anaAndBia();
+    const cris = await joinLobby("Cris");
+    say(ana, "/play song0000001");
+    await expect.poll(() => onAir(cris)).toBeDefined();
+    say(bia, "/skip");
+    await expect.poll(() => skipVote(ana)).toEqual({ votes: 1, needed: 2 });
+
+    await joinLobby("Duda");
+    await expect.poll(() => skipVote(ana)).toEqual({ votes: 1, needed: 3 });
+    await bia.leave();
+
+    await expect.poll(() => skipVote(ana)).toEqual({ votes: 0, needed: 2 });
+    expect(onAir(ana)?.videoId).toBe("song0000001");
+  });
+
+  it("skips when a player leaves and those who voted are now more than half", async () => {
+    const { ana, bia } = await anaAndBia();
+    const cris = await joinLobby("Cris");
+    const duda = await joinLobby("Duda");
+    say(ana, "/play song0000001");
+    say(ana, "/play song0000002");
+    await expect.poll(() => waiting(duda)).toEqual(["song0000002"]);
+    say(bia, "/skip");
+    say(cris, "/skip");
+    await expect.poll(() => skipVote(ana)).toEqual({ votes: 2, needed: 3 });
+
+    await duda.leave();
+
+    await expect.poll(() => onAir(ana)?.videoId).toBe("song0000002");
   });
 });

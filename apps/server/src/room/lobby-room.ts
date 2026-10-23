@@ -15,11 +15,10 @@ import {
   RoomState,
   STEP_MESSAGE,
 } from "@bumbadum/protocol";
-import type { TrackCatalog } from "@bumbadum/radio";
 import { lobbyMap, STEPS_PER_SECOND, step } from "@bumbadum/world";
 import { type Client, ErrorCode, matchMaker, Room, ServerError, validate } from "@colyseus/core";
 import { ChatChannel } from "../chat/chat-channel.ts";
-import { RadioStation } from "../radio/radio-station.ts";
+import { RadioStation, type TrackSources } from "../radio/radio-station.ts";
 import { TokenBucket } from "../rate-limit/token-bucket.ts";
 
 const MAX_PLAYERS = 16;
@@ -41,9 +40,7 @@ function reject(code: JoinRejection): never {
 type LobbyClient = Client<{ auth: JoinOptions }>;
 
 /** What the server hands every room it creates (see `createServer`). */
-export interface LobbyRoomOptions {
-  catalog: TrackCatalog;
-}
+export type LobbyRoomOptions = TrackSources;
 
 export class LobbyRoom extends Room<{ state: RoomState; client: LobbyClient }> {
   override maxClients = MAX_PLAYERS;
@@ -84,9 +81,9 @@ export class LobbyRoom extends Room<{ state: RoomState; client: LobbyClient }> {
     },
   };
 
-  override onCreate({ catalog }: LobbyRoomOptions) {
+  override onCreate({ catalog, search }: LobbyRoomOptions) {
     // The room is the composition root: chat commands reach the radio here (ADR-0003).
-    this.#radio = new RadioStation(this, catalog);
+    this.#radio = new RadioStation(this, { catalog, search });
     this.#chat = new ChatChannel(this, {
       play: (client, nickname, args) => {
         this.#radio
@@ -94,6 +91,9 @@ export class LobbyRoom extends Room<{ state: RoomState; client: LobbyClient }> {
           .catch((error: unknown) => {
             console.error("/play failed", error);
           });
+      },
+      skip: (client, nickname) => {
+        this.#radio.skip(client, { id: client.sessionId, nickname });
       },
     });
   }

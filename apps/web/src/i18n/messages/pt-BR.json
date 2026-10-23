@@ -53,14 +53,19 @@
       "player-joined": "{nickname} entrou na sala.",
       "player-left": "{nickname} saiu da sala.",
       "track-queued": "{nickname} colocou “{title}” na fila.",
-      "now-playing": "Tocando agora: “{title}”, de {nickname}."
+      "now-playing": "Tocando agora: “{title}”, de {nickname}.",
+      "skip-vote-cast": "{nickname} votou para pular ({votes} de {needed}).",
+      "track-skipped": "Pulamos “{title}”, de {nickname}."
     },
     "notice": {
       "unknown-command": "Não existe o comando /{name}.",
       "rate-limited": "Calma: no máximo 5 mensagens a cada 5 segundos.",
-      "play-missing-track": "Diga ao /tocar o que tocar: um link ou ID de vídeo do YouTube.",
+      "play-missing-track": "Diga ao /tocar o que tocar: um link do YouTube, ou um nome para buscar.",
       "play-not-a-video": "Esse link não aponta para um vídeo do YouTube.",
-      "play-search-unavailable": "A busca por nome ainda não está disponível. Cole um link do YouTube.",
+      "search-nothing-found": "Não encontrei nenhum vídeo com esse nome no YouTube.",
+      "search-quota-exhausted": "A busca por nome acabou por hoje (volta à meia-noite do horário do Pacífico). Cole um link do YouTube: links continuam funcionando.",
+      "search-failed": "Não dá para buscar por nome agora. Tente de novo daqui a pouco, ou cole um link do YouTube.",
+      "search-rate-limited": "Calma: no máximo 3 buscas por nome por minuto. Cole um link do YouTube, ou tente de novo daqui a pouco.",
       "track-not-found": "Não encontrei esse vídeo no YouTube.",
       "track-lookup-unavailable": "Não dá para buscar músicas agora. Tente de novo daqui a pouco.",
       "track-live": "Transmissões ao vivo não tocam no rádio.",
@@ -68,7 +73,9 @@
       "track-too-long": "Essa música passa de 10 minutos.",
       "track-on-air": "Essa música está tocando agora.",
       "track-already-queued": "Essa música já está na fila.",
-      "track-too-many-waiting": "Você já tem 3 músicas esperando. Deixe uma tocar primeiro."
+      "track-too-many-waiting": "Você já tem 3 músicas esperando. Deixe uma tocar primeiro.",
+      "skip-nothing-on-air": "Nada está tocando, então não há o que pular.",
+      "skip-already-voted": "Você já votou para pular esta música ({votes} de {needed})."
     }
   },
   "avatar": {
@@ -95,9 +102,10 @@
   "radio": {
     "screenLabel": "Tela",
     "nothingPlaying": "Nada tocando",
-    "nothingPlayingHint": "Digite /tocar e um link do YouTube no chat para ligar o rádio.",
+    "nothingPlayingHint": "Digite /tocar e um link do YouTube ou o nome de uma música no chat para ligar o rádio.",
     "nowPlaying": "Tocando agora:",
     "from": "de {nickname}",
+    "skipVotes": "Votos para pular: {votes} de {needed}",
     "volume": "Volume",
     "mute": "Silenciar",
     "queue": "A seguir ({count})",

@@ -23,11 +23,15 @@ export const NowPlayingState = schema(
 );
 export type NowPlayingState = SchemaType<typeof NowPlayingState>;
 
-/** The room's radio: what is on air, and the queue behind it, oldest first. */
+/** The room's radio: what is on air, the queue behind it, oldest first, and the skip vote. */
 export const RadioState = schema(
   {
     nowPlaying: t.ref(NowPlayingState).optional(),
     queue: t.array(TrackState),
+    /** Skip votes against the track on air from the players present. */
+    skipVotes: t.uint8(),
+    /** The votes that skip it: more than half of the players present. */
+    skipVotesNeeded: t.uint8(),
   },
   "RadioState",
 );
