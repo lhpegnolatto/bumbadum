@@ -1,4 +1,5 @@
 import {
+  type AnimationCycle,
   type Avatar,
   avatarFrames,
   type Direction,
@@ -8,7 +9,7 @@ import {
 } from "@bumbadum/avatar";
 import { Assets, Container, Rectangle, Sprite, Texture } from "pixi.js";
 
-/** The avatar sheets, cut into 32×32 frame textures on first use. */
+/** The avatar sheets, cut into 24×24 frame textures on first use. */
 export class FrameTextures {
   private readonly frames = new Map<string, Texture>();
 
@@ -32,13 +33,13 @@ export class FrameTextures {
 }
 
 /**
- * A player's avatar drawn as its layers, shadow at the bottom and hair on top.
+ * A player's avatar drawn from the project's first-party sprite sheet.
  * The view's origin is the middle of the frame's bottom edge: put it where the
  * feet should stand.
  */
 export class AvatarSprite {
   readonly view = new Container();
-  private readonly layers = Array.from({ length: 4 }, () => new Sprite());
+  private readonly layers = [new Sprite()];
   private worn: Avatar;
   private drawn = "";
 
@@ -61,17 +62,17 @@ export class AvatarSprite {
     this.worn = { ...avatar };
   }
 
-  /** Shows walking frame `walkFrame` facing `direction`; cheap when nothing changed. */
-  draw(direction: Direction, walkFrame: number): void {
-    const { skinTone, hair, outfit } = this.worn;
-    const key = `${skinTone}:${hair}:${outfit}:${direction}:${walkFrame}`;
+  /** Shows one animation frame facing `direction`; cheap when nothing changed. */
+  draw(direction: Direction, cycle: AnimationCycle, frame: number): void {
+    const { skinTone } = this.worn;
+    const key = `${skinTone}:${direction}:${cycle}:${frame}`;
     if (key === this.drawn) return;
     this.drawn = key;
-    avatarFrames(this.worn, direction, walkFrame).forEach((frame, i) => {
+    avatarFrames(this.worn, direction, cycle, frame).forEach((layerFrame, i) => {
       const layer = this.layers[i];
       if (!layer) return;
-      layer.texture = this.textures.get(frame);
-      layer.scale.x = frame.mirrored ? -1 : 1;
+      layer.texture = this.textures.get(layerFrame);
+      layer.scale.x = layerFrame.mirrored ? -1 : 1;
     });
   }
 }

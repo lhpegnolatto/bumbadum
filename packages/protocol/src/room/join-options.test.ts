@@ -31,7 +31,7 @@ describe("parseNickname", () => {
 });
 
 describe("parseJoinOptions", () => {
-  const avatar = { skinTone: 2, hair: 3, outfit: 4 };
+  const avatar = { skinTone: 2 };
 
   it("returns the slug, trimmed nickname and avatar", () => {
     expect(parseJoinOptions({ slug: "lobby", nickname: " Ana ", avatar })).toEqual({
@@ -50,12 +50,12 @@ describe("parseJoinOptions", () => {
   it("rejects options without a valid avatar with invalid-avatar", () => {
     const invalid = { ok: false, rejection: "invalid-avatar" };
     expect(parseJoinOptions({ slug: "lobby", nickname: "Ana" })).toEqual(invalid);
-    expect(
-      parseJoinOptions({ slug: "lobby", nickname: "Ana", avatar: { ...avatar, hair: 9 } }),
-    ).toEqual(invalid);
-    expect(
-      parseJoinOptions({ slug: "lobby", nickname: "Ana", avatar: { skinTone: 1, hair: 1 } }),
-    ).toEqual(invalid);
+    expect(parseJoinOptions({ slug: "lobby", nickname: "Ana", avatar: { skinTone: 5 } })).toEqual(
+      invalid,
+    );
+    expect(parseJoinOptions({ slug: "lobby", nickname: "Ana", avatar: { hair: 1 } })).toEqual(
+      invalid,
+    );
   });
 
   it("rejects a slug that is too long or not kebab-case with invalid-room", () => {
@@ -67,7 +67,7 @@ describe("parseJoinOptions", () => {
     expect(parseJoinOptions({ slug: "a".repeat(64), nickname, avatar }).ok).toBe(true);
   });
 
-  it("keeps only the avatar's three layers", () => {
+  it("keeps only the avatar's skin tone", () => {
     const result = parseJoinOptions({
       slug: "lobby",
       nickname: "Ana",

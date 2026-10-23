@@ -24,7 +24,7 @@ export function AvatarEditor({
   return (
     <div className="flex flex-col gap-4">
       <div className="flex justify-center rounded-lg bg-muted py-3">
-        <AvatarSprite avatar={value} scale={PREVIEW_SCALE} />
+        <AvatarSprite avatar={value} scale={PREVIEW_SCALE} animated />
         <span className="sr-only">{t("label")}</span>
       </div>
       {AVATAR_LAYERS.map((layer) => (

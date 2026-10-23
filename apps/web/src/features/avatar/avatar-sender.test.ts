@@ -27,9 +27,9 @@ function fakeClock() {
   return { clock, advance };
 }
 
-const a: Avatar = { skinTone: 1, hair: 1, outfit: 1 };
-const b: Avatar = { skinTone: 2, hair: 2, outfit: 2 };
-const c: Avatar = { skinTone: 3, hair: 3, outfit: 3 };
+const a: Avatar = { skinTone: 1 };
+const b: Avatar = { skinTone: 2 };
+const c: Avatar = { skinTone: 3 };
 
 function setup() {
   const { clock, advance } = fakeClock();

@@ -100,23 +100,26 @@
   "avatar": {
     "label": "Avatar",
     "layers": {
-      "skinTone": "Tom de pele",
-      "hair": "Cabelo",
-      "outfit": "Roupa"
+      "skinTone": "Tom de pele"
     },
     "choice": {
-      "skinTone": "Tom de pele {number}",
-      "hair": "Cabelo {number}",
-      "outfit": "Roupa {number}"
+      "skinTone": "Tom de pele {number}"
     }
   },
   "wardrobe": {
     "open": "Guarda-roupa",
     "shortcut": "Tecle C",
     "title": "Guarda-roupa",
-    "hint": "Só você vê essas mudanças até vesti-las.",
-    "wear": "Vestir",
-    "close": "Fechar o guarda-roupa"
+    "hint": "Só você vê essas mudanças até aplicá-las.",
+    "apply": "Aplicar",
+    "close": "Fechar o guarda-roupa",
+    "future": {
+      "title": "Mais personalizações",
+      "hair": "Cabelo",
+      "outfit": "Roupa",
+      "accessories": "Acessórios",
+      "comingSoon": "Em breve"
+    }
   },
   "radio": {
     "screenLabel": "Tela",

@@ -20,16 +20,24 @@ describe("parseSettings", () => {
     });
   });
 
-  it("reads the avatar", () => {
-    const avatar = { skinTone: 6, hair: 8, outfit: 2 };
-    expect(parseSettings(JSON.stringify({ nickname: "Ana", avatar }))).toEqual({
+  it("reads the avatar and discards obsolete appearance fields", () => {
+    const stored = { skinTone: 4, hair: 8, outfit: 2 };
+    expect(parseSettings(JSON.stringify({ nickname: "Ana", avatar: stored }))).toEqual({
       nickname: "Ana",
-      avatar,
+      avatar: { skinTone: 4 },
     });
   });
 
+  it("migrates old skin tones 5 and 6 to tone 1", () => {
+    for (const skinTone of [5, 6]) {
+      expect(parseSettings(JSON.stringify({ avatar: { skinTone, hair: 1, outfit: 1 } }))).toEqual({
+        avatar: { skinTone: 1 },
+      });
+    }
+  });
+
   it("drops an invalid avatar, keeping the rest", () => {
-    for (const avatar of [{ skinTone: 7, hair: 1, outfit: 1 }, { hair: 1, outfit: 1 }, "1,1,1"]) {
+    for (const avatar of [{ skinTone: 7 }, { hair: 1, outfit: 1 }, "1,1,1"]) {
       expect(parseSettings(JSON.stringify({ nickname: "Ana", avatar }))).toEqual({
         nickname: "Ana",
       });

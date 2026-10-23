@@ -100,23 +100,26 @@
   "avatar": {
     "label": "Avatar",
     "layers": {
-      "skinTone": "Skin tone",
-      "hair": "Hair",
-      "outfit": "Outfit"
+      "skinTone": "Skin tone"
     },
     "choice": {
-      "skinTone": "Skin tone {number}",
-      "hair": "Hair {number}",
-      "outfit": "Outfit {number}"
+      "skinTone": "Skin tone {number}"
     }
   },
   "wardrobe": {
     "open": "Wardrobe",
     "shortcut": "Press C",
     "title": "Wardrobe",
-    "hint": "Only you see these changes until you wear them.",
-    "wear": "Wear",
-    "close": "Close the wardrobe"
+    "hint": "Only you see these changes until you apply them.",
+    "apply": "Apply",
+    "close": "Close the wardrobe",
+    "future": {
+      "title": "More customization",
+      "hair": "Hair",
+      "outfit": "Outfit",
+      "accessories": "Accessories",
+      "comingSoon": "Coming soon"
+    }
   },
   "radio": {
     "screenLabel": "Screen",

@@ -13,7 +13,16 @@ export const SETTINGS_KEY = "bumbadum:settings:v1";
 const settingsSchema = z.object({
   nickname: z.string().optional().catch(undefined),
   locale: z.enum(locales).optional().catch(undefined),
-  avatar: z.unknown().transform(parseAvatar).optional(),
+  avatar: z
+    .unknown()
+    .transform((input) => {
+      const avatar = parseAvatar(input);
+      if (avatar) return avatar;
+      if (typeof input !== "object" || input === null || Array.isArray(input)) return undefined;
+      const { skinTone } = input as Record<string, unknown>;
+      return skinTone === 5 || skinTone === 6 ? { skinTone: 1 } : undefined;
+    })
+    .optional(),
   /** The radio's volume for this player only, 0 to 100. */
   volume: z.number().int().min(0).max(100).optional().catch(undefined),
   muted: z.boolean().optional().catch(undefined),

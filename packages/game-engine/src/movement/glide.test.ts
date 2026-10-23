@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { bumpOffset, Glide } from "./glide.ts";
+import { bumpOffset, Glide, isBumping } from "./glide.ts";
 
 describe("Glide", () => {
   it("moves in a straight line from where it is drawn to the target over the duration", () => {
@@ -52,5 +52,12 @@ describe("bumpOffset", () => {
     expect(bumpOffset(bump, 120).x).toBeCloseTo(0);
     expect(bumpOffset(bump, 500)).toEqual({ x: 0, y: 0 });
     expect(bumpOffset({ direction: "down", at: 0 }, 60)).toEqual({ x: 0, y: peak });
+  });
+
+  it("reports a blocked-step attempt for the whole bump", () => {
+    const bump = { direction: "up", at: 100 } as const;
+    expect(isBumping(bump, 100)).toBe(true);
+    expect(isBumping(bump, 219)).toBe(true);
+    expect(isBumping(bump, 220)).toBe(false);
   });
 });

@@ -103,21 +103,9 @@ _Avoid_: system message, log
 ### Avatar
 
 **Avatar**:
-A player's visual appearance: a skin tone, a hair and an outfit.
+A player's visual appearance. For now, an avatar has only a skin tone; more appearance choices enter the model when their assets are ready.
 _Avoid_: character, skin, sprite
 
 **Skin tone**:
 The colour of an avatar's body.
 _Avoid_: skin, colour, body type
-
-**Hair**:
-An avatar's hairstyle together with its colour; the two are chosen as one.
-_Avoid_: hairstyle, hair colour
-
-**Outfit**:
-The clothing an avatar wears, chosen as one whole look rather than piece by piece.
-_Avoid_: clothes, top, bottom, costume
-
-**Layer**:
-One part of an avatar (body, outfit, hair), drawn in that order from bottom to top.
-_Avoid_: part, slot

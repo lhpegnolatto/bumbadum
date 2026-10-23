@@ -24,14 +24,10 @@ describe("the avatar sprite manifest", () => {
 
   it("finds every frame of every avatar inside its sheet", () => {
     const sizes = new Map(SPRITE_SHEETS.map((sheet) => [sheet, pngSize(sheet)]));
-    const largest = {
-      skinTone: AVATAR_CHOICES.skinTone,
-      hair: AVATAR_CHOICES.hair,
-      outfit: AVATAR_CHOICES.outfit,
-    };
+    const largest = { skinTone: AVATAR_CHOICES.skinTone };
     for (const direction of ["up", "down", "left", "right"] as const) {
       for (let frame = 0; frame < WALK_FRAMES; frame++) {
-        for (const { sheet, x, y } of avatarFrames(largest, direction, frame)) {
+        for (const { sheet, x, y } of avatarFrames(largest, direction, "walk", frame)) {
           const size = sizes.get(sheet);
           expect(size, sheet).toBeDefined();
           expect(x + FRAME_SIZE).toBeLessThanOrEqual(size?.width ?? 0);
@@ -41,8 +37,9 @@ describe("the avatar sprite manifest", () => {
     }
   });
 
-  it("has exactly one row per skin tone and per hair", () => {
-    expect(pngSize("/sprites/body.png").height).toBe(AVATAR_CHOICES.skinTone * FRAME_SIZE);
-    expect(pngSize("/sprites/hairs.png").height).toBe(AVATAR_CHOICES.hair * FRAME_SIZE);
+  it("has exactly one row per skin tone", () => {
+    for (const sheet of SPRITE_SHEETS) {
+      expect(pngSize(sheet).height).toBe(AVATAR_CHOICES.skinTone * FRAME_SIZE);
+    }
   });
 });

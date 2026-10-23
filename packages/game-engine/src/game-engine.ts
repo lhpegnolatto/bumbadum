@@ -1,4 +1,4 @@
-import type { Avatar } from "@bumbadum/avatar";
+import { type Avatar, IDLE_FRAME_MS } from "@bumbadum/avatar";
 import type { AvatarState, PlayerState, RoomState } from "@bumbadum/protocol";
 import {
   type Direction,
@@ -9,12 +9,12 @@ import {
 } from "@bumbadum/world";
 import { Application, Container, Graphics, Text, TextureStyle } from "pixi.js";
 import { listenToDirectionKeys } from "./keyboard.ts";
-import { type Bump, bumpOffset, Glide } from "./movement/glide.ts";
+import { type Bump, bumpOffset, Glide, isBumping } from "./movement/glide.ts";
 import { type Pose, StepPredictor } from "./movement/step-predictor.ts";
 import { StepRepeater } from "./movement/step-repeater.ts";
 import { SpeechBubbles } from "./speech-bubbles.ts";
+import { AvatarAnimation } from "./sprites/avatar-animation.ts";
 import { AvatarSprite, FrameTextures } from "./sprites/avatar-sprite.ts";
-import { WalkCycle } from "./sprites/walk-cycle.ts";
 
 /** Pixels per tile, before the whole-number scale that fits the map to its container. */
 const TILE_SIZE = 16;
@@ -27,8 +27,7 @@ const BUBBLE_GAP = 2;
 const STEP_INTERVAL_MS = 1000 / STEPS_PER_SECOND;
 const REPEAT_DELAY_MS = 200;
 const CORRECTION_SLIDE_MS = 120;
-/** Half a walking cycle per step: one stride, from standing to standing. */
-const WALK_TIMING = { frameMs: STEP_INTERVAL_MS / 3, graceMs: 60 };
+const ANIMATION_TIMING = { idleFrameMs: IDLE_FRAME_MS, walkFrameMs: 100, walkGraceMs: 60 };
 
 const COLORS = {
   background: "#2b2238",
@@ -72,7 +71,7 @@ interface PlayerView {
   sprite: AvatarSprite;
   label: Text;
   glide: Glide;
-  walk: WalkCycle;
+  animation: AvatarAnimation;
   direction: Direction;
   bump?: Bump;
 }
@@ -123,6 +122,7 @@ export async function mountGameEngine(
   });
   let walking = true;
   const stopListening = listenToDirectionKeys(repeater, () => walking);
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
   const addAvatar = (id: string, player: PlayerState): PlayerView => {
     const sprite = new AvatarSprite(textures, avatarOf(player.avatar));
@@ -144,7 +144,7 @@ export async function mountGameEngine(
       sprite,
       label,
       glide: new Glide({ x: player.x, y: player.y }),
-      walk: new WalkCycle(WALK_TIMING),
+      animation: new AvatarAnimation(id, ANIMATION_TIMING),
       direction: player.direction,
     };
     avatars.set(id, avatar);
@@ -164,6 +164,7 @@ export async function mountGameEngine(
 
   app.ticker.add(() => {
     const now = performance.now();
+    const animationNow = Date.now();
     walkLocalPlayer(now);
     for (const avatar of avatars.values()) {
       const at = avatar.glide.at(now);
@@ -172,7 +173,12 @@ export async function mountGameEngine(
       // Feet on the bottom edge of the tile, centred across it.
       view.position.set((at.x + nudge.x + 0.5) * TILE_SIZE, (at.y + nudge.y + 1) * TILE_SIZE);
       view.zIndex = view.y;
-      avatar.sprite.draw(avatar.direction, avatar.walk.frame(avatar.glide.moving(now), now));
+      const frame = avatar.animation.frame(
+        avatar.glide.moving(now) || isBumping(avatar.bump, now),
+        animationNow,
+        reducedMotion.matches,
+      );
+      avatar.sprite.draw(avatar.direction, frame.cycle, frame.frame);
       // Labels live outside the scaled world, so text renders at screen resolution.
       avatar.label.position.set(view.x * world.scale.x, (view.y - HEAD_HEIGHT) * world.scale.y);
     }
@@ -270,10 +276,10 @@ function drawMap(map: GameMap): Graphics {
   return g;
 }
 
-function avatarOf({ skinTone, hair, outfit }: AvatarState): Avatar {
-  return { skinTone, hair, outfit };
+function avatarOf({ skinTone }: AvatarState): Avatar {
+  return { skinTone };
 }
 
 function sameAvatar(a: Avatar, b: AvatarState): boolean {
-  return a.skinTone === b.skinTone && a.hair === b.hair && a.outfit === b.outfit;
+  return a.skinTone === b.skinTone;
 }

@@ -62,6 +62,11 @@ export interface Bump {
   at: number;
 }
 
+/** Whether a blocked-step attempt is still visibly in progress. */
+export function isBumping(bump: Bump | undefined, now: number): boolean {
+  return bump !== undefined && now >= bump.at && now - bump.at < BUMP_MS;
+}
+
 /** How far a bump against a blocked tile pushes the avatar at `now`, in tiles. */
 export function bumpOffset(bump: Bump, now: number): Point {
   const progress = (now - bump.at) / BUMP_MS;

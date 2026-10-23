@@ -1,5 +1,5 @@
 ---
-status: accepted
+status: superseded by ADR-0012
 ---
 
 # Only assets whose licence allows redistribution

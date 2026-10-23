@@ -38,7 +38,6 @@ A change is done when:
 - [CODING_STANDARDS.md](CODING_STANDARDS.md): how code is written here. Read before writing code.
 - [GLOSSARY.md](GLOSSARY.md): the ubiquitous language. Name things with these terms.
 - [docs/adr/](docs/adr/): decisions that are hard to reverse. Read the ADRs touching the area you work in.
-- [ASSETS.md](ASSETS.md): every third-party asset, its source and licence. Add an entry with every new asset; only licences that allow redistribution ([ADR-0011](docs/adr/0011-only-redistributable-assets.md)).
 
 Keep them true. A change that alters an ADR's decision adds a new ADR and sets the old one's status to `superseded by ADR-NNNN`; a change that breaks a rule in `CODING_STANDARDS.md` updates that file in the same commit.
 

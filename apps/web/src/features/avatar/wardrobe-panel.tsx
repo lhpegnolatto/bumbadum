@@ -8,13 +8,12 @@ import { Button } from "@/components/ui/button.tsx";
 import { AvatarEditor } from "./avatar-editor.tsx";
 
 function sameAvatar(a: Avatar, b: Avatar): boolean {
-  return a.skinTone === b.skinTone && a.hair === b.hair && a.outfit === b.outfit;
+  return a.skinTone === b.skinTone;
 }
 
-/**
- * The avatar editor inside the room. Changes preview here only; "Wear",
- * closing or `Esc` puts on any pending change through `onWear`, then closes.
- */
+const FUTURE_CATEGORIES = ["hair", "outfit", "accessories"] as const;
+
+/** The avatar editor inside the room. Only Apply publishes its draft. */
 export function WardrobePanel({
   worn,
   onWear,
@@ -28,7 +27,7 @@ export function WardrobePanel({
   const [draft, setDraft] = useState(worn);
   const panelRef = useRef<HTMLElement>(null);
 
-  function close() {
+  function apply() {
     if (!sameAvatar(draft, worn)) onWear(draft);
     onClose();
   }
@@ -36,7 +35,7 @@ export function WardrobePanel({
   const closeOnEscape = useEffectEvent((event: KeyboardEvent) => {
     if (event.key !== "Escape" || event.defaultPrevented) return;
     event.preventDefault();
-    close();
+    onClose();
   });
 
   useEffect(() => {
@@ -61,12 +60,25 @@ export function WardrobePanel({
           </h2>
           <p className="text-muted-foreground text-sm">{t("hint")}</p>
         </div>
-        <Button variant="ghost" size="icon" aria-label={t("close")} onClick={close}>
+        <Button variant="ghost" size="icon" aria-label={t("close")} onClick={onClose}>
           <XIcon />
         </Button>
       </header>
       <AvatarEditor value={draft} onChange={setDraft} />
-      <Button onClick={close}>{t("wear")}</Button>
+      <section aria-labelledby="future-categories-title" className="flex flex-col gap-2">
+        <h3 id="future-categories-title" className="font-medium text-sm">
+          {t("future.title")}
+        </h3>
+        <div className="grid grid-cols-3 gap-2">
+          {FUTURE_CATEGORIES.map((category) => (
+            <div key={category} className="rounded-md border border-dashed p-2 text-center">
+              <p className="font-medium text-sm">{t(`future.${category}`)}</p>
+              <p className="text-muted-foreground text-xs">{t("future.comingSoon")}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+      <Button onClick={apply}>{t("apply")}</Button>
     </section>
   );
 }

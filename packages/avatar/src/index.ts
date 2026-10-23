@@ -8,10 +8,13 @@ export {
   randomAvatar,
 } from "./avatar.ts";
 export {
+  type AnimationCycle,
   avatarFrames,
   type Direction,
   FRAME_SIZE,
   IDLE_FRAME,
+  IDLE_FRAME_MS,
+  IDLE_FRAMES,
   type LayerFrame,
   SPRITE_SHEETS,
   WALK_FRAMES,

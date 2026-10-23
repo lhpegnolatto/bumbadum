@@ -1,7 +1,7 @@
 import { type Avatar, parseAvatar } from "@bumbadum/avatar";
 import { z } from "zod";
 
-/** An avatar sent by a client, as the avatar domain validates it: three layers, each in range. */
+/** An avatar sent by a client, as the avatar domain validates it. */
 export const avatarSchema = z.unknown().transform((input, ctx): Avatar => {
   const avatar = parseAvatar(input);
   if (avatar) return avatar;
