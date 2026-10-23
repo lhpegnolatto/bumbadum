@@ -68,3 +68,17 @@ Reach for the owner skill when its situation arises. Details, neighbours and the
 | Auditing the web app's performance, accessibility, SEO | `web-quality-audit` |
 | Editing `AGENTS.md`, `CLAUDE.md`, `docs/agents/` or a skill | `writing-for-agents` |
 | Planning or stress-testing a feature | `grilling` |
+
+## Agent skills
+
+### Issue tracker
+
+Local markdown: specs and tickets live under `.scratch/<feature>/`. See [docs/agents/issue-tracker.md](docs/agents/issue-tracker.md).
+
+### Triage labels
+
+The five default roles, written as each ticket's `Status:` line. See [docs/agents/triage-labels.md](docs/agents/triage-labels.md).
+
+### Domain docs
+
+Single-context: one root `GLOSSARY.md` and `docs/adr/` for every app and package. See [docs/agents/domain.md](docs/agents/domain.md).

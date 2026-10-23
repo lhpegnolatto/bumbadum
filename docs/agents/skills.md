@@ -91,6 +91,7 @@ These run only when the human types them; suggest one when it fits:
 
 - `/grill-with-docs`, `/to-spec`, `/to-tickets`, `/implement`, `/implement-spec`: the full feature flow.
 - `/setup-matt-pocock-skills`: configures the local tracker and domain docs layout (single-context). Run once.
+- `/triage`: moves `.scratch/` tickets through the triage roles in [triage-labels.md](triage-labels.md).
 - `/handoff`: compacts a session for another agent to continue.
 - `/retro`: suggests improvements to the agent environment after a session.
 - `/improve-codebase-architecture`: scans for deepening opportunities once there is real code.
