@@ -1,0 +1,24 @@
+# Render Blueprint for the Colyseus server (ADR-0007). The web app deploys to Vercel.
+services:
+  - type: web
+    name: bumbadum-server
+    runtime: node
+    plan: free
+    buildCommand: corepack enable && pnpm install --frozen-lockfile --filter "@bumbadum/server..." && pnpm --filter @bumbadum/server build
+    startCommand: node apps/server/dist/index.js
+    healthCheckPath: /health
+    buildFilter:
+      paths:
+        - apps/server/**
+        - packages/protocol/**
+        - packages/tooling/**
+        - package.json
+        - pnpm-lock.yaml
+        - pnpm-workspace.yaml
+        - render.yaml
+      ignoredPaths:
+        - "**/*.test.ts"
+    envVars:
+      # Node 24 still ships corepack, which provides the pnpm pinned in package.json.
+      - key: NODE_VERSION
+        value: "24"
