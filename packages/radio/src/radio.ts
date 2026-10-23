@@ -31,6 +31,11 @@ export interface Radio {
   nowPlaying?: NowPlaying;
   /** The tracks waiting to go on air, oldest first. */
   queue: readonly Track[];
+  /**
+   * The players, by id, who voted to skip the track on air. Empty whenever a
+   * track goes on air: votes never carry over to the next one.
+   */
+  skipVotes: readonly string[];
 }
 
 export type Refusal =
@@ -43,13 +48,15 @@ export type Refusal =
 
 export type RadioEvent =
   | { kind: "queued"; track: Track }
-  | { kind: "on-air"; nowPlaying: NowPlaying };
+  | { kind: "on-air"; nowPlaying: NowPlaying }
+  /** The track on air ended early by skip vote. */
+  | { kind: "skipped"; track: Track };
 
 export type Submission =
   | { kind: "accepted"; radio: Radio; events: RadioEvent[] }
   | { kind: "refused"; reason: Refusal };
 
-export const silentRadio: Radio = { queue: [] };
+export const silentRadio: Radio = { queue: [], skipVotes: [] };
 
 /** The longest track the radio accepts. */
 export const MAX_TRACK_DURATION_MS = 10 * 60_000;
@@ -106,7 +113,7 @@ export function submit(
   }
   const nowPlaying = { track, startedAt: now };
   events.push({ kind: "on-air", nowPlaying });
-  return { kind: "accepted", radio: { nowPlaying, queue: [] }, events };
+  return { kind: "accepted", radio: { nowPlaying, queue: [], skipVotes: [] }, events };
 }
 
 function refusalOf(info: TrackInfo): Refusal | undefined {
@@ -132,7 +139,7 @@ export function advance(radio: Radio, now: number): { radio: Radio; events: Radi
     if (nowPlaying) events.push({ kind: "on-air", nowPlaying });
   }
   if (events.length === 0 && nowPlaying === radio.nowPlaying) return { radio, events };
-  return { radio: nowPlaying ? { nowPlaying, queue } : silentRadio, events };
+  return { radio: nowPlaying ? { nowPlaying, queue, skipVotes: [] } : silentRadio, events };
 }
 
 /** When the track on air ends, which is when the radio next changes by itself. */

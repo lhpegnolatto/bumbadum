@@ -4,9 +4,17 @@ import { readTrackRequest } from "./index.ts";
 const video = (videoId: string) => ({ kind: "video", videoId });
 
 describe("readTrackRequest", () => {
-  it("reads a bare video ID", () => {
-    expect(readTrackRequest("dQw4w9WgXcQ")).toEqual(video("dQw4w9WgXcQ"));
-    expect(readTrackRequest("  a-b_c1234XY ")).toEqual(video("a-b_c1234XY"));
+  it("reads a bare 11-character word as a video ID that may also be a name to search for", () => {
+    expect(readTrackRequest("dQw4w9WgXcQ")).toEqual({
+      kind: "video-or-name",
+      videoId: "dQw4w9WgXcQ",
+      name: "dQw4w9WgXcQ",
+    });
+    expect(readTrackRequest("  rickrolling ")).toEqual({
+      kind: "video-or-name",
+      videoId: "rickrolling",
+      name: "rickrolling",
+    });
   });
 
   it("reads the video of every common YouTube link", () => {

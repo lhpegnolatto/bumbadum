@@ -1,6 +1,11 @@
 /** What a player asked the radio to play. */
 export type TrackRequest =
   | { kind: "video"; videoId: string }
+  /**
+   * A bare 11-character word: a video ID, unless the catalog knows no such
+   * video, in which case it is a name to search for.
+   */
+  | { kind: "video-or-name"; videoId: string; name: string }
   | { kind: "name"; name: string }
   | { kind: "not-a-video" }
   | { kind: "missing" };
@@ -17,13 +22,13 @@ const SHORT_HOST = "youtu.be";
 const ID_PATHS = new Set(["embed", "shorts", "live", "v"]);
 
 /**
- * Reads the argument of `/play`: a video ID, a YouTube link (a playlist link
- * plays only the video it names), or a name to search for.
+ * Reads the argument of `/play`: a YouTube link (a playlist link plays only
+ * the video it names), a video ID, or a name to search for.
  */
 export function readTrackRequest(input: string): TrackRequest {
   const text = input.trim();
   if (text.length === 0) return { kind: "missing" };
-  if (VIDEO_ID.test(text)) return { kind: "video", videoId: text };
+  if (VIDEO_ID.test(text)) return { kind: "video-or-name", videoId: text, name: text };
   if (!LINK.test(text)) return { kind: "name", name: text };
 
   const videoId = videoIdOfLink(text);

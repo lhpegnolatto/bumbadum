@@ -12,6 +12,7 @@ export {
   recordDrift,
   startDriftCorrection,
 } from "./drift-correction.ts";
+export { type MusicSearch, normalizeSearchQuery, type SearchResult } from "./music-search.ts";
 export {
   advance,
   endsAt,
@@ -29,5 +30,12 @@ export {
   type Track,
   type TrackInfo,
 } from "./radio.ts";
+export {
+  recountSkipVotes,
+  type SkipTally,
+  type SkipVoteOutcome,
+  skipTally,
+  voteToSkip,
+} from "./skip-vote.ts";
 export type { TrackCatalog, TrackLookup } from "./track-catalog.ts";
 export { readTrackRequest, type TrackRequest } from "./track-request.ts";
