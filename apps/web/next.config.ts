@@ -2,7 +2,12 @@ import { LOBBY_SLUG } from "@bumbadum/protocol";
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  transpilePackages: ["@bumbadum/world", "@bumbadum/protocol", "@bumbadum/game-engine"],
+  transpilePackages: [
+    "@bumbadum/chat",
+    "@bumbadum/world",
+    "@bumbadum/protocol",
+    "@bumbadum/game-engine",
+  ],
   async redirects() {
     return [
       {

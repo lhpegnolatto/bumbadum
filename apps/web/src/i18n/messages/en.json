@@ -43,5 +43,18 @@
     },
     "timedOut": "The server is taking much longer than usual to wake up. Sorry about that!",
     "tryAgain": "Try again"
+  },
+  "chat": {
+    "historyLabel": "Chat",
+    "inputLabel": "Message",
+    "inputPlaceholder": "Press Enter to chat",
+    "announcement": {
+      "player-joined": "{nickname} joined the room.",
+      "player-left": "{nickname} left the room."
+    },
+    "notice": {
+      "unknown-command": "There is no /{name} command.",
+      "rate-limited": "Easy there: at most 5 messages every 5 seconds."
+    }
   }
 }

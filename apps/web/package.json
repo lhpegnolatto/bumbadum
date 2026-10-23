@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@base-ui/react": "1.9.0",
+    "@bumbadum/chat": "workspace:*",
     "@bumbadum/game-engine": "workspace:*",
     "@bumbadum/protocol": "workspace:*",
     "@colyseus/sdk": "0.18.6",

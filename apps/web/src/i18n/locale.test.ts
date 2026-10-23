@@ -1,5 +1,12 @@
+import { languages } from "@bumbadum/chat";
 import { describe, expect, it } from "vitest";
-import { detectLocale } from "./locale.ts";
+import { detectLocale, locales } from "./locale.ts";
+
+describe("locales", () => {
+  it("match the languages every command has a name in", () => {
+    expect([...locales].sort()).toEqual([...languages].sort());
+  });
+});
 
 describe("detectLocale", () => {
   it("gives pt-BR to any Portuguese browser language", () => {

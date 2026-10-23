@@ -3,6 +3,7 @@
 import { isJoinRejection, ROOM_TYPE, type RoomState } from "@bumbadum/protocol";
 import { Callbacks, Client, MatchMakeError, type Room } from "@colyseus/sdk";
 import { useEffect, useRef, useState } from "react";
+import { watchChat } from "@/features/chat/chat-feed.ts";
 import { isServerAwake } from "@/lib/server-health.ts";
 import { SERVER_URL } from "@/lib/server-url.ts";
 import {
@@ -50,6 +51,8 @@ export function useRoom(slug: string, nickname: string) {
         }
         return { kind: "failed" };
       }
+      // Before any await: the server pushes the chat history as soon as we join.
+      watchChat(room);
       setPlayers([]);
       const callbacks = Callbacks.get(room);
       callbacks.onAdd("players", (player, sessionId) => {

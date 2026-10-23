@@ -43,5 +43,18 @@
     },
     "timedOut": "O servidor está demorando bem mais que o normal para acordar. Foi mal!",
     "tryAgain": "Tentar de novo"
+  },
+  "chat": {
+    "historyLabel": "Chat",
+    "inputLabel": "Mensagem",
+    "inputPlaceholder": "Aperte Enter para conversar",
+    "announcement": {
+      "player-joined": "{nickname} entrou na sala.",
+      "player-left": "{nickname} saiu da sala."
+    },
+    "notice": {
+      "unknown-command": "Não existe o comando /{name}.",
+      "rate-limited": "Calma: no máximo 5 mensagens a cada 5 segundos."
+    }
   }
 }

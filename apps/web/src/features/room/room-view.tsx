@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import { useTranslations } from "use-intl";
 import { Alert, AlertDescription } from "@/components/ui/alert.tsx";
 import { Button } from "@/components/ui/button.tsx";
+import { ChatPanel } from "@/features/chat/chat-panel.tsx";
 import { useSettings } from "@/lib/local-settings.ts";
 import { GameCanvas } from "./game-canvas.tsx";
 import { PlayerList } from "./player-list.tsx";
@@ -48,8 +49,10 @@ function ConnectedRoom({ slug, nickname }: { slug: string; nickname: string }) {
       <div className="min-w-0 flex-1">
         <GameCanvas room={status.room} />
       </div>
-      <aside className="w-[400px] shrink-0">
+      {/* The side column (ADR-0010): the screen and the queue go above the chat. */}
+      <aside className="flex h-[calc(100dvh-3rem)] w-[400px] shrink-0 flex-col gap-4">
         <PlayerList players={players} me={status.room.sessionId} />
+        <ChatPanel room={status.room} />
       </aside>
     </main>
   );
