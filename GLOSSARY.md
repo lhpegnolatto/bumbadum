@@ -1,0 +1,95 @@
+# bumbadum
+
+A shared space where friends walk around a room together and listen to the same music at the same time.
+
+## Language
+
+### Rooms and players
+
+**Room**:
+A shared space where players are present together and hear the same radio. Identified by a slug.
+_Avoid_: server, channel, instance
+
+**Lobby**:
+The room every player joins. During the MVP it is the only room.
+_Avoid_: main room, default room
+
+**Player**:
+A person present in a room, known by a nickname and an avatar.
+_Avoid_: user, client, member
+
+**Nickname**:
+The display name a player chooses for themselves. Not unique and not an account.
+_Avoid_: username, login
+
+### World
+
+**Map**:
+The grid of tiles that makes up a room's floor and walls.
+_Avoid_: level, scene
+
+**Tile**:
+One cell of the map. A tile is either walkable or blocked.
+_Avoid_: cell, square
+
+**Step**:
+A player's move of exactly one tile in one direction.
+_Avoid_: movement, walk
+
+**Direction**:
+Where a player is facing: up, down, left or right.
+_Avoid_: orientation, heading
+
+### Radio
+
+**Radio**:
+A room's shared music playback: what is on air, what comes next, and when it started.
+_Avoid_: player, jukebox, music
+
+**Track**:
+A single YouTube video submitted to the radio.
+_Avoid_: song, music, video
+
+**Queue**:
+The ordered tracks waiting to go on air after the current one.
+_Avoid_: playlist
+
+**Now playing**:
+The track currently on air, together with the moment it started.
+_Avoid_: current song
+
+**Skip vote**:
+A player's vote to end the current track early. The track is skipped once more than half of the players present have voted.
+_Avoid_: skip request
+
+**Screen**:
+The visible YouTube player inside the room, where the track on air is shown.
+_Avoid_: TV, video player, embed
+
+**Drift**:
+How far a player's playback position has wandered from where the radio says it should be.
+_Avoid_: lag, desync
+
+### Chat
+
+**Message**:
+Text a player sends to everyone in the room.
+_Avoid_: chat line, post
+
+**Command**:
+A message starting with `/` that asks the room to do something, such as `/play` or `/skip`.
+_Avoid_: action, slash message
+
+### Avatar
+
+**Avatar**:
+A player's visual appearance: a skin tone plus a choice of hair, top, bottom and footwear, each in a colour.
+_Avoid_: character, skin, sprite
+
+**Layer**:
+One part of an avatar (body, footwear, bottom, top, hair), drawn in that order from bottom to top.
+_Avoid_: part, slot
+
+**Variant**:
+One colour option within a layer.
+_Avoid_: colour, palette, style
