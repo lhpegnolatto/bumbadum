@@ -29,12 +29,34 @@ export function RoomView({ slug }: { slug: string }) {
   const nickname = settings?.nickname;
   const avatar = settings?.avatar ?? DEFAULT_AVATAR;
   const router = useRouter();
+  const [clickedJoin, setClickedJoin] = useState(hasClickedOnPage);
 
   useEffect(() => {
     if (!nickname) router.replace("/");
   }, [nickname, router]);
 
-  return nickname ? <ConnectedRoom slug={slug} nickname={nickname} avatar={avatar} /> : null;
+  if (!nickname) return null;
+  if (!clickedJoin) return <JoinGate nickname={nickname} onJoin={() => setClickedJoin(true)} />;
+  return <ConnectedRoom slug={slug} nickname={nickname} avatar={avatar} />;
+}
+
+/**
+ * Browsers unlock autoplay only after a click on the page. Coming from the
+ * home page's Join button that click already happened; a shared link or a
+ * reload asks for it here, before joining.
+ */
+function hasClickedOnPage(): boolean {
+  return typeof navigator !== "undefined" && navigator.userActivation?.hasBeenActive === true;
+}
+
+function JoinGate({ nickname, onJoin }: { nickname: string; onJoin: () => void }) {
+  const t = useTranslations("room");
+  return (
+    <main className="mx-auto flex min-h-dvh max-w-md flex-col justify-center gap-4 p-6">
+      <p>{t("joinGate", { nickname })}</p>
+      <Button onClick={onJoin}>{t("join")}</Button>
+    </main>
+  );
 }
 
 function ConnectedRoom({
