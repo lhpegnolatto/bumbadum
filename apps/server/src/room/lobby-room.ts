@@ -84,8 +84,9 @@ export class LobbyRoom extends Room<{ state: RoomState; client: LobbyClient }> {
   override onReconnect(client: LobbyClient) {
     const player = this.state.players.get(client.sessionId);
     if (!player) return;
-    player.x = SPAWN_POINT.x;
-    player.y = SPAWN_POINT.y;
+    player.x = lobbyMap.spawnPoint.x;
+    player.y = lobbyMap.spawnPoint.y;
+    player.direction = "down";
   }
 
   override onLeave(client: LobbyClient) {

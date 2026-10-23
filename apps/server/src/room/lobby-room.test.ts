@@ -82,11 +82,13 @@ describe("lobby-room", () => {
     const room = await joinLobby("Ana");
     room.reconnection.minUptime = 0;
     await room.waitForNextPatch();
-    // No step intent exists yet, so the player is moved on the server directly.
+    // Moved on the server directly, so the test does not depend on the map layout.
     const seat = colyseus.getRoomById<RoomState>(room.roomId).state.players.get(room.sessionId);
     if (!seat) throw new Error("expected Ana's seat");
-    seat.x = SPAWN_POINT.x + 3;
-    await expect.poll(() => room.state.players.get(room.sessionId)?.x).toBe(SPAWN_POINT.x + 3);
+    seat.x = lobbyMap.spawnPoint.x + 3;
+    await expect
+      .poll(() => room.state.players.get(room.sessionId)?.x)
+      .toBe(lobbyMap.spawnPoint.x + 3);
 
     const reconnected = new Promise<void>((resolve) => room.onReconnect(resolve));
     room.connection.close(CloseCode.MAY_TRY_RECONNECT);
@@ -95,9 +97,9 @@ describe("lobby-room", () => {
     await expect
       .poll(() => {
         const me = room.state.players.get(room.sessionId);
-        return { x: me?.x, y: me?.y };
+        return { x: me?.x, y: me?.y, direction: me?.direction };
       })
-      .toEqual(SPAWN_POINT);
+      .toEqual({ ...lobbyMap.spawnPoint, direction: "down" });
     expect(nicknames(room)).toEqual(["Ana"]);
   });
 
