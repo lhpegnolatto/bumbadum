@@ -21,4 +21,4 @@ See [spec](../spec.md): World, Layout and keyboard.
 
 ## Notes
 
-Tiles are 16 px: the character sprites fill about one tile inside their 32×32 frame (see `.scratch/mvp/research/tileset.md`). Render scaled by a whole number with nearest-neighbour filtering. The prototype on branch `worktree-agent-a7aa6f69023ccc7d4` (`prototypes/movement/src/movement.ts`) holds DOM-free movement logic worth reusing.
+Tiles are 16 px: a MetroCity character's body is about 14×28 px inside its 32×32 frame, so it stands one tile wide and about two tall, with its feet on its tile. Render scaled by a whole number with nearest-neighbour filtering. The prototype on branch `prototype/movement` (`prototypes/movement/src/movement.ts`) holds DOM-free movement logic worth reusing.

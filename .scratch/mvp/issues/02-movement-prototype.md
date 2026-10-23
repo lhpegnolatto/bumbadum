@@ -14,7 +14,7 @@ A throwaway prototype to settle how step movement feels before ticket 03 builds 
 
 ## Answer
 
-Prototype on branch `worktree-agent-a7aa6f69023ccc7d4`, under `prototypes/movement/` (not merged). Its DOM-free movement logic in `src/movement.ts` is a starting point for `packages/world`. Chosen by the human:
+Prototype on branch `prototype/movement`, under `prototypes/movement/` (not merged). Its DOM-free movement logic in `src/movement.ts` is a starting point for `packages/world`. Chosen by the human:
 
 | Setting | Value |
 |---|---|

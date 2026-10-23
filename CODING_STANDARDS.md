@@ -4,7 +4,7 @@ Rules Biome already enforces are not repeated here; run `pnpm check` and trust i
 
 ## Naming
 
-- **kebab-case** for every file, folder, package name, route segment and Colyseus room name: `skip-vote.ts`, `chat-panel.tsx`, `@bumbadum/game-engine`, `lobby-room`. Assets too: `sprites/hairs/extra-long.png`.
+- **kebab-case** for every file, folder, package name, route segment and Colyseus room name: `skip-vote.ts`, `chat-panel.tsx`, `@bumbadum/game-engine`, `lobby-room`. Assets too: `sprites/outfits/outfit-1.png`.
 - Identifiers follow TypeScript convention: `camelCase` for values and functions, `PascalCase` for types, classes and React components (`chat-panel.tsx` exports `ChatPanel`).
 - Name domain concepts with the terms in [GLOSSARY.md](GLOSSARY.md), in code as in prose: `Track`, `Queue`, `SkipVote`, `Player`.
 - Everything is in English: code, comments, docs, commit messages.

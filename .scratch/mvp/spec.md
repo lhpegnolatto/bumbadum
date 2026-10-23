@@ -33,7 +33,7 @@ Terms follow [GLOSSARY.md](../../GLOSSARY.md). Decisions that are hard to revers
 ## Avatar and nickname
 
 - The home page has the nickname field and the avatar editor. Nickname: 1–16 characters, trimmed, not unique.
-- The editor uses exactly the assets in `apps/web/public/sprites/`: 8 skin tones; hair `extra-long`, `gentleman` (14 variants); top `shirt`, `dress`, bottom `pants`, `skirt`, footwear `shoes` (10 variants each). Every layer is mandatory.
+- The editor uses exactly the MetroCity assets in `apps/web/public/sprites/` (CC0, see [ASSETS.md](../../ASSETS.md), [ADR-0011](../../docs/adr/0011-only-redistributable-assets.md)): 6 skin tones, 8 hairs (each with its own colour) and 6 outfits. Every layer is mandatory.
 - In the room, a HUD button or `C` opens the same editor in a side panel that never covers the screen. The nickname cannot be changed there.
   - Changes preview locally only. "Wear" (or closing the panel with pending changes) sends the new avatar to the room and stores it in `localStorage`.
   - The server accepts at most one avatar change every 2 seconds per player.
