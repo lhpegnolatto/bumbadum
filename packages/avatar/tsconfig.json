@@ -1,0 +1,4 @@
+{
+  "extends": "@bumbadum/tooling/tsconfig/base.json",
+  "include": ["src"]
+}
