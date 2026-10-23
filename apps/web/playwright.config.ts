@@ -27,7 +27,7 @@ export default defineConfig({
       name: "web",
       command: `pnpm exec next dev --port ${WEB_PORT}`,
       url: `http://localhost:${WEB_PORT}`,
-      env: { NEXT_PUBLIC_SERVER_URL: `http://localhost:${SERVER_PORT}` },
+      env: { NEXT_PUBLIC_SERVER_URL: `http://localhost:${SERVER_PORT}`, NEXT_PUBLIC_E2E: "1" },
       reuseExistingServer: false,
       timeout: 120_000,
     },

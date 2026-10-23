@@ -41,7 +41,7 @@ function ConnectedRoom({ slug, nickname }: { slug: string; nickname: string }) {
 
   return (
     <main className="flex min-h-dvh gap-6 p-6">
-      <div className="shrink-0">
+      <div className="min-w-0 flex-1">
         {status.kind === "joined" ? (
           <GameCanvas room={status.room} />
         ) : (

@@ -7,14 +7,17 @@
     ".": "./src/index.ts"
   },
   "scripts": {
-    "typecheck": "tsc"
+    "typecheck": "tsc",
+    "test": "vitest run"
   },
   "dependencies": {
     "@bumbadum/protocol": "workspace:*",
+    "@bumbadum/world": "workspace:*",
     "pixi.js": "8.22.0"
   },
   "devDependencies": {
     "@bumbadum/tooling": "workspace:*",
-    "typescript": "7.0.2"
+    "typescript": "7.0.2",
+    "vitest": "5.0.5"
   }
 }
