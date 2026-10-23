@@ -8,4 +8,11 @@ describe("commands", () => {
     expect(readChatInput("/play https://youtu.be/dQw4w9WgXcQ", commands)).toEqual(play);
     expect(readChatInput("/tocar https://youtu.be/dQw4w9WgXcQ", commands)).toEqual(play);
   });
+
+  it("knows /skip and /pular as the same command", () => {
+    const skip = { kind: "command", command: "skip", args: "" };
+
+    expect(readChatInput("/skip", commands)).toEqual(skip);
+    expect(readChatInput("/PULAR", commands)).toEqual(skip);
+  });
 });
