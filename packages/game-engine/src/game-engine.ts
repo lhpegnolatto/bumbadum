@@ -11,10 +11,13 @@ import { listenToDirectionKeys } from "./keyboard.ts";
 import { type Bump, bumpOffset, Glide } from "./movement/glide.ts";
 import { type Pose, StepPredictor } from "./movement/step-predictor.ts";
 import { StepRepeater } from "./movement/step-repeater.ts";
+import { SpeechBubbles } from "./speech-bubbles.ts";
 
 /** Pixels per tile, before the whole-number scale that fits the map to its container. */
 const TILE_SIZE = 16;
 const DOT_RADIUS = 5;
+/** Screen pixels between a player's nickname and their speech bubble. */
+const BUBBLE_GAP = 2;
 
 // The movement feel chosen in the movement prototype (ticket 02).
 const STEP_INTERVAL_MS = 1000 / STEPS_PER_SECOND;
@@ -61,6 +64,8 @@ export interface GameEngine {
   applyState(state: RoomState): void;
   /** What the canvas shows, for end-to-end tests that cannot read pixels. */
   drawnPlayers(): DrawnPlayer[];
+  /** Shows `text` in a bubble over the player for a few seconds. */
+  showBubble(sessionId: string, text: string): void;
   destroy(): void;
 }
 
@@ -96,6 +101,8 @@ export async function mountGameEngine(
   world.addChild(drawMap(map));
   const labels = new Container();
   app.stage.addChild(world, labels);
+  // Last on the stage, so bubbles stay above every avatar and label.
+  const bubbles = new SpeechBubbles(app.stage, app.screen);
 
   const fitToContainer = () => {
     const scale = fittingScale(map, container.clientWidth, container.clientHeight);
@@ -161,6 +168,10 @@ export async function mountGameEngine(
         (avatar.body.y - DOT_RADIUS - 2) * world.scale.y,
       );
     }
+    bubbles.update(now, (id) => {
+      const label = avatars.get(id)?.label;
+      return label && { x: label.x, y: label.y - label.height - BUBBLE_GAP };
+    });
   });
 
   return {
@@ -200,6 +211,9 @@ export async function mountGameEngine(
         ...avatar.glide.target,
         direction: avatar.direction,
       }));
+    },
+    showBubble(id, text) {
+      bubbles.show(id, text, performance.now());
     },
     destroy() {
       stopListening();
