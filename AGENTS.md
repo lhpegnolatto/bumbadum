@@ -2,11 +2,9 @@
 
 A cozy place where friends listen to music together. Players walk around a top-down 2D room (Gather-style) rendered with PixiJS, and chat. Chat commands like `/play <url|name>` drive a shared **radio**: every player in the room hears the same YouTube track at the same moment.
 
-Status: **pre-scaffold**. The layout below is the target; create the monorepo to match it. Once scaffolded, delete this line.
-
 ## Stack
 
-TypeScript end to end, pnpm workspaces + Turborepo. Next.js (App Router) + Tailwind + shadcn/ui on Vercel. Colyseus (self-hosted, authoritative) on Render. PixiJS for the game. Biome, Vitest, Playwright. No database, no auth: players pick a nickname and avatar stored in `localStorage`. Use the latest stable version of each, confirmed through Context7 docs at install time.
+TypeScript end to end, pnpm workspaces + Turborepo. Next.js (App Router) + Tailwind + shadcn/ui on Vercel. Colyseus (self-hosted, authoritative) on Render. PixiJS for the game. Zod for schemas, `use-intl` for i18n (client-side only: the locale never reaches the server or the URL, ADR-0009). Biome, Vitest, Playwright. No database, no auth: players pick a nickname and avatar stored in `localStorage`. Use the latest stable version of each that pnpm's release-age policy accepts, confirmed through Context7 docs at install time.
 
 ## Layout
 
@@ -24,7 +22,7 @@ packages/
   tooling/      shared tsconfig
 ```
 
-Dependencies point one way: **domain packages ← protocol ← game-engine ← apps**. A domain package imports no other domain package; the server room is the composition root that wires chat commands to radio and world. Apps mirror the domains internally (`apps/server/src/radio/`, `apps/web/src/features/radio/`).
+Each package is created by the first slice that needs it. Dependencies point one way: **domain packages ← protocol ← game-engine ← apps**. A domain package imports no other domain package; the server room is the composition root that wires chat commands to radio and world. Apps mirror the domains internally (`apps/server/src/radio/`, `apps/web/src/features/radio/`).
 
 ## Done
 

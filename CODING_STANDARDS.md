@@ -19,7 +19,7 @@ Rules Biome already enforces are not repeated here; run `pnpm check` and trust i
 - Domain packages (`world`, `radio`, `chat`, `avatar`) are pure: plain TypeScript with no I/O, no timers, no `Date.now()`, no Colyseus, PixiJS or React. Time, randomness and external services come in as arguments or through a port (e.g. `MusicSearch`), so every rule is testable with plain values.
 - A domain package imports no other domain package. The composition root (the server room, the web feature) wires domains together.
 - Each package exposes one public entry (`src/index.ts`); consumers import only from it. Internal packages export TypeScript source directly (`"exports": { ".": "./src/index.ts" }`), with no build step: Next consumes them via `transpilePackages`, the server is bundled for production.
-- `protocol` mirrors domain state into Colyseus schemas and defines message types; it holds no rules of its own.
+- `protocol` mirrors domain state into Colyseus schemas and defines message types together with the schemas that validate them (shape and size limits, such as a nickname's 1–16 characters); it holds no game rules of its own. Colyseus schemas use `schema()` with `t.*` fields, not `@type()` decorators.
 - `game-engine` owns the PixiJS lifecycle. React mounts it (`mount`, `applyState`, events) and renders only UI around it: chat, menus, the screen column.
 
 ## Server
@@ -30,7 +30,8 @@ Rules Biome already enforces are not repeated here; run `pnpm check` and trust i
 
 ## Web
 
-- Tailwind + shadcn/ui for all UI. Components live under `apps/web/src/features/<domain>/`.
+- Tailwind + shadcn/ui for all UI. Components live under `apps/web/src/features/<feature>/`, named after the domain where one fits (`room`, `radio`; `home` for the home page). App-wide plumbing lives in `src/i18n/` and `src/lib/`; generated shadcn/ui primitives stay in `src/components/ui/`.
+- Every UI string comes from `apps/web/src/i18n/messages/en.json` and `pt-BR.json`, which a test keeps key-for-key identical.
 - The YouTube player is the room's **screen**: always visible, at least 200×200 px, and nothing renders on top of it; it lives in a column beside the canvas ([ADR-0006](docs/adr/0006-youtube-player-as-visible-screen.md), [ADR-0010](docs/adr/0010-screen-in-side-column.md)).
 - `localStorage` holds only the player's nickname, avatar, language and volume settings, under a versioned key, parsed with a schema on read.
 

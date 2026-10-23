@@ -11,14 +11,18 @@ See [spec](../spec.md): Platform and language, Room.
 
 ## Acceptance criteria
 
-- [ ] `pnpm check` green across every package; `pnpm test:e2e` runs one two-browser test (both players see each other).
-- [ ] Nickname 1–16 characters, trimmed, validated on the server; stored in `localStorage` under a versioned key.
-- [ ] `/r/<anything other than lobby>` redirects to `/r/lobby`; the 17th player sees "room full".
-- [ ] Every UI string comes from the pt-BR and English message files; the switcher changes them live.
-- [ ] A touch device sees the desktop-only notice.
+- [x] `pnpm check` green across every package; `pnpm test:e2e` runs one two-browser test (both players see each other).
+- [x] Nickname 1–16 characters, trimmed, validated on the server; stored in `localStorage` under a versioned key.
+- [x] `/r/<anything other than lobby>` redirects to `/r/lobby`; the 17th player sees "room full".
+- [x] Every UI string comes from the pt-BR and English message files; the switcher changes them live.
+- [x] A touch device sees the desktop-only notice.
 - [ ] Both apps deployed; the production link works for two people on different machines.
-- [ ] The "Status: pre-scaffold" line is removed from `AGENTS.md`.
+- [x] The "Status: pre-scaffold" line is removed from `AGENTS.md`.
 
 ## Notes
 
 Confirm the latest stable versions and the i18n library through Context7 at install time. A minimal reconnect is enough here; ticket 10 builds the full waiting experience.
+
+## Comments
+
+Built everything but the deploy. `render.yaml` (server) and `apps/web/.env.example` are ready; connecting Vercel and Render and checking the production link with two people on different machines is left to the human.
