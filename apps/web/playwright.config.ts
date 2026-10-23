@@ -22,7 +22,8 @@ export default defineConfig({
       name: "server",
       command: "pnpm --filter @bumbadum/server exec tsx src/index.ts",
       url: `http://localhost:${SERVER_PORT}/health`,
-      env: { PORT: String(SERVER_PORT) },
+      // The fake track catalog: e2e runs never call YouTube (apps/server/src/radio/fake-track-catalog.ts).
+      env: { PORT: String(SERVER_PORT), TRACK_CATALOG: "fake" },
       reuseExistingServer: false,
     },
     {

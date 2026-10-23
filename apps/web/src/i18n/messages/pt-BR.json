@@ -91,5 +91,16 @@
     "hint": "Só você vê essas mudanças até vesti-las.",
     "wear": "Vestir",
     "close": "Fechar o guarda-roupa"
+  },
+  "radio": {
+    "screenLabel": "Tela",
+    "nothingPlaying": "Nada tocando",
+    "nothingPlayingHint": "Digite /tocar e um link do YouTube no chat para ligar o rádio.",
+    "nowPlaying": "Tocando agora:",
+    "from": "de {nickname}",
+    "volume": "Volume",
+    "mute": "Silenciar",
+    "queue": "A seguir ({count})",
+    "queueEmpty": "Nada na fila."
   }
 }

@@ -91,5 +91,16 @@
     "hint": "Only you see these changes until you wear them.",
     "wear": "Wear",
     "close": "Close the wardrobe"
+  },
+  "radio": {
+    "screenLabel": "Screen",
+    "nothingPlaying": "Nothing playing",
+    "nothingPlayingHint": "Type /play and a YouTube link in the chat to start the radio.",
+    "nowPlaying": "Now playing:",
+    "from": "from {nickname}",
+    "volume": "Volume",
+    "mute": "Mute",
+    "queue": "Up next ({count})",
+    "queueEmpty": "Nothing in the queue."
   }
 }

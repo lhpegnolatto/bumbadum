@@ -17,6 +17,7 @@
     "@bumbadum/chat": "workspace:*",
     "@bumbadum/game-engine": "workspace:*",
     "@bumbadum/protocol": "workspace:*",
+    "@bumbadum/radio": "workspace:*",
     "@colyseus/sdk": "0.18.6",
     "class-variance-authority": "0.7.1",
     "cn": "0.5.0",

@@ -27,7 +27,7 @@ export const test = base.extend<{ joinLobby: (nickname: string) => Promise<Page>
 /** Where `page`'s canvas draws the player called `nickname`. */
 export function drawnPlayer(page: Page, nickname: string) {
   return page.evaluate(
-    (name) => window.bumbadumE2E?.drawnPlayers().find((player) => player.nickname === name),
+    (name) => window.bumbadumE2E?.drawnPlayers?.().find((player) => player.nickname === name),
     nickname,
   );
 }

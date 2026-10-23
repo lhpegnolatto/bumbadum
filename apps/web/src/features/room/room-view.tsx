@@ -13,6 +13,11 @@ import { Button } from "@/components/ui/button.tsx";
 import { useWearAvatar } from "@/features/avatar/use-wear-avatar.ts";
 import { WardrobePanel } from "@/features/avatar/wardrobe-panel.tsx";
 import { ChatPanel } from "@/features/chat/chat-panel.tsx";
+import { NowPlayingCaption } from "@/features/radio/now-playing.tsx";
+import { QueueList } from "@/features/radio/queue-list.tsx";
+import { RadioProvider } from "@/features/radio/radio-provider.tsx";
+import { RadioScreen } from "@/features/radio/radio-screen.tsx";
+import { VolumeControl } from "@/features/radio/volume-control.tsx";
 import { useSettings } from "@/lib/local-settings.ts";
 import { GameCanvas } from "./game-canvas.tsx";
 import { PlayerList } from "./player-list.tsx";
@@ -107,8 +112,18 @@ function JoinedRoom({
           </Button>
         )}
       </div>
-      {/* The side column (ADR-0010): the screen and the queue go above the chat. */}
+      {/* The side column (ADR-0010): the screen on top, always visible, then the queue and the chat. */}
       <aside className="flex h-[calc(100dvh-3rem)] w-[400px] shrink-0 flex-col gap-4">
+        <RadioProvider room={room}>
+          <div className="flex shrink-0 flex-col gap-2">
+            <RadioScreen />
+            <div className="flex items-center justify-end gap-2">
+              <NowPlayingCaption />
+              <VolumeControl />
+            </div>
+          </div>
+          <QueueList />
+        </RadioProvider>
         <PlayerList players={players} me={room.sessionId} />
         <ChatPanel room={room} />
       </aside>

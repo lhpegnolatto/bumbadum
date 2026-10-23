@@ -5,11 +5,12 @@ import { CHAT_MESSAGE, type ChatMessage, type RoomState, STEP_MESSAGE } from "@b
 import type { Room } from "@colyseus/sdk";
 import { useEffect, useRef } from "react";
 import { useTranslations } from "use-intl";
+import { exposeToE2E } from "@/lib/e2e.ts";
 
 declare global {
-  interface Window {
-    /** Set only in end-to-end runs: what the canvas shows, since tests cannot read its pixels. */
-    bumbadumE2E?: { drawnPlayers(): DrawnPlayer[] };
+  interface BumbadumE2E {
+    /** What the canvas shows, since tests cannot read its pixels. */
+    drawnPlayers?(): DrawnPlayer[];
   }
 }
 
@@ -59,9 +60,7 @@ export function GameCanvas({
       const stopBubbles = room.onMessage<ChatMessage>(CHAT_MESSAGE, (message) =>
         engine.showBubble(message.senderId, message.text),
       );
-      if (process.env.NEXT_PUBLIC_E2E === "1") {
-        window.bumbadumE2E = { drawnPlayers: () => engine.drawnPlayers() };
-      }
+      exposeToE2E({ drawnPlayers: () => engine.drawnPlayers() });
       stop = () => {
         engineRef.current = undefined;
         room.onStateChange.remove(onStateChange);

@@ -43,6 +43,9 @@
         "rules": {
           "a11y": {
             "noLabelWithoutControl": "off"
+          },
+          "suspicious": {
+            "noArrayIndexKey": "off"
           }
         }
       }

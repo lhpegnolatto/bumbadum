@@ -5,7 +5,8 @@ import { type Locale, locales } from "../i18n/locale.ts";
 
 /**
  * Bump the version when the stored shape changes incompatibly. Adding an
- * optional field (as `avatar` was) keeps older settings valid, so needs none.
+ * optional field (as `avatar`, `volume` and `muted` were) keeps older settings
+ * valid, so needs none.
  */
 export const SETTINGS_KEY = "bumbadum:settings:v1";
 
@@ -13,12 +14,17 @@ const settingsSchema = z.object({
   nickname: z.string().optional().catch(undefined),
   locale: z.enum(locales).optional().catch(undefined),
   avatar: z.unknown().transform(parseAvatar).optional(),
+  /** The radio's volume for this player only, 0 to 100. */
+  volume: z.number().int().min(0).max(100).optional().catch(undefined),
+  muted: z.boolean().optional().catch(undefined),
 });
 
 export interface Settings {
   nickname?: string;
   locale?: Locale;
   avatar?: Avatar;
+  volume?: number;
+  muted?: boolean;
 }
 
 export function parseSettings(raw: string | null): Settings {
@@ -30,11 +36,13 @@ export function parseSettings(raw: string | null): Settings {
   }
   const result = settingsSchema.safeParse(json);
   if (!result.success) return {};
-  const { nickname, locale, avatar } = result.data;
+  const { nickname, locale, avatar, volume, muted } = result.data;
   return {
     ...(nickname !== undefined && { nickname }),
     ...(locale !== undefined && { locale }),
     ...(avatar !== undefined && { avatar }),
+    ...(volume !== undefined && { volume }),
+    ...(muted !== undefined && { muted }),
   };
 }
 

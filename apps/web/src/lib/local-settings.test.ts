@@ -36,6 +36,24 @@ describe("parseSettings", () => {
     }
   });
 
+  it("reads the volume and mute", () => {
+    expect(parseSettings(JSON.stringify({ volume: 35, muted: true }))).toEqual({
+      volume: 35,
+      muted: true,
+    });
+  });
+
+  it("drops a volume outside 0 to 100 or a mute that is not a yes or no, keeping the rest", () => {
+    for (const volume of [-1, 101, 50.5, "50"]) {
+      expect(parseSettings(JSON.stringify({ nickname: "Ana", volume }))).toEqual({
+        nickname: "Ana",
+      });
+    }
+    expect(parseSettings(JSON.stringify({ nickname: "Ana", muted: "yes" }))).toEqual({
+      nickname: "Ana",
+    });
+  });
+
   it("lives under a versioned key", () => {
     expect(SETTINGS_KEY).toMatch(/v\d+$/);
   });

@@ -7,6 +7,7 @@ const nextConfig: NextConfig = {
     "@bumbadum/chat",
     "@bumbadum/world",
     "@bumbadum/protocol",
+    "@bumbadum/radio",
     "@bumbadum/game-engine",
   ],
   async redirects() {
