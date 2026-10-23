@@ -1,6 +1,8 @@
+import type { Avatar } from "@bumbadum/avatar";
 import {
   ANNOUNCEMENT,
   type Announcement,
+  AVATAR_MESSAGE,
   CHAT_HISTORY,
   CHAT_INPUT,
   CHAT_MESSAGE,
@@ -34,8 +36,19 @@ beforeEach(async () => {
   await openLobby();
 });
 
-function joinLobby(nickname: string): Promise<ClientRoom<unknown, RoomState>> {
-  return colyseus.sdk.join(ROOM_TYPE, { slug: LOBBY_SLUG, nickname });
+const AVATAR: Avatar = { skinTone: 2, hair: 3, outfit: 4 };
+
+function joinLobby(
+  nickname: string,
+  avatar: unknown = AVATAR,
+): Promise<ClientRoom<unknown, RoomState>> {
+  return colyseus.sdk.join(ROOM_TYPE, { slug: LOBBY_SLUG, nickname, avatar });
+}
+
+/** The avatar `room` sees `player` wearing. */
+function avatarOf(room: ClientRoom<unknown, RoomState>, player: ClientRoom<unknown, RoomState>) {
+  const avatar = room.state.players?.get(player.sessionId)?.avatar;
+  return avatar && { skinTone: avatar.skinTone, hair: avatar.hair, outfit: avatar.outfit };
 }
 
 function nicknames(room: ClientRoom<unknown, RoomState>): string[] {
@@ -120,6 +133,14 @@ describe("lobby-room", () => {
   it("rejects an invalid nickname with a code", async () => {
     expect(await rejectionOf(joinLobby("   "))).toBe("invalid-nickname");
     expect(await rejectionOf(joinLobby("a".repeat(17)))).toBe("invalid-nickname");
+  });
+
+  it("rejects an invalid avatar with a code", async () => {
+    expect(
+      await rejectionOf(colyseus.sdk.join(ROOM_TYPE, { slug: LOBBY_SLUG, nickname: "Ana" })),
+    ).toBe("invalid-avatar");
+    expect(await rejectionOf(joinLobby("Ana", { skinTone: 1, hair: 1 }))).toBe("invalid-avatar");
+    expect(await rejectionOf(joinLobby("Ana", { ...AVATAR, hair: 9 }))).toBe("invalid-avatar");
   });
 
   it("rejects the player after the 16th with room-full, without opening a second lobby", async () => {
@@ -290,5 +311,51 @@ describe("lobby-room chat", () => {
     say(bia, "after");
 
     await expect.poll(() => toBia.map((message) => message.text)).toEqual(["after"]);
+  });
+});
+
+describe("lobby-room avatars", () => {
+  const changed: Avatar = { skinTone: 6, hair: 8, outfit: 1 };
+
+  it("shows everyone the avatar a player joins with", async () => {
+    const ana = await joinLobby("Ana", { skinTone: 5, hair: 7, outfit: 6 });
+    const bia = await joinLobby("Bia");
+
+    await expect.poll(() => avatarOf(bia, ana)).toEqual({ skinTone: 5, hair: 7, outfit: 6 });
+    await expect.poll(() => avatarOf(ana, bia)).toEqual(AVATAR);
+  });
+
+  it("applies an avatar change for everyone to see", async () => {
+    const ana = await joinLobby("Ana");
+    const bia = await joinLobby("Bia");
+    await expect.poll(() => avatarOf(bia, ana)).toEqual(AVATAR);
+    ana.send(AVATAR_MESSAGE, changed);
+
+    await expect.poll(() => avatarOf(bia, ana)).toEqual(changed);
+    await expect.poll(() => avatarOf(ana, ana)).toEqual(changed);
+  });
+
+  it("ignores an invalid avatar change", async () => {
+    const ana = await joinLobby("Ana");
+    ana.send(AVATAR_MESSAGE, { skinTone: 6, hair: 8 });
+    ana.send(AVATAR_MESSAGE, { ...changed, outfit: 7 });
+    ana.send(AVATAR_MESSAGE, "outfit-2");
+    // Messages are handled in order, so once the step is, so are the changes.
+    await walk(ana, "down");
+
+    expect(avatarOf(ana, ana)).toEqual(AVATAR);
+  });
+
+  it("accepts at most one avatar change every 2 seconds per player", async () => {
+    const ana = await joinLobby("Ana");
+    const bia = await joinLobby("Bia");
+    ana.send(AVATAR_MESSAGE, changed);
+    ana.send(AVATAR_MESSAGE, { skinTone: 1, hair: 1, outfit: 1 });
+    bia.send(AVATAR_MESSAGE, changed);
+    await walk(ana, "down");
+    await walk(bia, "down");
+
+    expect(avatarOf(ana, ana)).toEqual(changed);
+    expect(avatarOf(bia, bia)).toEqual(changed);
   });
 });
