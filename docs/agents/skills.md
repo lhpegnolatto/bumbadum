@@ -1,13 +1,27 @@
 # Skills
 
-The routing table in [AGENTS.md](../../AGENTS.md) names one owner skill per situation. This file holds what the table cannot: where each skill stops, which neighbour it gets confused with, and what it means in bumbadum. Project skills live in `.claude/skills/`; the rest come from the `mattpocock-skills` plugin. The `superpowers` plugin is disabled for this project.
+The routing table in [AGENTS.md](../../AGENTS.md) names one owner skill per situation. This file holds what the table cannot: where each skill stops, which neighbour it gets confused with, and what it means in bumbadum. Project skills have one source in `.claude/skills/`; `.agents/skills` points there so Codex loads the same files. The rest come from the `mattpocock-skills` plugin. The `superpowers` plugin is disabled for this project.
+
+## Agent setup
+
+`AGENTS.md` is the shared instruction source. Claude reaches it through [CLAUDE.md](../../CLAUDE.md); Codex reads it directly. Nested `AGENTS.md` files continue to apply in their directories.
+
+After cloning, install the shared workflow plugin and Context7 for the agent you use:
+
+| Capability | Claude Code | Codex |
+|---|---|---|
+| Project skills | `.claude/skills/` | `.agents/skills` symlink |
+| Matt Pocock workflows | `claude plugin install mattpocock-skills@claude-plugins-official` | `codex plugin add mattpocock-skills@openai-curated-remote` |
+| Current library docs | Context7 plugin | `codex mcp add context7 --url https://mcp.context7.com/mcp` |
+
+The installs are user-level prerequisites, not repository state. Run each command once per machine and complete the OAuth prompt that Context7 opens. Invoke a human-only workflow as `/skill-name` in Claude Code. In Codex, use `$skill-name` for a project skill and `$mattpocock-skills:skill-name` for a plugin skill; model-invoked owner skills are selected automatically in both.
 
 ## Feature workflows
 
 Pick by size. **Does the feature fit in one agent session?**
 
 - **Yes → light flow.** `grilling` to settle the open decisions, `tdd` to build it slice by slice, `code-review` on the diff, then a Conventional Commit on `main`.
-- **No → full flow**, run by the human: `/grill-with-docs` (grills and updates `GLOSSARY.md` and ADRs as it goes), `/to-spec`, `/to-tickets`, then `/implement`, which drives `tdd` and closes with `code-review`. Specs and tickets live in the local tracker set up by `/setup-matt-pocock-skills`. Example: the whole radio system.
+- **No → full flow**, run by the human: `grill-with-docs` (grills and updates `GLOSSARY.md` and ADRs as it goes), `to-spec`, `to-tickets`, then `implement`, which drives `tdd` and closes with `code-review`. Specs and tickets live in the local tracker set up by `setup-matt-pocock-skills`. Example: the whole radio system.
 
 When unsure, start light; if `grilling` surfaces more than one session's worth of work, switch to the full flow.
 
@@ -87,13 +101,13 @@ Interviews the human until a plan has no silent assumptions. The entry point of 
 
 ## Human-invoked
 
-These run only when the human types them; suggest one when it fits:
+These run only when the human invokes them (`/name` in Claude Code, `$mattpocock-skills:name` in Codex); suggest one when it fits:
 
-- `/grill-with-docs`, `/to-spec`, `/to-tickets`, `/implement`, `/implement-spec`: the full feature flow.
-- `/setup-matt-pocock-skills`: configures the local tracker and domain docs layout (single-context). Run once.
-- `/triage`: moves `.scratch/` tickets through the triage roles in [triage-labels.md](triage-labels.md).
-- `/handoff`: compacts a session for another agent to continue.
-- `/retro`: suggests improvements to the agent environment after a session.
-- `/improve-codebase-architecture`: scans for deepening opportunities once there is real code.
+- `grill-with-docs`, `to-spec`, `to-tickets`, `implement`: the full feature flow. Claude also exposes `implement-spec`; use `implement` with the spec in Codex.
+- `setup-matt-pocock-skills`: configures the local tracker and domain docs layout (single-context). Run once.
+- `triage`: moves `.scratch/` tickets through the triage roles in [triage-labels.md](triage-labels.md).
+- `handoff`: compacts a session for another agent to continue.
+- `retro`: suggests improvements to the agent environment after a session; currently Claude-only because the Codex plugin does not publish it.
+- `improve-codebase-architecture`: scans for deepening opportunities once there is real code.
 
 `pr` is not used: work goes straight to `main` during the MVP.

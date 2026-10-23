@@ -46,6 +46,8 @@ Keep them true. A change that alters an ADR's decision adds a new ADR and sets t
 
 Reach for the owner skill when its situation arises. Details, neighbours and the two feature workflows: [docs/agents/skills.md](docs/agents/skills.md).
 
+Project skills have one source in `.claude/skills/` and are exposed to Codex through the `.agents/skills` symlink. Skills named below that are not in that directory come from the `mattpocock-skills` plugin. Setup and invocation for both agents: [docs/agents/skills.md](docs/agents/skills.md#agent-setup).
+
 | Situation | Skill |
 |---|---|
 | Writing or changing any code | `coding-guidelines` |
