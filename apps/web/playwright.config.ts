@@ -1,7 +1,8 @@
 import { defineConfig, devices } from "@playwright/test";
 
-const SERVER_PORT = 2577;
-const WEB_PORT = 3100;
+// Overridable so several checkouts can run e2e side by side.
+const SERVER_PORT = Number(process.env.E2E_SERVER_PORT ?? 2577);
+const WEB_PORT = Number(process.env.E2E_WEB_PORT ?? 3100);
 
 export default defineConfig({
   testDir: "e2e",
