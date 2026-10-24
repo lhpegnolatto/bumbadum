@@ -1,5 +1,5 @@
 ---
-status: proposed
+status: accepted
 ---
 
 # The world scales by whole physical pixels

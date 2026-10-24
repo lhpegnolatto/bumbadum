@@ -1,5 +1,5 @@
 ---
-status: accepted
+status: scale rule superseded by ADR-0017
 ---
 
 # The camera follows the local player

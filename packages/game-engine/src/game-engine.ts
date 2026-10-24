@@ -141,11 +141,14 @@ export async function mountGameEngine(
   // Last on the stage, so bubbles stay above every avatar and label.
   const bubbles = new SpeechBubbles(app.stage, app.screen);
 
-  // The camera frames the world every frame, from the resized screen.
-  const fitToContainer = () => app.renderer.resize(container.clientWidth, container.clientHeight);
+  // The camera frames the world every frame, from the resized screen and its pixel ratio.
+  const fitToContainer = () =>
+    app.renderer.resize(container.clientWidth, container.clientHeight, window.devicePixelRatio);
   fitToContainer();
   const resizeObserver = new ResizeObserver(fitToContainer);
   resizeObserver.observe(container);
+  // Browser zoom and moving the window to another monitor change the ratio, not always the size.
+  const stopWatchingRatio = onDevicePixelRatioChange(fitToContainer);
 
   const avatars = new Map<string, PlayerView>();
   let predictor: StepPredictor | undefined;
@@ -191,7 +194,7 @@ export async function mountGameEngine(
     walkLocalPlayer(now);
     // Follows the glide, not the bump, so a blocked step does not shake the view.
     const focus = avatars.get(sessionId)?.glide.at(now) ?? map.spawnPoint;
-    const camera = cameraOn(map, app.screen, tileCentre(focus));
+    const camera = cameraOn(map, app.screen, tileCentre(focus), app.renderer.resolution);
     world.scale.set(camera.scale);
     world.position.set(camera.x, camera.y);
     for (const avatar of avatars.values()) {
@@ -272,6 +275,7 @@ export async function mountGameEngine(
     destroy() {
       stopListening();
       resizeObserver.disconnect();
+      stopWatchingRatio();
       app.destroy({ removeView: true }, { children: true });
     },
   };
@@ -300,6 +304,24 @@ function drawNickname(nickname: string): Container {
   label.addChild(background, text);
   label.pivot.set(label.width / 2, label.height);
   return label;
+}
+
+/** Calls `listener` each time `window.devicePixelRatio` changes, until the returned function is called. */
+function onDevicePixelRatioChange(listener: () => void): () => void {
+  const stop = new AbortController();
+  const watch = () => {
+    // Matches only the current ratio, so it fires once the ratio moves away from it.
+    window.matchMedia(`(resolution: ${window.devicePixelRatio}dppx)`).addEventListener(
+      "change",
+      () => {
+        listener();
+        watch();
+      },
+      { once: true, signal: stop.signal },
+    );
+  };
+  watch();
+  return () => stop.abort();
 }
 
 /** The centre of the tile at `point`, in world pixels. */

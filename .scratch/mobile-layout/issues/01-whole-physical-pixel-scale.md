@@ -4,11 +4,11 @@
 
 **Blocked by:** None — can start immediately.
 
-**Status:** ready-for-agent
+**Status:** resolved
 
-- [ ] The pure camera seam takes the device pixel ratio and is unit-tested at ratios 1, 1.25, 2, 2.625 and 3: a whole number of physical pixels per art pixel, coverage of the viewport, and offsets rounded to physical pixels.
-- [ ] Existing following and edge-clamping tests still pass.
-- [ ] The engine reads the ratio it renders at, and reacts when it changes (browser zoom, moving the window to another monitor).
-- [ ] Nicknames and speech bubbles stay attached to their avatars at fractional CSS scales.
-- [ ] ADR-0017 is `accepted`, and ADR-0015's status points to it.
-- [ ] `pnpm check` and `pnpm test:e2e` are green.
+- [x] The pure camera seam takes the device pixel ratio and is unit-tested at ratios 1, 1.25, 2, 2.625 and 3: a whole number of physical pixels per art pixel, coverage of the viewport, and offsets rounded to physical pixels.
+- [x] Existing following and edge-clamping tests still pass.
+- [x] The engine reads the ratio it renders at, and reacts when it changes (browser zoom, moving the window to another monitor).
+- [x] Nicknames and speech bubbles stay attached to their avatars at fractional CSS scales.
+- [x] ADR-0017 is `accepted`, and ADR-0015's status points to it.
+- [x] `pnpm check` and `pnpm test:e2e` are green.
