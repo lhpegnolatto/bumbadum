@@ -1,4 +1,4 @@
-import { type Avatar, parseAvatar } from "@bumbadum/avatar";
+import { type Avatar, DEFAULT_AVATAR, parseAvatar } from "@bumbadum/avatar";
 import { type SchemaType, schema, t } from "@colyseus/schema";
 
 /** A player's complete layered avatar. Empty strings represent optional layers not worn. */
@@ -31,7 +31,18 @@ export function avatarStateValue(avatar: Avatar) {
 }
 
 export function avatarFromState(state: AvatarState): Avatar {
-  const avatar = parseAvatar({
+  const avatar = parseAvatarState(state);
+  if (!avatar) throw new Error("room contains an invalid avatar");
+  return avatar;
+}
+
+/** Returns a valid avatar for rendering, tolerating old or incomplete room state. */
+export function avatarFromStateOrDefault(state: AvatarState): Avatar {
+  return parseAvatarState(state) ?? DEFAULT_AVATAR;
+}
+
+function parseAvatarState(state: AvatarState): Avatar | undefined {
+  return parseAvatar({
     ...state,
     hair: state.hair || null,
     footwear: state.footwear || null,
@@ -40,6 +51,4 @@ export function avatarFromState(state: AvatarState): Avatar {
     eyewear: state.eyewear || null,
     headwear: state.headwear || null,
   });
-  if (!avatar) throw new Error("room contains an invalid avatar");
-  return avatar;
 }

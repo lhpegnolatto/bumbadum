@@ -6,7 +6,7 @@ import {
 } from "@bumbadum/avatar";
 import {
   type AvatarState,
-  avatarFromState,
+  avatarFromStateOrDefault,
   type PlayerState,
   type RoomState,
 } from "@bumbadum/protocol";
@@ -358,9 +358,9 @@ function tileCentre(point: Point): { x: number; y: number } {
 }
 
 function avatarOf(state: AvatarState): Avatar {
-  return avatarFromState(state);
+  return avatarFromStateOrDefault(state);
 }
 
 function sameAvatar(a: Avatar, b: AvatarState): boolean {
-  return avatarsMatch(a, avatarFromState(b));
+  return avatarsMatch(a, avatarFromStateOrDefault(b));
 }
