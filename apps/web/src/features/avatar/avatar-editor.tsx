@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  APPEARANCE_LAYERS,
   type AppearanceLayer,
   type Avatar,
   availableAvatarOptions,
@@ -14,7 +13,19 @@ import { AvatarSprite } from "./avatar-sprite.tsx";
 
 const PREVIEW_SCALE = 5;
 const CHOICE_SCALE = 2;
-type EditorLayer = "skinTone" | AppearanceLayer;
+type EditorSection = "skinTone" | "hair" | "clothing" | "accessories";
+
+const SECTION_LAYERS = {
+  hair: ["hair"],
+  clothing: ["top", "bottom", "overgarment"],
+  accessories: ["footwear", "neckwear", "eyewear", "headwear"],
+} as const satisfies Readonly<
+  Record<Exclude<EditorSection, "skinTone">, readonly AppearanceLayer[]>
+>;
+
+function layersFor(section: Exclude<EditorSection, "skinTone">): readonly AppearanceLayer[] {
+  return SECTION_LAYERS[section];
+}
 
 /** Edits a complete avatar without deciding when the draft is published. */
 export function AvatarEditor({
@@ -25,8 +36,16 @@ export function AvatarEditor({
   onChange: (avatar: Avatar) => void;
 }) {
   const t = useTranslations("avatar");
-  const [layer, setLayer] = useState<EditorLayer>("skinTone");
-  const layers: readonly EditorLayer[] = ["skinTone", ...APPEARANCE_LAYERS];
+  const [section, setSection] = useState<EditorSection>("skinTone");
+  const [layer, setLayer] = useState<AppearanceLayer>("top");
+
+  function chooseSection(next: EditorSection) {
+    setSection(next);
+    if (next !== "skinTone") {
+      const firstLayer = layersFor(next)[0];
+      if (firstLayer) setLayer(firstLayer);
+    }
+  }
 
   return (
     <div className="flex flex-col gap-4">
@@ -34,24 +53,50 @@ export function AvatarEditor({
         <AvatarSprite avatar={value} scale={PREVIEW_SCALE} animated />
         <span className="sr-only">{t("label")}</span>
       </div>
-      <div role="tablist" aria-label={t("layersLabel")} className="flex gap-1 overflow-x-auto pb-1">
-        {layers.map((candidate) => (
+      <div
+        role="tablist"
+        aria-label={t("sectionsLabel")}
+        className="flex gap-1 overflow-x-auto pb-1"
+      >
+        {(["skinTone", "hair", "clothing", "accessories"] as const).map((candidate) => (
           <button
             key={candidate}
             type="button"
             role="tab"
-            aria-selected={layer === candidate}
+            aria-selected={section === candidate}
             className="shrink-0 rounded-md border px-2 py-1 text-sm aria-selected:border-primary aria-selected:bg-accent pointer-coarse:min-h-11 pointer-coarse:min-w-11"
-            onClick={() => setLayer(candidate)}
+            onClick={() => chooseSection(candidate)}
           >
-            {t(`layers.${candidate}`)}
+            {t(`sections.${candidate}`)}
           </button>
         ))}
       </div>
-      {layer === "skinTone" ? (
+      {section === "skinTone" ? (
         <SkinTonePicker value={value} onChange={onChange} />
       ) : (
-        <AppearancePicker layer={layer} value={value} onChange={onChange} />
+        <>
+          {layersFor(section).length > 1 ? (
+            <div
+              role="tablist"
+              aria-label={section === "clothing" ? t("clothingLabel") : t("accessoriesLabel")}
+              className="flex gap-1 overflow-x-auto pb-1"
+            >
+              {layersFor(section).map((candidate) => (
+                <button
+                  key={candidate}
+                  type="button"
+                  role="tab"
+                  aria-selected={layer === candidate}
+                  className="shrink-0 rounded-md border px-2 py-1 text-sm aria-selected:border-primary aria-selected:bg-accent pointer-coarse:min-h-11 pointer-coarse:min-w-11"
+                  onClick={() => setLayer(candidate)}
+                >
+                  {t(`layers.${candidate}`)}
+                </button>
+              ))}
+            </div>
+          ) : null}
+          <AppearancePicker layer={layer} value={value} onChange={onChange} />
+        </>
       )}
     </div>
   );

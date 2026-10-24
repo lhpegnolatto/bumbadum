@@ -146,6 +146,18 @@ _Avoid_: hat, head accessory
 An optional wearable layer over an avatar's eyes, such as glasses.
 _Avoid_: glasses, face accessory
 
+**Clothing**:
+Wearables that form an avatar's main outfit: a top, bottom or one-piece garment.
+_Avoid_: clothes tab, outfit layer
+
+**One-piece garment**:
+A garment that visually covers an avatar's torso and lower body, such as a dress or pinafore.
+_Avoid_: dress layer, full-body outfit
+
+**Accessory**:
+An optional wearable detail added around or above an avatar's clothing, such as footwear, neckwear, eyewear or headwear.
+_Avoid_: decoration, extra layer
+
 **Wardrobe**:
 The editor where a player previews appearance changes and chooses which avatar to wear.
 _Avoid_: closet, character creator

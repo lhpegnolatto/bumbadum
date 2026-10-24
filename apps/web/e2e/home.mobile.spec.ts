@@ -25,6 +25,12 @@ test("a player chooses a nickname and an avatar on a phone, then joins", async (
   await choice(page, `Skin tone ${skinTone}`).tap();
   await expect(page.getByRole("radio", { name: `Skin tone ${skinTone}` })).toBeChecked();
 
+  await page.getByRole("tab", { name: "Clothing" }).tap();
+  await page.getByRole("tab", { name: "One-piece" }).tap();
+  await page.getByRole("button", { name: "Dress", exact: true }).tap();
+  await expect(page.getByRole("radio", { name: "Dress, Pink" })).toBeVisible();
+
+  await page.getByRole("tab", { name: "Accessories" }).tap();
   await page.getByRole("tab", { name: "Headwear" }).tap();
   const cap = page.getByRole("button", { name: "Cap" });
   await cap.tap();
