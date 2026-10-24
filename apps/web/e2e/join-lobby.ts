@@ -12,7 +12,19 @@ const HOME_LABELS = {
 interface JoinOptions {
   /** The browser's language, which the page picks up: English unless asked. */
   locale?: keyof typeof HOME_LABELS;
+  /**
+   * A plain desktop window instead of the project's device: in a phone spec, a second player that
+   * only needs to chat, sparing a second high-ratio page on software WebGL.
+   */
+  desktop?: boolean;
 }
+
+const DESKTOP_CONTEXT = {
+  viewport: { width: 1280, height: 720 },
+  deviceScaleFactor: 1,
+  isMobile: false,
+  hasTouch: false,
+};
 
 /**
  * `joinLobby(nickname)` opens a fresh browser, English unless `locale` says
@@ -28,9 +40,12 @@ export const test = base.extend<{
   joinLobby: async ({ browser }, use) => {
     const contexts: BrowserContext[] = [];
     const pages: Page[] = [];
-    await use(async (nickname, { locale = "en" } = {}) => {
+    await use(async (nickname, { locale = "en", desktop = false } = {}) => {
       const labels = HOME_LABELS[locale];
-      const context = await browser.newContext({ locale: labels.browserLocale });
+      const context = await browser.newContext({
+        locale: labels.browserLocale,
+        ...(desktop && DESKTOP_CONTEXT),
+      });
       contexts.push(context);
       const page = await context.newPage();
       pages.push(page);

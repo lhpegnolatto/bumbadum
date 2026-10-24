@@ -13,6 +13,8 @@ async function onAir(page: Page): Promise<string | undefined> {
 test("a skip vote passes with more than half of the players present, or at once from the submitter", async ({
   joinLobby,
 }) => {
+  // Three pages, plus up to five earlier tracks to vote off first, run close to the default timeout.
+  test.slow();
   const nina = await joinLobby("Nina");
   const otto = await joinLobby("Otto");
   const pia = await joinLobby("Pia");

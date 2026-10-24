@@ -11,8 +11,10 @@ test("resizing across the compact layout's boundary keeps the connection, the ca
   await page.setViewportSize({ width: 800, height: 720 });
   await expect.poll(async () => (await screenBounds(page)).y).toBe(0);
   await expect(page.getByRole("application", { name: "Movement stick" })).toBeHidden();
+  // The compact layout reaches Players through the Chat sheet's tabs.
+  await page.getByRole("button", { name: "Chat", exact: true }).click();
+  await page.getByRole("tab", { name: "Players" }).click();
   const players = page.getByRole("button", { name: "Players", exact: true });
-  await players.click();
   await markMountedElements(page);
 
   // Desktop: the Screen sits in the right rail, clear of the top edge; compact puts it at the top.
@@ -40,6 +42,34 @@ test("resizing across the compact layout's boundary keeps the connection, the ca
 
   expect((await drawnPlayer(page, "Uli"))?.sessionId).toBe(sessionId);
   await expect(players).toHaveAttribute("aria-expanded", "true");
+});
+
+test("the open panel and the compact sheet's tab are one, across the boundary both ways", async ({
+  joinLobby,
+}) => {
+  const page = await joinLobby("Vera");
+  await page.setViewportSize({ width: 1280, height: 720 });
+  await page.getByRole("button", { name: "Queue", exact: true }).click();
+
+  await page.setViewportSize({ width: 800, height: 720 });
+  await expect(page.getByRole("tab", { name: "Queue" })).toHaveAttribute("aria-selected", "true");
+  await expect(page.getByRole("heading", { name: /Up next/ })).toBeVisible();
+
+  await page.setViewportSize({ width: 1280, height: 720 });
+  await expect(page.getByRole("button", { name: "Queue", exact: true })).toHaveAttribute(
+    "aria-expanded",
+    "true",
+  );
+  await expect(page.getByRole("heading", { name: /Up next/ })).toBeVisible();
+
+  await page.setViewportSize({ width: 800, height: 720 });
+  await page.getByRole("tab", { name: "Players" }).click();
+  await page.setViewportSize({ width: 1280, height: 720 });
+  await expect(page.getByRole("button", { name: "Players", exact: true })).toHaveAttribute(
+    "aria-expanded",
+    "true",
+  );
+  await expect(page.getByRole("heading", { name: /In the room/ })).toBeVisible();
 });
 
 /** The canvas and the Screen's player host: a remount replaces them. */

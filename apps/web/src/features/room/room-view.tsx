@@ -12,7 +12,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { useWearAvatar } from "@/features/avatar/use-wear-avatar.ts";
 import { WardrobePanel } from "@/features/avatar/wardrobe-panel.tsx";
-import { ChatComposer, ChatHistoryPanel } from "@/features/chat/chat-panel.tsx";
+import { ChatHistoryPanel } from "@/features/chat/chat-panel.tsx";
 import { NowPlayingCaption } from "@/features/radio/now-playing.tsx";
 import { QueueList } from "@/features/radio/queue-list.tsx";
 import { RadioProvider } from "@/features/radio/radio-provider.tsx";
@@ -24,8 +24,18 @@ import { useSettings } from "@/lib/local-settings.ts";
 import { AnalogueStick } from "./analogue-stick.tsx";
 import { GameCanvas, type GameCanvasHandle } from "./game-canvas.tsx";
 import { PlayerList } from "./player-list.tsx";
-import { useCompactTopInset, useRoomNotice } from "./room-layout.ts";
-import { type RoomPanel, RoomPanelControls, RoomPanelFrame } from "./room-panel-dock.tsx";
+import {
+  useCompactLayout,
+  useCompactTopInset,
+  useRoomNotice,
+  useVisibleViewport,
+} from "./room-layout.ts";
+import {
+  ChatComposerDock,
+  type RoomPanel,
+  RoomPanelControls,
+  RoomPanelFrame,
+} from "./room-panel-dock.tsx";
 import { useExitPresence } from "./use-exit-presence.ts";
 import { type PresentPlayer, useRoom } from "./use-room.ts";
 import { WaitingScreen, WaitingTimedOut } from "./waiting-screen.tsx";
@@ -126,10 +136,16 @@ function JoinedRoom({
   const notice = useRoomNotice();
   const screenBlockRef = useRef<HTMLDivElement>(null);
   const topInset = useCompactTopInset(screenBlockRef);
+  const visibleViewport = useVisibleViewport();
+  const compact = useCompactLayout();
   const [activeInterface, setActiveInterface] = useState<RoomInterface>(null);
   const [hasUnreadChat, setHasUnreadChat] = useState(false);
   const activePanel: RoomPanel = isRoomPanel(activeInterface) ? activeInterface : null;
   const wardrobeOpen = activeInterface === "wardrobe";
+  // In the compact layout an open panel is a sheet over the world: the player stands still and the
+  // floating controls step aside.
+  const sheetOpen = compact && activePanel !== null;
+  const hiddenUnderSheet = activePanel ? "compact:hidden" : "";
   const visiblePanel = useExitPresence(activePanel);
   const visibleWardrobe = useExitPresence(wardrobeOpen ? "wardrobe" : null);
   const activePanelRef = useRef(activePanel);
@@ -185,7 +201,13 @@ function JoinedRoom({
     // Compact viewports (ADR-0018) restyle this same tree, so crossing the boundary never remounts
     // the Screen, the canvas or the connection.
     <main
-      style={{ "--room-top-inset": `${topInset}px` } as CSSProperties}
+      style={
+        {
+          "--room-top-inset": `${topInset}px`,
+          // Above iOS Safari's on-screen keyboard (see useVisibleViewport).
+          ...(visibleViewport && { top: visibleViewport.top, height: visibleViewport.height }),
+        } as CSSProperties
+      }
       className="relative h-dvh overflow-hidden [--room-above-controls:calc(var(--room-safe-bottom)_+_3.25rem)] [--room-overlay-edge:1.5rem] [--room-overlay-gap:1rem] [--room-rail-width:clamp(400px,32vw,480px)] [--room-safe-bottom:calc(env(safe-area-inset-bottom)_+_0.75rem)]"
     >
       <div
@@ -195,7 +217,12 @@ function JoinedRoom({
       >
         {/* The world owns the viewport; room interface overlays it without changing its scale (ADR-0014). */}
         <div className="absolute inset-0">
-          <GameCanvas ref={canvasRef} room={room} walking={!wardrobeOpen} topInset={topInset} />
+          <GameCanvas
+            ref={canvasRef}
+            room={room}
+            walking={!wardrobeOpen && !sheetOpen}
+            topInset={topInset}
+          />
           {visibleWardrobe.present && (
             <WardrobePanel
               worn={worn}
@@ -205,7 +232,9 @@ function JoinedRoom({
             />
           )}
         </div>
-        <div className="absolute bottom-[var(--room-overlay-edge)] left-[var(--room-overlay-edge)] z-20 flex items-center gap-2 compact:bottom-[var(--room-safe-bottom)] compact:left-3">
+        <div
+          className={`absolute bottom-[var(--room-overlay-edge)] left-[var(--room-overlay-edge)] z-20 flex items-center gap-2 compact:bottom-[var(--room-safe-bottom)] compact:left-3 ${hiddenUnderSheet}`}
+        >
           <Button
             variant="secondary"
             size="sm"
@@ -222,16 +251,10 @@ function JoinedRoom({
           </Button>
           <SettingsControl open={activeInterface === "settings"} onOpenChange={setSettings} />
         </div>
+        <ChatComposerDock room={room} active={activePanel} />
         <div
-          className={`${
-            activePanel === "chat"
-              ? "absolute right-[calc(var(--room-overlay-edge)_+_var(--room-overlay-gap))] bottom-2 z-20 w-[calc(var(--room-rail-width)_-_var(--room-overlay-gap)_-_var(--room-overlay-gap))] rounded-lg border bg-background/95 p-2 shadow-lg backdrop-blur-sm"
-              : "absolute bottom-6 left-1/2 z-20 w-[min(28rem,calc(100vw-3rem))] -translate-x-1/2 rounded-lg border bg-background/95 p-2 shadow-lg backdrop-blur-sm"
-          } compact:inset-x-3 compact:bottom-[var(--room-above-controls)] compact:mx-auto compact:w-auto compact:max-w-md compact:translate-x-0`}
+          className={`absolute right-[var(--room-overlay-edge)] bottom-[var(--room-overlay-edge)] z-20 compact:right-3 compact:bottom-[var(--room-safe-bottom)] ${hiddenUnderSheet}`}
         >
-          <ChatComposer room={room} />
-        </div>
-        <div className="absolute right-[var(--room-overlay-edge)] bottom-[var(--room-overlay-edge)] z-20 compact:right-3 compact:bottom-[var(--room-safe-bottom)]">
           <RoomPanelControls
             active={activePanel}
             hasUnreadChat={hasUnreadChat}
@@ -245,7 +268,14 @@ function JoinedRoom({
           className="absolute bottom-[calc(var(--room-overlay-edge)_+_env(safe-area-inset-bottom)_+_2.75rem)] left-[var(--room-overlay-edge)] z-20 compact:bottom-[var(--room-safe-bottom)] compact:left-[calc(50%_-_3.5rem)]"
         />
         {/* The Screen and Radio stay visible; one optional room panel uses the space beneath them. */}
-        <aside className="absolute inset-y-[var(--room-overlay-edge)] right-[var(--room-overlay-edge)] z-10 flex w-[var(--room-rail-width)] flex-col gap-[var(--room-overlay-gap)] compact:inset-x-0 compact:top-0 compact:bottom-[var(--room-above-controls)] compact:w-auto compact:gap-2 compact:pt-[env(safe-area-inset-top)]">
+        <aside
+          className={`absolute inset-y-[var(--room-overlay-edge)] right-[var(--room-overlay-edge)] z-10 flex w-[var(--room-rail-width)] flex-col gap-[var(--room-overlay-gap)] compact:inset-x-0 compact:top-0 compact:w-auto compact:gap-0 compact:pt-[env(safe-area-inset-top)] ${
+            // In the compact layout the open panel is a sheet down to the bottom edge.
+            visiblePanel.present
+              ? "compact:bottom-0"
+              : "compact:bottom-[var(--room-above-controls)]"
+          }`}
+        >
           <RadioProvider room={room}>
             <div ref={screenBlockRef} className="flex shrink-0 flex-col gap-2 compact:gap-0">
               <RadioScreen paused={notice !== null} />
@@ -258,10 +288,12 @@ function JoinedRoom({
               <RoomPanelFrame
                 panel={visiblePanel.present}
                 open={visiblePanel.open}
+                hasUnreadChat={hasUnreadChat}
+                onSelect={setActiveInterface}
                 onClose={() => setActiveInterface(null)}
               >
                 {visiblePanel.present === "chat" ? (
-                  <div className="flex min-h-0 flex-1 pb-24 compact:pb-0">
+                  <div className="flex min-h-0 flex-1 pb-24">
                     <ChatHistoryPanel room={room} />
                   </div>
                 ) : null}

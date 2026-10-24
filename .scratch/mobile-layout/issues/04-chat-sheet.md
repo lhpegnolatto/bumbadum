@@ -4,13 +4,13 @@
 
 **Blocked by:** 02
 
-**Status:** ready-for-agent
+**Status:** resolved
 
-- [ ] With the sheet closed there is no Message input. Speech bubbles still show, and a Message from someone else sets the unread indicator, which does not rely on colour alone.
-- [ ] Opening the Chat tab clears the indicator. The input is not autofocused.
-- [ ] While the sheet is open, the player does not walk, and the floating controls are hidden.
-- [ ] The sheet's tabs and the desktop panels are the same state. Resizing across layouts keeps the open one.
-- [ ] Focusing the input keeps the Screen at the top, shrinks the history and keeps the input just above the keyboard. This uses `interactive-widget` on Chromium and `visualViewport` on iOS Safari.
-- [ ] Mobile e2e tests cover opening the sheet, switching tabs, sending a Message, closing with X, and the unread indicator across two pages.
-- [ ] New labels have en and pt-BR parity.
-- [ ] `pnpm check` and `pnpm test:e2e` are green.
+- [x] With the sheet closed there is no Message input. Speech bubbles still show, and a Message from someone else sets the unread indicator, which does not rely on colour alone.
+- [x] Opening the Chat tab clears the indicator. The input is not autofocused.
+- [x] While the sheet is open, the player does not walk, and the floating controls are hidden.
+- [x] The sheet's tabs and the desktop panels are the same state. Resizing across layouts keeps the open one.
+- [x] Focusing the input keeps the Screen at the top, shrinks the history and keeps the input just above the keyboard. This uses `interactive-widget` on Chromium and `visualViewport` on iOS Safari.
+- [x] Mobile e2e tests cover opening the sheet, switching tabs, sending a Message, closing with X, and the unread indicator across two pages.
+- [x] New labels have en and pt-BR parity.
+- [x] `pnpm check` and `pnpm test:e2e` are green.

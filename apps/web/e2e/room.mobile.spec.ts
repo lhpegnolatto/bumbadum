@@ -56,10 +56,8 @@ test("at 360 px wide the Screen stays 200 px tall and the room controls overlap 
     [
       page.getByRole("button", { name: "Wardrobe" }),
       page.getByRole("button", { name: "Settings" }),
-      page.getByLabel("Message"),
       page.getByRole("button", { name: "Chat", exact: true }),
-      page.getByRole("button", { name: "Queue", exact: true }),
-      page.getByRole("button", { name: "Players", exact: true }),
+      page.getByRole("application", { name: "Movement stick" }),
     ].map(boundsOf),
   );
   for (const [index, control] of controls.entries()) {
@@ -72,10 +70,11 @@ test("at 360 px wide the Screen stays 200 px tall and the room controls overlap 
     }
   }
 
-  // An open panel sits between the strip and the controls, and leaves the Screen alone.
-  await page.getByRole("button", { name: "Players", exact: true }).tap();
-  const panel = await boundsOf(page.getByRole("region", { name: "Players" }));
-  expect(panel.y).toBeGreaterThanOrEqual(topInset);
+  // The Chat sheet sits under the strip and leaves the Screen alone.
+  await page.getByRole("button", { name: "Chat", exact: true }).tap();
+  const sheet = await boundsOf(page.getByRole("region", { name: "Chat" }));
+  expect(sheet.y).toBeGreaterThanOrEqual(topInset);
+  await expect(page.getByRole("application", { name: "Movement stick" })).toBeHidden();
   await expectNothingOver(page, screen);
 });
 
@@ -85,6 +84,8 @@ test("turning a phone sideways covers the room with a notice that keeps it conne
   const rui = await joinLobby("Rui");
   const viewport = rui.viewportSize();
   if (!viewport) throw new Error("Rui's page has no viewport");
+  // A phone has a Message input only in the Chat sheet.
+  await rui.getByRole("button", { name: "Chat", exact: true }).tap();
   await say(rui, `/play ${freshVideoId()}`);
   await expect.poll(() => screenReading(rui)).toBeDefined();
   const sessionId = (await drawnPlayer(rui, "Rui"))?.sessionId;
