@@ -3,7 +3,7 @@
 import type { RoomState } from "@bumbadum/protocol";
 import type { Room } from "@colyseus/sdk";
 import { ListMusicIcon, MessageCircleIcon, UsersIcon, XIcon } from "lucide-react";
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import { useTranslations } from "use-intl";
 import { Button } from "@/components/ui/button.tsx";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs.tsx";
@@ -157,9 +157,13 @@ export function RoomPanelFrame({
   );
 }
 
+/** Where content starts inside the {@link RoomPanelFrame} on desktop: its `p-4` plus its border. */
+const PANEL_INSET = "calc(1rem + 1px)";
+
 /**
- * The Message input. On desktop it floats at the bottom centre, or sits at the bottom of open Chat.
- * The compact layout shows it only at the bottom of the sheet's Chat tab.
+ * The Message input. On desktop it floats at the bottom centre, or sits at the bottom of open Chat,
+ * inset like the panel's content and entering with it. The compact layout shows it only at the
+ * bottom of the sheet's Chat tab. It stays one element across these places so the draft survives.
  */
 export function ChatComposerDock({
   room,
@@ -170,9 +174,10 @@ export function ChatComposerDock({
 }) {
   return (
     <div
+      style={{ "--room-panel-inset": PANEL_INSET } as CSSProperties}
       className={`${
         active === "chat"
-          ? "right-[calc(var(--room-overlay-edge)_+_var(--room-overlay-gap))] bottom-2 w-[calc(var(--room-rail-width)_-_var(--room-overlay-gap)_-_var(--room-overlay-gap))] compact:inset-x-3 compact:bottom-[var(--room-safe-bottom)] compact:w-auto"
+          ? "right-[calc(var(--room-overlay-edge)_+_var(--room-panel-inset))] bottom-[calc(var(--room-rail-bottom)_+_var(--room-panel-inset))] w-[calc(var(--room-rail-width)_-_2_*_var(--room-panel-inset))] duration-200 animate-in fade-in slide-in-from-right-2 motion-reduce:animate-none compact:inset-x-3 compact:bottom-[var(--room-safe-bottom)] compact:w-auto"
           : "bottom-6 left-1/2 w-[min(28rem,calc(100vw-3rem))] -translate-x-1/2 compact:hidden"
       } absolute z-20 rounded-lg border bg-background/95 p-2 shadow-lg backdrop-blur-sm`}
     >

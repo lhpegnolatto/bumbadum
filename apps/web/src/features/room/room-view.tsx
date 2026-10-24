@@ -209,7 +209,9 @@ function JoinedRoom({
           ...(visibleViewport && { top: visibleViewport.top, height: visibleViewport.height }),
         } as CSSProperties
       }
-      className="relative h-dvh overflow-hidden [--room-above-controls:calc(var(--room-safe-bottom)_+_3.25rem)] [--room-overlay-edge:1.5rem] [--room-overlay-gap:1rem] [--room-rail-width:clamp(400px,32vw,480px)] [--room-safe-bottom:calc(env(safe-area-inset-bottom)_+_0.75rem)]"
+      // On desktop the rail ends one gap above the panel buttons (h-8), so an open panel and the
+      // Message input docked in it never sit under them.
+      className="relative h-dvh overflow-hidden [--room-above-controls:calc(var(--room-safe-bottom)_+_3.25rem)] [--room-overlay-edge:1.5rem] [--room-overlay-gap:1rem] [--room-rail-bottom:calc(var(--room-overlay-edge)_+_2rem_+_var(--room-overlay-gap))] [--room-rail-width:clamp(400px,32vw,480px)] [--room-safe-bottom:calc(env(safe-area-inset-bottom)_+_0.75rem)]"
     >
       <div
         aria-hidden={notice !== null}
@@ -273,7 +275,7 @@ function JoinedRoom({
         />
         {/* The Screen and Radio stay visible; one optional room panel uses the space beneath them. */}
         <aside
-          className={`absolute inset-y-[var(--room-overlay-edge)] right-[var(--room-overlay-edge)] z-10 flex w-[var(--room-rail-width)] flex-col gap-[var(--room-overlay-gap)] compact:inset-x-0 compact:top-0 compact:w-auto compact:gap-0 compact:pt-[env(safe-area-inset-top)] ${
+          className={`absolute top-[var(--room-overlay-edge)] right-[var(--room-overlay-edge)] bottom-[var(--room-rail-bottom)] z-10 flex w-[var(--room-rail-width)] flex-col gap-[var(--room-overlay-gap)] compact:inset-x-0 compact:top-0 compact:w-auto compact:gap-0 compact:pt-[env(safe-area-inset-top)] ${
             // In the compact layout the open panel is a sheet down to the bottom edge.
             visiblePanel.present
               ? "compact:bottom-0"
@@ -297,7 +299,8 @@ function JoinedRoom({
                 onClose={() => setActiveInterface(null)}
               >
                 {visiblePanel.present === "chat" ? (
-                  <div className="flex min-h-0 flex-1 pb-24">
+                  // Room for the Message input docked over the panel's bottom.
+                  <div className="flex min-h-0 flex-1 pb-20">
                     <ChatHistoryPanel room={room} />
                   </div>
                 ) : null}
