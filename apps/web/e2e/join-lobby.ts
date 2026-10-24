@@ -47,7 +47,7 @@ export const test = base.extend<{
 });
 
 /** Leaves the lobby through the page's e2e hook; a page that cannot is closed anyway. */
-async function leaveLobby(page: Page) {
+export async function leaveLobby(page: Page) {
   await page
     .evaluate(
       (timeoutMs) =>

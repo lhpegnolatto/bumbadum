@@ -39,6 +39,7 @@ export function ThemeToggle() {
       type="button"
       size="icon"
       variant="outline"
+      className="pointer-coarse:size-11"
       aria-label={label}
       title={label}
       onClick={() => updateSettings({ theme: nextTheme })}

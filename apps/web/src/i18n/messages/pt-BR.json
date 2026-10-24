@@ -5,8 +5,7 @@
     "nicknamePlaceholder": "Como podemos te chamar?",
     "nicknameInvalid": "Escolha um apelido com 1 a 16 caracteres.",
     "join": "Entrar",
-    "languageLabel": "Idioma",
-    "desktopOnly": "O bumbadum foi feito para computadores. Abra este link em um desktop ou notebook para entrar."
+    "languageLabel": "Idioma"
   },
   "languages": {
     "en": "English",

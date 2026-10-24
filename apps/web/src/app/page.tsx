@@ -1,4 +1,3 @@
-import { DesktopOnlyNotice } from "@/features/home/desktop-only-notice.tsx";
 import { HomeTagline } from "@/features/home/home-tagline.tsx";
 import { ServerWakeUp } from "@/features/home/server-wake-up.tsx";
 import { JoinForm } from "@/features/room/join-form.tsx";
@@ -15,7 +14,6 @@ export default function HomePage() {
         </div>
         <ThemeToggle />
       </header>
-      <DesktopOnlyNotice />
       <JoinForm />
       <LanguageSwitcher />
       <ServerWakeUp />

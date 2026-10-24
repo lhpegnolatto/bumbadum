@@ -41,7 +41,7 @@ export function AvatarEditor({
             type="button"
             role="tab"
             aria-selected={layer === candidate}
-            className="shrink-0 rounded-md border px-2 py-1 text-sm aria-selected:border-primary aria-selected:bg-accent"
+            className="shrink-0 rounded-md border px-2 py-1 text-sm aria-selected:border-primary aria-selected:bg-accent pointer-coarse:min-h-11 pointer-coarse:min-w-11"
             onClick={() => setLayer(candidate)}
           >
             {t(`layers.${candidate}`)}
@@ -120,7 +120,7 @@ function AppearancePicker({
         {OPTIONAL_LAYERS.includes(layer as never) ? (
           <button
             type="button"
-            className="rounded-md border px-2 py-1 text-sm"
+            className="rounded-md border px-2 py-1 text-sm pointer-coarse:min-h-11 pointer-coarse:min-w-11"
             aria-pressed={selected === null}
             onClick={() => choose(null)}
           >
@@ -136,7 +136,7 @@ function AppearancePicker({
               key={style}
               type="button"
               disabled={disabled}
-              className="rounded-md border px-2 py-1 text-sm aria-pressed:border-primary aria-pressed:bg-accent disabled:cursor-not-allowed disabled:opacity-40"
+              className="rounded-md border px-2 py-1 text-sm aria-pressed:border-primary aria-pressed:bg-accent disabled:cursor-not-allowed disabled:opacity-40 pointer-coarse:min-h-11 pointer-coarse:min-w-11"
               aria-pressed={selectedStyle === style && selected !== null}
               onClick={() => chooseStyle(style)}
             >
@@ -188,7 +188,7 @@ function Choice({
   onChoose: () => void;
 }) {
   return (
-    <label className="cursor-pointer rounded-md border border-transparent p-1 hover:bg-accent has-checked:border-primary has-checked:bg-accent has-focus-visible:ring-3 has-focus-visible:ring-ring/50 has-disabled:cursor-not-allowed has-disabled:opacity-40">
+    <label className="flex cursor-pointer justify-center rounded-md border border-transparent p-1 hover:bg-accent pointer-coarse:min-w-11 has-checked:border-primary has-checked:bg-accent has-focus-visible:ring-3 has-focus-visible:ring-ring/50 has-disabled:cursor-not-allowed has-disabled:opacity-40">
       <input
         type="radio"
         className="sr-only"

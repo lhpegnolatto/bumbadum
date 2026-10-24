@@ -21,6 +21,7 @@ export function LanguageSwitcher({ showLabel = false }: { showLabel?: boolean })
             type="button"
             size="sm"
             variant={option === locale ? "secondary" : "ghost"}
+            className="pointer-coarse:h-11"
             aria-pressed={option === locale}
             lang={option}
             onClick={() => setLocale(option)}

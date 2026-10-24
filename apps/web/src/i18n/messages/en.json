@@ -5,8 +5,7 @@
     "nicknamePlaceholder": "What should we call you?",
     "nicknameInvalid": "Pick a nickname with 1 to 16 characters.",
     "join": "Join",
-    "languageLabel": "Language",
-    "desktopOnly": "bumbadum is made for computers. Open this link on a desktop or laptop to join."
+    "languageLabel": "Language"
   },
   "languages": {
     "en": "English",

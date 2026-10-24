@@ -41,6 +41,7 @@ export function JoinForm() {
           autoComplete="nickname"
           maxLength={NICKNAME_MAX_LENGTH}
           placeholder={t("nicknamePlaceholder")}
+          className="pointer-coarse:h-11"
           value={draft}
           aria-invalid={invalid}
           aria-describedby={invalid ? "nickname-error" : undefined}
@@ -54,7 +55,9 @@ export function JoinForm() {
             {t("nicknameInvalid")}
           </p>
         )}
-        <Button type="submit">{t("join")}</Button>
+        <Button type="submit" className="pointer-coarse:h-11">
+          {t("join")}
+        </Button>
       </div>
       <div className="sm:w-80">
         <AvatarEditor value={avatar} onChange={setAvatar} />
