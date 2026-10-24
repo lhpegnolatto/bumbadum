@@ -1,4 +1,5 @@
 export { type Camera, cameraOn } from "./camera.ts";
+export { objectDepth, playerDepth } from "./depth.ts";
 export {
   type DrawnPlayer,
   type GameEngine,

@@ -16,16 +16,19 @@ import {
   Assets,
   Container,
   Graphics,
+  Rectangle,
   Sprite,
   Text,
-  type Texture,
+  Texture,
   TextureStyle,
 } from "pixi.js";
 import { cameraOn, TILE_SIZE } from "./camera.ts";
+import { objectDepth, playerDepth } from "./depth.ts";
 import { listenToDirectionKeys } from "./keyboard.ts";
 import { type Bump, bumpOffset, Glide, isBumping, type Point } from "./movement/glide.ts";
 import { type Pose, StepPredictor } from "./movement/step-predictor.ts";
 import { StepRepeater } from "./movement/step-repeater.ts";
+import { PLAZA_OBJECTS } from "./plaza-objects.generated.ts";
 import { SpeechBubbles } from "./speech-bubbles.ts";
 import { AvatarAnimation } from "./sprites/avatar-animation.ts";
 import { AvatarSprite, FrameTextures } from "./sprites/avatar-sprite.ts";
@@ -48,6 +51,7 @@ const ANIMATION_TIMING = { idleFrameMs: IDLE_FRAME_MS, walkFrameMs: 100, walkGra
 
 // The Lobby's art, generated from its Tiled project (ADR-0016).
 const PLAZA_FLOOR = "/sprites/plaza/floor.png";
+const PLAZA_OBJECTS_ATLAS = "/sprites/plaza/objects.png";
 const PLAZA_LIGHTS = "/sprites/plaza/lights.png";
 
 const COLORS = {
@@ -110,17 +114,28 @@ export async function mountGameEngine(
     autoDensity: true,
   });
   container.appendChild(app.canvas);
-  const [textures, floor, lights] = await Promise.all([
+  const [textures, floor, objectsAtlas, lights] = await Promise.all([
     FrameTextures.load(),
     Assets.load<Texture>(PLAZA_FLOOR),
+    Assets.load<Texture>(PLAZA_OBJECTS_ATLAS),
     Assets.load<Texture>(PLAZA_LIGHTS),
   ]);
 
   const world = new Container();
-  // Players lower on the map are drawn in front of the ones above them.
-  const players = new Container({ sortableChildren: true });
+  // Players and objects lower on the map are drawn in front of the ones above them.
+  const depthSorted = new Container({ sortableChildren: true });
+  for (const object of PLAZA_OBJECTS) {
+    const { x, y, width, height } = object.frame;
+    const texture = new Texture({
+      source: objectsAtlas.source,
+      frame: new Rectangle(x, y, width, height),
+    });
+    const sprite = new Sprite({ texture, x: object.x, y: object.y });
+    sprite.zIndex = objectDepth(object);
+    depthSorted.addChild(sprite);
+  }
   // The evening glow brightens whatever lies beneath it, avatars included.
-  world.addChild(new Sprite(floor), players, new Sprite({ texture: lights, blendMode: "add" }));
+  world.addChild(new Sprite(floor), depthSorted, new Sprite({ texture: lights, blendMode: "add" }));
   const labels = new Container();
   app.stage.addChild(world, labels);
   // Last on the stage, so bubbles stay above every avatar and label.
@@ -145,7 +160,7 @@ export async function mountGameEngine(
   const addAvatar = (id: string, player: PlayerState): PlayerView => {
     const sprite = new AvatarSprite(textures, avatarOf(player.avatar));
     const label = drawNickname(player.nickname);
-    players.addChild(sprite.view);
+    depthSorted.addChild(sprite.view);
     labels.addChild(label);
     const avatar: PlayerView = {
       nickname: player.nickname,
@@ -183,9 +198,10 @@ export async function mountGameEngine(
       const at = avatar.glide.at(now);
       const nudge = avatar.bump ? bumpOffset(avatar.bump, now) : { x: 0, y: 0 };
       const { view } = avatar.sprite;
+      const drawnAt = { x: at.x + nudge.x, y: at.y + nudge.y };
       // Feet on the bottom edge of the tile, centred across it.
-      view.position.set((at.x + nudge.x + 0.5) * TILE_SIZE, (at.y + nudge.y + 1) * TILE_SIZE);
-      view.zIndex = view.y;
+      view.position.set((drawnAt.x + 0.5) * TILE_SIZE, (drawnAt.y + 1) * TILE_SIZE);
+      view.zIndex = playerDepth(drawnAt);
       const frame = avatar.animation.frame(
         avatar.glide.moving(now) || isBumping(avatar.bump, now),
         animationNow,

@@ -14,6 +14,7 @@
       "!**/pnpm-lock.yaml",
       "!packages/avatar/src/catalog.generated.ts",
       "!packages/world/src/plaza-map.generated.ts",
+      "!packages/game-engine/src/plaza-objects.generated.ts",
       "!**/next-env.d.ts"
     ]
   },
