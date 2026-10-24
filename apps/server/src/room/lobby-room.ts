@@ -16,7 +16,7 @@ import {
   STEP_MESSAGE,
 } from "@bumbadum/protocol";
 import { lobbyMap, STEPS_PER_SECOND, step } from "@bumbadum/world";
-import { type Client, ErrorCode, matchMaker, Room, ServerError, validate } from "@colyseus/core";
+import { type Client, matchMaker, Room, ServerError, validate } from "@colyseus/core";
 import { ChatChannel } from "../chat/chat-channel.ts";
 import { RadioStation, type TrackSources } from "../radio/radio-station.ts";
 import { TokenBucket } from "../rate-limit/token-bucket.ts";
@@ -34,7 +34,7 @@ const RECONNECTION_WINDOW = 20;
 
 function reject(code: JoinRejection): never {
   // The rejection travels as the matchmaking error's message: a code, never display text.
-  throw new ServerError(ErrorCode.APPLICATION_ERROR, code);
+  throw new ServerError(400, code);
 }
 
 type LobbyClient = Client<{ auth: JoinOptions }>;

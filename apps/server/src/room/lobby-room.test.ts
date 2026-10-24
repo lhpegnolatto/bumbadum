@@ -30,6 +30,7 @@ import { createServer } from "../server.ts";
 import { openLobby } from "./lobby-room.ts";
 
 let colyseus: ColyseusTestServer;
+const TEST_PORT = 2568;
 
 /** Every query that reached the music search, which is what costs quota. */
 const searched: string[] = [];
@@ -42,7 +43,7 @@ const search: MusicSearch = {
 };
 
 beforeAll(async () => {
-  colyseus = await boot(createServer({ catalog: createFakeTrackCatalog(), search }));
+  colyseus = await boot(createServer({ catalog: createFakeTrackCatalog(), search }), TEST_PORT);
 });
 afterAll(async () => {
   await colyseus.shutdown();
@@ -97,6 +98,17 @@ async function rejectionOf(join: Promise<unknown>): Promise<string> {
 }
 
 describe("lobby-room", () => {
+  it("returns a client error when join options are invalid", async () => {
+    const response = await fetch(`http://127.0.0.1:${TEST_PORT}/matchmake/join/${ROOM_TYPE}`, {
+      method: "POST",
+      body: "{}",
+      headers: { "content-type": "application/json" },
+    });
+
+    expect(response.status).toBe(400);
+    expect(await response.json()).toEqual({ code: 400, error: "invalid-nickname" });
+  });
+
   it("puts a joining player on the spawn point, facing down, with their trimmed nickname", async () => {
     const room = await joinLobby("  Ana  ");
     await room.waitForNextPatch();
