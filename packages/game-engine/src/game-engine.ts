@@ -18,14 +18,14 @@ import {
   STEPS_PER_SECOND,
 } from "@bumbadum/world";
 import { Application, Container, Graphics, Text, TextureStyle } from "pixi.js";
+import { cameraOn, TILE_SIZE } from "./camera.ts";
 import { listenToDirectionKeys } from "./keyboard.ts";
-import { type Bump, bumpOffset, Glide, isBumping } from "./movement/glide.ts";
+import { type Bump, bumpOffset, Glide, isBumping, type Point } from "./movement/glide.ts";
 import { type Pose, StepPredictor } from "./movement/step-predictor.ts";
 import { StepRepeater } from "./movement/step-repeater.ts";
 import { SpeechBubbles } from "./speech-bubbles.ts";
 import { AvatarAnimation } from "./sprites/avatar-animation.ts";
 import { AvatarSprite, FrameTextures } from "./sprites/avatar-sprite.ts";
-import { fitMapToViewport, TILE_SIZE } from "./world-layout.ts";
 
 /** Screen pixels between the top of an avatar's frame and their nickname. */
 const LABEL_GAP = 3;
@@ -120,16 +120,8 @@ export async function mountGameEngine(
   // Last on the stage, so bubbles stay above every avatar and label.
   const bubbles = new SpeechBubbles(app.stage, app.screen);
 
-  const fitToContainer = () => {
-    const viewportWidth = container.clientWidth;
-    const viewportHeight = container.clientHeight;
-    app.renderer.resize(viewportWidth, viewportHeight);
-    // Below native size the room is hidden behind the compatibility notice: keep the last fit.
-    if (viewportWidth < map.width * TILE_SIZE || viewportHeight < map.height * TILE_SIZE) return;
-    const layout = fitMapToViewport(map, viewportWidth, viewportHeight);
-    world.scale.set(layout.scale);
-    world.position.set(layout.x, layout.y);
-  };
+  // The camera frames the world every frame, from the resized screen.
+  const fitToContainer = () => app.renderer.resize(container.clientWidth, container.clientHeight);
   fitToContainer();
   const resizeObserver = new ResizeObserver(fitToContainer);
   resizeObserver.observe(container);
@@ -176,6 +168,11 @@ export async function mountGameEngine(
     const now = performance.now();
     const animationNow = Date.now();
     walkLocalPlayer(now);
+    // Follows the glide, not the bump, so a blocked step does not shake the view.
+    const focus = avatars.get(sessionId)?.glide.at(now) ?? map.spawnPoint;
+    const camera = cameraOn(map, app.screen, tileCentre(focus));
+    world.scale.set(camera.scale);
+    world.position.set(camera.x, camera.y);
     for (const avatar of avatars.values()) {
       const at = avatar.glide.at(now);
       const nudge = avatar.bump ? bumpOffset(avatar.bump, now) : { x: 0, y: 0 };
@@ -306,6 +303,11 @@ function drawMap(map: GameMap): Graphics {
     color: COLORS.spawnPoint,
   });
   return g;
+}
+
+/** The centre of the tile at `point`, in world pixels. */
+function tileCentre(point: Point): { x: number; y: number } {
+  return { x: (point.x + 0.5) * TILE_SIZE, y: (point.y + 0.5) * TILE_SIZE };
 }
 
 function avatarOf(state: AvatarState): Avatar {
