@@ -25,20 +25,21 @@ describe("depth order", () => {
     expect(playerDepth({ x: 30, y: 11.6 })).toBeGreaterThan(objectDepth(tree));
   });
 
-  it("draws a player standing on an audience chair over the chair", () => {
+  it("seats a player on an audience chair behind its backrest", () => {
     const chairs = PLAZA_OBJECTS.filter((object) => object.name === "chair");
     expect(chairs).toHaveLength(24);
     for (const chair of chairs) {
-      // The tiles under the chair's legs: its bottom row of pixels.
-      const row = Math.floor((chair.base - 1) / 16);
+      // The seat is the tile the chair mostly covers: the one whose bottom edge its legs overhang.
+      const row = Math.floor(chair.base / 16) - 1;
       const columns = [
         Math.floor(chair.x / 16),
         Math.floor((chair.x + chair.frame.width - 1) / 16),
       ];
       for (const column of columns) {
-        const tile = { x: column, y: row };
-        expect(isWalkable(lobbyMap, tile), `chair tile ${column},${row}`).toBe(true);
-        expect(playerDepth(tile)).toBeGreaterThan(objectDepth(chair));
+        const seat = { x: column, y: row };
+        expect(isWalkable(lobbyMap, seat), `chair tile ${column},${row}`).toBe(true);
+        expect(playerDepth(seat)).toBeLessThan(objectDepth(chair));
+        expect(playerDepth({ x: column, y: row + 1 })).toBeGreaterThan(objectDepth(chair));
       }
     }
   });

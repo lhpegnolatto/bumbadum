@@ -17,7 +17,7 @@ Make the plaza the Lobby's Map. Its Tiled project becomes the canonical source u
 3. As a Player, I want the view to follow me as I walk, so that I can explore the whole plaza.
 4. As a Player, I want the view to stop at the plaza's edges, so that I never see empty space beyond the Map.
 5. As a Player, I want to walk behind trees, lamp posts and buildings, so that the world has depth.
-6. As a Player, I want to stand on the audience chairs, so that I can "sit" in front of the stage with friends.
+6. As a Player, I want to sit on the audience chairs, so that I can watch the stage with friends.
 7. As a Player, I want buildings, stalls, the stage and object bases to block me, so that the world feels solid.
 8. As a Player, I want to appear in the open plaza below the audience when I join, so that I start near everyone else.
 9. As a Player, I want every walkable tile reachable from where I appear, so that no part of the plaza is unreachable.
@@ -26,7 +26,7 @@ Make the plaza the Lobby's Map. Its Tiled project becomes the canonical source u
 ## Implementation Decisions
 
 - **Source.** Move `refs/mapa_praca/` to `assets/map/plaza/` as a Tiled project with English kebab-case file and object names (`arvore_a` → `tree-a`, `camada_1_chao` → `floor`, and so on). Drop the files that are only previews or redundant: `mapa_praca_*.png`, `demo_com_personagens.png`, `colisao_preview.png`, `colisao_retangulos.json`, `colisao_tiles.csv`, `objetos_spritesheet.*`, `camada_1_chao.png`, `camada_2_objetos.png` and the `colisao_objetos` layer. Remove `refs/`.
-- **Authoring in Tiled.** Make the 24 audience chairs walkable in the collision tile layer (12 tiles were blocked under them), and block the single enclosed pocket at (43, 14) so every walkable tile is reachable. Add a point object named `spawn` in the open plaza below the audience, around tile (30, 22). The stage, buildings, stalls and object bases stay blocked as authored.
+- **Authoring in Tiled.** Make the 24 audience chairs walkable in the collision tile layer (12 tiles were blocked under them), and block the single enclosed pocket at (43, 14) so every walkable tile is reachable. Each chair's base sits 2 px below the bottom edge of the tile it mostly covers (bases 210, 242, 274 and 306), so a player on that tile is drawn behind the backrest and reads as seated facing the stage. Add a point object named `spawn` in the open plaza below the audience, around tile (30, 22). The stage, buildings, stalls and object bases stay blocked as authored.
 - **Generator.** `packages/tooling/generate-map-assets.mjs`, modelled on `generate-avatar-assets.mjs` and using `sharp`, with a `--check` mode wired into the tests so stale output fails `pnpm check`. It reads Tiled layers verbatim and never special-cases objects. It fails when the spawn point is missing, outside the Map or blocked, or when any walkable tile is unreachable from it.
 - **Generated output, committed:**
   - `packages/world/src/plaza-map.generated.ts`: width, height, walkability and spawn point. `lobbyMap` is built from it. `createMap`'s ASCII rows remain available to tests.
