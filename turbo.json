@@ -6,8 +6,15 @@
       "outputs": [".next/**", "!.next/cache/**", "dist/**"],
       "env": ["NEXT_PUBLIC_SERVER_URL"]
     },
-    "typecheck": {},
-    "test": {},
+    "transit": {
+      "dependsOn": ["^transit"]
+    },
+    "typecheck": {
+      "dependsOn": ["transit"]
+    },
+    "test": {
+      "dependsOn": ["transit"]
+    },
     "dev": {
       "cache": false,
       "persistent": true

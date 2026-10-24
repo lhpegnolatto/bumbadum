@@ -1,0 +1,14 @@
+{
+  "$schema": "https://turborepo.com/schema.json",
+  "extends": ["//"],
+  "tasks": {
+    "test": {
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "$TURBO_ROOT$/assets/avatar/**",
+        "$TURBO_ROOT$/apps/web/public/sprites/avatar/**",
+        "$TURBO_ROOT$/packages/tooling/generate-avatar-assets.mjs"
+      ]
+    }
+  }
+}
