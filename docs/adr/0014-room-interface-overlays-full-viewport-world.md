@@ -1,5 +1,5 @@
 ---
-status: accepted
+status: map framing superseded by ADR-0015
 ---
 
 # The room interface overlays a full-viewport world

@@ -20,7 +20,7 @@ import {
   STEP_MESSAGE,
 } from "@bumbadum/protocol";
 import type { MusicSearch } from "@bumbadum/radio";
-import { type Direction, lobbyMap } from "@bumbadum/world";
+import { type Direction, isWalkable, lobbyMap } from "@bumbadum/world";
 import { matchMaker } from "@colyseus/core";
 import { type Room as ClientRoom, CloseCode } from "@colyseus/sdk";
 import { boot, type ColyseusTestServer } from "@colyseus/testing";
@@ -197,11 +197,19 @@ describe("lobby-room", () => {
     });
 
     it("only turns the player towards a blocked tile", async () => {
-      // The lobby has furniture two tiles above the spawn point and the tile left of that.
       const ana = await joinLobby("Ana");
-      await walk(ana, "up", "left", "up");
+      await ana.waitForNextPatch();
+      // Placed on the server, below the first blocked tile above the spawn point.
+      let below = spawn;
+      while (isWalkable(lobbyMap, { x: below.x, y: below.y - 1 })) {
+        below = { x: below.x, y: below.y - 1 };
+      }
+      const seat = colyseus.getRoomById<RoomState>(ana.roomId).state.players.get(ana.sessionId);
+      if (!seat) throw new Error("expected Ana's seat");
+      seat.y = below.y;
+      await walk(ana, "up");
 
-      expect(me(ana)).toEqual({ x: spawn.x - 1, y: spawn.y - 1, direction: "up" });
+      expect(me(ana)).toEqual({ ...below, direction: "up" });
     });
 
     it("lets players stand on the same tile", async () => {
@@ -223,7 +231,7 @@ describe("lobby-room", () => {
     });
 
     it("refuses steps beyond the step rate, still counting them as handled", async () => {
-      // Nine walkable tiles lie left of the spawn point; a burst gets one second of steps.
+      // More than six walkable tiles lie left of the spawn point; a burst gets one second of steps.
       const ana = await joinLobby("Ana");
       await walk(ana, ...Array<Direction>(12).fill("left"));
 

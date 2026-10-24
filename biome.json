@@ -13,6 +13,7 @@
       "!**/*.svg",
       "!**/pnpm-lock.yaml",
       "!packages/avatar/src/catalog.generated.ts",
+      "!packages/world/src/plaza-map.generated.ts",
       "!**/next-env.d.ts"
     ]
   },

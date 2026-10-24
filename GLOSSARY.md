@@ -25,7 +25,7 @@ _Avoid_: username, login
 ### World
 
 **Map**:
-The grid of tiles that makes up a room's floor and walls.
+The grid of tiles a room takes place on. Each tile is walkable or blocked.
 _Avoid_: level, scene
 
 **Tile**:

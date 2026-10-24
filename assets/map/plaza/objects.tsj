@@ -1,0 +1,270 @@
+{
+  "type": "tileset",
+  "version": "1.10",
+  "name": "objects",
+  "tilewidth": 256,
+  "tileheight": 176,
+  "tilecount": 36,
+  "columns": 0,
+  "grid": {
+    "orientation": "orthogonal",
+    "width": 1,
+    "height": 1
+  },
+  "margin": 0,
+  "spacing": 0,
+  "tiles": [
+    {
+      "id": 0,
+      "image": "objects/bush.png",
+      "imagewidth": 18,
+      "imageheight": 14,
+      "type": "bush"
+    },
+    {
+      "id": 1,
+      "image": "objects/flowering-bush.png",
+      "imagewidth": 18,
+      "imageheight": 14,
+      "type": "flowering-bush"
+    },
+    {
+      "id": 2,
+      "image": "objects/tree-a.png",
+      "imagewidth": 42,
+      "imageheight": 50,
+      "type": "tree-a"
+    },
+    {
+      "id": 3,
+      "image": "objects/tall-tree.png",
+      "imagewidth": 30,
+      "imageheight": 52,
+      "type": "tall-tree"
+    },
+    {
+      "id": 4,
+      "image": "objects/tree-b.png",
+      "imagewidth": 42,
+      "imageheight": 50,
+      "type": "tree-b"
+    },
+    {
+      "id": 5,
+      "image": "objects/tree-c.png",
+      "imagewidth": 42,
+      "imageheight": 50,
+      "type": "tree-c"
+    },
+    {
+      "id": 6,
+      "image": "objects/young-tree.png",
+      "imagewidth": 26,
+      "imageheight": 36,
+      "type": "young-tree"
+    },
+    {
+      "id": 7,
+      "image": "objects/pink-tree.png",
+      "imagewidth": 42,
+      "imageheight": 50,
+      "type": "pink-tree"
+    },
+    {
+      "id": 8,
+      "image": "objects/bench.png",
+      "imagewidth": 32,
+      "imageheight": 16,
+      "type": "bench"
+    },
+    {
+      "id": 9,
+      "image": "objects/vertical-bench.png",
+      "imagewidth": 12,
+      "imageheight": 30,
+      "type": "vertical-bench"
+    },
+    {
+      "id": 10,
+      "image": "objects/pink-banner.png",
+      "imagewidth": 16,
+      "imageheight": 50,
+      "type": "pink-banner"
+    },
+    {
+      "id": 11,
+      "image": "objects/purple-banner.png",
+      "imagewidth": 16,
+      "imageheight": 50,
+      "type": "purple-banner"
+    },
+    {
+      "id": 12,
+      "image": "objects/bunting.png",
+      "imagewidth": 100,
+      "imageheight": 10,
+      "type": "bunting"
+    },
+    {
+      "id": 13,
+      "image": "objects/short-bunting.png",
+      "imagewidth": 60,
+      "imageheight": 10,
+      "type": "short-bunting"
+    },
+    {
+      "id": 14,
+      "image": "objects/chair.png",
+      "imagewidth": 14,
+      "imageheight": 16,
+      "type": "chair"
+    },
+    {
+      "id": 15,
+      "image": "objects/speaker.png",
+      "imagewidth": 28,
+      "imageheight": 46,
+      "type": "speaker"
+    },
+    {
+      "id": 16,
+      "image": "objects/low-speaker.png",
+      "imagewidth": 28,
+      "imageheight": 30,
+      "type": "low-speaker"
+    },
+    {
+      "id": 17,
+      "image": "objects/fence.png",
+      "imagewidth": 48,
+      "imageheight": 14,
+      "type": "fence"
+    },
+    {
+      "id": 18,
+      "image": "objects/food-truck.png",
+      "imagewidth": 68,
+      "imageheight": 50,
+      "type": "food-truck"
+    },
+    {
+      "id": 19,
+      "image": "objects/hydrant.png",
+      "imagewidth": 10,
+      "imageheight": 13,
+      "type": "hydrant"
+    },
+    {
+      "id": 20,
+      "image": "objects/yellow-planter.png",
+      "imagewidth": 18,
+      "imageheight": 18,
+      "type": "yellow-planter"
+    },
+    {
+      "id": 21,
+      "image": "objects/pink-planter.png",
+      "imagewidth": 18,
+      "imageheight": 18,
+      "type": "pink-planter"
+    },
+    {
+      "id": 22,
+      "image": "objects/trash-can.png",
+      "imagewidth": 12,
+      "imageheight": 15,
+      "type": "trash-can"
+    },
+    {
+      "id": 23,
+      "image": "objects/umbrella-table.png",
+      "imagewidth": 34,
+      "imageheight": 34,
+      "type": "umbrella-table"
+    },
+    {
+      "id": 24,
+      "image": "objects/picnic-table.png",
+      "imagewidth": 34,
+      "imageheight": 26,
+      "type": "picnic-table"
+    },
+    {
+      "id": 25,
+      "image": "objects/stage.png",
+      "imagewidth": 256,
+      "imageheight": 150,
+      "type": "stage"
+    },
+    {
+      "id": 26,
+      "image": "objects/pine-tree.png",
+      "imagewidth": 26,
+      "imageheight": 42,
+      "type": "pine-tree"
+    },
+    {
+      "id": 27,
+      "image": "objects/menu-board.png",
+      "imagewidth": 14,
+      "imageheight": 18,
+      "type": "menu-board"
+    },
+    {
+      "id": 28,
+      "image": "objects/lamp-post.png",
+      "imagewidth": 12,
+      "imageheight": 44,
+      "type": "lamp-post"
+    },
+    {
+      "id": 29,
+      "image": "objects/cafe-building.png",
+      "imagewidth": 128,
+      "imageheight": 140,
+      "type": "cafe-building"
+    },
+    {
+      "id": 30,
+      "image": "objects/record-shop-building.png",
+      "imagewidth": 128,
+      "imageheight": 140,
+      "type": "record-shop-building"
+    },
+    {
+      "id": 31,
+      "image": "objects/radio-building.png",
+      "imagewidth": 128,
+      "imageheight": 176,
+      "type": "radio-building"
+    },
+    {
+      "id": 32,
+      "image": "objects/brick-building.png",
+      "imagewidth": 128,
+      "imageheight": 176,
+      "type": "brick-building"
+    },
+    {
+      "id": 33,
+      "image": "objects/striped-kiosk.png",
+      "imagewidth": 50,
+      "imageheight": 52,
+      "type": "striped-kiosk"
+    },
+    {
+      "id": 34,
+      "image": "objects/blue-tent.png",
+      "imagewidth": 50,
+      "imageheight": 52,
+      "type": "blue-tent"
+    },
+    {
+      "id": 35,
+      "image": "objects/white-tent.png",
+      "imagewidth": 50,
+      "imageheight": 52,
+      "type": "white-tent"
+    }
+  ]
+}

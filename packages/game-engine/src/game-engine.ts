@@ -123,8 +123,10 @@ export async function mountGameEngine(
   const fitToContainer = () => {
     const viewportWidth = container.clientWidth;
     const viewportHeight = container.clientHeight;
-    const layout = fitMapToViewport(map, viewportWidth, viewportHeight);
     app.renderer.resize(viewportWidth, viewportHeight);
+    // Below native size the room is hidden behind the compatibility notice: keep the last fit.
+    if (viewportWidth < map.width * TILE_SIZE || viewportHeight < map.height * TILE_SIZE) return;
+    const layout = fitMapToViewport(map, viewportWidth, viewportHeight);
     world.scale.set(layout.scale);
     world.position.set(layout.x, layout.y);
   };

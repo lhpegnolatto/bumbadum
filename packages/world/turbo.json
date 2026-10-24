@@ -1,0 +1,13 @@
+{
+  "$schema": "https://turborepo.com/schema.json",
+  "extends": ["//"],
+  "tasks": {
+    "test": {
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "$TURBO_ROOT$/assets/map/**",
+        "$TURBO_ROOT$/packages/tooling/generate-map-assets.mjs"
+      ]
+    }
+  }
+}

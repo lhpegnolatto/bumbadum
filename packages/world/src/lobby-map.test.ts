@@ -11,15 +11,13 @@ function allTiles(): Tile[] {
 }
 
 describe("lobbyMap", () => {
-  it("is 20 by 15 tiles", () => {
-    expect({ width: lobbyMap.width, height: lobbyMap.height }).toEqual({ width: 20, height: 15 });
+  it("is the 60 by 40 tile plaza", () => {
+    expect({ width: lobbyMap.width, height: lobbyMap.height }).toEqual({ width: 60, height: 40 });
   });
 
-  it("is closed by walls, so nobody walks off its edge", () => {
-    const edge = allTiles().filter(
-      (t) => t.x === 0 || t.y === 0 || t.x === lobbyMap.width - 1 || t.y === lobbyMap.height - 1,
-    );
-    expect(edge.filter((t) => isWalkable(lobbyMap, t))).toEqual([]);
+  it("spawns players on a walkable tile in the open plaza below the audience", () => {
+    expect(lobbyMap.spawnPoint).toEqual({ x: 30, y: 22 });
+    expect(isWalkable(lobbyMap, lobbyMap.spawnPoint)).toBe(true);
   });
 
   it("lets a player reach every walkable tile from the spawn point", () => {
@@ -37,6 +35,17 @@ describe("lobbyMap", () => {
 
     const walkable = allTiles().filter((t) => isWalkable(lobbyMap, t));
     expect(walkable.filter((t) => !reached.has(key(t)))).toEqual([]);
-    expect(walkable.length).toBeGreaterThan(150);
+    expect(walkable.length).toBeGreaterThan(1500);
+  });
+
+  it("lets players stand on the audience chairs", () => {
+    expect(isWalkable(lobbyMap, { x: 28, y: 14 })).toBe(true);
+    expect(isWalkable(lobbyMap, { x: 34, y: 18 })).toBe(true);
+  });
+
+  it("blocks the stage and the buildings", () => {
+    expect(isWalkable(lobbyMap, { x: 30, y: 4 })).toBe(false);
+    expect(isWalkable(lobbyMap, { x: 2, y: 4 })).toBe(false);
+    expect(isWalkable(lobbyMap, { x: 57, y: 34 })).toBe(false);
   });
 });
