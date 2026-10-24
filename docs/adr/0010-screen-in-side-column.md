@@ -1,5 +1,5 @@
 ---
-status: accepted
+status: superseded by ADR-0014
 ---
 
 # The screen lives in a side column, beside the room

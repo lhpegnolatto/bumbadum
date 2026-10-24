@@ -34,11 +34,13 @@ test("/play puts a track on every screen at the same position, a late joiner's t
   expect(box?.width).toBeGreaterThanOrEqual(400);
   expect(box?.height).toBeGreaterThanOrEqual(225);
 
+  await ivo.getByRole("button", { name: "Chat", exact: true }).click();
   await play(ivo, `https://www.youtube.com/watch?v=${videoId}&list=PLe2e`);
   await expect(ivo.getByRole("log", { name: "Chat" })).toContainText(
     `Ivo queued “Fake track ${videoId}”.`,
   );
   const juno = await joinLobby("Juno");
+  await juno.getByRole("button", { name: "Queue", exact: true }).click();
 
   // Another test's track may still be on air, with Ivo's waiting behind it:
   // either way both players see it, and both screens play the same thing.
@@ -56,6 +58,7 @@ test("/play puts a track on every screen at the same position, a late joiner's t
   expect(Math.abs(onJuno.screenStartedAt - onJuno.radioStartedAt)).toBeLessThan(250);
 
   // A refusal is a notice for the sender alone.
+  await juno.getByRole("button", { name: "Chat", exact: true }).click();
   await play(juno, "live0000001");
   await juno.getByLabel("Message").fill("after the refusal");
   await juno.getByLabel("Message").press("Enter");
@@ -73,11 +76,13 @@ test("/play with a name plays what the search finds, for every player", async ({
   const kai = await joinLobby("Kai");
   const lia = await joinLobby("Lia");
 
+  await lia.getByRole("button", { name: "Chat", exact: true }).click();
   await play(kai, `lofi beats ${tail}`);
 
   await expect(lia.getByRole("log", { name: "Chat" })).toContainText(`Kai queued “${title}”.`);
   // On air or waiting behind another test's track: either way both players see it.
   for (const page of [kai, lia]) {
+    await page.getByRole("button", { name: "Queue", exact: true }).click();
     const onAir = page.getByText(title, { exact: true });
     const waiting = page.getByRole("region", { name: /Up next/ }).getByText(title);
     await expect(onAir.or(waiting)).toBeVisible();

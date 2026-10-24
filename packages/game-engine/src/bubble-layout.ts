@@ -10,8 +10,8 @@ export interface Size {
 
 /**
  * Where a speech bubble's top-left corner goes: centred above `anchor` (the
- * point just over the speaker's head), shifted to stay inside the canvas. The
- * canvas never overlaps the screen column, so neither does a bubble.
+ * point just over the speaker's head), shifted to stay inside the full-viewport
+ * canvas. Room UI overlays may still visually occlude a bubble.
  */
 export function placeBubble(anchor: Point, bubble: Size, canvas: Size): Point {
   return {

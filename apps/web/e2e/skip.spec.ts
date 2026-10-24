@@ -16,6 +16,8 @@ test("a skip vote passes with more than half of the players present, or at once 
   const nina = await joinLobby("Nina");
   const otto = await joinLobby("Otto");
   const pia = await joinLobby("Pia");
+  await nina.getByRole("button", { name: "Chat", exact: true }).click();
+  await pia.getByRole("button", { name: "Chat", exact: true }).click();
   const ninas = freshVideoId();
   const ottos = freshVideoId();
   await say(nina, `/play ${ninas}`);

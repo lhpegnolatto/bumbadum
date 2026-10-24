@@ -19,7 +19,7 @@ declare global {
 /**
  * The room's screen: the YouTube player kept on the radio's time. Always
  * visible, 16:9 and at least 400×225 px, with nothing drawn over it
- * (ADR-0006, ADR-0010); a "nothing playing" card stands in while the radio is
+ * (ADR-0006, ADR-0014); a "nothing playing" card stands in while the radio is
  * silent.
  */
 export function RadioScreen() {

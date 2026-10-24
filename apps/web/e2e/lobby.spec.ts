@@ -5,15 +5,54 @@ const SETTINGS_KEY = "bumbadum:settings:v1";
 
 test("two players in the lobby see each other", async ({ joinLobby }) => {
   const ana = await joinLobby("Ana");
-  const bia = await joinLobby("Bia");
-
   const viewport = ana.viewportSize();
   if (!viewport) throw new Error("Ana's page has no viewport");
   const room = await ana.getByRole("img", { name: "The room" }).boundingBox();
   if (!room) throw new Error("Ana's room has no visible bounds");
-  expect(room.y).toBe(viewport.height - room.y - room.height);
+  expect(room).toEqual({ x: 0, y: 0, width: viewport.width, height: viewport.height });
+
+  const screen = await ana.getByRole("region", { name: "Screen" }).boundingBox();
+  if (!screen) throw new Error("Ana's screen has no visible bounds");
+  expect(screen.width).toBeCloseTo(viewport.width * 0.32, 0);
+  expect(screen.height).toBeCloseTo(screen.width * (9 / 16), 0);
+  expect(screen.x + screen.width).toBe(viewport.width - 24);
+  expect(screen.y).toBe(24);
+
+  const bia = await joinLobby("Bia");
+  await ana.getByRole("button", { name: "Players", exact: true }).click();
+  await bia.getByRole("button", { name: "Players", exact: true }).click();
   await expect(ana.getByRole("listitem")).toContainText(["Ana (you)", "Bia"]);
+  expect(await ana.getByRole("img", { name: "The room" }).boundingBox()).toEqual(room);
   await expect(bia.getByRole("listitem")).toContainText(["Ana", "Bia (you)"]);
+});
+
+test("an undersized viewport keeps the joined room alive until desktop size returns", async ({
+  joinLobby,
+}) => {
+  const gui = await joinLobby("Gui");
+  const hugo = await joinLobby("Hugo");
+  const players = gui.getByRole("button", { name: "Players", exact: true });
+  await players.click();
+  await expect(gui.getByRole("listitem")).toContainText(["Gui (you)", "Hugo"]);
+
+  const compatibilityNotice = gui.getByRole("alert").filter({
+    hasText: "Make the window at least 1024 by 640 pixels to return to the room.",
+  });
+  await gui.setViewportSize({ width: 1023, height: 640 });
+  await expect(compatibilityNotice).toBeVisible();
+  await expect(gui.getByRole("img", { name: "The room" })).toBeHidden();
+
+  await hugo.getByRole("button", { name: "Players", exact: true }).click();
+  await expect(hugo.getByRole("listitem")).toContainText(["Gui", "Hugo (you)"]);
+
+  await gui.setViewportSize({ width: 1024, height: 639 });
+  await expect(compatibilityNotice).toBeVisible();
+
+  await gui.setViewportSize({ width: 1024, height: 640 });
+  await expect(compatibilityNotice).toBeHidden();
+  await expect(gui.getByRole("img", { name: "The room" })).toBeVisible();
+  await expect(players).toHaveAttribute("aria-expanded", "true");
+  await expect(gui.getByRole("listitem")).toContainText(["Gui (you)", "Hugo"]);
 });
 
 test("one player walks and the other sees it", async ({ joinLobby }) => {

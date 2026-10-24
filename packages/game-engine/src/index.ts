@@ -4,3 +4,4 @@ export {
   type GameEngineOptions,
   mountGameEngine,
 } from "./game-engine.ts";
+export { fitMapToViewport, type WorldLayout } from "./world-layout.ts";

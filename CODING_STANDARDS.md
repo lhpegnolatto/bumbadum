@@ -21,7 +21,7 @@ Rules Biome already enforces are not repeated here; run `pnpm check` and trust i
 - Each package exposes one public entry (`src/index.ts`); consumers import only from it. Internal packages export TypeScript source directly (`"exports": { ".": "./src/index.ts" }`), with no build step: Next consumes them via `transpilePackages`, the server is bundled for production.
 - Canonical avatar overlays live under `assets/avatar/<layer>/<style>/` as paired `<style>-<color>-idle.png` and `<style>-<color>-walk.png` sheets. Run `pnpm --filter @bumbadum/avatar assets:generate` after adding one; tests reject stale, incomplete or mis-sized generated catalogs and atlases (ADR-0013).
 - `protocol` mirrors domain state into Colyseus schemas and defines message types together with the schemas that validate them (shape and size limits, such as a nickname's 1–16 characters); it holds no game rules of its own. Colyseus schemas use `schema()` with `t.*` fields, not `@type()` decorators.
-- `game-engine` owns the PixiJS lifecycle and the walking keys (ignored while a text field has focus). React mounts it (`mount`, `applyState`, events) and renders only UI around it: chat, menus, the screen column.
+- `game-engine` owns the PixiJS lifecycle and the walking keys (ignored while a text field has focus). React mounts it (`mount`, `applyState`, events) in a full-viewport canvas and renders the room UI as overlays above it: chat, menus and the screen.
 
 ## Server
 
@@ -33,7 +33,7 @@ Rules Biome already enforces are not repeated here; run `pnpm check` and trust i
 
 - Tailwind + shadcn/ui for all UI. Components live under `apps/web/src/features/<feature>/`, named after the domain where one fits (`room`, `radio`; `home` for the home page). App-wide plumbing lives in `src/i18n/` and `src/lib/`; generated shadcn/ui primitives stay in `src/components/ui/`.
 - Every UI string comes from `apps/web/src/i18n/messages/en.json` and `pt-BR.json`, which a test keeps key-for-key identical.
-- The YouTube player is the room's **screen**: always visible, at least 200×200 px, and nothing renders on top of it; it lives in a column beside the canvas ([ADR-0006](docs/adr/0006-youtube-player-as-visible-screen.md), [ADR-0010](docs/adr/0010-screen-in-side-column.md)).
+- The YouTube player is the room's **screen**: always visible, 16:9, at least 400×225 px, and nothing renders on top of it. It overlays the full-viewport canvas with the other room UI, and opening a panel never resizes or rescales the world ([ADR-0006](docs/adr/0006-youtube-player-as-visible-screen.md), [ADR-0014](docs/adr/0014-room-interface-overlays-full-viewport-world.md)).
 - `localStorage` holds only the player's nickname, avatar, language, volume and theme settings, under a versioned key, parsed with a schema on application reads. The pre-paint theme initializer is the sole exception: before application JavaScript loads, it reads only that key and accepts only the exact `light` and `dark` values.
 
 ## Tests

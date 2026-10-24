@@ -1,5 +1,46 @@
 import { drawnPlayer, expect, test } from "./join-lobby.ts";
 
+test("the wardrobe is a wide exclusive overlay that leaves the Screen available", async ({
+  joinLobby,
+}) => {
+  const page = await joinLobby("Nara");
+  const wardrobeButton = page.getByRole("button", { name: "Wardrobe", exact: true });
+  const settingsButton = page.getByRole("button", { name: "Settings" });
+  const chatButton = page.getByRole("button", { name: "Chat", exact: true });
+  const room = page.getByRole("img", { name: "The room" });
+  const screen = page.getByRole("region", { name: "Screen" });
+  const wardrobe = page.getByRole("dialog", { name: "Wardrobe" });
+  const initialRoomBounds = await room.boundingBox();
+
+  await settingsButton.click();
+  await expect(page.getByRole("region", { name: "Settings" })).toBeVisible();
+  await wardrobeButton.click();
+  await expect(page.getByRole("region", { name: "Settings" })).toBeHidden();
+  await expect(wardrobe).toBeVisible();
+  await expect(wardrobeButton).toBeVisible();
+  await expect(page.getByRole("dialog", { name: "Wardrobe" })).toHaveCount(1);
+  await expect(screen).toBeVisible();
+  expect(await room.boundingBox()).toEqual(initialRoomBounds);
+
+  const wardrobeBounds = await wardrobe.boundingBox();
+  const screenBounds = await screen.boundingBox();
+  if (!wardrobeBounds || !screenBounds) throw new Error("Room overlays have no bounds");
+  expect(wardrobeBounds.width).toBeGreaterThan(352);
+  expect(wardrobeBounds.x + wardrobeBounds.width).toBeLessThanOrEqual(screenBounds.x);
+
+  await chatButton.click();
+  await expect(wardrobe).toBeHidden();
+  await expect(page.getByRole("region", { name: "Chat" })).toBeVisible();
+
+  await page.keyboard.press("KeyC");
+  await expect(page.getByRole("region", { name: "Chat" })).toBeHidden();
+  await expect(wardrobe).toBeVisible();
+
+  await settingsButton.click();
+  await expect(wardrobe).toBeHidden();
+  await expect(page.getByRole("region", { name: "Settings" })).toBeVisible();
+});
+
 test("the wardrobe keeps layered drafts private and publishes the whole avatar", async ({
   joinLobby,
 }) => {

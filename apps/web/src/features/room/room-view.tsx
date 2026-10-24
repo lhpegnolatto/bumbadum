@@ -1,27 +1,30 @@
 "use client";
 
 import { type Avatar, DEFAULT_AVATAR } from "@bumbadum/avatar";
-import type { RoomState } from "@bumbadum/protocol";
+import { CHAT_MESSAGE, type ChatMessage, type RoomState } from "@bumbadum/protocol";
 import type { Room } from "@colyseus/sdk";
-import { ShirtIcon } from "lucide-react";
+import { MonitorIcon, ShirtIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { useTranslations } from "use-intl";
 import { Alert, AlertDescription } from "@/components/ui/alert.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { useWearAvatar } from "@/features/avatar/use-wear-avatar.ts";
 import { WardrobePanel } from "@/features/avatar/wardrobe-panel.tsx";
-import { ChatPanel } from "@/features/chat/chat-panel.tsx";
+import { ChatComposer, ChatHistoryPanel } from "@/features/chat/chat-panel.tsx";
 import { NowPlayingCaption } from "@/features/radio/now-playing.tsx";
 import { QueueList } from "@/features/radio/queue-list.tsx";
 import { RadioProvider } from "@/features/radio/radio-provider.tsx";
 import { RadioScreen } from "@/features/radio/radio-screen.tsx";
 import { VolumeControl } from "@/features/radio/volume-control.tsx";
+import { SettingsControl } from "@/features/settings/settings-control.tsx";
 import { ThemeToggle } from "@/features/theme/theme-toggle.tsx";
 import { useSettings } from "@/lib/local-settings.ts";
 import { GameCanvas } from "./game-canvas.tsx";
 import { PlayerList } from "./player-list.tsx";
+import { type RoomPanel, RoomPanelControls, RoomPanelFrame } from "./room-panel-dock.tsx";
+import { useExitPresence } from "./use-exit-presence.ts";
 import { type PresentPlayer, useRoom } from "./use-room.ts";
 import { WaitingScreen, WaitingTimedOut } from "./waiting-screen.tsx";
 
@@ -117,58 +120,175 @@ function JoinedRoom({
   worn: Avatar;
 }) {
   const t = useTranslations("wardrobe");
-  const [wardrobeOpen, setWardrobeOpen] = useState(false);
+  const roomT = useTranslations("room");
+  const supportedViewport = useSupportedViewport();
+  const [activeInterface, setActiveInterface] = useState<RoomInterface>(null);
+  const [hasUnreadChat, setHasUnreadChat] = useState(false);
+  const activePanel: RoomPanel = isRoomPanel(activeInterface) ? activeInterface : null;
+  const wardrobeOpen = activeInterface === "wardrobe";
+  const visiblePanel = useExitPresence(activePanel);
+  const visibleWardrobe = useExitPresence(wardrobeOpen ? "wardrobe" : null);
+  const activePanelRef = useRef(activePanel);
   const wear = useWearAvatar(room);
+
+  useEffect(() => {
+    activePanelRef.current = activePanel;
+    if (activePanel === "chat") setHasUnreadChat(false);
+  }, [activePanel]);
+
+  useEffect(
+    () =>
+      room.onMessage<ChatMessage>(CHAT_MESSAGE, (message) => {
+        if (message.senderId !== room.sessionId && activePanelRef.current !== "chat") {
+          setHasUnreadChat(true);
+        }
+      }),
+    [room],
+  );
 
   useEffect(() => {
     function openOnC(event: KeyboardEvent) {
       if (event.key.toLowerCase() !== "c" || event.repeat || event.defaultPrevented) return;
       if (event.ctrlKey || event.metaKey || event.altKey || isTextField(event.target)) return;
-      setWardrobeOpen(true);
+      setActiveInterface("wardrobe");
     }
     document.addEventListener("keydown", openOnC);
     return () => document.removeEventListener("keydown", openOnC);
   }, []);
 
+  useEffect(() => {
+    function closePanel(event: KeyboardEvent) {
+      if (event.key !== "Escape" || event.defaultPrevented || isTextField(event.target)) return;
+      setActiveInterface(null);
+    }
+    document.addEventListener("keydown", closePanel);
+    return () => document.removeEventListener("keydown", closePanel);
+  }, []);
+
+  function togglePanel(panel: Exclude<RoomPanel, null>) {
+    setActiveInterface((current) => (current === panel ? null : panel));
+  }
+
+  function setSettings(nextOpen: boolean) {
+    setActiveInterface((current) => {
+      if (nextOpen) return "settings";
+      return current === "settings" ? null : current;
+    });
+  }
+
   return (
-    <main className="flex min-h-dvh gap-6 p-6">
-      {/* The wardrobe opens over the canvas, never over the side column (ADR-0010). */}
-      <div className="relative min-w-0 flex-1">
-        <GameCanvas room={room} walking={!wardrobeOpen} />
-        {wardrobeOpen ? (
-          <WardrobePanel worn={worn} onWear={wear} onClose={() => setWardrobeOpen(false)} />
-        ) : (
+    <main className="relative h-dvh overflow-hidden [--room-overlay-edge:1.5rem] [--room-overlay-gap:1rem] [--room-rail-width:clamp(400px,32vw,480px)]">
+      <div
+        aria-hidden={!supportedViewport}
+        inert={!supportedViewport}
+        className={`relative h-full ${supportedViewport ? "" : "invisible pointer-events-none"}`}
+      >
+        {/* The world owns the viewport; room interface overlays it without changing its scale (ADR-0014). */}
+        <div className="absolute inset-0">
+          <GameCanvas room={room} walking={!wardrobeOpen} />
+          {visibleWardrobe.present && (
+            <WardrobePanel
+              worn={worn}
+              open={visibleWardrobe.open}
+              onWear={wear}
+              onClose={() => setActiveInterface(null)}
+            />
+          )}
+        </div>
+        <div className="absolute bottom-[var(--room-overlay-edge)] left-[var(--room-overlay-edge)] z-20 flex items-center gap-2">
           <Button
             variant="secondary"
             size="sm"
-            className="absolute top-2 left-2"
+            aria-expanded={wardrobeOpen}
             aria-keyshortcuts="C"
             title={t("shortcut")}
-            onClick={() => setWardrobeOpen(true)}
+            onClick={() =>
+              setActiveInterface((current) => (current === "wardrobe" ? null : "wardrobe"))
+            }
           >
             <ShirtIcon />
             {t("open")}
           </Button>
-        )}
-      </div>
-      {/* The side column (ADR-0010): the screen on top, always visible, then the queue and the chat. */}
-      <aside className="flex h-[calc(100dvh-3rem)] w-[400px] shrink-0 flex-col gap-4">
-        <RadioProvider room={room}>
-          <div className="flex shrink-0 flex-col gap-2">
-            <RadioScreen />
-            <div className="flex items-center justify-end gap-2">
-              <NowPlayingCaption />
-              <VolumeControl />
-              <ThemeToggle />
+          <SettingsControl open={activeInterface === "settings"} onOpenChange={setSettings} />
+        </div>
+        <div
+          className={
+            activePanel === "chat"
+              ? "absolute right-[calc(var(--room-overlay-edge)_+_var(--room-overlay-gap))] bottom-2 z-20 w-[calc(var(--room-rail-width)_-_var(--room-overlay-gap)_-_var(--room-overlay-gap))] rounded-lg border bg-background/95 p-2 shadow-lg backdrop-blur-sm"
+              : "absolute bottom-6 left-1/2 z-20 w-[min(28rem,calc(100vw-3rem))] -translate-x-1/2 rounded-lg border bg-background/95 p-2 shadow-lg backdrop-blur-sm"
+          }
+        >
+          <ChatComposer room={room} />
+        </div>
+        <div className="absolute right-[var(--room-overlay-edge)] bottom-[var(--room-overlay-edge)] z-20">
+          <RoomPanelControls
+            active={activePanel}
+            hasUnreadChat={hasUnreadChat}
+            onToggle={togglePanel}
+          />
+        </div>
+        {/* The Screen and Radio stay visible; one optional room panel uses the space beneath them. */}
+        <aside className="absolute inset-y-[var(--room-overlay-edge)] right-[var(--room-overlay-edge)] z-10 flex w-[var(--room-rail-width)] flex-col gap-[var(--room-overlay-gap)]">
+          <RadioProvider room={room}>
+            <div className="flex shrink-0 flex-col gap-2">
+              <RadioScreen />
+              <div className="flex items-center justify-end gap-2 rounded-lg border bg-background/95 p-2 shadow-lg backdrop-blur-sm">
+                <NowPlayingCaption />
+                <VolumeControl />
+              </div>
             </div>
-          </div>
-          <QueueList />
-        </RadioProvider>
-        <PlayerList players={players} me={room.sessionId} />
-        <ChatPanel room={room} />
-      </aside>
+            {visiblePanel.present ? (
+              <RoomPanelFrame
+                panel={visiblePanel.present}
+                open={visiblePanel.open}
+                onClose={() => setActiveInterface(null)}
+              >
+                {visiblePanel.present === "chat" ? (
+                  <div className="flex min-h-0 flex-1 pb-24">
+                    <ChatHistoryPanel room={room} />
+                  </div>
+                ) : null}
+                {visiblePanel.present === "queue" ? <QueueList /> : null}
+                {visiblePanel.present === "players" ? (
+                  <PlayerList players={players} me={room.sessionId} />
+                ) : null}
+              </RoomPanelFrame>
+            ) : null}
+          </RadioProvider>
+        </aside>
+      </div>
+      {!supportedViewport && (
+        <div className="absolute inset-0 z-50 grid place-items-center bg-background p-6">
+          <Alert className="max-w-md">
+            <MonitorIcon />
+            <AlertDescription>{roomT("desktopCompatibility")}</AlertDescription>
+          </Alert>
+        </div>
+      )}
     </main>
   );
+}
+
+const supportedViewportQuery = "(min-width: 1024px) and (min-height: 640px)";
+
+function subscribeToSupportedViewport(onChange: () => void) {
+  const query = window.matchMedia(supportedViewportQuery);
+  query.addEventListener("change", onChange);
+  return () => query.removeEventListener("change", onChange);
+}
+
+function getSupportedViewport() {
+  return window.matchMedia(supportedViewportQuery).matches;
+}
+
+function useSupportedViewport() {
+  return useSyncExternalStore(subscribeToSupportedViewport, getSupportedViewport, () => true);
+}
+
+type RoomInterface = Exclude<RoomPanel, null> | "settings" | "wardrobe" | null;
+
+function isRoomPanel(value: RoomInterface): value is Exclude<RoomPanel, null> {
+  return value === "chat" || value === "queue" || value === "players";
 }
 
 function FloatingThemeToggle() {

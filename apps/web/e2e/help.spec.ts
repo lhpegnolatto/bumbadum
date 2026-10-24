@@ -10,6 +10,9 @@ test("/help gives the sender a notice listing the commands, and the other player
   const quim = await joinLobby("Quim");
   const rita = await joinLobby("Rita");
 
+  await quim.getByRole("button", { name: "Chat", exact: true }).click();
+  await rita.getByRole("button", { name: "Chat", exact: true }).click();
+
   await expect(quim.getByText("/play <link or name> · /skip · /help")).toBeVisible();
 
   await say(quim, "/help");
@@ -26,7 +29,7 @@ test("/help gives the sender a notice listing the commands, and the other player
   await expect(chat(rita)).not.toContainText("Commands you can use");
 });
 
-test("typing / offers the command names; arrows, Tab, Enter and a click complete them, Esc closes the list first", async ({
+test("typing / offers command names; arrows, Tab, Enter and a click complete them", async ({
   joinLobby,
 }) => {
   const sara = await joinLobby("Sara");
@@ -61,8 +64,6 @@ test("typing / offers the command names; arrows, Tab, Enter and a click complete
   await sara.keyboard.type("/h");
   await sara.keyboard.press("Escape");
   await expect(suggestions).toHaveCount(0);
-  await expect(chatInput).toBeFocused();
-  await sara.keyboard.press("Escape");
   await expect(chatInput).not.toBeFocused();
 
   // A complete command name sends on Enter.
@@ -70,6 +71,7 @@ test("typing / offers the command names; arrows, Tab, Enter and a click complete
   await chatInput.pressSequentially("/help");
   await chatInput.press("Enter");
   await expect(chatInput).toHaveValue("");
+  await sara.getByRole("button", { name: "Chat", exact: true }).click();
   await expect(chat(sara)).toContainText("Commands you can use:");
 });
 
@@ -95,6 +97,7 @@ test("in Portuguese, the hint and help use the Portuguese names, and /pl still o
 
   await chatInput.fill("/ajuda");
   await chatInput.press("Enter");
+  await tati.getByRole("button", { name: "Chat", exact: true }).click();
   await expect(chat(tati)).toContainText("Comandos que você pode usar:");
   await expect(chat(tati).getByRole("listitem").first()).toHaveText(
     "/tocar <link ou nome> Coloca uma música na fila: um link do YouTube, ou um nome para buscar.",

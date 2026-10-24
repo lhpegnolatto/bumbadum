@@ -16,13 +16,27 @@
     "useLight": "Usar modo claro",
     "useDark": "Usar modo escuro"
   },
+  "settings": {
+    "title": "Configurações",
+    "language": "Idioma",
+    "theme": "Tema"
+  },
   "room": {
     "players": "Na sala ({count})",
     "you": "{nickname} (você)",
     "canvasLabel": "A sala",
     "backHome": "Voltar ao início",
     "joinGate": "Pronto para entrar na sala como {nickname}?",
-    "join": "Entrar"
+    "join": "Entrar",
+    "desktopCompatibility": "Aumente a janela para pelo menos 1024 por 640 pixels para voltar à sala.",
+    "panels": {
+      "navigation": "Painéis da sala",
+      "chat": "Chat",
+      "queue": "Fila",
+      "players": "Pessoas",
+      "newMessage": "Nova mensagem",
+      "close": "Fechar {panel}"
+    }
   },
   "joinRejection": {
     "room-full": "A sala está cheia. Tente de novo daqui a pouco.",

@@ -16,13 +16,27 @@
     "useLight": "Use light mode",
     "useDark": "Use dark mode"
   },
+  "settings": {
+    "title": "Settings",
+    "language": "Language",
+    "theme": "Theme"
+  },
   "room": {
     "players": "In the room ({count})",
     "you": "{nickname} (you)",
     "canvasLabel": "The room",
     "backHome": "Back to home",
     "joinGate": "Ready to join the room as {nickname}?",
-    "join": "Join"
+    "join": "Join",
+    "desktopCompatibility": "Make the window at least 1024 by 640 pixels to return to the room.",
+    "panels": {
+      "navigation": "Room panels",
+      "chat": "Chat",
+      "queue": "Queue",
+      "players": "Players",
+      "newMessage": "New message",
+      "close": "Close {panel}"
+    }
   },
   "joinRejection": {
     "room-full": "The room is full. Try again in a little while.",

@@ -25,9 +25,8 @@ import { StepRepeater } from "./movement/step-repeater.ts";
 import { SpeechBubbles } from "./speech-bubbles.ts";
 import { AvatarAnimation } from "./sprites/avatar-animation.ts";
 import { AvatarSprite, FrameTextures } from "./sprites/avatar-sprite.ts";
+import { fitMapToViewport, TILE_SIZE } from "./world-layout.ts";
 
-/** Pixels per tile, before the whole-number scale that fits the map to its container. */
-const TILE_SIZE = 16;
 /** Screen pixels between the top of an avatar's frame and their nickname. */
 const LABEL_GAP = 3;
 /** Transparent world pixels above every avatar's highest visible pixel. */
@@ -122,9 +121,12 @@ export async function mountGameEngine(
   const bubbles = new SpeechBubbles(app.stage, app.screen);
 
   const fitToContainer = () => {
-    const scale = fittingScale(map, container.clientWidth, container.clientHeight);
-    world.scale.set(scale);
-    app.renderer.resize(map.width * TILE_SIZE * scale, map.height * TILE_SIZE * scale);
+    const viewportWidth = container.clientWidth;
+    const viewportHeight = container.clientHeight;
+    const layout = fitMapToViewport(map, viewportWidth, viewportHeight);
+    app.renderer.resize(viewportWidth, viewportHeight);
+    world.scale.set(layout.scale);
+    world.position.set(layout.x, layout.y);
   };
   fitToContainer();
   const resizeObserver = new ResizeObserver(fitToContainer);
@@ -187,8 +189,8 @@ export async function mountGameEngine(
       avatar.sprite.draw(avatar.direction, frame.cycle, frame.frame);
       // Labels live outside the scaled world, so their size and gap render in screen pixels.
       avatar.label.position.set(
-        view.x * world.scale.x,
-        (view.y - FRAME_SIZE + AVATAR_TOP_INSET) * world.scale.y - LABEL_GAP,
+        world.x + view.x * world.scale.x,
+        world.y + (view.y - FRAME_SIZE + AVATAR_TOP_INSET) * world.scale.y - LABEL_GAP,
       );
     }
     bubbles.update(now, (id) => {
@@ -277,12 +279,6 @@ function drawNickname(nickname: string): Container {
   label.addChild(background, text);
   label.pivot.set(label.width / 2, label.height);
   return label;
-}
-
-/** The largest whole-number scale at which the map fits, so pixels stay square. */
-function fittingScale(map: GameMap, width: number, height: number): number {
-  const fit = Math.min(width / (map.width * TILE_SIZE), height / (map.height * TILE_SIZE));
-  return Math.max(1, Math.floor(fit));
 }
 
 function drawMap(map: GameMap): Graphics {

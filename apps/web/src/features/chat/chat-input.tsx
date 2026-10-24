@@ -55,6 +55,7 @@ export function ChatInput({ onSend }: { onSend: (text: string) => void }) {
     event.preventDefault();
     if (draft.trim()) onSend(draft);
     edit("");
+    inputRef.current?.blur();
   }
 
   function onKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
@@ -75,9 +76,6 @@ export function ChatInput({ onSend }: { onSend: (text: string) => void }) {
         case "Enter":
           event.preventDefault();
           complete(selected.name);
-          return;
-        case "Escape":
-          setDismissed(true);
           return;
       }
     }

@@ -1,8 +1,8 @@
 import { DesktopOnlyNotice } from "@/features/home/desktop-only-notice.tsx";
 import { HomeTagline } from "@/features/home/home-tagline.tsx";
-import { LanguageSwitcher } from "@/features/home/language-switcher.tsx";
 import { ServerWakeUp } from "@/features/home/server-wake-up.tsx";
 import { JoinForm } from "@/features/room/join-form.tsx";
+import { LanguageSwitcher } from "@/features/settings/language-switcher.tsx";
 import { ThemeToggle } from "@/features/theme/theme-toggle.tsx";
 
 export default function HomePage() {
