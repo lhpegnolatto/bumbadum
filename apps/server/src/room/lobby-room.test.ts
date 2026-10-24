@@ -1,8 +1,9 @@
-import type { Avatar } from "@bumbadum/avatar";
+import { type Avatar, DEFAULT_AVATAR } from "@bumbadum/avatar";
 import {
   ANNOUNCEMENT,
   type Announcement,
   AVATAR_MESSAGE,
+  avatarFromState,
   CHAT_HISTORY,
   CHAT_INPUT,
   CHAT_MESSAGE,
@@ -54,7 +55,7 @@ beforeEach(async () => {
   searched.length = 0;
 });
 
-const AVATAR: Avatar = { skinTone: 2 };
+const AVATAR: Avatar = { ...DEFAULT_AVATAR, skinTone: 2 };
 
 function joinLobby(
   nickname: string,
@@ -66,7 +67,7 @@ function joinLobby(
 /** The avatar `room` sees `player` wearing. */
 function avatarOf(room: ClientRoom<unknown, RoomState>, player: ClientRoom<unknown, RoomState>) {
   const avatar = room.state.players?.get(player.sessionId)?.avatar;
-  return avatar && { skinTone: avatar.skinTone };
+  return avatar && avatarFromState(avatar);
 }
 
 function nicknames(room: ClientRoom<unknown, RoomState>): string[] {
@@ -360,13 +361,14 @@ describe("lobby-room chat", () => {
 });
 
 describe("lobby-room avatars", () => {
-  const changed: Avatar = { skinTone: 4 };
+  const changed: Avatar = { ...DEFAULT_AVATAR, skinTone: 4, headwear: "crown-gold" };
 
   it("shows everyone the avatar a player joins with", async () => {
-    const ana = await joinLobby("Ana", { skinTone: 3 });
+    const joined = { ...DEFAULT_AVATAR, skinTone: 3 };
+    const ana = await joinLobby("Ana", joined);
     const bia = await joinLobby("Bia");
 
-    await expect.poll(() => avatarOf(bia, ana)).toEqual({ skinTone: 3 });
+    await expect.poll(() => avatarOf(bia, ana)).toEqual(joined);
     await expect.poll(() => avatarOf(ana, bia)).toEqual(AVATAR);
   });
 
@@ -382,7 +384,7 @@ describe("lobby-room avatars", () => {
 
   it("ignores an invalid avatar change", async () => {
     const ana = await joinLobby("Ana");
-    ana.send(AVATAR_MESSAGE, { hair: 8 });
+    ana.send(AVATAR_MESSAGE, { ...AVATAR, hair: "unknown" });
     ana.send(AVATAR_MESSAGE, { skinTone: 5 });
     ana.send(AVATAR_MESSAGE, "outfit-2");
     // Messages are handled in order, so once the step is, so are the changes.
@@ -395,7 +397,7 @@ describe("lobby-room avatars", () => {
     const ana = await joinLobby("Ana");
     const bia = await joinLobby("Bia");
     ana.send(AVATAR_MESSAGE, changed);
-    ana.send(AVATAR_MESSAGE, { skinTone: 1 });
+    ana.send(AVATAR_MESSAGE, { ...AVATAR, skinTone: 1 });
     bia.send(AVATAR_MESSAGE, changed);
     await walk(ana, "down");
     await walk(bia, "down");

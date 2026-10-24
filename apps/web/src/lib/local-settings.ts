@@ -1,4 +1,4 @@
-import { type Avatar, parseAvatar } from "@bumbadum/avatar";
+import { type Avatar, DEFAULT_AVATAR, parseAvatar } from "@bumbadum/avatar";
 import { useSyncExternalStore } from "react";
 import { z } from "zod";
 import { type Locale, locales } from "../i18n/locale.ts";
@@ -19,9 +19,7 @@ const settingsSchema = z.object({
     .transform((input) => {
       const avatar = parseAvatar(input);
       if (avatar) return avatar;
-      if (typeof input !== "object" || input === null || Array.isArray(input)) return undefined;
-      const { skinTone } = input as Record<string, unknown>;
-      return skinTone === 5 || skinTone === 6 ? { skinTone: 1 } : undefined;
+      return migrateLegacyAvatar(input);
     })
     .optional(),
   /** The radio's volume for this player only, 0 to 100. */
@@ -31,6 +29,19 @@ const settingsSchema = z.object({
 });
 
 export type Theme = "light" | "dark";
+
+function migrateLegacyAvatar(input: unknown): Avatar | undefined {
+  if (typeof input !== "object" || input === null || Array.isArray(input)) return undefined;
+  const value = input as Record<string, unknown>;
+  if (!Object.keys(value).every((key) => ["skinTone", "hair", "outfit"].includes(key)))
+    return undefined;
+  if (!Number.isInteger(value.skinTone) || Number(value.skinTone) < 1 || Number(value.skinTone) > 6)
+    return undefined;
+  for (const obsolete of [value.hair, value.outfit]) {
+    if (obsolete !== undefined && !Number.isInteger(obsolete)) return undefined;
+  }
+  return { ...DEFAULT_AVATAR, skinTone: Number(value.skinTone) <= 4 ? Number(value.skinTone) : 1 };
+}
 
 export interface Settings {
   nickname?: string;

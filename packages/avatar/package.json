@@ -7,8 +7,9 @@
     ".": "./src/index.ts"
   },
   "scripts": {
+    "assets:generate": "node ../tooling/generate-avatar-assets.mjs",
     "typecheck": "tsc",
-    "test": "vitest run"
+    "test": "node ../tooling/generate-avatar-assets.mjs --check && vitest run"
   },
   "devDependencies": {
     "@bumbadum/tooling": "workspace:*",

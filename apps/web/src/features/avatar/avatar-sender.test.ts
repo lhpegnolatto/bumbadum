@@ -1,4 +1,4 @@
-import type { Avatar } from "@bumbadum/avatar";
+import { type Avatar, DEFAULT_AVATAR } from "@bumbadum/avatar";
 import { describe, expect, it } from "vitest";
 import type { Clock } from "../room/connection.ts";
 import { createAvatarSender } from "./avatar-sender.ts";
@@ -27,9 +27,9 @@ function fakeClock() {
   return { clock, advance };
 }
 
-const a: Avatar = { skinTone: 1 };
-const b: Avatar = { skinTone: 2 };
-const c: Avatar = { skinTone: 3 };
+const a: Avatar = DEFAULT_AVATAR;
+const b: Avatar = { ...DEFAULT_AVATAR, skinTone: 2 };
+const c: Avatar = { ...DEFAULT_AVATAR, skinTone: 3 };
 
 function setup() {
   const { clock, advance } = fakeClock();

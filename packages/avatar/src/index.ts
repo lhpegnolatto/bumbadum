@@ -1,11 +1,17 @@
 export {
-  AVATAR_CHOICES,
-  AVATAR_LAYERS,
+  APPEARANCE_LAYERS,
+  type AppearanceLayer,
+  AVATAR_CATALOG,
   type Avatar,
-  type AvatarLayer,
+  availableAvatarOptions,
+  avatarKey,
+  type CatalogOption,
+  compatibleAvatar,
   DEFAULT_AVATAR,
+  OPTIONAL_LAYERS,
   parseAvatar,
   randomAvatar,
+  sameAvatar,
 } from "./avatar.ts";
 export {
   type AnimationCycle,

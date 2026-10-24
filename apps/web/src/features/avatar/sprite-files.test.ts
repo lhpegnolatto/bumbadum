@@ -1,8 +1,9 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import {
-  AVATAR_CHOICES,
+  AVATAR_CATALOG,
   avatarFrames,
+  DEFAULT_AVATAR,
   FRAME_SIZE,
   SPRITE_SHEETS,
   WALK_FRAMES,
@@ -24,7 +25,15 @@ describe("the avatar sprite manifest", () => {
 
   it("finds every frame of every avatar inside its sheet", () => {
     const sizes = new Map(SPRITE_SHEETS.map((sheet) => [sheet, pngSize(sheet)]));
-    const largest = { skinTone: AVATAR_CHOICES.skinTone };
+    const largest = {
+      ...DEFAULT_AVATAR,
+      skinTone: 4,
+      footwear: AVATAR_CATALOG.footwear.at(-1)?.id ?? null,
+      overgarment: AVATAR_CATALOG.overgarment.at(-1)?.id ?? null,
+      neckwear: AVATAR_CATALOG.neckwear.at(-1)?.id ?? null,
+      eyewear: AVATAR_CATALOG.eyewear.at(-1)?.id ?? null,
+      headwear: AVATAR_CATALOG.headwear.at(-1)?.id ?? null,
+    };
     for (const direction of ["up", "down", "left", "right"] as const) {
       for (let frame = 0; frame < WALK_FRAMES; frame++) {
         for (const { sheet, x, y } of avatarFrames(largest, direction, "walk", frame)) {
@@ -37,9 +46,12 @@ describe("the avatar sprite manifest", () => {
     }
   });
 
-  it("has exactly one row per skin tone", () => {
+  it("keeps every runtime texture within the WebGL guaranteed maximum size", () => {
+    expect(pngSize("/sprites/avatar/idle.png").height).toBe(4 * FRAME_SIZE);
+    expect(pngSize("/sprites/avatar/walk.png").height).toBe(4 * FRAME_SIZE);
     for (const sheet of SPRITE_SHEETS) {
-      expect(pngSize(sheet).height).toBe(AVATAR_CHOICES.skinTone * FRAME_SIZE);
+      expect(pngSize(sheet).width).toBeLessThanOrEqual(4096);
+      expect(pngSize(sheet).height).toBeLessThanOrEqual(4096);
     }
   });
 });

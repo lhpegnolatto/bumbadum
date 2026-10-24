@@ -103,9 +103,49 @@ _Avoid_: system message, log
 ### Avatar
 
 **Avatar**:
-A player's visual appearance. For now, an avatar has only a skin tone; more appearance choices enter the model when their assets are ready.
+A player's visual appearance, composed from a skin tone and wearable appearance layers.
 _Avoid_: character, skin, sprite
 
 **Skin tone**:
 The colour of an avatar's body.
 _Avoid_: skin, colour, body type
+
+**Appearance layer**:
+One independently selected part of an avatar's appearance: hair, top, bottom, footwear, overgarment, neckwear, eyewear or headwear. Skin tone is part of the avatar but is not wearable.
+_Avoid_: slot, category, outfit
+
+**Hair**:
+An optional hairstyle and hair colour an avatar wears.
+_Avoid_: haircut, hairdo
+
+**Top**:
+Required clothing worn on an avatar's torso.
+_Avoid_: shirt, upper body
+
+**Bottom**:
+Required clothing worn on the lower half of an avatar.
+_Avoid_: trousers, lower body
+
+**Footwear**:
+An optional wearable layer over an avatar's feet, such as boots.
+_Avoid_: shoes, foot accessory
+
+**Overgarment**:
+An optional wearable layer over an avatar's top and bottom, such as overalls.
+_Avoid_: outfit, full body
+
+**Neckwear**:
+An optional wearable layer around an avatar's neck, such as a scarf.
+_Avoid_: neck accessory
+
+**Headwear**:
+An optional wearable layer over an avatar's head, such as a cap or crown.
+_Avoid_: hat, head accessory
+
+**Eyewear**:
+An optional wearable layer over an avatar's eyes, such as glasses.
+_Avoid_: glasses, face accessory
+
+**Wardrobe**:
+The editor where a player previews appearance changes and chooses which avatar to wear.
+_Avoid_: closet, character creator

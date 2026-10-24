@@ -103,11 +103,77 @@
   },
   "avatar": {
     "label": "Avatar",
+    "layersLabel": "Camadas de aparência",
+    "style": "Estilo",
+    "color": "Cor",
+    "none": "Nenhum",
     "layers": {
-      "skinTone": "Tom de pele"
+      "skinTone": "Corpo",
+      "hair": "Cabelo",
+      "top": "Parte de cima",
+      "bottom": "Parte de baixo",
+      "footwear": "Calçados",
+      "overgarment": "Sobreposição",
+      "neckwear": "Pescoço",
+      "eyewear": "Óculos",
+      "headwear": "Cabeça"
     },
     "choice": {
-      "skinTone": "Tom de pele {number}"
+      "skinTone": "Tom de pele {number}",
+      "appearance": "{style}, {color}"
+    },
+    "styles": {
+      "afro": "Afro",
+      "bandana": "Bandana",
+      "beanie": "Gorro",
+      "boots": "Botas",
+      "bow": "Laço",
+      "bowl": "Tigela",
+      "bun": "Coque",
+      "cap": "Boné",
+      "crown": "Coroa",
+      "jacket": "Jaqueta",
+      "long": "Longo",
+      "long-sleeve": "Manga longa",
+      "mohawk": "Moicano",
+      "overalls": "Macacão",
+      "pigtails": "Marias-chiquinhas",
+      "ponytail": "Rabo de cavalo",
+      "round-glasses": "Óculos redondos",
+      "scarf": "Cachecol",
+      "short": "Curto",
+      "spiky": "Espetado",
+      "straw-hat": "Chapéu de palha",
+      "sunglasses": "Óculos escuros",
+      "t-shirt": "Camiseta",
+      "tank-top": "Regata",
+      "top-hat": "Cartola",
+      "trousers": "Calça",
+      "tunic": "Túnica",
+      "viking-helmet": "Elmo viking",
+      "wizard-hat": "Chapéu de mago"
+    },
+    "colors": {
+      "auburn": "Acaju",
+      "black": "Preto",
+      "blue": "Azul",
+      "bronze": "Bronze",
+      "brown": "Marrom",
+      "cyan": "Ciano",
+      "gold": "Dourado",
+      "gray": "Cinza",
+      "green": "Verde",
+      "iron": "Ferro",
+      "light-brown": "Castanho-claro",
+      "orange": "Laranja",
+      "pink": "Rosa",
+      "platinum": "Platinado",
+      "purple": "Roxo",
+      "red": "Vermelho",
+      "silver": "Prata",
+      "straw": "Palha",
+      "white": "Branco",
+      "yellow": "Amarelo"
     }
   },
   "wardrobe": {
@@ -116,14 +182,7 @@
     "title": "Guarda-roupa",
     "hint": "Só você vê essas mudanças até aplicá-las.",
     "apply": "Aplicar",
-    "close": "Fechar o guarda-roupa",
-    "future": {
-      "title": "Mais personalizações",
-      "hair": "Cabelo",
-      "outfit": "Roupa",
-      "accessories": "Acessórios",
-      "comingSoon": "Em breve"
-    }
+    "close": "Fechar o guarda-roupa"
   },
   "radio": {
     "screenLabel": "Tela",

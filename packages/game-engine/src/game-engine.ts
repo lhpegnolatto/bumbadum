@@ -1,5 +1,15 @@
-import { type Avatar, FRAME_SIZE, IDLE_FRAME_MS } from "@bumbadum/avatar";
-import type { AvatarState, PlayerState, RoomState } from "@bumbadum/protocol";
+import {
+  type Avatar,
+  sameAvatar as avatarsMatch,
+  FRAME_SIZE,
+  IDLE_FRAME_MS,
+} from "@bumbadum/avatar";
+import {
+  type AvatarState,
+  avatarFromState,
+  type PlayerState,
+  type RoomState,
+} from "@bumbadum/protocol";
 import {
   type Direction,
   type GameMap,
@@ -300,10 +310,10 @@ function drawMap(map: GameMap): Graphics {
   return g;
 }
 
-function avatarOf({ skinTone }: AvatarState): Avatar {
-  return { skinTone };
+function avatarOf(state: AvatarState): Avatar {
+  return avatarFromState(state);
 }
 
 function sameAvatar(a: Avatar, b: AvatarState): boolean {
-  return a.skinTone === b.skinTone;
+  return avatarsMatch(a, avatarFromState(b));
 }

@@ -1,4 +1,5 @@
-import type { Avatar } from "./avatar.ts";
+import type { AppearanceLayer, Avatar } from "./avatar.ts";
+import { ASSET_POSITION_BY_ID } from "./catalog.generated.ts";
 
 /**
  * Where a frame faces: the same four directions as the world's, restated here
@@ -35,13 +36,20 @@ const COLUMNS: Record<Direction, { first: number; mirrored: boolean }> = {
 
 const WALK_SHEET = "/sprites/avatar/walk.png";
 const IDLE_SHEET = "/sprites/avatar/idle.png";
+const LAYER_WALK_SHEET = "/sprites/avatar/layers-walk.png";
+const LAYER_IDLE_SHEET = "/sprites/avatar/layers-idle.png";
 
 /** Every sheet an avatar can be drawn from, as URL paths served by the web app. */
-export const SPRITE_SHEETS: readonly string[] = [IDLE_SHEET, WALK_SHEET];
+export const SPRITE_SHEETS: readonly string[] = [
+  IDLE_SHEET,
+  WALK_SHEET,
+  LAYER_IDLE_SHEET,
+  LAYER_WALK_SHEET,
+];
 
 /** One avatar frame: the 24×24 square at (`x`, `y`) of `sheet`, flipped when mirrored. */
 export interface LayerFrame {
-  layer: "avatar";
+  layer: "body" | AppearanceLayer;
   sheet: string;
   x: number;
   y: number;
@@ -59,13 +67,39 @@ export function avatarFrames(
 ): LayerFrame[] {
   const { first, mirrored } = COLUMNS[direction];
   const x = (first + frame) * FRAME_SIZE;
-  return [
+  const sheet = cycle === "idle" ? IDLE_SHEET : WALK_SHEET;
+  const layerSheet = cycle === "idle" ? LAYER_IDLE_SHEET : LAYER_WALK_SHEET;
+  const frames: LayerFrame[] = [
     {
-      layer: "avatar",
-      sheet: cycle === "idle" ? IDLE_SHEET : WALK_SHEET,
+      layer: "body",
+      sheet,
       x,
       y: (avatar.skinTone - 1) * FRAME_SIZE,
       mirrored,
     },
   ];
+  const order = [
+    "bottom",
+    "footwear",
+    "top",
+    "overgarment",
+    "neckwear",
+    "hair",
+    "eyewear",
+    "headwear",
+  ] as const;
+  for (const layer of order) {
+    const id = avatar[layer];
+    if (!id) continue;
+    const position = ASSET_POSITION_BY_ID[`${layer}:${id}`];
+    if (!position) throw new Error(`missing avatar asset: ${layer}:${id}`);
+    frames.push({
+      layer,
+      sheet: layerSheet,
+      x: position.x + x,
+      y: position.y,
+      mirrored,
+    });
+  }
+  return frames;
 }

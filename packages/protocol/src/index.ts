@@ -1,5 +1,5 @@
 export { AVATAR_MESSAGE, parseAvatarChange } from "./avatar/avatar-change.ts";
-export { AvatarState } from "./avatar/avatar-state.ts";
+export { AvatarState, avatarFromState, avatarStateValue } from "./avatar/avatar-state.ts";
 export { ANNOUNCEMENT, type Announcement, type AnnouncementCode } from "./chat/announcement.ts";
 export {
   CHAT_HISTORY,

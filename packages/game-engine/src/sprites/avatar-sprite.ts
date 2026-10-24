@@ -2,6 +2,7 @@ import {
   type AnimationCycle,
   type Avatar,
   avatarFrames,
+  avatarKey,
   type Direction,
   FRAME_SIZE,
   type LayerFrame,
@@ -39,7 +40,7 @@ export class FrameTextures {
  */
 export class AvatarSprite {
   readonly view = new Container();
-  private readonly layers = [new Sprite()];
+  private readonly layers: Sprite[] = [];
   private worn: Avatar;
   private drawn = "";
 
@@ -48,10 +49,6 @@ export class AvatarSprite {
     avatar: Avatar,
   ) {
     this.worn = { ...avatar };
-    for (const layer of this.layers) {
-      layer.anchor.set(0.5, 1);
-      this.view.addChild(layer);
-    }
   }
 
   get avatar(): Avatar {
@@ -64,13 +61,20 @@ export class AvatarSprite {
 
   /** Shows one animation frame facing `direction`; cheap when nothing changed. */
   draw(direction: Direction, cycle: AnimationCycle, frame: number): void {
-    const { skinTone } = this.worn;
-    const key = `${skinTone}:${direction}:${cycle}:${frame}`;
+    const key = `${avatarKey(this.worn)}:${direction}:${cycle}:${frame}`;
     if (key === this.drawn) return;
     this.drawn = key;
-    avatarFrames(this.worn, direction, cycle, frame).forEach((layerFrame, i) => {
-      const layer = this.layers[i];
-      if (!layer) return;
+    const frames = avatarFrames(this.worn, direction, cycle, frame);
+    while (this.layers.length < frames.length) {
+      const layer = new Sprite();
+      layer.anchor.set(0.5, 1);
+      this.layers.push(layer);
+      this.view.addChild(layer);
+    }
+    this.layers.forEach((layer, i) => {
+      const layerFrame = frames[i];
+      layer.visible = layerFrame !== undefined;
+      if (!layerFrame) return;
       layer.texture = this.textures.get(layerFrame);
       layer.scale.x = layerFrame.mirrored ? -1 : 1;
     });

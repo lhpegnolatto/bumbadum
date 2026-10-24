@@ -1,3 +1,4 @@
+import { DEFAULT_AVATAR } from "@bumbadum/avatar";
 import { describe, expect, it } from "vitest";
 import { parseJoinOptions, parseNickname } from "../index.ts";
 
@@ -31,7 +32,7 @@ describe("parseNickname", () => {
 });
 
 describe("parseJoinOptions", () => {
-  const avatar = { skinTone: 2 };
+  const avatar = { ...DEFAULT_AVATAR, skinTone: 2 };
 
   it("returns the slug, trimmed nickname and avatar", () => {
     expect(parseJoinOptions({ slug: "lobby", nickname: " Ana ", avatar })).toEqual({
@@ -67,11 +68,11 @@ describe("parseJoinOptions", () => {
     expect(parseJoinOptions({ slug: "a".repeat(64), nickname, avatar }).ok).toBe(true);
   });
 
-  it("keeps only the avatar's skin tone", () => {
+  it("keeps only the avatar's current appearance fields", () => {
     const result = parseJoinOptions({
       slug: "lobby",
       nickname: "Ana",
-      avatar: { ...avatar, crown: true },
+      avatar: { ...avatar, obsolete: true },
     });
     expect(result.ok && result.options.avatar).toEqual(avatar);
   });

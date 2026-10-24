@@ -1,5 +1,6 @@
 import {
   AVATAR_MESSAGE,
+  avatarStateValue,
   CHAT_INPUT,
   CLOCK_PING,
   chatInputSchema,
@@ -77,7 +78,7 @@ export class LobbyRoom extends Room<{ state: RoomState; client: LobbyClient }> {
       const player = this.state.players.get(client.sessionId);
       if (!avatar || !player) return;
       if (!this.avatarChangeLimits.get(client.sessionId)?.take(performance.now())) return;
-      player.avatar.assign(avatar);
+      player.avatar.assign(avatarStateValue(avatar));
     },
   };
 
@@ -114,7 +115,7 @@ export class LobbyRoom extends Room<{ state: RoomState; client: LobbyClient }> {
     const { nickname, avatar } = joinOptionsOf(client);
     const player = new PlayerState();
     player.nickname = nickname;
-    player.avatar.assign(avatar);
+    player.avatar.assign(avatarStateValue(avatar));
     player.x = lobbyMap.spawnPoint.x;
     player.y = lobbyMap.spawnPoint.y;
     player.direction = "down";

@@ -1,17 +1,11 @@
 "use client";
 
-import type { Avatar } from "@bumbadum/avatar";
+import { type Avatar, sameAvatar } from "@bumbadum/avatar";
 import { XIcon } from "lucide-react";
 import { useEffect, useEffectEvent, useRef, useState } from "react";
 import { useTranslations } from "use-intl";
 import { Button } from "@/components/ui/button.tsx";
 import { AvatarEditor } from "./avatar-editor.tsx";
-
-function sameAvatar(a: Avatar, b: Avatar): boolean {
-  return a.skinTone === b.skinTone;
-}
-
-const FUTURE_CATEGORIES = ["hair", "outfit", "accessories"] as const;
 
 /** The avatar editor inside the room. Only Apply publishes its draft. */
 export function WardrobePanel({
@@ -65,19 +59,6 @@ export function WardrobePanel({
         </Button>
       </header>
       <AvatarEditor value={draft} onChange={setDraft} />
-      <section aria-labelledby="future-categories-title" className="flex flex-col gap-2">
-        <h3 id="future-categories-title" className="font-medium text-sm">
-          {t("future.title")}
-        </h3>
-        <div className="grid grid-cols-3 gap-2">
-          {FUTURE_CATEGORIES.map((category) => (
-            <div key={category} className="rounded-md border border-dashed p-2 text-center">
-              <p className="font-medium text-sm">{t(`future.${category}`)}</p>
-              <p className="text-muted-foreground text-xs">{t("future.comingSoon")}</p>
-            </div>
-          ))}
-        </div>
-      </section>
       <Button onClick={apply}>{t("apply")}</Button>
     </section>
   );

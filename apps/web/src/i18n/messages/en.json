@@ -103,11 +103,77 @@
   },
   "avatar": {
     "label": "Avatar",
+    "layersLabel": "Appearance layers",
+    "style": "Style",
+    "color": "Color",
+    "none": "None",
     "layers": {
-      "skinTone": "Skin tone"
+      "skinTone": "Body",
+      "hair": "Hair",
+      "top": "Top",
+      "bottom": "Bottom",
+      "footwear": "Footwear",
+      "overgarment": "Overgarment",
+      "neckwear": "Neckwear",
+      "eyewear": "Eyewear",
+      "headwear": "Headwear"
     },
     "choice": {
-      "skinTone": "Skin tone {number}"
+      "skinTone": "Skin tone {number}",
+      "appearance": "{style}, {color}"
+    },
+    "styles": {
+      "afro": "Afro",
+      "bandana": "Bandana",
+      "beanie": "Beanie",
+      "boots": "Boots",
+      "bow": "Bow",
+      "bowl": "Bowl cut",
+      "bun": "Bun",
+      "cap": "Cap",
+      "crown": "Crown",
+      "jacket": "Jacket",
+      "long": "Long",
+      "long-sleeve": "Long sleeve",
+      "mohawk": "Mohawk",
+      "overalls": "Overalls",
+      "pigtails": "Pigtails",
+      "ponytail": "Ponytail",
+      "round-glasses": "Round glasses",
+      "scarf": "Scarf",
+      "short": "Short",
+      "spiky": "Spiky",
+      "straw-hat": "Straw hat",
+      "sunglasses": "Sunglasses",
+      "t-shirt": "T-shirt",
+      "tank-top": "Tank top",
+      "top-hat": "Top hat",
+      "trousers": "Trousers",
+      "tunic": "Tunic",
+      "viking-helmet": "Viking helmet",
+      "wizard-hat": "Wizard hat"
+    },
+    "colors": {
+      "auburn": "Auburn",
+      "black": "Black",
+      "blue": "Blue",
+      "bronze": "Bronze",
+      "brown": "Brown",
+      "cyan": "Cyan",
+      "gold": "Gold",
+      "gray": "Gray",
+      "green": "Green",
+      "iron": "Iron",
+      "light-brown": "Light brown",
+      "orange": "Orange",
+      "pink": "Pink",
+      "platinum": "Platinum",
+      "purple": "Purple",
+      "red": "Red",
+      "silver": "Silver",
+      "straw": "Straw",
+      "white": "White",
+      "yellow": "Yellow"
     }
   },
   "wardrobe": {
@@ -116,14 +182,7 @@
     "title": "Wardrobe",
     "hint": "Only you see these changes until you apply them.",
     "apply": "Apply",
-    "close": "Close the wardrobe",
-    "future": {
-      "title": "More customization",
-      "hair": "Hair",
-      "outfit": "Outfit",
-      "accessories": "Accessories",
-      "comingSoon": "Coming soon"
-    }
+    "close": "Close the wardrobe"
   },
   "radio": {
     "screenLabel": "Screen",

@@ -1,3 +1,4 @@
+import { DEFAULT_AVATAR } from "@bumbadum/avatar";
 import { describe, expect, it } from "vitest";
 import { parseSettings, SETTINGS_KEY } from "./local-settings.ts";
 
@@ -24,20 +25,25 @@ describe("parseSettings", () => {
     const stored = { skinTone: 4, hair: 8, outfit: 2 };
     expect(parseSettings(JSON.stringify({ nickname: "Ana", avatar: stored }))).toEqual({
       nickname: "Ana",
-      avatar: { skinTone: 4 },
+      avatar: { ...DEFAULT_AVATAR, skinTone: 4 },
     });
   });
 
   it("migrates old skin tones 5 and 6 to tone 1", () => {
     for (const skinTone of [5, 6]) {
       expect(parseSettings(JSON.stringify({ avatar: { skinTone, hair: 1, outfit: 1 } }))).toEqual({
-        avatar: { skinTone: 1 },
+        avatar: DEFAULT_AVATAR,
       });
     }
   });
 
   it("drops an invalid avatar, keeping the rest", () => {
-    for (const avatar of [{ skinTone: 7 }, { hair: 1, outfit: 1 }, "1,1,1"]) {
+    for (const avatar of [
+      { skinTone: 7 },
+      { hair: 1, outfit: 1 },
+      { ...DEFAULT_AVATAR, hair: "unknown" },
+      "1,1,1",
+    ]) {
       expect(parseSettings(JSON.stringify({ nickname: "Ana", avatar }))).toEqual({
         nickname: "Ana",
       });

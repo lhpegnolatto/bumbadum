@@ -12,6 +12,7 @@
       "!**/*.md",
       "!**/*.svg",
       "!**/pnpm-lock.yaml",
+      "!packages/avatar/src/catalog.generated.ts",
       "!**/next-env.d.ts"
     ]
   },
