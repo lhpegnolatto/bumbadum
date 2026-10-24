@@ -1,6 +1,6 @@
 # Room on small and touch viewports
 
-Status: ready-for-agent
+Status: resolved
 
 ## Problem Statement
 

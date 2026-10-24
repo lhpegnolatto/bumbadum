@@ -32,7 +32,12 @@ export function SettingsControl({
         <SettingsIcon />
         <span className="compact:sr-only">{t("title")}</span>
       </PopoverTrigger>
-      <PopoverContent role="region" aria-label={t("title")} className="flex flex-col gap-4">
+      {/* Within a 360 px phone, beside the safe area that already lifts its trigger. */}
+      <PopoverContent
+        role="region"
+        aria-label={t("title")}
+        className="flex max-w-[calc(100vw_-_1.5rem)] flex-col gap-4"
+      >
         <LanguageSwitcher showLabel />
         <div className="flex items-center justify-between gap-4">
           <span className="text-sm font-medium">{t("theme")}</span>

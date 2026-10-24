@@ -7,7 +7,10 @@ import { Button } from "@/components/ui/button.tsx";
 import { Slider } from "@/components/ui/slider.tsx";
 import { useRadioContext } from "./radio-provider.tsx";
 
-/** This player's own volume and mute; nobody else hears the difference. */
+/**
+ * This player's own volume and mute; nobody else hears the difference. A coarse pointer gets the
+ * mute toggle alone: iOS leaves the volume to the device's buttons and ignores the page's.
+ */
 export function VolumeControl() {
   const t = useTranslations("radio");
   const { state, actions } = useRadioContext();
@@ -16,7 +19,7 @@ export function VolumeControl() {
 
   return (
     <div
-      className="flex w-36 shrink-0 items-center gap-2"
+      className="flex w-36 shrink-0 items-center gap-2 pointer-coarse:w-auto"
       // Pointer users hand focus back to the room; keyboard users keep normal control focus.
       onPointerUp={() => {
         window.setTimeout(() => {
@@ -27,6 +30,7 @@ export function VolumeControl() {
       <Button
         variant="ghost"
         size="icon-sm"
+        className="pointer-coarse:size-10"
         aria-label={t("mute")}
         aria-pressed={state.muted}
         onClick={() => actions.setMuted(!state.muted)}
@@ -37,6 +41,7 @@ export function VolumeControl() {
         {t("volume")}
       </span>
       <Slider
+        className="pointer-coarse:hidden"
         aria-labelledby={labelId}
         min={0}
         max={100}

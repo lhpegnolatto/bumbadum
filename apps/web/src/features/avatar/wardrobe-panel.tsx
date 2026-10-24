@@ -5,19 +5,22 @@ import { XIcon } from "lucide-react";
 import { useEffect, useEffectEvent, useRef, useState } from "react";
 import { useTranslations } from "use-intl";
 import { Button } from "@/components/ui/button.tsx";
+import { cn } from "@/lib/utils.ts";
 import { AvatarEditor } from "./avatar-editor.tsx";
 
-/** The avatar editor inside the room. Only Apply publishes its draft. */
+/** The avatar editor inside the room, placed by `className`. Only Apply publishes its draft. */
 export function WardrobePanel({
   worn,
   open,
   onWear,
   onClose,
+  className,
 }: {
   worn: Avatar;
   open: boolean;
   onWear: (avatar: Avatar) => void;
   onClose: () => void;
+  className?: string;
 }) {
   const t = useTranslations("wardrobe");
   const [draft, setDraft] = useState(worn);
@@ -50,7 +53,10 @@ export function WardrobePanel({
       inert={!open}
       data-open={open}
       tabIndex={-1}
-      className="absolute inset-y-[var(--room-overlay-edge)] right-[calc(var(--room-rail-width)_+_var(--room-overlay-edge)_+_var(--room-overlay-gap))] left-[var(--room-overlay-edge)] z-10 flex flex-col gap-4 overflow-y-auto rounded-lg border bg-background/95 p-4 pb-20 shadow-lg outline-none backdrop-blur-sm duration-200 data-[open=false]:animate-out data-[open=false]:fade-out data-[open=false]:slide-out-to-left-2 data-[open=true]:animate-in data-[open=true]:fade-in data-[open=true]:slide-in-from-left-2 motion-reduce:animate-none motion-reduce:duration-0 compact:inset-x-3 compact:top-[calc(var(--room-top-inset)_+_0.5rem)] compact:bottom-[var(--room-above-controls)] compact:pb-28"
+      className={cn(
+        "flex flex-col gap-4 overflow-y-auto rounded-lg border bg-background/95 p-4 shadow-lg outline-none backdrop-blur-sm duration-200 data-[open=false]:animate-out data-[open=false]:fade-out data-[open=false]:slide-out-to-left-2 data-[open=true]:animate-in data-[open=true]:fade-in data-[open=true]:slide-in-from-left-2 motion-reduce:animate-none motion-reduce:duration-0",
+        className,
+      )}
     >
       <header className="flex items-start justify-between gap-2">
         <div className="flex flex-col gap-1">

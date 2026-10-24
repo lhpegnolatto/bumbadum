@@ -16,7 +16,12 @@ function PopoverContent({
   Pick<PopoverPrimitive.Positioner.Props, "align" | "side" | "sideOffset">) {
   return (
     <PopoverPrimitive.Portal>
-      <PopoverPrimitive.Positioner align={align} side={side} sideOffset={sideOffset}>
+      <PopoverPrimitive.Positioner
+        className="isolate z-50"
+        align={align}
+        side={side}
+        sideOffset={sideOffset}
+      >
         <PopoverPrimitive.Popup
           data-slot="popover-content"
           className={cn(

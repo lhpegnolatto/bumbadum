@@ -17,6 +17,13 @@ import { ChatComposer } from "@/features/chat/chat-panel.tsx";
 
 export type RoomPanel = "chat" | "queue" | "players" | null;
 
+/**
+ * How an open panel or the Wardrobe looks as the compact layout's sheet: opaque and edge to edge
+ * down to the bottom, clear of the safe area. Each caller places it below the Radio strip.
+ */
+export const COMPACT_SHEET =
+  "compact:rounded-none compact:border-0 compact:bg-background compact:px-3 compact:pt-2 compact:pb-[var(--room-safe-bottom)] compact:shadow-none";
+
 const PANELS = [
   { id: "chat", icon: MessageCircleIcon },
   { id: "queue", icon: ListMusicIcon },
@@ -113,7 +120,7 @@ export function RoomPanelFrame({
       aria-hidden={!open}
       inert={!open}
       data-open={open}
-      className="flex min-h-0 flex-1 flex-col rounded-lg border bg-background/95 p-4 shadow-lg duration-200 data-[open=false]:animate-out data-[open=false]:fade-out data-[open=false]:slide-out-to-right-2 data-[open=true]:animate-in data-[open=true]:fade-in data-[open=true]:slide-in-from-right-2 motion-reduce:animate-none motion-reduce:duration-0 compact:rounded-none compact:border-0 compact:bg-background compact:px-3 compact:pt-2 compact:pb-[var(--room-safe-bottom)] compact:shadow-none"
+      className={`flex min-h-0 flex-1 flex-col rounded-lg border bg-background/95 p-4 shadow-lg duration-200 data-[open=false]:animate-out data-[open=false]:fade-out data-[open=false]:slide-out-to-right-2 data-[open=true]:animate-in data-[open=true]:fade-in data-[open=true]:slide-in-from-right-2 motion-reduce:animate-none motion-reduce:duration-0 ${COMPACT_SHEET}`}
     >
       <Tabs
         value={panel}

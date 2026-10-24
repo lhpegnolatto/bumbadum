@@ -161,9 +161,8 @@ test("the analogue stick hides while the Wardrobe is open and sits above its but
   const wardrobe = page.getByRole("button", { name: "Wardrobe", exact: true });
   await expect(stick).toBeVisible();
 
-  // Its shortcut, since the dev build's badge covers the bottom-left corner.
-  await page.keyboard.press("c");
-  await expect(wardrobe).toHaveAttribute("aria-expanded", "true");
+  await wardrobe.tap();
+  await expect(page.getByRole("dialog", { name: "Wardrobe" })).toBeVisible();
   await expect(stick).toBeHidden();
   await page.keyboard.press("Escape");
   await expect(stick).toBeVisible();

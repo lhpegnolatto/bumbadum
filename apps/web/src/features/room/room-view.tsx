@@ -32,6 +32,7 @@ import {
 } from "./room-layout.ts";
 import {
   ChatComposerDock,
+  COMPACT_SHEET,
   type RoomPanel,
   RoomPanelControls,
   RoomPanelFrame,
@@ -142,10 +143,10 @@ function JoinedRoom({
   const [hasUnreadChat, setHasUnreadChat] = useState(false);
   const activePanel: RoomPanel = isRoomPanel(activeInterface) ? activeInterface : null;
   const wardrobeOpen = activeInterface === "wardrobe";
-  // In the compact layout an open panel is a sheet over the world: the player stands still and the
-  // floating controls step aside.
+  // In the compact layout an open panel or the Wardrobe is a sheet over the world: the player
+  // stands still and the floating controls step aside.
   const sheetOpen = compact && activePanel !== null;
-  const hiddenUnderSheet = activePanel ? "compact:hidden" : "";
+  const hiddenUnderSheet = activePanel || wardrobeOpen ? "compact:hidden" : "";
   const visiblePanel = useExitPresence(activePanel);
   const visibleWardrobe = useExitPresence(wardrobeOpen ? "wardrobe" : null);
   const activePanelRef = useRef(activePanel);
@@ -229,11 +230,14 @@ function JoinedRoom({
               open={visibleWardrobe.open}
               onWear={wear}
               onClose={() => setActiveInterface(null)}
+              // Beside the rail on desktop; in the compact layout, the sheet below the Radio strip,
+              // above the rail's box.
+              className={`absolute inset-y-[var(--room-overlay-edge)] right-[calc(var(--room-rail-width)_+_var(--room-overlay-edge)_+_var(--room-overlay-gap))] left-[var(--room-overlay-edge)] z-10 pb-20 compact:inset-x-0 compact:top-[var(--room-top-inset)] compact:bottom-0 compact:z-30 compact:backdrop-blur-none ${COMPACT_SHEET}`}
             />
           )}
         </div>
         <div
-          className={`absolute bottom-[var(--room-overlay-edge)] left-[var(--room-overlay-edge)] z-20 flex items-center gap-2 compact:bottom-[var(--room-safe-bottom)] compact:left-3 ${hiddenUnderSheet}`}
+          className={`absolute bottom-[var(--room-overlay-edge)] left-[var(--room-overlay-edge)] z-20 flex items-center gap-2 compact:bottom-[var(--room-safe-bottom)] compact:left-3 compact:flex-col ${hiddenUnderSheet}`}
         >
           <Button
             variant="secondary"
