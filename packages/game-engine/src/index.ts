@@ -1,3 +1,4 @@
+export type { Direction } from "@bumbadum/world";
 export { type Camera, cameraOn } from "./camera.ts";
 export { objectDepth, playerDepth } from "./depth.ts";
 export {

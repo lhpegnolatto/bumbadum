@@ -26,6 +26,7 @@ import { cameraOn, TILE_SIZE } from "./camera.ts";
 import { objectDepth, playerDepth } from "./depth.ts";
 import { listenToDirectionKeys } from "./keyboard.ts";
 import { type Bump, bumpOffset, Glide, isBumping, type Point } from "./movement/glide.ts";
+import { Steering } from "./movement/steering.ts";
 import { type Pose, StepPredictor } from "./movement/step-predictor.ts";
 import { StepRepeater } from "./movement/step-repeater.ts";
 import { PLAZA_OBJECTS } from "./plaza-objects.generated.ts";
@@ -85,6 +86,11 @@ export interface GameEngine {
   showBubble(sessionId: string, text: string): void;
   /** Lets the walking keys move the local player, or stops them, as while the wardrobe is open. */
   setWalking(enabled: boolean): void;
+  /**
+   * Walks the local player towards `direction` like a held walking key, with the same timing, until
+   * steered elsewhere or `null`. Ignored while walking is off.
+   */
+  steer(direction: Direction | null): void;
   /**
    * CSS pixels at the top of the canvas that room interface covers, such as the Screen on a
    * phone: the local player is framed below them (ADR-0018). 0, the default, frames the whole canvas.
@@ -166,6 +172,7 @@ export async function mountGameEngine(
   let walking = true;
   let topInset = 0;
   const stopListening = listenToDirectionKeys(repeater, () => walking);
+  const steering = new Steering(repeater);
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
   const addAvatar = (id: string, player: PlayerState): PlayerView => {
@@ -286,6 +293,9 @@ export async function mountGameEngine(
     setWalking(enabled) {
       walking = enabled;
       if (!enabled) repeater.releaseAll();
+    },
+    steer(direction) {
+      steering.steer(walking ? direction : null, performance.now());
     },
     setTopInset(pixels) {
       topInset = pixels;

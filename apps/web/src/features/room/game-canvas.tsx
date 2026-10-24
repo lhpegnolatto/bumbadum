@@ -1,9 +1,9 @@
 "use client";
 
-import type { DrawnPlayer, GameEngine } from "@bumbadum/game-engine";
+import type { Direction, DrawnPlayer, GameEngine } from "@bumbadum/game-engine";
 import { CHAT_MESSAGE, type ChatMessage, type RoomState, STEP_MESSAGE } from "@bumbadum/protocol";
 import type { Room } from "@colyseus/sdk";
-import { useEffect, useRef } from "react";
+import { type Ref, useEffect, useImperativeHandle, useRef } from "react";
 import { useTranslations } from "use-intl";
 import { exposeToE2E } from "@/lib/e2e.ts";
 
@@ -14,15 +14,23 @@ declare global {
   }
 }
 
+/** What the room drives on the mounted engine besides its props. */
+export interface GameCanvasHandle {
+  /** Walks the local player towards `direction`, as a held walking key would, until steered elsewhere or `null`. */
+  steer(direction: Direction | null): void;
+}
+
 /**
  * Mounts the PixiJS engine and feeds it every state patch and chat message
  * (as speech bubbles), without re-rendering React.
  */
 export function GameCanvas({
+  ref,
   room,
   walking,
   topInset,
 }: {
+  ref?: Ref<GameCanvasHandle>;
   room: Room<unknown, RoomState>;
   /** Whether the walking keys move the local player; off while a panel such as the wardrobe is open. */
   walking: boolean;
@@ -34,6 +42,12 @@ export function GameCanvas({
   const engineRef = useRef<GameEngine>(undefined);
   const walkingRef = useRef(walking);
   const topInsetRef = useRef(topInset);
+
+  useImperativeHandle(
+    ref,
+    () => ({ steer: (direction) => engineRef.current?.steer(direction) }),
+    [],
+  );
 
   useEffect(() => {
     walkingRef.current = walking;

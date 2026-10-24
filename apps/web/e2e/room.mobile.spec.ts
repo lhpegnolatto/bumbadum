@@ -113,6 +113,93 @@ test("turning a phone sideways covers the room with a notice that keeps it conne
     .toBeLessThan(250);
 });
 
+test("holding the analogue stick walks, sliding turns and letting go stops", async ({
+  joinLobby,
+}) => {
+  const page = await joinLobby("Stela");
+  await expect.poll(() => drawnPlayer(page, "Stela")).toBeDefined();
+  const start = await drawnPlayer(page, "Stela");
+  if (!start) throw new Error("Stela's canvas does not draw her");
+  const stick = await boundsOf(page.getByRole("application", { name: "Movement stick" }));
+  const thumb = await touchscreen(page);
+  const centre = { x: stick.x + stick.width / 2, y: stick.y + stick.height / 2 };
+  const reach = stick.width * 0.4;
+
+  // A tap past the dead zone takes one Step.
+  await thumb.tap(centre.x + reach, centre.y);
+  await expect.poll(() => drawnPlayer(page, "Stela")).toMatchObject({ x: start.x + 1 });
+
+  // Holding keeps walking, and sliding the thumb turns without lifting it.
+  await thumb.down(centre.x - reach, centre.y);
+  await expect
+    .poll(async () => (await drawnPlayer(page, "Stela"))?.x)
+    .toBeLessThanOrEqual(start.x - 2);
+  await thumb.move(centre.x, centre.y - reach);
+  await expect
+    .poll(async () => (await drawnPlayer(page, "Stela"))?.y)
+    .toBeLessThanOrEqual(start.y - 2);
+  await thumb.up();
+  // A Step already due when the thumb lifts may still land, never one after it.
+  await page.waitForTimeout(500);
+  const stopped = await drawnPlayer(page, "Stela");
+  expect(stopped?.direction).toBe("up");
+  // Six Steps a second: a still player for most of a second has stopped walking.
+  await page.waitForTimeout(700);
+  expect(await drawnPlayer(page, "Stela")).toMatchObject({ x: stopped?.x, y: stopped?.y });
+
+  // The walking keys still work alongside it.
+  await page.keyboard.press("ArrowDown");
+  await expect.poll(() => drawnPlayer(page, "Stela")).toMatchObject({ y: (stopped?.y ?? 0) + 1 });
+});
+
+test("the analogue stick hides while the Wardrobe is open and sits above its button on a tablet", async ({
+  joinLobby,
+}) => {
+  const page = await joinLobby("Tuca");
+  const stick = page.getByRole("application", { name: "Movement stick" });
+  const wardrobe = page.getByRole("button", { name: "Wardrobe", exact: true });
+  await expect(stick).toBeVisible();
+
+  // Its shortcut, since the dev build's badge covers the bottom-left corner.
+  await page.keyboard.press("c");
+  await expect(wardrobe).toHaveAttribute("aria-expanded", "true");
+  await expect(stick).toBeHidden();
+  await page.keyboard.press("Escape");
+  await expect(stick).toBeVisible();
+
+  // A touch tablet in landscape gets the desktop layout, and still the stick.
+  await page.setViewportSize({ width: 1280, height: 800 });
+  await expect.poll(async () => (await boundsOf(screenOf(page))).y).toBeGreaterThan(0);
+  const stickBounds = await boundsOf(stick);
+  const wardrobeBounds = await boundsOf(wardrobe);
+  expect(stickBounds.y + stickBounds.height).toBeLessThanOrEqual(wardrobeBounds.y);
+  expect(overlap(stickBounds, await boundsOf(page.getByLabel("Message")))).toBe(false);
+});
+
+/**
+ * A finger on the page's touchscreen, through Chromium's input pipeline, so the browser's own
+ * touch handling (panning, zooming, `touch-action`) applies as on a phone.
+ */
+async function touchscreen(page: Page) {
+  const cdp = await page.context().newCDPSession(page);
+  const touch = (
+    type: "touchStart" | "touchMove" | "touchEnd",
+    points: { x: number; y: number }[],
+  ) =>
+    cdp.send("Input.dispatchTouchEvent", {
+      type,
+      touchPoints: points.map((point) => ({ ...point, id: 1 })),
+    });
+  return {
+    down: (x: number, y: number) => touch("touchStart", [{ x, y }]),
+    move: (x: number, y: number) => touch("touchMove", [{ x, y }]),
+    up: () => touch("touchEnd", []),
+    // Sent back to back, so a busy machine cannot stretch the tap into a hold.
+    tap: (x: number, y: number) =>
+      Promise.all([touch("touchStart", [{ x, y }]), touch("touchEnd", [])]),
+  };
+}
+
 function screenOf(page: Page) {
   return page.getByRole("region", { name: "Screen" });
 }

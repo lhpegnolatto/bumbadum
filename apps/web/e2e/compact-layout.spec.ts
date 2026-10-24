@@ -7,6 +7,10 @@ test("resizing across the compact layout's boundary keeps the connection, the ca
   const page = await joinLobby("Uli");
   await expect.poll(() => drawnPlayer(page, "Uli")).toBeDefined();
   const sessionId = (await drawnPlayer(page, "Uli"))?.sessionId;
+  // A mouse walks with the keyboard, even in a window narrow enough for the compact layout.
+  await page.setViewportSize({ width: 800, height: 720 });
+  await expect.poll(async () => (await screenBounds(page)).y).toBe(0);
+  await expect(page.getByRole("application", { name: "Movement stick" })).toBeHidden();
   const players = page.getByRole("button", { name: "Players", exact: true });
   await players.click();
   await markMountedElements(page);

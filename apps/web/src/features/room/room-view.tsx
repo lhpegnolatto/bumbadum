@@ -21,7 +21,8 @@ import { VolumeControl } from "@/features/radio/volume-control.tsx";
 import { SettingsControl } from "@/features/settings/settings-control.tsx";
 import { ThemeToggle } from "@/features/theme/theme-toggle.tsx";
 import { useSettings } from "@/lib/local-settings.ts";
-import { GameCanvas } from "./game-canvas.tsx";
+import { AnalogueStick } from "./analogue-stick.tsx";
+import { GameCanvas, type GameCanvasHandle } from "./game-canvas.tsx";
 import { PlayerList } from "./player-list.tsx";
 import { useCompactTopInset, useRoomNotice } from "./room-layout.ts";
 import { type RoomPanel, RoomPanelControls, RoomPanelFrame } from "./room-panel-dock.tsx";
@@ -133,6 +134,7 @@ function JoinedRoom({
   const visibleWardrobe = useExitPresence(wardrobeOpen ? "wardrobe" : null);
   const activePanelRef = useRef(activePanel);
   const wear = useWearAvatar(room);
+  const canvasRef = useRef<GameCanvasHandle>(null);
 
   useEffect(() => {
     activePanelRef.current = activePanel;
@@ -193,7 +195,7 @@ function JoinedRoom({
       >
         {/* The world owns the viewport; room interface overlays it without changing its scale (ADR-0014). */}
         <div className="absolute inset-0">
-          <GameCanvas room={room} walking={!wardrobeOpen} topInset={topInset} />
+          <GameCanvas ref={canvasRef} room={room} walking={!wardrobeOpen} topInset={topInset} />
           {visibleWardrobe.present && (
             <WardrobePanel
               worn={worn}
@@ -236,6 +238,12 @@ function JoinedRoom({
             onToggle={togglePanel}
           />
         </div>
+        {/* Bottom centre on a phone; above the Wardrobe and Settings buttons on a touch tablet. */}
+        <AnalogueStick
+          hidden={activeInterface !== null}
+          onSteer={(direction) => canvasRef.current?.steer(direction)}
+          className="absolute bottom-[calc(var(--room-overlay-edge)_+_env(safe-area-inset-bottom)_+_2.75rem)] left-[var(--room-overlay-edge)] z-20 compact:bottom-[var(--room-safe-bottom)] compact:left-[calc(50%_-_3.5rem)]"
+        />
         {/* The Screen and Radio stay visible; one optional room panel uses the space beneath them. */}
         <aside className="absolute inset-y-[var(--room-overlay-edge)] right-[var(--room-overlay-edge)] z-10 flex w-[var(--room-rail-width)] flex-col gap-[var(--room-overlay-gap)] compact:inset-x-0 compact:top-0 compact:bottom-[var(--room-above-controls)] compact:w-auto compact:gap-2 compact:pt-[env(safe-area-inset-top)]">
           <RadioProvider room={room}>

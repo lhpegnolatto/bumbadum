@@ -29,6 +29,7 @@
     "join": "Join",
     "compatibility": "Make the window at least 360 pixels wide to return to the room.",
     "rotate": "Turn your device upright, or make the window taller, to return to the room.",
+    "stick": "Movement stick",
     "panels": {
       "navigation": "Room panels",
       "chat": "Chat",

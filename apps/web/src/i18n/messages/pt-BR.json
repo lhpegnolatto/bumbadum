@@ -29,6 +29,7 @@
     "join": "Entrar",
     "compatibility": "Aumente a janela para pelo menos 360 pixels de largura para voltar à sala.",
     "rotate": "Coloque o aparelho em pé, ou aumente a altura da janela, para voltar à sala.",
+    "stick": "Direcional de movimento",
     "panels": {
       "navigation": "Painéis da sala",
       "chat": "Chat",
