@@ -4,9 +4,9 @@
 
 **Blocked by:** 01
 
-**Status:** ready-for-agent
+**Status:** resolved
 
-- [ ] The generated floor image matches the Tiled floor layer pixel for pixel, and `--check` covers it.
-- [ ] The engine loads the floor and lights, keeps nearest-neighbour scaling, and draws lights above players with an additive-style blend.
-- [ ] `drawMap` and the old map colours are gone.
-- [ ] `pnpm check` and `pnpm test:e2e` are green.
+- [x] The generated floor image matches the Tiled floor layer pixel for pixel, and `--check` covers it.
+- [x] The engine loads the floor and lights, keeps nearest-neighbour scaling, and draws lights above players with an additive-style blend.
+- [x] `drawMap` and the old map colours are gone.
+- [x] `pnpm check` and `pnpm test:e2e` are green.

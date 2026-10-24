@@ -6,6 +6,7 @@
       "inputs": [
         "$TURBO_DEFAULT$",
         "$TURBO_ROOT$/assets/map/**",
+        "$TURBO_ROOT$/apps/web/public/sprites/plaza/**",
         "$TURBO_ROOT$/packages/tooling/generate-map-assets.mjs"
       ]
     }

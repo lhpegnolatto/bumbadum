@@ -10,14 +10,17 @@ import {
   type PlayerState,
   type RoomState,
 } from "@bumbadum/protocol";
+import { type Direction, lobbyMap, STEPS_PER_SECOND } from "@bumbadum/world";
 import {
-  type Direction,
-  type GameMap,
-  isWalkable,
-  lobbyMap,
-  STEPS_PER_SECOND,
-} from "@bumbadum/world";
-import { Application, Container, Graphics, Text, TextureStyle } from "pixi.js";
+  Application,
+  Assets,
+  Container,
+  Graphics,
+  Sprite,
+  Text,
+  type Texture,
+  TextureStyle,
+} from "pixi.js";
 import { cameraOn, TILE_SIZE } from "./camera.ts";
 import { listenToDirectionKeys } from "./keyboard.ts";
 import { type Bump, bumpOffset, Glide, isBumping, type Point } from "./movement/glide.ts";
@@ -43,14 +46,12 @@ const REPEAT_DELAY_MS = 200;
 const CORRECTION_SLIDE_MS = 120;
 const ANIMATION_TIMING = { idleFrameMs: IDLE_FRAME_MS, walkFrameMs: 100, walkGraceMs: 60 };
 
+// The Lobby's art, generated from its Tiled project (ADR-0016).
+const PLAZA_FLOOR = "/sprites/plaza/floor.png";
+const PLAZA_LIGHTS = "/sprites/plaza/lights.png";
+
 const COLORS = {
   background: "#2b2238",
-  floor: ["#e9d8bd", "#e2cfb1"],
-  wall: "#3b3346",
-  wallTop: "#4d4459",
-  furniture: "#8a6f5a",
-  furnitureTop: "#a3876f",
-  spawnPoint: "#c9b08a",
   label: "#ffffff",
   labelBackground: "#000000",
 } as const;
@@ -109,12 +110,17 @@ export async function mountGameEngine(
     autoDensity: true,
   });
   container.appendChild(app.canvas);
-  const textures = await FrameTextures.load();
+  const [textures, floor, lights] = await Promise.all([
+    FrameTextures.load(),
+    Assets.load<Texture>(PLAZA_FLOOR),
+    Assets.load<Texture>(PLAZA_LIGHTS),
+  ]);
 
   const world = new Container();
   // Players lower on the map are drawn in front of the ones above them.
   const players = new Container({ sortableChildren: true });
-  world.addChild(drawMap(map), players);
+  // The evening glow brightens whatever lies beneath it, avatars included.
+  world.addChild(new Sprite(floor), players, new Sprite({ texture: lights, blendMode: "add" }));
   const labels = new Container();
   app.stage.addChild(world, labels);
   // Last on the stage, so bubbles stay above every avatar and label.
@@ -278,31 +284,6 @@ function drawNickname(nickname: string): Container {
   label.addChild(background, text);
   label.pivot.set(label.width / 2, label.height);
   return label;
-}
-
-function drawMap(map: GameMap): Graphics {
-  const g = new Graphics();
-  for (let y = 0; y < map.height; y++) {
-    for (let x = 0; x < map.width; x++) {
-      const px = x * TILE_SIZE;
-      const py = y * TILE_SIZE;
-      if (isWalkable(map, { x, y })) {
-        g.rect(px, py, TILE_SIZE, TILE_SIZE).fill(COLORS.floor[(x + y) % 2]);
-        continue;
-      }
-      const isWall = x === 0 || y === 0 || x === map.width - 1 || y === map.height - 1;
-      g.rect(px, py, TILE_SIZE, TILE_SIZE).fill(isWall ? COLORS.wall : COLORS.furniture);
-      if (isWall) g.rect(px, py, TILE_SIZE, 3).fill(COLORS.wallTop);
-      else if (isWalkable(map, { x, y: y - 1 }))
-        g.rect(px, py, TILE_SIZE, 3).fill(COLORS.furnitureTop);
-    }
-  }
-  const spawn = map.spawnPoint;
-  g.rect(spawn.x * TILE_SIZE + 4, spawn.y * TILE_SIZE + 4, TILE_SIZE - 8, TILE_SIZE - 8).stroke({
-    width: 1,
-    color: COLORS.spawnPoint,
-  });
-  return g;
 }
 
 /** The centre of the tile at `point`, in world pixels. */
