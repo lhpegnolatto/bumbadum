@@ -1,4 +1,5 @@
 import { drawnPlayer, expect, test } from "./join-lobby.ts";
+import { freshVideoId, say, screenVideoId } from "./radio-helpers.ts";
 
 /** Where the web app keeps a player's settings (`apps/web/src/lib/local-settings.ts`). */
 const SETTINGS_KEY = "bumbadum:settings:v1";
@@ -26,7 +27,7 @@ test("two players in the lobby see each other", async ({ joinLobby }) => {
   await expect(bia.getByRole("listitem")).toContainText(["Ana", "Bia (you)"]);
 });
 
-test("an undersized viewport keeps the joined room alive until desktop size returns", async ({
+test("a viewport too narrow for the Screen keeps the joined room alive, its Screen paused, until it widens", async ({
   joinLobby,
 }) => {
   const gui = await joinLobby("Gui");
@@ -34,25 +35,26 @@ test("an undersized viewport keeps the joined room alive until desktop size retu
   const players = gui.getByRole("button", { name: "Players", exact: true });
   await players.click();
   await expect(gui.getByRole("listitem")).toContainText(["Gui (you)", "Hugo"]);
+  await say(gui, `/play ${freshVideoId()}`);
+  await expect.poll(() => screenVideoId(gui)).toBeDefined();
 
   const compatibilityNotice = gui.getByRole("alert").filter({
-    hasText: "Make the window at least 1024 by 640 pixels to return to the room.",
+    hasText: "Make the window at least 360 pixels wide to return to the room.",
   });
-  await gui.setViewportSize({ width: 1023, height: 640 });
+  await gui.setViewportSize({ width: 359, height: 720 });
   await expect(compatibilityNotice).toBeVisible();
   await expect(gui.getByRole("img", { name: "The room" })).toBeHidden();
+  await expect.poll(() => screenVideoId(gui)).toBeUndefined();
 
   await hugo.getByRole("button", { name: "Players", exact: true }).click();
   await expect(hugo.getByRole("listitem")).toContainText(["Gui", "Hugo (you)"]);
-
-  await gui.setViewportSize({ width: 1024, height: 639 });
-  await expect(compatibilityNotice).toBeVisible();
 
   await gui.setViewportSize({ width: 1024, height: 640 });
   await expect(compatibilityNotice).toBeHidden();
   await expect(gui.getByRole("img", { name: "The room" })).toBeVisible();
   await expect(players).toHaveAttribute("aria-expanded", "true");
   await expect(gui.getByRole("listitem")).toContainText(["Gui (you)", "Hugo"]);
+  await expect.poll(() => screenVideoId(gui)).toBeDefined();
 });
 
 test("one player walks and the other sees it", async ({ joinLobby }) => {

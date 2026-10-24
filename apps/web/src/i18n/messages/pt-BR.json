@@ -27,7 +27,8 @@
     "backHome": "Voltar ao início",
     "joinGate": "Pronto para entrar na sala como {nickname}?",
     "join": "Entrar",
-    "desktopCompatibility": "Aumente a janela para pelo menos 1024 por 640 pixels para voltar à sala.",
+    "compatibility": "Aumente a janela para pelo menos 360 pixels de largura para voltar à sala.",
+    "rotate": "Coloque o aparelho em pé, ou aumente a altura da janela, para voltar à sala.",
     "panels": {
       "navigation": "Painéis da sala",
       "chat": "Chat",

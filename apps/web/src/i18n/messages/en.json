@@ -27,7 +27,8 @@
     "backHome": "Back to home",
     "joinGate": "Ready to join the room as {nickname}?",
     "join": "Join",
-    "desktopCompatibility": "Make the window at least 1024 by 640 pixels to return to the room.",
+    "compatibility": "Make the window at least 360 pixels wide to return to the room.",
+    "rotate": "Turn your device upright, or make the window taller, to return to the room.",
     "panels": {
       "navigation": "Room panels",
       "chat": "Chat",

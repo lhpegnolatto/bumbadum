@@ -3,10 +3,10 @@
 import { type Avatar, DEFAULT_AVATAR } from "@bumbadum/avatar";
 import { CHAT_MESSAGE, type ChatMessage, type RoomState } from "@bumbadum/protocol";
 import type { Room } from "@colyseus/sdk";
-import { MonitorIcon, ShirtIcon } from "lucide-react";
+import { MonitorIcon, ShirtIcon, SmartphoneIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { type CSSProperties, useEffect, useRef, useState } from "react";
 import { useTranslations } from "use-intl";
 import { Alert, AlertDescription } from "@/components/ui/alert.tsx";
 import { Button } from "@/components/ui/button.tsx";
@@ -23,6 +23,7 @@ import { ThemeToggle } from "@/features/theme/theme-toggle.tsx";
 import { useSettings } from "@/lib/local-settings.ts";
 import { GameCanvas } from "./game-canvas.tsx";
 import { PlayerList } from "./player-list.tsx";
+import { useCompactTopInset, useRoomNotice } from "./room-layout.ts";
 import { type RoomPanel, RoomPanelControls, RoomPanelFrame } from "./room-panel-dock.tsx";
 import { useExitPresence } from "./use-exit-presence.ts";
 import { type PresentPlayer, useRoom } from "./use-room.ts";
@@ -121,7 +122,9 @@ function JoinedRoom({
 }) {
   const t = useTranslations("wardrobe");
   const roomT = useTranslations("room");
-  const supportedViewport = useSupportedViewport();
+  const notice = useRoomNotice();
+  const screenBlockRef = useRef<HTMLDivElement>(null);
+  const topInset = useCompactTopInset(screenBlockRef);
   const [activeInterface, setActiveInterface] = useState<RoomInterface>(null);
   const [hasUnreadChat, setHasUnreadChat] = useState(false);
   const activePanel: RoomPanel = isRoomPanel(activeInterface) ? activeInterface : null;
@@ -177,15 +180,20 @@ function JoinedRoom({
   }
 
   return (
-    <main className="relative h-dvh overflow-hidden [--room-overlay-edge:1.5rem] [--room-overlay-gap:1rem] [--room-rail-width:clamp(400px,32vw,480px)]">
+    // Compact viewports (ADR-0018) restyle this same tree, so crossing the boundary never remounts
+    // the Screen, the canvas or the connection.
+    <main
+      style={{ "--room-top-inset": `${topInset}px` } as CSSProperties}
+      className="relative h-dvh overflow-hidden [--room-above-controls:calc(var(--room-safe-bottom)_+_3.25rem)] [--room-overlay-edge:1.5rem] [--room-overlay-gap:1rem] [--room-rail-width:clamp(400px,32vw,480px)] [--room-safe-bottom:calc(env(safe-area-inset-bottom)_+_0.75rem)]"
+    >
       <div
-        aria-hidden={!supportedViewport}
-        inert={!supportedViewport}
-        className={`relative h-full ${supportedViewport ? "" : "invisible pointer-events-none"}`}
+        aria-hidden={notice !== null}
+        inert={notice !== null}
+        className={`relative h-full ${notice ? "invisible pointer-events-none" : ""}`}
       >
         {/* The world owns the viewport; room interface overlays it without changing its scale (ADR-0014). */}
         <div className="absolute inset-0">
-          <GameCanvas room={room} walking={!wardrobeOpen} />
+          <GameCanvas room={room} walking={!wardrobeOpen} topInset={topInset} />
           {visibleWardrobe.present && (
             <WardrobePanel
               worn={worn}
@@ -195,10 +203,11 @@ function JoinedRoom({
             />
           )}
         </div>
-        <div className="absolute bottom-[var(--room-overlay-edge)] left-[var(--room-overlay-edge)] z-20 flex items-center gap-2">
+        <div className="absolute bottom-[var(--room-overlay-edge)] left-[var(--room-overlay-edge)] z-20 flex items-center gap-2 compact:bottom-[var(--room-safe-bottom)] compact:left-3">
           <Button
             variant="secondary"
             size="sm"
+            className="compact:size-11 compact:px-0"
             aria-expanded={wardrobeOpen}
             aria-keyshortcuts="C"
             title={t("shortcut")}
@@ -207,20 +216,20 @@ function JoinedRoom({
             }
           >
             <ShirtIcon />
-            {t("open")}
+            <span className="compact:sr-only">{t("open")}</span>
           </Button>
           <SettingsControl open={activeInterface === "settings"} onOpenChange={setSettings} />
         </div>
         <div
-          className={
+          className={`${
             activePanel === "chat"
               ? "absolute right-[calc(var(--room-overlay-edge)_+_var(--room-overlay-gap))] bottom-2 z-20 w-[calc(var(--room-rail-width)_-_var(--room-overlay-gap)_-_var(--room-overlay-gap))] rounded-lg border bg-background/95 p-2 shadow-lg backdrop-blur-sm"
               : "absolute bottom-6 left-1/2 z-20 w-[min(28rem,calc(100vw-3rem))] -translate-x-1/2 rounded-lg border bg-background/95 p-2 shadow-lg backdrop-blur-sm"
-          }
+          } compact:inset-x-3 compact:bottom-[var(--room-above-controls)] compact:mx-auto compact:w-auto compact:max-w-md compact:translate-x-0`}
         >
           <ChatComposer room={room} />
         </div>
-        <div className="absolute right-[var(--room-overlay-edge)] bottom-[var(--room-overlay-edge)] z-20">
+        <div className="absolute right-[var(--room-overlay-edge)] bottom-[var(--room-overlay-edge)] z-20 compact:right-3 compact:bottom-[var(--room-safe-bottom)]">
           <RoomPanelControls
             active={activePanel}
             hasUnreadChat={hasUnreadChat}
@@ -228,11 +237,11 @@ function JoinedRoom({
           />
         </div>
         {/* The Screen and Radio stay visible; one optional room panel uses the space beneath them. */}
-        <aside className="absolute inset-y-[var(--room-overlay-edge)] right-[var(--room-overlay-edge)] z-10 flex w-[var(--room-rail-width)] flex-col gap-[var(--room-overlay-gap)]">
+        <aside className="absolute inset-y-[var(--room-overlay-edge)] right-[var(--room-overlay-edge)] z-10 flex w-[var(--room-rail-width)] flex-col gap-[var(--room-overlay-gap)] compact:inset-x-0 compact:top-0 compact:bottom-[var(--room-above-controls)] compact:w-auto compact:gap-2 compact:pt-[env(safe-area-inset-top)]">
           <RadioProvider room={room}>
-            <div className="flex shrink-0 flex-col gap-2">
-              <RadioScreen />
-              <div className="flex items-center justify-end gap-2 rounded-lg border bg-background/95 p-2 shadow-lg backdrop-blur-sm">
+            <div ref={screenBlockRef} className="flex shrink-0 flex-col gap-2 compact:gap-0">
+              <RadioScreen paused={notice !== null} />
+              <div className="flex items-center justify-end gap-2 rounded-lg border bg-background/95 p-2 shadow-lg backdrop-blur-sm compact:rounded-none compact:border-x-0 compact:border-t-0 compact:px-3 compact:py-1 compact:shadow-none">
                 <NowPlayingCaption />
                 <VolumeControl />
               </div>
@@ -244,7 +253,7 @@ function JoinedRoom({
                 onClose={() => setActiveInterface(null)}
               >
                 {visiblePanel.present === "chat" ? (
-                  <div className="flex min-h-0 flex-1 pb-24">
+                  <div className="flex min-h-0 flex-1 pb-24 compact:pb-0">
                     <ChatHistoryPanel room={room} />
                   </div>
                 ) : null}
@@ -257,32 +266,16 @@ function JoinedRoom({
           </RadioProvider>
         </aside>
       </div>
-      {!supportedViewport && (
+      {notice && (
         <div className="absolute inset-0 z-50 grid place-items-center bg-background p-6">
           <Alert className="max-w-md">
-            <MonitorIcon />
-            <AlertDescription>{roomT("desktopCompatibility")}</AlertDescription>
+            {notice === "rotate" ? <SmartphoneIcon /> : <MonitorIcon />}
+            <AlertDescription>{roomT(notice)}</AlertDescription>
           </Alert>
         </div>
       )}
     </main>
   );
-}
-
-const supportedViewportQuery = "(min-width: 1024px) and (min-height: 640px)";
-
-function subscribeToSupportedViewport(onChange: () => void) {
-  const query = window.matchMedia(supportedViewportQuery);
-  query.addEventListener("change", onChange);
-  return () => query.removeEventListener("change", onChange);
-}
-
-function getSupportedViewport() {
-  return window.matchMedia(supportedViewportQuery).matches;
-}
-
-function useSupportedViewport() {
-  return useSyncExternalStore(subscribeToSupportedViewport, getSupportedViewport, () => true);
 }
 
 type RoomInterface = Exclude<RoomPanel, null> | "settings" | "wardrobe" | null;

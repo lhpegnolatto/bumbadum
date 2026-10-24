@@ -3,6 +3,12 @@
 @import "shadcn/tailwind.css";
 
 @custom-variant dark (&:is(.dark *));
+/* The room's compact layout (ADR-0018); `COMPACT_LAYOUT_QUERY` in room-layout.ts must match. */
+@custom-variant compact {
+  @media (width < 1024px), (height < 640px) {
+    @slot;
+  }
+}
 
 @theme inline {
   --font-heading: var(--font-sans);

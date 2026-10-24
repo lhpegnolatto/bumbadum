@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { Geist } from "next/font/google";
 import { themeInitScript } from "@/features/theme/theme-init-script.ts";
@@ -10,6 +10,15 @@ const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
 export const metadata: Metadata = {
   title: "bumbadum",
   icons: "/bumbadum.svg",
+};
+
+// The world reaches under a phone's notch and gesture bar, and the on-screen keyboard shrinks the
+// layout instead of covering the chat (ADR-0018).
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  interactiveWidget: "resizes-content",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

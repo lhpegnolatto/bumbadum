@@ -21,6 +21,12 @@ export default defineConfig({
   projects: [
     { name: "chromium", use: { ...devices["Desktop Chrome"] }, testIgnore: MOBILE_SPECS },
     { name: "pixel-7", use: { ...devices["Pixel 7"] }, testMatch: MOBILE_SPECS },
+    {
+      name: "iphone-14",
+      // The iPhone's viewport, ratio and touch, on Chromium: e2e runs install no WebKit.
+      use: { ...devices["iPhone 14"], defaultBrowserType: "chromium" },
+      testMatch: MOBILE_SPECS,
+    },
   ],
   webServer: [
     {

@@ -21,20 +21,29 @@ declare global {
 export function GameCanvas({
   room,
   walking,
+  topInset,
 }: {
   room: Room<unknown, RoomState>;
   /** Whether the walking keys move the local player; off while a panel such as the wardrobe is open. */
   walking: boolean;
+  /** CSS pixels the Screen and Radio strip cover at the top: the camera frames the local player below them. */
+  topInset: number;
 }) {
   const t = useTranslations("room");
   const containerRef = useRef<HTMLDivElement>(null);
   const engineRef = useRef<GameEngine>(undefined);
   const walkingRef = useRef(walking);
+  const topInsetRef = useRef(topInset);
 
   useEffect(() => {
     walkingRef.current = walking;
     engineRef.current?.setWalking(walking);
   }, [walking]);
+
+  useEffect(() => {
+    topInsetRef.current = topInset;
+    engineRef.current?.setTopInset(topInset);
+  }, [topInset]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -53,6 +62,7 @@ export function GameCanvas({
         return;
       }
       engine.setWalking(walkingRef.current);
+      engine.setTopInset(topInsetRef.current);
       engineRef.current = engine;
       const onStateChange = (state: RoomState) => engine.applyState(state);
       onStateChange(room.state);

@@ -15,13 +15,16 @@ export interface Camera {
 /**
  * Frames the Map at the smallest whole number of physical pixels per art pixel that is at
  * least `ceil(2 × devicePixelRatio)` and covers the viewport, centred on `focus` (in world
- * pixels) but never showing beyond the Map's edges (ADR-0015, ADR-0017).
+ * pixels) but never showing beyond the Map's edges (ADR-0015, ADR-0017). The focus is centred
+ * in the visible area below `topInset` CSS pixels, such as the Screen on a phone, while the
+ * world still covers the whole viewport (ADR-0018).
  */
 export function cameraOn(
   map: Pick<GameMap, "width" | "height">,
   viewport: { width: number; height: number },
   focus: { x: number; y: number },
   devicePixelRatio: number,
+  topInset = 0,
 ): Camera {
   const mapWidth = map.width * TILE_SIZE;
   const mapHeight = map.height * TILE_SIZE;
@@ -35,11 +38,14 @@ export function cameraOn(
   return {
     scale,
     x: toPhysicalPixel(follow(focus.x * scale, viewport.width, mapWidth * scale)),
-    y: toPhysicalPixel(follow(focus.y * scale, viewport.height, mapHeight * scale)),
+    y: toPhysicalPixel(follow(focus.y * scale, viewport.height, mapHeight * scale, topInset)),
   };
 }
 
-/** Where the world starts on one axis, in CSS pixels, so `focus` is centred without showing beyond the Map. */
-function follow(focus: number, viewport: number, map: number): number {
-  return Math.min(0, Math.max(viewport - map, viewport / 2 - focus));
+/**
+ * Where the world starts on one axis, in CSS pixels, so `focus` is centred in the part of the
+ * viewport past `inset` without showing beyond the Map.
+ */
+function follow(focus: number, viewport: number, map: number, inset = 0): number {
+  return Math.min(0, Math.max(viewport - map, (viewport + inset) / 2 - focus));
 }

@@ -118,4 +118,23 @@ describe("syncScreen", () => {
 
     expect(sync.reading()).toEqual({ videoId: "aaaaaaaaaaa", positionMs: 900, expectedMs: 1000 });
   });
+
+  it("stops while paused, then resumes where the radio has moved on to", () => {
+    const { sync, calls } = setup();
+    sync.show(onAir("aaaaaaaaaaa", OFFSET));
+    vi.advanceTimersByTime(20);
+    sync.pause();
+    vi.advanceTimersByTime(10_000);
+    // A new track goes on air while the screen is covered.
+    sync.show(onAir("bbbbbbbbbbb", OFFSET + 5000));
+    vi.advanceTimersByTime(1000);
+    expect(sync.reading()).toBeUndefined();
+
+    sync.resume();
+    expect(calls.filter(([kind]) => kind !== "setRate")).toEqual([
+      ["load", "aaaaaaaaaaa", 0],
+      ["stop"],
+      ["load", "bbbbbbbbbbb", 6.02],
+    ]);
+  });
 });

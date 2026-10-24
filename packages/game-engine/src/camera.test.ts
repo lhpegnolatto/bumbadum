@@ -102,4 +102,31 @@ describe("cameraOn", () => {
     expect(camera.x).toBeCloseTo(-1280, 9);
     expect(camera.y).toBeCloseTo(-896, 9);
   });
+
+  describe("under a top inset, such as the Screen on a phone", () => {
+    // 360×780 at 2x sees 180×390 world px; the 260 px inset leaves the 520 px below it visible.
+    const phone = { width: 360, height: 780 };
+    const inset = 260;
+
+    it("centres the focus in the visible area beneath the inset", () => {
+      // The visible area's centre is at y = (780 + 260) / 2 = 520; the focus lands on y = 640 at 2x.
+      expect(cameraOn(map, phone, middle, 1, inset)).toEqual({ scale: 2, x: -780, y: -120 });
+    });
+
+    it("still stops at the Map's top edge, drawing the world behind the inset", () => {
+      expect(cameraOn(map, phone, { x: 480, y: 10 }, 1, inset)).toEqual({
+        scale: 2,
+        x: -780,
+        y: 0,
+      });
+    });
+
+    it("still stops at the Map's bottom edge at the viewport's bottom", () => {
+      expect(cameraOn(map, phone, { x: 480, y: 630 }, 1, inset)).toEqual({
+        scale: 2,
+        x: -780,
+        y: -500,
+      });
+    });
+  });
 });

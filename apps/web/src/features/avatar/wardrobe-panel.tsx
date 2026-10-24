@@ -50,7 +50,7 @@ export function WardrobePanel({
       inert={!open}
       data-open={open}
       tabIndex={-1}
-      className="absolute inset-y-[var(--room-overlay-edge)] right-[calc(var(--room-rail-width)_+_var(--room-overlay-edge)_+_var(--room-overlay-gap))] left-[var(--room-overlay-edge)] z-10 flex flex-col gap-4 overflow-y-auto rounded-lg border bg-background/95 p-4 pb-20 shadow-lg outline-none backdrop-blur-sm duration-200 data-[open=false]:animate-out data-[open=false]:fade-out data-[open=false]:slide-out-to-left-2 data-[open=true]:animate-in data-[open=true]:fade-in data-[open=true]:slide-in-from-left-2 motion-reduce:animate-none motion-reduce:duration-0"
+      className="absolute inset-y-[var(--room-overlay-edge)] right-[calc(var(--room-rail-width)_+_var(--room-overlay-edge)_+_var(--room-overlay-gap))] left-[var(--room-overlay-edge)] z-10 flex flex-col gap-4 overflow-y-auto rounded-lg border bg-background/95 p-4 pb-20 shadow-lg outline-none backdrop-blur-sm duration-200 data-[open=false]:animate-out data-[open=false]:fade-out data-[open=false]:slide-out-to-left-2 data-[open=true]:animate-in data-[open=true]:fade-in data-[open=true]:slide-in-from-left-2 motion-reduce:animate-none motion-reduce:duration-0 compact:inset-x-3 compact:top-[calc(var(--room-top-inset)_+_0.5rem)] compact:bottom-[var(--room-above-controls)] compact:pb-28"
     >
       <header className="flex items-start justify-between gap-2">
         <div className="flex flex-col gap-1">

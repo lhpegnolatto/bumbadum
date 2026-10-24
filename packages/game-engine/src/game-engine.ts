@@ -72,6 +72,8 @@ export interface DrawnPlayer extends Pose {
   sessionId: string;
   nickname: string;
   avatar: Avatar;
+  /** Where the centre of that tile is drawn, in CSS pixels from the canvas's top-left corner. */
+  canvasPosition: { x: number; y: number };
 }
 
 export interface GameEngine {
@@ -83,6 +85,11 @@ export interface GameEngine {
   showBubble(sessionId: string, text: string): void;
   /** Lets the walking keys move the local player, or stops them, as while the wardrobe is open. */
   setWalking(enabled: boolean): void;
+  /**
+   * CSS pixels at the top of the canvas that room interface covers, such as the Screen on a
+   * phone: the local player is framed below them (ADR-0018). 0, the default, frames the whole canvas.
+   */
+  setTopInset(pixels: number): void;
   destroy(): void;
 }
 
@@ -157,6 +164,7 @@ export async function mountGameEngine(
     repeatDelayMs: REPEAT_DELAY_MS,
   });
   let walking = true;
+  let topInset = 0;
   const stopListening = listenToDirectionKeys(repeater, () => walking);
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
@@ -194,7 +202,7 @@ export async function mountGameEngine(
     walkLocalPlayer(now);
     // Follows the glide, not the bump, so a blocked step does not shake the view.
     const focus = avatars.get(sessionId)?.glide.at(now) ?? map.spawnPoint;
-    const camera = cameraOn(map, app.screen, tileCentre(focus), app.renderer.resolution);
+    const camera = cameraOn(map, app.screen, tileCentre(focus), app.renderer.resolution, topInset);
     world.scale.set(camera.scale);
     world.position.set(camera.x, camera.y);
     for (const avatar of avatars.values()) {
@@ -257,13 +265,20 @@ export async function mountGameEngine(
       });
     },
     drawnPlayers() {
-      return [...avatars].map(([id, avatar]) => ({
-        sessionId: id,
-        nickname: avatar.nickname,
-        avatar: avatar.sprite.avatar,
-        ...avatar.glide.target,
-        direction: avatar.direction,
-      }));
+      return [...avatars].map(([id, avatar]) => {
+        const centre = tileCentre(avatar.glide.target);
+        return {
+          sessionId: id,
+          nickname: avatar.nickname,
+          avatar: avatar.sprite.avatar,
+          ...avatar.glide.target,
+          direction: avatar.direction,
+          canvasPosition: {
+            x: world.x + centre.x * world.scale.x,
+            y: world.y + centre.y * world.scale.y,
+          },
+        };
+      });
     },
     showBubble(id, text) {
       bubbles.show(id, text, performance.now());
@@ -271,6 +286,9 @@ export async function mountGameEngine(
     setWalking(enabled) {
       walking = enabled;
       if (!enabled) repeater.releaseAll();
+    },
+    setTopInset(pixels) {
+      topInset = pixels;
     },
     destroy() {
       stopListening();

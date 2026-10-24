@@ -1,5 +1,5 @@
 ---
-status: proposed
+status: accepted
 ---
 
 # A compact portrait layout for small viewports

@@ -41,12 +41,13 @@ export function RoomPanelControls({
                   aria-label={t(id)}
                   aria-controls={`${id}-panel`}
                   aria-expanded={active === id}
+                  className="compact:size-11 compact:px-0"
                   onClick={() => onToggle(id)}
                 />
               }
             >
               <Icon />
-              {t(id)}
+              <span className="compact:sr-only">{t(id)}</span>
               {id === "chat" && hasUnreadChat ? (
                 <span
                   role="status"
@@ -83,7 +84,7 @@ export function RoomPanelFrame({
       aria-hidden={!open}
       inert={!open}
       data-open={open}
-      className="flex min-h-0 flex-1 flex-col rounded-lg border bg-background/95 p-4 shadow-lg duration-200 data-[open=false]:animate-out data-[open=false]:fade-out data-[open=false]:slide-out-to-right-2 data-[open=true]:animate-in data-[open=true]:fade-in data-[open=true]:slide-in-from-right-2 motion-reduce:animate-none motion-reduce:duration-0"
+      className="flex min-h-0 flex-1 flex-col rounded-lg border bg-background/95 p-4 shadow-lg compact:mx-3 compact:pb-24 duration-200 data-[open=false]:animate-out data-[open=false]:fade-out data-[open=false]:slide-out-to-right-2 data-[open=true]:animate-in data-[open=true]:fade-in data-[open=true]:slide-in-from-right-2 motion-reduce:animate-none motion-reduce:duration-0"
     >
       <Button
         variant="ghost"

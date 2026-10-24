@@ -28,6 +28,10 @@ export interface ScreenSync {
   /** What is on air now; `undefined` when the radio is silent. */
   show(nowPlaying: NowPlaying | undefined): void;
   reading(): ScreenReading | undefined;
+  /** Stops the screen while something covers it, such as a notice; `show` still tracks the radio. */
+  pause(): void;
+  /** Plays again where the radio is now. */
+  resume(): void;
   stop(): void;
 }
 
@@ -42,6 +46,7 @@ const SAMPLE_EVERY_MS = 20;
 export function syncScreen({ player, serverNow, localNow }: ScreenSyncDeps): ScreenSync {
   let wanted: NowPlaying | undefined;
   let loaded: NowPlaying | undefined;
+  let paused = false;
   let correction: DriftCorrection = startDriftCorrection(localNow());
 
   function expectedMs(nowPlaying: NowPlaying): number | undefined {
@@ -50,7 +55,7 @@ export function syncScreen({ player, serverNow, localNow }: ScreenSyncDeps): Scr
   }
 
   function loadWanted() {
-    if (!wanted || wanted === loaded) return;
+    if (paused || !wanted || wanted === loaded) return;
     const expected = expectedMs(wanted);
     if (expected === undefined) return;
     player.setRate(1);
@@ -103,6 +108,15 @@ export function syncScreen({ player, serverNow, localNow }: ScreenSyncDeps): Scr
       loadWanted();
     },
     reading,
+    pause() {
+      paused = true;
+      if (loaded) player.stop();
+      loaded = undefined;
+    },
+    resume() {
+      paused = false;
+      loadWanted();
+    },
     stop() {
       clearInterval(sampling);
       clearInterval(correcting);

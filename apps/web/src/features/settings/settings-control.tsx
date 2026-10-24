@@ -19,10 +19,18 @@ export function SettingsControl({
   return (
     <Popover open={open} onOpenChange={onOpenChange}>
       <PopoverTrigger
-        render={<Button variant="secondary" size="sm" aria-label={t("title")} title={t("title")} />}
+        render={
+          <Button
+            variant="secondary"
+            size="sm"
+            className="compact:size-11 compact:px-0"
+            aria-label={t("title")}
+            title={t("title")}
+          />
+        }
       >
         <SettingsIcon />
-        {t("title")}
+        <span className="compact:sr-only">{t("title")}</span>
       </PopoverTrigger>
       <PopoverContent role="region" aria-label={t("title")} className="flex flex-col gap-4">
         <LanguageSwitcher showLabel />
