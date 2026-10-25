@@ -1,4 +1,3 @@
-import { isWalkable, lobbyMap } from "@bumbadum/world";
 import { describe, expect, it } from "vitest";
 import { objectDepth, playerDepth } from "./index.ts";
 import { PLAZA_OBJECTS } from "./plaza-objects.generated.ts";
@@ -25,22 +24,9 @@ describe("depth order", () => {
     expect(playerDepth({ x: 30, y: 11.6 })).toBeGreaterThan(objectDepth(tree));
   });
 
-  it("seats a player on an audience chair behind its backrest", () => {
-    const chairs = PLAZA_OBJECTS.filter((object) => object.name === "chair");
-    expect(chairs).toHaveLength(24);
-    for (const chair of chairs) {
-      // The seat is the tile the chair mostly covers: the one whose bottom edge its legs overhang.
-      const row = Math.floor(chair.base / 16) - 1;
-      const columns = [
-        Math.floor(chair.x / 16),
-        Math.floor((chair.x + chair.frame.width - 1) / 16),
-      ];
-      for (const column of columns) {
-        const seat = { x: column, y: row };
-        expect(isWalkable(lobbyMap, seat), `chair tile ${column},${row}`).toBe(true);
-        expect(playerDepth(seat)).toBeLessThan(objectDepth(chair));
-        expect(playerDepth({ x: column, y: row + 1 })).toBeGreaterThan(objectDepth(chair));
-      }
-    }
+  it("removes the central chairs while preserving surrounding objects", () => {
+    expect(PLAZA_OBJECTS.filter((object) => object.name === "chair")).toHaveLength(0);
+    expect(PLAZA_OBJECTS.some((object) => object.name === "bench")).toBe(true);
+    expect(PLAZA_OBJECTS.some((object) => object.name === "picnic-table")).toBe(true);
   });
 });

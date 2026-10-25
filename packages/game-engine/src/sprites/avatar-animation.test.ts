@@ -73,6 +73,7 @@ describe("AvatarAnimation", () => {
   describe("dancing", () => {
     const SERVER_NOW = 1_700_000_000_000;
     const FRAME_MS = 60_000 / 220;
+    const NOTE_FRAME_MS = (60_000 / 110) * 2;
 
     it("dances the player's dance in step with the server clock while standing", () => {
       const dancer = animation();
@@ -100,6 +101,38 @@ describe("AvatarAnimation", () => {
         cycle: "walk",
         frame: 1,
       });
+    });
+
+    it("changes the sound-note frame every two beats from the server clock", () => {
+      const dancer = animation();
+      const frames = [0, 1, 2, 3, 0].map((step) =>
+        dancer.soundNoteFrame(false, 0, false, {
+          dance: "side-step",
+          serverNow: step * NOTE_FRAME_MS,
+        }),
+      );
+      expect(frames).toEqual([0, 1, 2, 3, 0]);
+    });
+
+    it("holds the first sound-note frame under reduced motion", () => {
+      const dancer = animation();
+      expect(
+        dancer.soundNoteFrame(false, 0, true, {
+          dance: "side-step",
+          serverNow: NOTE_FRAME_MS * 3,
+        }),
+      ).toBe(0);
+    });
+
+    it("hides the sound-note effect while walking or without a dance", () => {
+      const dancer = animation();
+      expect(
+        dancer.soundNoteFrame(true, 0, false, {
+          dance: "side-step",
+          serverNow: 0,
+        }),
+      ).toBeUndefined();
+      expect(dancer.soundNoteFrame(false, GRACE_MS + 1, false)).toBeUndefined();
     });
   });
 });

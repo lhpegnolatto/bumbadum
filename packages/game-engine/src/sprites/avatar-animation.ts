@@ -6,6 +6,9 @@ import {
   WALK_FRAMES,
 } from "@bumbadum/avatar";
 
+const SOUND_NOTE_FRAME_MS = (60_000 / 110) * 2;
+const SOUND_NOTE_FRAMES = 4;
+
 export interface AvatarAnimationTiming {
   idleFrameMs: number;
   walkFrameMs: number;
@@ -40,12 +43,7 @@ export class AvatarAnimation {
     reducedMotion: boolean,
     dancing?: Dancing,
   ): AvatarAnimationFrame {
-    if (walking) {
-      this.walkStartedAt ??= now;
-      this.lastWalkingAt = now;
-    } else if (now - this.lastWalkingAt >= this.timing.walkGraceMs) {
-      this.walkStartedAt = undefined;
-    }
+    this.updateWalking(walking, now);
 
     if (this.walkStartedAt !== undefined) {
       return {
@@ -62,6 +60,27 @@ export class AvatarAnimation {
         ? 0
         : (Math.floor(now / this.timing.idleFrameMs) + this.idlePhase) % IDLE_FRAMES,
     };
+  }
+
+  soundNoteFrame(
+    walking: boolean,
+    now: number,
+    reducedMotion: boolean,
+    dancing?: Dancing,
+  ): number | undefined {
+    this.updateWalking(walking, now);
+    if (this.walkStartedAt !== undefined || !dancing) return undefined;
+    if (reducedMotion) return 0;
+    return Math.floor(dancing.serverNow / SOUND_NOTE_FRAME_MS) % SOUND_NOTE_FRAMES;
+  }
+
+  private updateWalking(walking: boolean, now: number): void {
+    if (walking) {
+      this.walkStartedAt ??= now;
+      this.lastWalkingAt = now;
+    } else if (now - this.lastWalkingAt >= this.timing.walkGraceMs) {
+      this.walkStartedAt = undefined;
+    }
   }
 }
 

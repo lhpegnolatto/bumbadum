@@ -11,7 +11,7 @@ describe("the side step", () => {
     expect(isDance("moonwalk")).toBe(false);
   });
 
-  it("steps left, bounces, steps right and bounces, two frames a beat at 110 BPM", () => {
+  it("completes the eight-beat passinho before starting the giro", () => {
     const frames = [0, 1, 2, 3, 4].map((k) => danceFrame("side-step", k * FRAME_MS + 1, false));
     expect(frames).toEqual([
       { cycle: "walk", direction: "left", frame: 1, dx: -1, dy: 0, mirrored: false },
@@ -20,10 +20,62 @@ describe("the side step", () => {
       { cycle: "idle", direction: "down", frame: 0, dx: 0, dy: -1, mirrored: false },
       frames[0],
     ]);
+
+    expect(
+      Array.from({ length: 16 }, (_, frame) =>
+        danceFrame("side-step", frame * FRAME_MS + 1, false),
+      ).map(({ direction }) => direction),
+    ).toEqual([
+      "left",
+      "down",
+      "right",
+      "down",
+      "left",
+      "down",
+      "right",
+      "down",
+      "left",
+      "down",
+      "right",
+      "down",
+      "left",
+      "down",
+      "right",
+      "down",
+    ]);
+  });
+
+  it("follows the giro with left, up, right, and down for eight beats", () => {
+    expect(
+      Array.from({ length: 16 }, (_, frame) =>
+        danceFrame("side-step", (16 + frame) * FRAME_MS + 1, false),
+      ).map(({ direction }) => direction),
+    ).toEqual([
+      "left",
+      "left",
+      "left",
+      "left",
+      "up",
+      "up",
+      "up",
+      "up",
+      "right",
+      "right",
+      "right",
+      "right",
+      "down",
+      "down",
+      "down",
+      "down",
+    ]);
+
+    expect(danceFrame("side-step", 32 * FRAME_MS + 1, false)).toEqual(
+      danceFrame("side-step", 0, false),
+    );
   });
 
   it("shows everyone the same frame at the same server time", () => {
-    const at = 1_700_000_000_123;
+    const at = 1;
     expect(danceFrame("side-step", at, false)).toEqual(danceFrame("side-step", at, false));
     expect(danceFrame("side-step", at + FRAME_MS, false)).not.toEqual(
       danceFrame("side-step", at, false),

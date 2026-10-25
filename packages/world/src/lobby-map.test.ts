@@ -38,9 +38,13 @@ describe("lobbyMap", () => {
     expect(walkable.length).toBeGreaterThan(1500);
   });
 
-  it("lets players stand on the audience chairs", () => {
-    expect(isWalkable(lobbyMap, { x: 28, y: 14 })).toBe(true);
-    expect(isWalkable(lobbyMap, { x: 34, y: 18 })).toBe(true);
+  it("keeps the cleared central dance area walkable", () => {
+    const chairColumns = [22, 25, 28, 31, 33, 36];
+    const clearedRows = [12, 14, 16, 18];
+    const clearedTiles = clearedRows.flatMap((y) => chairColumns.map((x) => ({ x, y })));
+
+    expect(clearedTiles).toHaveLength(24);
+    expect(clearedTiles.every((tile) => isWalkable(lobbyMap, tile))).toBe(true);
   });
 
   it("blocks the stage and the buildings", () => {

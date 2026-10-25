@@ -49,8 +49,20 @@ Where a player is facing: up, down, left or right.
 _Avoid_: orientation, heading
 
 **Dance**:
-A named, looping choreography a player performs in place, seen by everyone in the room. Everyone performing the same dance moves in unison. A step intent ends it.
+A named, looping choreography a player performs in place, seen by everyone in the room. The current choreography alternates a `passinho` phase with a `giro` phase. Everyone performing the same dance moves in unison. A step intent ends it.
 _Avoid_: emote, animation, move
+
+**Passinho**:
+The side-step phase of the Dance: a sequence of existing avatar frames that moves left and right in place.
+_Avoid_: dance animation, side movement
+
+**Giro**:
+The turning phase of the Dance: a sequence of existing avatar frames that presents the avatar facing the cardinal directions and ends facing down. It is a visual choreography phase, not a change to the Player's stored Direction.
+_Avoid_: rotation, turn state
+
+**Sound-note effect**:
+A visual decoration shown above a Player while their Dance is active. It has no audio and no server state of its own; clients derive its synchronized frame from the Dance clock. Reduced motion holds one static frame.
+_Avoid_: sound effect, note event
 
 ### Radio
 

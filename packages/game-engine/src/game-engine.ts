@@ -56,6 +56,7 @@ const ANIMATION_TIMING = { idleFrameMs: IDLE_FRAME_MS, walkFrameMs: 100, walkGra
 const PLAZA_FLOOR = "/sprites/plaza/floor.png";
 const PLAZA_OBJECTS_ATLAS = "/sprites/plaza/objects.png";
 const PLAZA_LIGHTS = "/sprites/plaza/lights.png";
+const SOUND_NOTES = "/sprites/effects/fx-notas-4q-arco-iris.png";
 
 const COLORS = {
   background: "#2b2238",
@@ -134,11 +135,12 @@ export async function mountGameEngine(
     autoDensity: true,
   });
   container.appendChild(app.canvas);
-  const [textures, floor, objectsAtlas, lights] = await Promise.all([
+  const [textures, floor, objectsAtlas, lights, soundNotes] = await Promise.all([
     FrameTextures.load(),
     Assets.load<Texture>(PLAZA_FLOOR),
     Assets.load<Texture>(PLAZA_OBJECTS_ATLAS),
     Assets.load<Texture>(PLAZA_LIGHTS),
+    Assets.load<Texture>(SOUND_NOTES),
   ]);
 
   const world = new Container();
@@ -183,7 +185,7 @@ export async function mountGameEngine(
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
   const addAvatar = (id: string, player: PlayerState): PlayerView => {
-    const sprite = new AvatarSprite(textures, avatarOf(player.avatar));
+    const sprite = new AvatarSprite(textures, avatarOf(player.avatar), soundNotes);
     const label = drawNickname(player.nickname);
     depthSorted.addChild(sprite.view);
     labels.addChild(label);
@@ -227,8 +229,15 @@ export async function mountGameEngine(
       const nudge = avatar.bump ? bumpOffset(avatar.bump, now) : { x: 0, y: 0 };
       const { view } = avatar.sprite;
       const drawnAt = { x: at.x + nudge.x, y: at.y + nudge.y };
+      const walkingNow = avatar.glide.moving(now) || isBumping(avatar.bump, now);
       const frame = avatar.animation.frame(
-        avatar.glide.moving(now) || isBumping(avatar.bump, now),
+        walkingNow,
+        animationNow,
+        reducedMotion.matches,
+        avatar.dance ? { dance: avatar.dance, serverNow: danceNow } : undefined,
+      );
+      const soundNoteFrame = avatar.animation.soundNoteFrame(
+        walkingNow,
         animationNow,
         reducedMotion.matches,
         avatar.dance ? { dance: avatar.dance, serverNow: danceNow } : undefined,
@@ -246,6 +255,7 @@ export async function mountGameEngine(
         frame.frame,
         dancing?.mirrored ?? false,
       );
+      avatar.sprite.drawSoundNote(soundNoteFrame);
       // Labels live outside the scaled world, so their size and gap render in screen pixels.
       avatar.label.position.set(
         world.x + view.x * world.scale.x,
