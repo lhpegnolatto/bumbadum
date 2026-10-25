@@ -1,7 +1,14 @@
 "use client";
 
-import type { Direction, DrawnPlayer, GameEngine } from "@bumbadum/game-engine";
-import { CHAT_MESSAGE, type ChatMessage, type RoomState, STEP_MESSAGE } from "@bumbadum/protocol";
+import type { Direction, DrawnConfettiThrow, DrawnPlayer, GameEngine } from "@bumbadum/game-engine";
+import {
+  CHAT_MESSAGE,
+  type ChatMessage,
+  CONFETTI_THROWN,
+  type ConfettiThrown,
+  type RoomState,
+  STEP_MESSAGE,
+} from "@bumbadum/protocol";
 import type { Room } from "@colyseus/sdk";
 import { type Ref, useEffect, useImperativeHandle, useRef } from "react";
 import { useTranslations } from "use-intl";
@@ -11,6 +18,8 @@ declare global {
   interface BumbadumE2E {
     /** What the canvas shows, since tests cannot read its pixels. */
     drawnPlayers?(): DrawnPlayer[];
+    /** The latest Confetti throws the canvas drew, oldest first. */
+    drawnConfettiThrows?(): DrawnConfettiThrow[];
   }
 }
 
@@ -21,8 +30,8 @@ export interface GameCanvasHandle {
 }
 
 /**
- * Mounts the PixiJS engine and feeds it every state patch and chat message
- * (as speech bubbles), without re-rendering React.
+ * Mounts the PixiJS engine and feeds it every state patch, chat message (as
+ * speech bubbles) and Confetti throw, without re-rendering React.
  */
 export function GameCanvas({
   ref,
@@ -88,11 +97,18 @@ export function GameCanvas({
       const stopBubbles = room.onMessage<ChatMessage>(CHAT_MESSAGE, (message) =>
         engine.showBubble(message.senderId, message.text),
       );
-      exposeToE2E({ drawnPlayers: () => engine.drawnPlayers() });
+      const stopConfetti = room.onMessage<ConfettiThrown>(CONFETTI_THROWN, (thrown) =>
+        engine.throwConfetti(thrown),
+      );
+      exposeToE2E({
+        drawnPlayers: () => engine.drawnPlayers(),
+        drawnConfettiThrows: () => engine.drawnConfettiThrows(),
+      });
       stop = () => {
         engineRef.current = undefined;
         room.onStateChange.remove(onStateChange);
         stopBubbles();
+        stopConfetti();
         engine.destroy();
       };
     });

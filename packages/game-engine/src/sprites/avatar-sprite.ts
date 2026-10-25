@@ -11,6 +11,14 @@ import {
 import { Assets, Container, Rectangle, Sprite, Texture } from "pixi.js";
 
 const SOUND_NOTE_FRAME_SIZE = 48;
+/** The hand sheet's 48×48 cells put the thrower's feet in the middle of their bottom edge. */
+const HAND_FRAME_SIZE = 48;
+const HAND_FRAMES = 2;
+/** The hand sheet's rows; a left-facing hand is the right-facing one mirrored. */
+const HAND_ROWS = { down: 0, right: 1, up: 2, left: 1 } as const satisfies Record<
+  Direction,
+  number
+>;
 
 /** The avatar sheets, cut into 24×24 frame textures on first use. */
 export class FrameTextures {
@@ -45,6 +53,9 @@ export class AvatarSprite {
   private readonly layers: Sprite[] = [];
   private readonly soundNote: Sprite;
   private readonly soundNoteFrames: Texture[];
+  private readonly hand: Sprite;
+  /** By row, then frame. */
+  private readonly handFrames: Texture[][];
   private worn: Avatar;
   private drawn = "";
 
@@ -52,6 +63,7 @@ export class AvatarSprite {
     private readonly textures: FrameTextures,
     avatar: Avatar,
     soundNoteTexture: Texture,
+    handTexture: Texture,
   ) {
     this.worn = { ...avatar };
     this.soundNoteFrames = Array.from(
@@ -71,6 +83,25 @@ export class AvatarSprite {
     this.soundNote.anchor.set(0.5, 1);
     this.soundNote.position.set(0, -FRAME_SIZE);
     this.soundNote.visible = false;
+    this.handFrames = [0, 1, 2].map((row) =>
+      Array.from(
+        { length: HAND_FRAMES },
+        (_, frame) =>
+          new Texture({
+            source: handTexture.source,
+            frame: new Rectangle(
+              frame * HAND_FRAME_SIZE,
+              row * HAND_FRAME_SIZE,
+              HAND_FRAME_SIZE,
+              HAND_FRAME_SIZE,
+            ),
+          }),
+      ),
+    );
+    this.hand = new Sprite();
+    this.hand.anchor.set(0.5, 1);
+    this.hand.visible = false;
+    this.view.addChild(this.hand);
   }
 
   get avatar(): Avatar {
@@ -104,6 +135,21 @@ export class AvatarSprite {
       layer.scale.x = layerFrame.mirrored !== flipped ? -1 : 1;
     });
     this.view.addChild(this.soundNote);
+  }
+
+  /**
+   * Shows the hand holding confetti, frame `frame` of a throw towards `direction`, or hides it
+   * on `undefined`. Throwing up, the hand is behind the body; otherwise in front of it.
+   */
+  drawHand(hand: { direction: Direction; frame: number } | undefined): void {
+    this.hand.visible = hand !== undefined;
+    if (!hand) return;
+    const texture = this.handFrames[HAND_ROWS[hand.direction]]?.[hand.frame];
+    if (texture) this.hand.texture = texture;
+    this.hand.scale.x = hand.direction === "left" ? -1 : 1;
+    // In front, it goes just below the sound note, which every draw puts on top.
+    const index = hand.direction === "up" ? 0 : this.view.children.length - 2;
+    this.view.setChildIndex(this.hand, Math.max(0, index));
   }
 
   drawSoundNote(frame: number | undefined): void {

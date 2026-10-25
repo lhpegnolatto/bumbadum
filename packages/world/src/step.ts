@@ -12,7 +12,8 @@ export function isDirection(value: unknown): value is Direction {
 /** How many steps a player takes per second while walking. */
 export const STEPS_PER_SECOND = 6;
 
-const OFFSETS: Record<Direction, Tile> = {
+/** One tile's move in each direction. */
+export const OFFSETS: Readonly<Record<Direction, Tile>> = {
   up: { x: 0, y: -1 },
   down: { x: 0, y: 1 },
   left: { x: -1, y: 0 },

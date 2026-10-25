@@ -8,6 +8,7 @@ const commandList = [
   { id: "play", names: { en: "play", "pt-BR": "tocar" } },
   { id: "skip", names: { en: "skip", "pt-BR": "pular" } },
   { id: "dance", names: { en: "dance", "pt-BR": "dançar" } },
+  { id: "confetti", names: { en: "confetti", "pt-BR": "confete" } },
   { id: "help", names: { en: "help", "pt-BR": "ajuda" } },
 ] as const satisfies readonly Command[];
 

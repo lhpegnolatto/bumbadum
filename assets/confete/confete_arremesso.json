@@ -1,0 +1,25 @@
+{
+  "versao_pronta": {
+    "arquivo": "confete_arremesso_2tiles.png",
+    "celula": [112, 112],
+    "quadros": 8,
+    "avatar_na_celula": {
+      "x": [44, 67],
+      "y": [40, 63],
+      "pes": [56, 64]
+    },
+    "distancia_alvo_px": 32,
+    "ponto_de_acerto": {
+      "baixo": [56, 83],
+      "direita": [88, 51],
+      "cima": [56, 19]
+    },
+    "ms_sugerido": [120, 110, 70, 70, 70, 90, 110, 140]
+  },
+  "pecas_modulares": {
+    "confete_mao_48.png": "2 quadros (segurar, preparar) x 3 direcoes, celula 48x48 igual a da espada",
+    "confete_projetil_16.png": "4 quadros girando, centro (8,8); o rastro sai para a esquerda: gire/espelhe na direcao do voo",
+    "confete_impacto_48.png": "4 quadros; ponto de acerto em (24,18), pes do alvo em (24,30)",
+    "trajetoria": "x = lerp(mao.x, alvo.x, s); y = lerp(mao.y, alvo.y, s) - altura*sin(pi*s); altura ~12-14 px; s de 0 a 1 em ~3 quadros"
+  }
+}

@@ -32,6 +32,13 @@ describe("commands", () => {
     expect(readChatInput("/DANÇAR", commands)).toEqual(dance);
   });
 
+  it("knows /confetti and /confete as the same command", () => {
+    const confetti = { kind: "command", command: "confetti", args: "" };
+
+    expect(readChatInput("/confetti", commands)).toEqual(confetti);
+    expect(readChatInput("/Confete", commands)).toEqual(confetti);
+  });
+
   it("suggests /dançar, then /dance, for /danc typed without the cedilla", () => {
     expect(suggestCommands("/danc", "pt-BR", commands)).toEqual([
       { command: "dance", name: "dançar" },

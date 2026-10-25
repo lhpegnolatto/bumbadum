@@ -8,6 +8,7 @@ import {
 import {
   type AvatarState,
   avatarFromStateOrDefault,
+  type ConfettiThrown,
   danceOf,
   type PlayerState,
   type RoomState,
@@ -35,6 +36,7 @@ import { PLAZA_OBJECTS } from "./plaza-objects.generated.ts";
 import { SpeechBubbles } from "./speech-bubbles.ts";
 import { AvatarAnimation } from "./sprites/avatar-animation.ts";
 import { AvatarSprite, FrameTextures } from "./sprites/avatar-sprite.ts";
+import { ConfettiThrowSprites } from "./sprites/confetti-throw-sprites.ts";
 
 /** Screen pixels between the top of an avatar's frame and their nickname. */
 const LABEL_GAP = 3;
@@ -57,6 +59,11 @@ const PLAZA_FLOOR = "/sprites/plaza/floor.png";
 const PLAZA_OBJECTS_ATLAS = "/sprites/plaza/objects.png";
 const PLAZA_LIGHTS = "/sprites/plaza/lights.png";
 const SOUND_NOTES = "/sprites/effects/fx-notas-4q-arco-iris.png";
+const CONFETTI_HAND = "/sprites/effects/confetti-hand.png";
+const CONFETTI_PROJECTILE = "/sprites/effects/confetti-projectile.png";
+const CONFETTI_IMPACT = "/sprites/effects/confetti-impact.png";
+/** How many recent Confetti throws the engine remembers for end-to-end tests. */
+const DRAWN_THROWS_KEPT = 20;
 
 const COLORS = {
   background: "#2b2238",
@@ -84,11 +91,20 @@ export interface DrawnPlayer extends Pose {
   canvasPosition: { x: number; y: number };
 }
 
+/** A Confetti throw as the engine drew it. */
+export interface DrawnConfettiThrow extends ConfettiThrown {
+  nickname: string;
+}
+
 export interface GameEngine {
   /** Updates the room from the latest server state. */
   applyState(state: RoomState): void;
   /** What the canvas shows, for end-to-end tests that cannot read pixels. */
   drawnPlayers(): DrawnPlayer[];
+  /** Draws a Confetti throw the room announced, from the thrower's hand to its Throw target. */
+  throwConfetti(thrown: ConfettiThrown): void;
+  /** The latest Confetti throws drawn, oldest first, for end-to-end tests. */
+  drawnConfettiThrows(): DrawnConfettiThrow[];
   /** Shows `text` in a bubble over the player for a few seconds. */
   showBubble(sessionId: string, text: string): void;
   /** Lets the walking keys move the local player, or stops them, as while the wardrobe is open. */
@@ -135,12 +151,24 @@ export async function mountGameEngine(
     autoDensity: true,
   });
   container.appendChild(app.canvas);
-  const [textures, floor, objectsAtlas, lights, soundNotes] = await Promise.all([
+  const [
+    textures,
+    floor,
+    objectsAtlas,
+    lights,
+    soundNotes,
+    confettiHand,
+    confettiProjectile,
+    confettiImpact,
+  ] = await Promise.all([
     FrameTextures.load(),
     Assets.load<Texture>(PLAZA_FLOOR),
     Assets.load<Texture>(PLAZA_OBJECTS_ATLAS),
     Assets.load<Texture>(PLAZA_LIGHTS),
     Assets.load<Texture>(SOUND_NOTES),
+    Assets.load<Texture>(CONFETTI_HAND),
+    Assets.load<Texture>(CONFETTI_PROJECTILE),
+    Assets.load<Texture>(CONFETTI_IMPACT),
   ]);
 
   const world = new Container();
@@ -156,8 +184,17 @@ export async function mountGameEngine(
     sprite.zIndex = objectDepth(object);
     depthSorted.addChild(sprite);
   }
-  // The evening glow brightens whatever lies beneath it, avatars included.
-  world.addChild(new Sprite(floor), depthSorted, new Sprite({ texture: lights, blendMode: "add" }));
+  // Thrown confetti flies above every player and object.
+  const confettiLayer = new Container();
+  const confetti = new ConfettiThrowSprites(confettiLayer, confettiProjectile, confettiImpact);
+  const drawnThrows: DrawnConfettiThrow[] = [];
+  // The evening glow brightens whatever lies beneath it, avatars and confetti included.
+  world.addChild(
+    new Sprite(floor),
+    depthSorted,
+    confettiLayer,
+    new Sprite({ texture: lights, blendMode: "add" }),
+  );
   const labels = new Container();
   app.stage.addChild(world, labels);
   // Last on the stage, so bubbles stay above every avatar and label.
@@ -185,7 +222,7 @@ export async function mountGameEngine(
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
   const addAvatar = (id: string, player: PlayerState): PlayerView => {
-    const sprite = new AvatarSprite(textures, avatarOf(player.avatar), soundNotes);
+    const sprite = new AvatarSprite(textures, avatarOf(player.avatar), soundNotes, confettiHand);
     const label = drawNickname(player.nickname);
     depthSorted.addChild(sprite.view);
     labels.addChild(label);
@@ -224,7 +261,7 @@ export async function mountGameEngine(
     const camera = cameraOn(map, app.screen, tileCentre(focus), app.renderer.resolution, topInset);
     world.scale.set(camera.scale);
     world.position.set(camera.x, camera.y);
-    for (const avatar of avatars.values()) {
+    for (const [id, avatar] of avatars) {
       const at = avatar.glide.at(now);
       const nudge = avatar.bump ? bumpOffset(avatar.bump, now) : { x: 0, y: 0 };
       const { view } = avatar.sprite;
@@ -256,12 +293,17 @@ export async function mountGameEngine(
         dancing?.mirrored ?? false,
       );
       avatar.sprite.drawSoundNote(soundNoteFrame);
+      avatar.sprite.drawHand(confetti.handOf(id, now, reducedMotion.matches));
       // Labels live outside the scaled world, so their size and gap render in screen pixels.
       avatar.label.position.set(
         world.x + view.x * world.scale.x,
         world.y + (view.y - FRAME_SIZE + AVATAR_TOP_INSET) * world.scale.y - LABEL_GAP,
       );
     }
+    confetti.update(now, reducedMotion.matches, (id) => {
+      const view = avatars.get(id)?.sprite.view;
+      return view && { x: view.x, y: view.y };
+    });
     bubbles.update(now, (id) => {
       const label = avatars.get(id)?.label;
       return label && { x: label.x, y: label.y - label.height - BUBBLE_GAP };
@@ -318,6 +360,17 @@ export async function mountGameEngine(
           },
         };
       });
+    },
+    throwConfetti(thrown) {
+      const thrower = avatars.get(thrown.throwerId);
+      if (!thrower) return;
+      const { view } = thrower.sprite;
+      confetti.start(thrown, { x: view.x, y: view.y }, performance.now());
+      drawnThrows.push({ ...thrown, nickname: thrower.nickname });
+      if (drawnThrows.length > DRAWN_THROWS_KEPT) drawnThrows.shift();
+    },
+    drawnConfettiThrows() {
+      return [...drawnThrows];
     },
     showBubble(id, text) {
       bubbles.show(id, text, performance.now());

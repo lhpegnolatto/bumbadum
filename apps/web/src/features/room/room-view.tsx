@@ -1,9 +1,20 @@
 "use client";
 
 import { type Avatar, DEFAULT_AVATAR } from "@bumbadum/avatar";
-import { CHAT_MESSAGE, type ChatMessage, type RoomState } from "@bumbadum/protocol";
+import {
+  CHAT_MESSAGE,
+  type ChatMessage,
+  CONFETTI_THROW_MESSAGE,
+  type RoomState,
+} from "@bumbadum/protocol";
 import type { Room } from "@colyseus/sdk";
-import { MonitorIcon, PartyPopperIcon, ShirtIcon, SmartphoneIcon } from "lucide-react";
+import {
+  MonitorIcon,
+  PartyPopperIcon,
+  ShirtIcon,
+  SmartphoneIcon,
+  SparklesIcon,
+} from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { type CSSProperties, useEffect, useRef, useState } from "react";
@@ -177,6 +188,17 @@ function JoinedRoom({
   }, [toggleDance]);
 
   useEffect(() => {
+    function throwConfettiOnE(event: KeyboardEvent) {
+      if (event.key.toLowerCase() !== "e" || event.repeat || event.defaultPrevented) return;
+      if (event.ctrlKey || event.metaKey || event.altKey || isTextField(event.target)) return;
+      if (wardrobeOpenRef.current) return;
+      room.send(CONFETTI_THROW_MESSAGE);
+    }
+    document.addEventListener("keydown", throwConfettiOnE);
+    return () => document.removeEventListener("keydown", throwConfettiOnE);
+  }, [room]);
+
+  useEffect(() => {
     activePanelRef.current = activePanel;
     if (activePanel === "chat") setHasUnreadChat(false);
   }, [activePanel]);
@@ -292,6 +314,19 @@ function JoinedRoom({
           >
             <PartyPopperIcon />
             <span className="compact:sr-only">{roomT("dance")}</span>
+          </Button>
+          <Button
+            variant="secondary"
+            size="sm"
+            className="compact:size-11 compact:px-0"
+            aria-keyshortcuts="E"
+            // A throw ends a dance, so, like one, none starts while the Wardrobe is open.
+            disabled={wardrobeOpen}
+            title={roomT("confettiShortcut")}
+            onClick={() => room.send(CONFETTI_THROW_MESSAGE)}
+          >
+            <SparklesIcon />
+            <span className="compact:sr-only">{roomT("confetti")}</span>
           </Button>
           <SettingsControl open={activeInterface === "settings"} onOpenChange={setSettings} />
         </div>

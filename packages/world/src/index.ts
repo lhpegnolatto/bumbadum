@@ -1,3 +1,4 @@
+export { CONFETTI_THROW_REACH, type ThrowTarget, throwTarget } from "./confetti-throw.ts";
 export { lobbyMap } from "./lobby-map.ts";
 export { createMap, type GameMap, isWalkable, type Tile } from "./map.ts";
 export {

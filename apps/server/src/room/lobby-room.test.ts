@@ -12,6 +12,9 @@ import {
   CLOCK_PING,
   CLOCK_PONG,
   type ClockPong,
+  CONFETTI_THROW_MESSAGE,
+  CONFETTI_THROWN,
+  type ConfettiThrown,
   DANCE_MESSAGE,
   LOBBY_SLUG,
   NOTICE,
@@ -416,17 +419,17 @@ describe("lobby-room avatars", () => {
   });
 });
 
+/** Waits until Bia has Ana's chat message, so every message Ana sent before it is handled. */
+async function handled(ana: ClientRoom<unknown, RoomState>, bia: ClientRoom<unknown, RoomState>) {
+  const toBia = received<ChatMessage>(bia, CHAT_MESSAGE);
+  say(ana, "after");
+  await expect.poll(() => toBia.map((message) => message.text)).toEqual(["after"]);
+}
+
 describe("lobby-room dances", () => {
   /** The dance `room` sees `player` performing, or "" when they are not dancing. */
   function danceOf(room: ClientRoom<unknown, RoomState>, player: ClientRoom<unknown, RoomState>) {
     return room.state.players?.get(player.sessionId)?.dance;
-  }
-
-  /** Waits until Bia has Ana's chat message, so every message Ana sent before it is handled. */
-  async function handled(ana: ClientRoom<unknown, RoomState>, bia: ClientRoom<unknown, RoomState>) {
-    const toBia = received<ChatMessage>(bia, CHAT_MESSAGE);
-    say(ana, "after");
-    await expect.poll(() => toBia.map((message) => message.text)).toEqual(["after"]);
   }
 
   it("starts and stops a player's dance for everyone to see", async () => {
@@ -486,6 +489,65 @@ describe("lobby-room dances", () => {
 
     expect(danceOf(bia, ana)).toBe("");
     expect(danceOf(ana, bia)).toBe("");
+  });
+});
+
+describe("lobby-room confetti", () => {
+  const spawn = lobbyMap.spawnPoint;
+
+  it("shows everyone a throw landing on the first player ahead, past one on the thrower's tile", async () => {
+    const ana = await joinLobby("Ana");
+    const bia = await joinLobby("Bia");
+    const cris = await joinLobby("Cris");
+    await walk(bia, "down");
+    const toAna = received<ConfettiThrown>(ana, CONFETTI_THROWN);
+    const toCris = received<ConfettiThrown>(cris, CONFETTI_THROWN);
+
+    ana.send(CONFETTI_THROW_MESSAGE);
+    const thrown: ConfettiThrown = {
+      throwerId: ana.sessionId,
+      direction: "down",
+      target: { at: { x: spawn.x, y: spawn.y + 1 }, onPlayer: true },
+    };
+    await expect.poll(() => toCris).toEqual([thrown]);
+    expect(toAna).toEqual([thrown]);
+  });
+
+  it("throws with /confete or /confetti, without a chat message", async () => {
+    const ana = await joinLobby("Ana");
+    const bia = await joinLobby("Bia");
+    const toBia = received<ChatMessage>(bia, CHAT_MESSAGE);
+    const throwsToBia = received<ConfettiThrown>(bia, CONFETTI_THROWN);
+
+    say(ana, "/confete");
+    say(ana, "/confetti");
+    await expect
+      .poll(() => throwsToBia.map(({ throwerId }) => throwerId))
+      .toEqual([ana.sessionId, ana.sessionId]);
+    expect(toBia).toEqual([]);
+  });
+
+  it("ends the thrower's dance", async () => {
+    const ana = await joinLobby("Ana");
+    ana.send(DANCE_MESSAGE, "side-step");
+    await expect.poll(() => ana.state.players.get(ana.sessionId)?.dance).toBe("side-step");
+
+    ana.send(CONFETTI_THROW_MESSAGE);
+    await expect.poll(() => ana.state.players.get(ana.sessionId)?.dance).toBe("");
+  });
+
+  it("accepts a burst of three throws per player, by message or command, ignoring a payload", async () => {
+    const ana = await joinLobby("Ana");
+    const bia = await joinLobby("Bia");
+    const toBia = received<ConfettiThrown>(bia, CONFETTI_THROWN);
+    ana.send(CONFETTI_THROW_MESSAGE, { target: { x: 1, y: 1 } });
+    ana.send(CONFETTI_THROW_MESSAGE);
+    ana.send(CONFETTI_THROW_MESSAGE);
+    say(ana, "/confetti");
+    ana.send(CONFETTI_THROW_MESSAGE);
+    await handled(ana, bia);
+
+    expect(toBia).toHaveLength(3);
   });
 });
 

@@ -39,7 +39,9 @@
       "close": "Fechar {panel}"
     },
     "dance": "Dançar",
-    "danceShortcut": "Tecle F"
+    "danceShortcut": "Tecle F",
+    "confetti": "Confete",
+    "confettiShortcut": "Tecle E"
   },
   "joinRejection": {
     "room-full": "A sala está cheia. Tente de novo daqui a pouco.",
@@ -86,6 +88,10 @@
       "dance": {
         "args": "",
         "description": "Começa ou para de dançar, no ritmo de quem já está dançando."
+      },
+      "confetti": {
+        "args": "",
+        "description": "Joga confete à sua frente, em quem estiver no caminho."
       },
       "help": {
         "args": "",

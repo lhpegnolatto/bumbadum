@@ -64,6 +64,14 @@ _Avoid_: rotation, turn state
 A visual decoration shown above a Player while their Dance is active. It has no audio and no server state of its own; clients derive its synchronized frame from the Dance clock. Reduced motion holds one static frame.
 _Avoid_: sound effect, note event
 
+**Confetti throw**:
+A Player tossing confetti ahead in the Direction they face, seen by everyone in the room. It is a passing event, not part of the Player's state: whoever joins later never sees earlier throws. It ends a Dance and touches no one: a Player it lands on is unaffected.
+_Avoid_: emote, projectile, shot
+
+**Throw target**:
+Where a Confetti throw lands: on the first Player ahead, short of the first blocked tile, or at the end of the throw's reach.
+_Avoid_: hit, aim, destination
+
 ### Radio
 
 **Radio**:

@@ -4,9 +4,13 @@ import {
   avatarStateValue,
   CHAT_INPUT,
   CLOCK_PING,
+  CONFETTI_THROW_MESSAGE,
+  CONFETTI_THROWN,
+  type ConfettiThrown,
   chatInputSchema,
   clockPingSchema,
   DANCE_MESSAGE,
+  isConfettiThrowIntent,
   type JoinOptions,
   type JoinRejection,
   LOBBY_SLUG,
@@ -20,7 +24,7 @@ import {
   RoomState,
   STEP_MESSAGE,
 } from "@bumbadum/protocol";
-import { lobbyMap, STEPS_PER_SECOND, step } from "@bumbadum/world";
+import { lobbyMap, STEPS_PER_SECOND, step, throwTarget } from "@bumbadum/world";
 import { type Client, matchMaker, Room, ServerError, validate } from "@colyseus/core";
 import { ChatChannel } from "../chat/chat-channel.ts";
 import { RadioStation, type TrackSources } from "../radio/radio-station.ts";
@@ -36,6 +40,9 @@ const AVATAR_CHANGE_RATE = { capacity: 1, perSecond: 0.5 };
 
 /** At most two dance changes a second: starting and stopping again. */
 const DANCE_CHANGE_RATE = { capacity: 2, perSecond: 1 };
+
+/** A burst of three Confetti throws, then one a second. */
+const CONFETTI_THROW_RATE = { capacity: 3, perSecond: 1 };
 
 /** Seconds a dropped player keeps their seat while the client reconnects. */
 const RECONNECTION_WINDOW = 20;
@@ -60,6 +67,7 @@ export class LobbyRoom extends Room<{ state: RoomState; client: LobbyClient }> {
   private readonly stepLimits = new Map<string, TokenBucket>();
   private readonly avatarChangeLimits = new Map<string, TokenBucket>();
   private readonly danceChangeLimits = new Map<string, TokenBucket>();
+  private readonly confettiThrowLimits = new Map<string, TokenBucket>();
 
   override messages = {
     [CHAT_INPUT]: validate(chatInputSchema, (client: LobbyClient, { text }) => {
@@ -94,6 +102,9 @@ export class LobbyRoom extends Room<{ state: RoomState; client: LobbyClient }> {
       const intent = parseDanceIntent(payload);
       if (intent) this.#changeDance(client, intent.dance);
     },
+    [CONFETTI_THROW_MESSAGE]: (client: LobbyClient, payload: unknown) => {
+      if (isConfettiThrowIntent(payload)) this.#throwConfetti(client);
+    },
   };
 
   override onCreate({ catalog, search }: LobbyRoomOptions) {
@@ -113,6 +124,9 @@ export class LobbyRoom extends Room<{ state: RoomState; client: LobbyClient }> {
       dance: (client) => {
         const dancing = this.state.players.get(client.sessionId)?.dance;
         this.#changeDance(client, dancing ? null : DEFAULT_DANCE);
+      },
+      confetti: (client) => {
+        this.#throwConfetti(client);
       },
     });
   }
@@ -149,6 +163,10 @@ export class LobbyRoom extends Room<{ state: RoomState; client: LobbyClient }> {
       client.sessionId,
       new TokenBucket(DANCE_CHANGE_RATE, performance.now()),
     );
+    this.confettiThrowLimits.set(
+      client.sessionId,
+      new TokenBucket(CONFETTI_THROW_RATE, performance.now()),
+    );
     this.#chat.welcome(client, nickname, performance.now());
     this.#radio.welcome(client);
   }
@@ -177,11 +195,32 @@ export class LobbyRoom extends Room<{ state: RoomState; client: LobbyClient }> {
     player.dance = dance ?? NOT_DANCING;
   }
 
+  /**
+   * Throws confetti from where the player stands, the way they face, within their throw rate,
+   * and shows everyone where it lands. A throw ends a dance.
+   */
+  #throwConfetti(client: LobbyClient) {
+    const player = this.state.players.get(client.sessionId);
+    if (!player || !this.confettiThrowLimits.get(client.sessionId)?.take(performance.now())) return;
+    player.dance = NOT_DANCING;
+    const isOccupied = (tile: { x: number; y: number }) =>
+      [...this.state.players].some(
+        ([id, other]) => id !== client.sessionId && other.x === tile.x && other.y === tile.y,
+      );
+    const thrown: ConfettiThrown = {
+      throwerId: client.sessionId,
+      direction: player.direction,
+      target: throwTarget(lobbyMap, player, player.direction, isOccupied),
+    };
+    this.broadcast(CONFETTI_THROWN, thrown);
+  }
+
   override onLeave(client: LobbyClient) {
     this.state.players.delete(client.sessionId);
     this.stepLimits.delete(client.sessionId);
     this.avatarChangeLimits.delete(client.sessionId);
     this.danceChangeLimits.delete(client.sessionId);
+    this.confettiThrowLimits.delete(client.sessionId);
     this.#chat.farewell(client, nicknameOf(client));
     this.#radio.farewell(client);
   }

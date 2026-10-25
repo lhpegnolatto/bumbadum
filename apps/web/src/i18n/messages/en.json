@@ -39,7 +39,9 @@
       "close": "Close {panel}"
     },
     "dance": "Dance",
-    "danceShortcut": "Press F"
+    "danceShortcut": "Press F",
+    "confetti": "Confetti",
+    "confettiShortcut": "Press E"
   },
   "joinRejection": {
     "room-full": "The room is full. Try again in a little while.",
@@ -86,6 +88,10 @@
       "dance": {
         "args": "",
         "description": "Starts or stops dancing, in step with everyone dancing."
+      },
+      "confetti": {
+        "args": "",
+        "description": "Throws confetti ahead of you, at the first person in the way."
       },
       "help": {
         "args": "",
