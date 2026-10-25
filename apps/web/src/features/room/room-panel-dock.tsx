@@ -163,14 +163,17 @@ const PANEL_INSET = "calc(1rem + 1px)";
 /**
  * The Message input. On desktop it floats at the bottom centre, or sits at the bottom of open Chat,
  * inset like the panel's content and entering with it. The compact layout shows it only at the
- * bottom of the sheet's Chat tab. It stays one element across these places so the draft survives.
+ * bottom of the sheet's Chat tab. It stays one element across these places so the draft survives,
+ * even while `hidden` steps it aside for the Wardrobe, which spans the bottom centre.
  */
 export function ChatComposerDock({
   room,
   active,
+  hidden,
 }: {
   room: Room<unknown, RoomState>;
   active: RoomPanel;
+  hidden: boolean;
 }) {
   return (
     <div
@@ -179,7 +182,7 @@ export function ChatComposerDock({
         active === "chat"
           ? "right-[calc(var(--room-overlay-edge)_+_var(--room-panel-inset))] bottom-[calc(var(--room-rail-bottom)_+_var(--room-panel-inset))] w-[calc(var(--room-rail-width)_-_2_*_var(--room-panel-inset))] duration-200 animate-in fade-in slide-in-from-right-2 motion-reduce:animate-none compact:inset-x-3 compact:bottom-[var(--room-safe-bottom)] compact:w-auto"
           : "bottom-6 left-1/2 w-[min(28rem,calc(100vw-3rem))] -translate-x-1/2 compact:hidden"
-      } absolute z-20 rounded-lg border bg-background/95 p-2 shadow-lg backdrop-blur-sm`}
+      } ${hidden ? "hidden" : ""} absolute z-20 rounded-lg border bg-background/95 p-2 shadow-lg backdrop-blur-sm`}
     >
       <ChatComposer room={room} />
     </div>

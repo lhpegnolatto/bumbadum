@@ -70,7 +70,9 @@ export function WardrobePanel({
         </Button>
       </header>
       <AvatarEditor value={draft} onChange={setDraft} />
-      <Button onClick={apply}>{t("apply")}</Button>
+      <Button className="self-end" onClick={apply}>
+        {t("apply")}
+      </Button>
     </section>
   );
 }

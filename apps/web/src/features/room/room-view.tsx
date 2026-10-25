@@ -209,8 +209,8 @@ function JoinedRoom({
           ...(visibleViewport && { top: visibleViewport.top, height: visibleViewport.height }),
         } as CSSProperties
       }
-      // On desktop the rail ends one gap above the panel buttons (h-8), so an open panel and the
-      // Message input docked in it never sit under them.
+      // On desktop the rail and the Wardrobe end one gap above the bottom buttons (at most h-8), so
+      // they and the Message input docked in Chat never sit under them.
       className="relative h-dvh overflow-hidden [--room-above-controls:calc(var(--room-safe-bottom)_+_3.25rem)] [--room-overlay-edge:1.5rem] [--room-overlay-gap:1rem] [--room-rail-bottom:calc(var(--room-overlay-edge)_+_2rem_+_var(--room-overlay-gap))] [--room-rail-width:clamp(400px,32vw,480px)] [--room-safe-bottom:calc(env(safe-area-inset-bottom)_+_0.75rem)]"
     >
       <div
@@ -232,9 +232,9 @@ function JoinedRoom({
               open={visibleWardrobe.open}
               onWear={wear}
               onClose={() => setActiveInterface(null)}
-              // Beside the rail on desktop; in the compact layout, the sheet below the Radio strip,
-              // above the rail's box.
-              className={`absolute inset-y-[var(--room-overlay-edge)] right-[calc(var(--room-rail-width)_+_var(--room-overlay-edge)_+_var(--room-overlay-gap))] left-[var(--room-overlay-edge)] z-10 pb-20 compact:inset-x-0 compact:top-[var(--room-top-inset)] compact:bottom-0 compact:z-30 compact:backdrop-blur-none ${COMPACT_SHEET}`}
+              // Beside the rail and ending with it, above the Wardrobe and Settings buttons, on
+              // desktop; in the compact layout, the sheet below the Radio strip, above the rail's box.
+              className={`absolute top-[var(--room-overlay-edge)] right-[calc(var(--room-rail-width)_+_var(--room-overlay-edge)_+_var(--room-overlay-gap))] bottom-[var(--room-rail-bottom)] left-[var(--room-overlay-edge)] z-10 compact:inset-x-0 compact:top-[var(--room-top-inset)] compact:bottom-0 compact:z-30 compact:backdrop-blur-none ${COMPACT_SHEET}`}
             />
           )}
         </div>
@@ -257,7 +257,7 @@ function JoinedRoom({
           </Button>
           <SettingsControl open={activeInterface === "settings"} onOpenChange={setSettings} />
         </div>
-        <ChatComposerDock room={room} active={activePanel} />
+        <ChatComposerDock room={room} active={activePanel} hidden={wardrobeOpen} />
         <div
           className={`absolute right-[var(--room-overlay-edge)] bottom-[var(--room-overlay-edge)] z-20 compact:right-3 compact:bottom-[var(--room-safe-bottom)] ${hiddenUnderSheet}`}
         >

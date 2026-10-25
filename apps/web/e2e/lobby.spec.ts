@@ -73,6 +73,17 @@ test("one player walks and the other sees it", async ({ joinLobby }) => {
   await expect.poll(() => drawnPlayer(duda, "Cris")).toMatchObject(walked);
 });
 
+test("a player who reloads the page is in the room once", async ({ joinLobby }) => {
+  const gabi = await joinLobby("Gabi");
+
+  await gabi.reload();
+  await gabi.getByRole("button", { name: "Players", exact: true }).click();
+
+  // The state the room sends on joining would still hold the old seat.
+  await expect(gabi.getByRole("listitem").filter({ hasText: "Gabi (you)" })).toBeVisible();
+  await expect(gabi.getByRole("listitem").filter({ hasText: /^Gabi/ })).toHaveCount(1);
+});
+
 test("a shared link opened without a click asks for one before joining, so the screen may play", async ({
   browser,
 }) => {

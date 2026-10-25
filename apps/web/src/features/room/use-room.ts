@@ -78,13 +78,24 @@ export function useRoom(slug: string, nickname: string, avatar: Avatar) {
     }
 
     // Every attempt, including a rejoin after a lost room, uses the same nickname.
-    const current = connectToRoom({
-      clock: browserClock,
-      isServerAwake,
-      join,
-      onChange: setStatus,
-    });
+    function connect() {
+      return connectToRoom({ clock: browserClock, isServerAwake, join, onChange: setStatus });
+    }
+    let current = connect();
     connection.current = current;
+
+    // A page going away leaves at once: the browser's own close would count as a drop,
+    // and a reload would meet its old seat, held for the whole reconnection window.
+    const leaveOnHide = () => current.close();
+    // A page back from the back/forward cache left when it was hidden, so it joins again.
+    const rejoinOnShow = (event: PageTransitionEvent) => {
+      if (!event.persisted) return;
+      current = connect();
+      connection.current = current;
+    };
+    window.addEventListener("pagehide", leaveOnHide);
+    window.addEventListener("pageshow", rejoinOnShow);
+
     exposeToE2E({
       leave: () =>
         new Promise((resolve) => {
@@ -94,7 +105,11 @@ export function useRoom(slug: string, nickname: string, avatar: Avatar) {
           current.close();
         }),
     });
-    return () => current.close();
+    return () => {
+      window.removeEventListener("pagehide", leaveOnHide);
+      window.removeEventListener("pageshow", rejoinOnShow);
+      current.close();
+    };
   }, [slug, nickname]);
 
   return { status, players, retry: () => connection.current?.retry() };

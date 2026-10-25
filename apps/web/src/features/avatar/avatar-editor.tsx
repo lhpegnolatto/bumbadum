@@ -145,11 +145,17 @@ function AppearancePicker({
   const visible = options.filter(({ style }) => style === selectedStyle);
   const name = useId();
 
-  function chooseStyle(style: string) {
+  /** The option a style switches to: the current colour when the style has it. */
+  function optionOfStyle(style: string) {
     const currentColor = options.find(({ id }) => id === selected)?.color;
-    const option =
+    return (
       options.find((candidate) => candidate.style === style && candidate.color === currentColor) ??
-      options.find((candidate) => candidate.style === style);
+      options.find((candidate) => candidate.style === style)
+    );
+  }
+
+  function chooseStyle(style: string) {
+    const option = optionOfStyle(style);
     if (option) choose(option.id);
   }
 
@@ -163,30 +169,26 @@ function AppearancePicker({
       <fieldset className="flex flex-wrap gap-1.5">
         <legend className="mb-1 font-medium text-sm">{t("style")}</legend>
         {OPTIONAL_LAYERS.includes(layer as never) ? (
-          <button
-            type="button"
-            className="rounded-md border px-2 py-1 text-sm pointer-coarse:min-h-11 pointer-coarse:min-w-11"
-            aria-pressed={selected === null}
-            onClick={() => choose(null)}
-          >
-            {t("none")}
-          </button>
+          <StyleChoice
+            label={t("none")}
+            avatar={{ ...value, [layer]: null } as Avatar}
+            pressed={selected === null}
+            onChoose={() => choose(null)}
+          />
         ) : null}
         {styles.map((style) => {
           const disabled = options
             .filter((option) => option.style === style)
             .every((option) => !compatibleAvatar({ ...value, [layer]: option.id } as Avatar));
           return (
-            <button
+            <StyleChoice
               key={style}
-              type="button"
+              label={t(`styles.${style}`)}
+              avatar={{ ...value, [layer]: optionOfStyle(style)?.id ?? null } as Avatar}
+              pressed={selectedStyle === style && selected !== null}
               disabled={disabled}
-              className="rounded-md border px-2 py-1 text-sm aria-pressed:border-primary aria-pressed:bg-accent disabled:cursor-not-allowed disabled:opacity-40 pointer-coarse:min-h-11 pointer-coarse:min-w-11"
-              aria-pressed={selectedStyle === style && selected !== null}
-              onClick={() => chooseStyle(style)}
-            >
-              {t(`styles.${style}`)}
-            </button>
+              onChoose={() => chooseStyle(style)}
+            />
           );
         })}
       </fieldset>
@@ -214,6 +216,34 @@ function AppearancePicker({
         </fieldset>
       ) : null}
     </div>
+  );
+}
+
+/** A style shown on the avatar as it would look wearing it, named below by its accessible label. */
+function StyleChoice({
+  label,
+  avatar,
+  pressed,
+  disabled = false,
+  onChoose,
+}: {
+  label: string;
+  avatar: Avatar;
+  pressed: boolean;
+  disabled?: boolean;
+  onChoose: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      disabled={disabled}
+      aria-pressed={pressed}
+      className="flex w-20 flex-col items-center gap-1 rounded-md border p-1 text-center text-xs leading-tight hover:bg-accent aria-pressed:border-primary aria-pressed:bg-accent disabled:cursor-not-allowed disabled:opacity-40"
+      onClick={onChoose}
+    >
+      <AvatarSprite avatar={avatar} scale={CHOICE_SCALE} />
+      {label}
+    </button>
   );
 }
 
