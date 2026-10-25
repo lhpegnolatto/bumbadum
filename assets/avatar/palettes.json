@@ -1,0 +1,156 @@
+{
+  "hairColors": [
+    {
+      "id": "black",
+      "oklch": [0.36, 0.025, 310],
+      "ramp": ["#5d5461", "#413a47", "#26212e"]
+    },
+    {
+      "id": "brown",
+      "oklch": [0.47, 0.065, 50],
+      "ramp": ["#936e56", "#785039", "#5b3425"]
+    },
+    {
+      "id": "light-brown",
+      "oklch": [0.6, 0.075, 65],
+      "ramp": ["#ba9770", "#a0774f", "#825939"]
+    },
+    {
+      "id": "auburn",
+      "oklch": [0.5, 0.11, 30],
+      "ramp": ["#b36a57", "#98483c", "#762c2d"]
+    },
+    {
+      "id": "ginger",
+      "oklch": [0.64, 0.13, 50],
+      "ramp": ["#e39660", "#ca723c", "#a9522f"]
+    },
+    {
+      "id": "blonde",
+      "oklch": [0.8, 0.1, 88],
+      "ramp": ["#fada99", "#d9ba70", "#bd9857"]
+    },
+    {
+      "id": "platinum",
+      "oklch": [0.9, 0.03, 95],
+      "ramp": ["#ffffff", "#e4dec8", "#c6bda9"]
+    },
+    {
+      "id": "gray",
+      "oklch": [0.72, 0.012, 280],
+      "ramp": ["#c3c3cb", "#a3a4ac", "#85858d"]
+    },
+    {
+      "id": "pink",
+      "oklch": [0.73, 0.11, 355],
+      "ramp": ["#fdacc5", "#de8aab", "#b76e95"]
+    },
+    {
+      "id": "blue",
+      "oklch": [0.6, 0.11, 255],
+      "ramp": ["#6ea3da", "#5182c1", "#43619f"]
+    },
+    {
+      "id": "purple",
+      "oklch": [0.56, 0.12, 305],
+      "ramp": ["#a67fc4", "#8560ac", "#5f488f"]
+    },
+    {
+      "id": "green",
+      "oklch": [0.62, 0.1, 155],
+      "ramp": ["#7bb587", "#50986b", "#287a59"]
+    }
+  ],
+  "fabricColors": [
+    {
+      "id": "black",
+      "oklch": [0.35, 0.02, 295],
+      "ramp": ["#57535e", "#3b3944", "#201f29", "#0f0e17"]
+    },
+    {
+      "id": "white",
+      "oklch": [0.87, 0.012, 80],
+      "ramp": ["#f8f5ed", "#d8d3cc", "#b7b2ab", "#a09a95"]
+    },
+    {
+      "id": "gray",
+      "oklch": [0.66, 0.015, 280],
+      "ramp": ["#b0b0ba", "#90919c", "#72727b", "#5d5d65"]
+    },
+    {
+      "id": "beige",
+      "oklch": [0.76, 0.05, 80],
+      "ramp": ["#dfcfb0", "#c2ae8e", "#a38c71", "#8c7660"]
+    },
+    {
+      "id": "brown",
+      "oklch": [0.5, 0.065, 50],
+      "ramp": ["#9c775f", "#825841", "#623b2b", "#4b281e"]
+    },
+    {
+      "id": "red",
+      "oklch": [0.56, 0.15, 25],
+      "ramp": ["#d86f5f", "#bc4945", "#952a39", "#77192e"]
+    },
+    {
+      "id": "pink",
+      "oklch": [0.73, 0.1, 355],
+      "ramp": ["#f9afc5", "#da8dab", "#b27093", "#945d7f"]
+    },
+    {
+      "id": "mustard",
+      "oklch": [0.73, 0.13, 80],
+      "ramp": ["#eac169", "#d29e39", "#b57a1f", "#9b631a"]
+    },
+    {
+      "id": "green",
+      "oklch": [0.58, 0.1, 145],
+      "ramp": ["#7aa671", "#528a54", "#2a6b42", "#135535"]
+    },
+    {
+      "id": "blue",
+      "oklch": [0.56, 0.12, 260],
+      "ramp": ["#6395d3", "#4974ba", "#3b5296", "#303c78"]
+    },
+    {
+      "id": "navy",
+      "oklch": [0.4, 0.07, 265],
+      "ramp": ["#4e6487", "#35476e", "#22294d", "#141736"]
+    },
+    {
+      "id": "purple",
+      "oklch": [0.53, 0.12, 305],
+      "ramp": ["#9d76ba", "#7c58a3", "#563e84", "#3e2d6a"]
+    }
+  ],
+  "accents": {
+    "top/bomber-jacket": {
+      "accent": "black",
+      "fallback": "gray"
+    },
+    "top/jacket": {
+      "accent": "white",
+      "fallback": "black"
+    },
+    "headwear/backwards-cap": {
+      "accent": "white",
+      "fallback": "gray"
+    },
+    "headwear/flat-brim-cap": {
+      "accent": "white",
+      "fallback": "gray"
+    },
+    "headwear/beanie": {
+      "accent": "white",
+      "fallback": "gray"
+    },
+    "headwear/bow-headband": {
+      "accent": "white",
+      "fallback": "gray"
+    },
+    "headwear/top-hat": {
+      "accent": "black",
+      "fallback": "red"
+    }
+  }
+}

@@ -22,50 +22,100 @@ const layers = [
 const cycles = ["idle", "walk"];
 const kebabCase = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
+/**
+ * Hairstyles and fabric wearables are one base pair painted in reserved key colors: grey keys
+ * take the shades of each palette color, blue-grey keys the shades of the style's accent
+ * (ADR-0022). Every other wearable is one pair per color.
+ */
+const palettes = JSON.parse(await readFile(path.join(sourceRoot, "palettes.json"), "utf8"));
+const keys = {
+  main: ["d8d8d8", "a8a8a8", "787878", "484848"],
+  accent: ["d8d8ff", "a8a8ff", "7878ff"],
+};
+const fabricRamp = (id) => {
+  const color = palettes.fabricColors.find((candidate) => candidate.id === id);
+  if (!color) throw new Error(`unknown fabric color: ${id}`);
+  return color.ramp;
+};
+for (const [styleKey, { accent, fallback }] of Object.entries(palettes.accents)) {
+  fabricRamp(accent);
+  fabricRamp(fallback);
+  if (accent === fallback) throw new Error(`accent needs a different fallback: ${styleKey}`);
+}
+
 const entries = [];
+const paletted = new Set();
 for (const layer of layers) {
   const layerPath = path.join(sourceRoot, layer);
   for (const styleEntry of await readdir(layerPath, { withFileTypes: true })) {
     if (!styleEntry.isDirectory() || !kebabCase.test(styleEntry.name))
       throw new Error(`invalid style directory: ${layer}/${styleEntry.name}`);
-    const stylePath = path.join(layerPath, styleEntry.name);
-    const files = await readdir(stylePath);
-    for (const file of files.filter((name) => name.endsWith("-idle.png")).sort()) {
+    const style = styleEntry.name;
+    const stylePath = path.join(layerPath, style);
+    const files = (await readdir(stylePath)).sort();
+    if (files.includes(`${style}-idle.png`)) {
+      if (files.join() !== cycles.map((cycle) => `${style}-${cycle}.png`).join())
+        throw new Error(`a base pair must be alone in ${layer}/${style}`);
+      paletted.add(`${layer}/${style}`);
+      const colors = layer === "hair" ? palettes.hairColors : palettes.fabricColors;
+      const accent = palettes.accents[`${layer}/${style}`];
+      for (const [order, color] of colors.entries()) {
+        const accentId = accent && (accent.accent === color.id ? accent.fallback : accent.accent);
+        entries.push({
+          layer,
+          style,
+          color: color.id,
+          id: `${style}-${color.id}`,
+          order,
+          file: (cycle) => path.join(stylePath, `${style}-${cycle}.png`),
+          ramps: { main: color.ramp, accent: accentId ? fabricRamp(accentId) : [] },
+        });
+      }
+      continue;
+    }
+    for (const [order, file] of files.filter((name) => name.endsWith("-idle.png")).entries()) {
       const id = file.slice(0, -"-idle.png".length);
-      if (!kebabCase.test(id) || !id.startsWith(`${styleEntry.name}-`))
-        throw new Error(`invalid asset id: ${layer}/${styleEntry.name}/${id}`);
+      if (!kebabCase.test(id) || !id.startsWith(`${style}-`))
+        throw new Error(`invalid asset id: ${layer}/${style}/${id}`);
       for (const cycle of cycles) {
         const expected = `${id}-${cycle}.png`;
         if (!files.includes(expected))
-          throw new Error(`missing pair: ${layer}/${styleEntry.name}/${expected}`);
+          throw new Error(`missing pair: ${layer}/${style}/${expected}`);
       }
       entries.push({
         layer,
-        style: styleEntry.name,
-        color: id.slice(styleEntry.name.length + 1),
+        style,
+        color: id.slice(style.length + 1),
         id,
-        stylePath,
+        order,
+        file: (cycle) => path.join(stylePath, `${id}-${cycle}.png`),
       });
     }
     const expectedCount = files.filter((name) => name.endsWith("-idle.png")).length * 2;
-    if (files.length !== expectedCount)
-      throw new Error(`unpaired file in ${layer}/${styleEntry.name}`);
+    if (files.length !== expectedCount) throw new Error(`unpaired file in ${layer}/${style}`);
   }
+}
+for (const styleKey of Object.keys(palettes.accents)) {
+  if (!paletted.has(styleKey))
+    throw new Error(`accent for a style without a base pair: ${styleKey}`);
 }
 
 entries.sort(
-  (a, b) => layers.indexOf(a.layer) - layers.indexOf(b.layer) || a.id.localeCompare(b.id),
+  (a, b) =>
+    layers.indexOf(a.layer) - layers.indexOf(b.layer) ||
+    a.style.localeCompare(b.style) ||
+    a.order - b.order,
 );
 const atlasWidth = sheetWidth * atlasColumns;
 const atlasHeight = Math.ceil(entries.length / atlasColumns) * frameSize;
 const atlases = Object.fromEntries(
   cycles.map((cycle) => [cycle, Buffer.alloc(atlasWidth * atlasHeight * 4)]),
 );
-const warnings = [];
+const warnings = new Set();
 
 for (const [row, entry] of entries.entries()) {
   for (const cycle of cycles) {
-    const file = path.join(entry.stylePath, `${entry.id}-${cycle}.png`);
+    const file = entry.file(cycle);
     const image = sharp(await readFile(file));
     const metadata = await image.metadata();
     if (
@@ -81,11 +131,12 @@ for (const [row, entry] of entries.entries()) {
       if (!pixels.subarray(offset, offset + firstRow.length).equals(firstRow))
         throw new Error(`appearance overlay differs by skin-tone row: ${file}`);
     }
+    if (entry.ramps) recolor(firstRow, entry.ramps, file);
     if ((entry.layer === "bottom" || entry.layer === "footwear") && cycle === "idle") {
       const missing = cell(firstRow, 5);
       if (missing.every((byte, index) => index % 4 !== 3 || byte === 0)) {
         copyCell(firstRow, 4, 5);
-        warnings.push(`repaired empty lateral frame: ${entry.layer}/${entry.id}-${cycle}.png`);
+        warnings.add(`repaired empty lateral frame: ${path.relative(sourceRoot, file)}`);
       }
     }
     const left = (row % atlasColumns) * sheetWidth;
@@ -142,6 +193,25 @@ for (const warning of warnings) console.warn(warning);
 console.log(
   `${check ? "validated" : "generated"} ${entries.length} avatar variants in two atlases`,
 );
+
+/** Replaces a base sheet's key colors with the shades of its ramps. */
+function recolor(buffer, ramps, file) {
+  let keyed = false;
+  for (let index = 0; index < buffer.length; index += 4) {
+    if (buffer[index + 3] === 0) continue;
+    const color = buffer.subarray(index, index + 3).toString("hex");
+    for (const role of ["main", "accent"]) {
+      const shade = keys[role].indexOf(color);
+      if (shade === -1) continue;
+      const replacement = ramps[role][shade];
+      if (!replacement)
+        throw new Error(`${file} uses ${role} shade ${shade + 1}, which has no color`);
+      Buffer.from(replacement.slice(1), "hex").copy(buffer, index);
+      keyed ||= role === "main";
+    }
+  }
+  if (!keyed) throw new Error(`base sheet has no palette keys: ${file}`);
+}
 
 function cell(buffer, column) {
   const result = Buffer.alloc(frameSize * frameSize * 4);

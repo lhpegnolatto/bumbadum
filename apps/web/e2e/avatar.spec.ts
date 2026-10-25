@@ -78,7 +78,7 @@ test("the wardrobe keeps layered drafts private and publishes the whole avatar",
     ...start.avatar,
     skinTone,
     top: "t-shirt-black",
-    overgarment: "dress-baby-blue",
+    overgarment: "dress-black",
     headwear: "cap-black",
   };
   await expect.poll(async () => (await drawnPlayer(joca, "Iris"))?.avatar).toEqual(worn);

@@ -36,9 +36,9 @@ describe("randomAvatar", () => {
   it("randomizes the required appearance and starts without optional wearables", () => {
     expect(randomAvatar(() => 0)).toEqual({
       skinTone: 1,
-      hair: "afro-auburn",
-      top: "basketball-jersey-beige",
-      bottom: "flared-skirt-baby-blue",
+      hair: "afro-black",
+      top: "basketball-jersey-black",
+      bottom: "flared-skirt-black",
       footwear: null,
       overgarment: null,
       neckwear: null,
@@ -88,6 +88,22 @@ describe("repairAvatar", () => {
       ...dressed,
       top: "t-shirt-blue",
       bottom: "trousers-blue",
+    });
+  });
+
+  it("swaps a colour no longer offered for the nearest colour of the same style", () => {
+    const stored = {
+      ...dressed,
+      hair: "afro-yellow",
+      top: "hoodie-olive",
+      bottom: "flared-skirt-mint",
+    };
+
+    expect(repairAvatar(stored)).toEqual({
+      ...dressed,
+      hair: "afro-blonde",
+      top: "hoodie-green",
+      bottom: "flared-skirt-green",
     });
   });
 

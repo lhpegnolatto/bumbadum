@@ -118,6 +118,14 @@ _Avoid_: slot, category, outfit
 An optional hairstyle and hair colour an avatar wears.
 _Avoid_: haircut, hairdo
 
+**Hair colour**:
+One of the fixed colours every hairstyle is offered in. All hairstyles share the same hair colours.
+_Avoid_: dye, hair palette
+
+**Fabric colour**:
+One of the fixed colours every fabric wearable is offered in, from clothing to caps and bows. All fabric wearables share the same fabric colours. Wearables made of other materials, such as a gold chain or a straw hat, keep colours of their own.
+_Avoid_: colourway, clothing palette
+
 **Top**:
 Required clothing worn on an avatar's torso.
 _Avoid_: shirt, upper body

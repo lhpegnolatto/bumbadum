@@ -91,16 +91,70 @@ export function parseAvatar(input: unknown): Avatar | undefined {
 }
 
 /**
- * Returns a complete avatar from one that may wear choices no longer offered,
- * keeping every choice that still exists: an optional layer loses a removed
- * choice, a required layer takes the default avatar's.
+ * The nearest current color for each color a palette no longer offers, so a style worn in a
+ * removed color stays on (ADR-0022). Hairstyles look up the hair table and every other style the
+ * fabric one; a material wearable has no entry to find, so it is never recolored.
+ */
+const NEAREST_COLOR: Record<"hair" | "fabric", Readonly<Record<string, string>>> = {
+  hair: {
+    red: "ginger",
+    yellow: "blonde",
+    bleached: "platinum",
+    "baby-blue": "blue",
+    cherry: "pink",
+    lilac: "purple",
+    mint: "green",
+    "pastel-pink": "pink",
+    peach: "ginger",
+  },
+  fabric: {
+    olive: "green",
+    "royal-blue": "blue",
+    wine: "red",
+    cyan: "blue",
+    orange: "mustard",
+    yellow: "mustard",
+    "baby-blue": "blue",
+    "butter-yellow": "mustard",
+    cherry: "red",
+    lilac: "purple",
+    mint: "green",
+    peach: "beige",
+  },
+};
+
+const styles = {} as Record<AppearanceLayer, readonly string[]>;
+for (const layer of APPEARANCE_LAYERS) {
+  // Longest first, so a choice is matched to its most specific style.
+  styles[layer] = [...new Set(AVATAR_CATALOG[layer].map(({ style }) => style))].sort(
+    (a, b) => b.length - a.length,
+  );
+}
+
+/** The same style in the nearest current color, when `choice` wears a color no longer offered. */
+function recolored(layer: AppearanceLayer, choice: string): string | null {
+  const style = styles[layer].find((candidate) => choice.startsWith(`${candidate}-`));
+  if (!style) return null;
+  const nearest =
+    NEAREST_COLOR[layer === "hair" ? "hair" : "fabric"][choice.slice(style.length + 1)];
+  if (!nearest) return null;
+  const id = `${style}-${nearest}`;
+  return choiceIds[layer].has(id) ? id : null;
+}
+
+/**
+ * Returns a complete avatar from one that may wear choices no longer offered, keeping every
+ * choice that still exists (ADR-0020, ADR-0022): a removed color becomes the nearest color of
+ * the same style; a removed style leaves an optional layer empty and puts the default avatar's
+ * choice on a required one.
  */
 export function repairAvatar(input: unknown): Avatar | undefined {
   const value = avatarFields(input);
   if (!value) return undefined;
   const offered = (layer: AppearanceLayer) => {
     const choice = value[layer];
-    return typeof choice === "string" && choiceIds[layer].has(choice) ? choice : null;
+    if (typeof choice !== "string") return null;
+    return choiceIds[layer].has(choice) ? choice : recolored(layer, choice);
   };
   return {
     skinTone: Number(value.skinTone),
