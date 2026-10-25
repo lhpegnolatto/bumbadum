@@ -48,6 +48,10 @@ _Avoid_: entrance, start
 Where a player is facing: up, down, left or right.
 _Avoid_: orientation, heading
 
+**Dance**:
+A named, looping choreography a player performs in place, seen by everyone in the room. Everyone performing the same dance moves in unison. A step intent ends it.
+_Avoid_: emote, animation, move
+
 ### Radio
 
 **Radio**:

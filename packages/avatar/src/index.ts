@@ -12,6 +12,7 @@ export {
   repairAvatar,
   sameAvatar,
 } from "./avatar.ts";
+export { type DanceFrame, type DanceId, DEFAULT_DANCE, danceFrame, isDance } from "./dances.ts";
 export {
   type AnimationCycle,
   avatarFrames,

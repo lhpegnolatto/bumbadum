@@ -1,5 +1,5 @@
 ---
-status: proposed
+status: accepted
 ---
 
 # Choreograph dances from existing frames, in unison by server clock

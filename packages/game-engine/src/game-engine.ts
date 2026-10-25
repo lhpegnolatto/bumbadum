@@ -1,12 +1,14 @@
 import {
   type Avatar,
   sameAvatar as avatarsMatch,
+  type DanceId,
   FRAME_SIZE,
   IDLE_FRAME_MS,
 } from "@bumbadum/avatar";
 import {
   type AvatarState,
   avatarFromStateOrDefault,
+  danceOf,
   type PlayerState,
   type RoomState,
 } from "@bumbadum/protocol";
@@ -66,6 +68,8 @@ export interface GameEngineOptions {
   sessionId: string;
   /** Sends a step intent to the room. */
   sendStep(direction: Direction): void;
+  /** The server's time now, or `undefined` until it is known: dancers keep in step with it. */
+  serverNow(): number | undefined;
 }
 
 /** A player as the engine draws them: the tile they stand on or glide towards. */
@@ -73,6 +77,8 @@ export interface DrawnPlayer extends Pose {
   sessionId: string;
   nickname: string;
   avatar: Avatar;
+  /** The dance the player is performing, or `null`. */
+  dance: DanceId | null;
   /** Where the centre of that tile is drawn, in CSS pixels from the canvas's top-left corner. */
   canvasPosition: { x: number; y: number };
 }
@@ -106,13 +112,14 @@ interface PlayerView {
   glide: Glide;
   animation: AvatarAnimation;
   direction: Direction;
+  dance: DanceId | null;
   bump?: Bump;
 }
 
 /** Creates the PixiJS canvas inside `container` and returns the API React drives. */
 export async function mountGameEngine(
   container: HTMLElement,
-  { sessionId, sendStep }: GameEngineOptions,
+  { sessionId, sendStep, serverNow }: GameEngineOptions,
 ): Promise<GameEngine> {
   const map = lobbyMap;
   TextureStyle.defaultOptions.scaleMode = "nearest";
@@ -187,6 +194,7 @@ export async function mountGameEngine(
       glide: new Glide({ x: player.x, y: player.y }),
       animation: new AvatarAnimation(id, ANIMATION_TIMING),
       direction: player.direction,
+      dance: danceOf(player),
     };
     avatars.set(id, avatar);
     return avatar;
@@ -206,6 +214,8 @@ export async function mountGameEngine(
   app.ticker.add(() => {
     const now = performance.now();
     const animationNow = Date.now();
+    // Before the first clock sync, the local clock keeps a dancer moving, if not yet in unison.
+    const danceNow = serverNow() ?? animationNow;
     walkLocalPlayer(now);
     // Follows the glide, not the bump, so a blocked step does not shake the view.
     const focus = avatars.get(sessionId)?.glide.at(now) ?? map.spawnPoint;
@@ -217,15 +227,25 @@ export async function mountGameEngine(
       const nudge = avatar.bump ? bumpOffset(avatar.bump, now) : { x: 0, y: 0 };
       const { view } = avatar.sprite;
       const drawnAt = { x: at.x + nudge.x, y: at.y + nudge.y };
-      // Feet on the bottom edge of the tile, centred across it.
-      view.position.set((drawnAt.x + 0.5) * TILE_SIZE, (drawnAt.y + 1) * TILE_SIZE);
-      view.zIndex = playerDepth(drawnAt);
       const frame = avatar.animation.frame(
         avatar.glide.moving(now) || isBumping(avatar.bump, now),
         animationNow,
         reducedMotion.matches,
+        avatar.dance ? { dance: avatar.dance, serverNow: danceNow } : undefined,
       );
-      avatar.sprite.draw(avatar.direction, frame.cycle, frame.frame);
+      const dancing = "direction" in frame ? frame : undefined;
+      // Feet on the bottom edge of the tile, centred across it; a dance frame nudges them.
+      view.position.set(
+        (drawnAt.x + 0.5) * TILE_SIZE + (dancing?.dx ?? 0),
+        (drawnAt.y + 1) * TILE_SIZE + (dancing?.dy ?? 0),
+      );
+      view.zIndex = playerDepth(drawnAt);
+      avatar.sprite.draw(
+        dancing?.direction ?? avatar.direction,
+        frame.cycle,
+        frame.frame,
+        dancing?.mirrored ?? false,
+      );
       // Labels live outside the scaled world, so their size and gap render in screen pixels.
       avatar.label.position.set(
         world.x + view.x * world.scale.x,
@@ -253,6 +273,7 @@ export async function mountGameEngine(
         if (!sameAvatar(avatar.sprite.avatar, player.avatar)) {
           avatar.sprite.wear(avatarOf(player.avatar));
         }
+        avatar.dance = danceOf(player);
         if (id === sessionId) {
           if (!predictor) {
             predictor = new StepPredictor(map, player, player.stepIntents);
@@ -278,6 +299,7 @@ export async function mountGameEngine(
           sessionId: id,
           nickname: avatar.nickname,
           avatar: avatar.sprite.avatar,
+          dance: avatar.dance,
           ...avatar.glide.target,
           direction: avatar.direction,
           canvasPosition: {

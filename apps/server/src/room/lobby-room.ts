@@ -1,3 +1,4 @@
+import { type DanceId, DEFAULT_DANCE } from "@bumbadum/avatar";
 import {
   AVATAR_MESSAGE,
   avatarStateValue,
@@ -5,11 +6,14 @@ import {
   CLOCK_PING,
   chatInputSchema,
   clockPingSchema,
+  DANCE_MESSAGE,
   type JoinOptions,
   type JoinRejection,
   LOBBY_SLUG,
+  NOT_DANCING,
   PlayerState,
   parseAvatarChange,
+  parseDanceIntent,
   parseJoinOptions,
   parseStepIntent,
   ROOM_TYPE,
@@ -29,6 +33,9 @@ const STEP_RATE = { capacity: STEPS_PER_SECOND, perSecond: STEPS_PER_SECOND };
 
 /** At most one avatar change every 2 seconds. */
 const AVATAR_CHANGE_RATE = { capacity: 1, perSecond: 0.5 };
+
+/** At most two dance changes a second: starting and stopping again. */
+const DANCE_CHANGE_RATE = { capacity: 2, perSecond: 1 };
 
 /** Seconds a dropped player keeps their seat while the client reconnects. */
 const RECONNECTION_WINDOW = 20;
@@ -52,6 +59,7 @@ export class LobbyRoom extends Room<{ state: RoomState; client: LobbyClient }> {
 
   private readonly stepLimits = new Map<string, TokenBucket>();
   private readonly avatarChangeLimits = new Map<string, TokenBucket>();
+  private readonly danceChangeLimits = new Map<string, TokenBucket>();
 
   override messages = {
     [CHAT_INPUT]: validate(chatInputSchema, (client: LobbyClient, { text }) => {
@@ -67,6 +75,8 @@ export class LobbyRoom extends Room<{ state: RoomState; client: LobbyClient }> {
 
       // Counted even when refused, so the client knows which of its steps the room has judged.
       player.stepIntents += 1;
+      // Any step intent ends a dance, even one the rate refuses or that only turns the player.
+      player.dance = NOT_DANCING;
       if (!this.stepLimits.get(client.sessionId)?.take(performance.now())) return;
       const { tile } = step(lobbyMap, player, direction);
       player.x = tile.x;
@@ -79,6 +89,10 @@ export class LobbyRoom extends Room<{ state: RoomState; client: LobbyClient }> {
       if (!avatar || !player) return;
       if (!this.avatarChangeLimits.get(client.sessionId)?.take(performance.now())) return;
       player.avatar.assign(avatarStateValue(avatar));
+    },
+    [DANCE_MESSAGE]: (client: LobbyClient, payload: unknown) => {
+      const intent = parseDanceIntent(payload);
+      if (intent) this.#changeDance(client, intent.dance);
     },
   };
 
@@ -95,6 +109,10 @@ export class LobbyRoom extends Room<{ state: RoomState; client: LobbyClient }> {
       },
       skip: (client, nickname) => {
         this.#radio.skip(client, { id: client.sessionId, nickname });
+      },
+      dance: (client) => {
+        const dancing = this.state.players.get(client.sessionId)?.dance;
+        this.#changeDance(client, dancing ? null : DEFAULT_DANCE);
       },
     });
   }
@@ -120,11 +138,16 @@ export class LobbyRoom extends Room<{ state: RoomState; client: LobbyClient }> {
     player.y = lobbyMap.spawnPoint.y;
     player.direction = "down";
     player.stepIntents = 0;
+    player.dance = NOT_DANCING;
     this.state.players.set(client.sessionId, player);
     this.stepLimits.set(client.sessionId, new TokenBucket(STEP_RATE, performance.now()));
     this.avatarChangeLimits.set(
       client.sessionId,
       new TokenBucket(AVATAR_CHANGE_RATE, performance.now()),
+    );
+    this.danceChangeLimits.set(
+      client.sessionId,
+      new TokenBucket(DANCE_CHANGE_RATE, performance.now()),
     );
     this.#chat.welcome(client, nickname, performance.now());
     this.#radio.welcome(client);
@@ -136,7 +159,7 @@ export class LobbyRoom extends Room<{ state: RoomState; client: LobbyClient }> {
     this.allowReconnection(client, RECONNECTION_WINDOW).catch(() => {});
   }
 
-  /** A reconnecting player appears on the spawn point, like a joining one. */
+  /** A reconnecting player appears on the spawn point, standing still, like a joining one. */
   override onReconnect(client: LobbyClient) {
     this.#radio.reconnect(client);
     const player = this.state.players.get(client.sessionId);
@@ -144,12 +167,21 @@ export class LobbyRoom extends Room<{ state: RoomState; client: LobbyClient }> {
     player.x = lobbyMap.spawnPoint.x;
     player.y = lobbyMap.spawnPoint.y;
     player.direction = "down";
+    player.dance = NOT_DANCING;
+  }
+
+  /** Starts `dance`, or stops dancing on `null`, within the player's dance change rate. */
+  #changeDance(client: LobbyClient, dance: DanceId | null) {
+    const player = this.state.players.get(client.sessionId);
+    if (!player || !this.danceChangeLimits.get(client.sessionId)?.take(performance.now())) return;
+    player.dance = dance ?? NOT_DANCING;
   }
 
   override onLeave(client: LobbyClient) {
     this.state.players.delete(client.sessionId);
     this.stepLimits.delete(client.sessionId);
     this.avatarChangeLimits.delete(client.sessionId);
+    this.danceChangeLimits.delete(client.sessionId);
     this.#chat.farewell(client, nicknameOf(client));
     this.#radio.farewell(client);
   }

@@ -17,6 +17,8 @@ export const PlayerState = schema(
      * predicted steps.
      */
     stepIntents: t.uint32(),
+    /** The dance the player is performing, or `NOT_DANCING`. */
+    dance: t.string(),
   },
   "PlayerState",
 );

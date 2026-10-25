@@ -5,6 +5,12 @@ export {
   avatarFromStateOrDefault,
   avatarStateValue,
 } from "./avatar/avatar-state.ts";
+export {
+  DANCE_MESSAGE,
+  danceOf,
+  NOT_DANCING,
+  parseDanceIntent,
+} from "./avatar/dance-intent.ts";
 export { ANNOUNCEMENT, type Announcement, type AnnouncementCode } from "./chat/announcement.ts";
 export {
   CHAT_HISTORY,

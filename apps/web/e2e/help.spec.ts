@@ -13,7 +13,7 @@ test("/help gives the sender a notice listing the commands, and the other player
   await quim.getByRole("button", { name: "Chat", exact: true }).click();
   await rita.getByRole("button", { name: "Chat", exact: true }).click();
 
-  await expect(quim.getByText("/play <link or name> · /skip · /help")).toBeVisible();
+  await expect(quim.getByText("/play <link or name> · /skip · /dance · /help")).toBeVisible();
 
   await say(quim, "/help");
   await say(quim, "after asking for help");
@@ -22,6 +22,7 @@ test("/help gives the sender a notice listing the commands, and the other player
   await expect(help).toHaveText([
     "/play <link or name> Puts a track in the queue: a YouTube link, or a name to search for.",
     "/skip Votes to skip the track on air.",
+    "/dance Starts or stops dancing, in step with everyone dancing.",
     "/help Lists the commands you can use.",
   ]);
   await expect(chat(quim)).toContainText("Commands you can use:");
@@ -45,11 +46,12 @@ test("typing / offers command names; arrows, Tab, Enter and a click complete the
 
   await chatInput.fill("");
   await sara.keyboard.type("/");
-  await expect(suggestions).toHaveText(["/play", "/skip", "/help"]);
+  await expect(suggestions).toHaveText(["/play", "/skip", "/dance", "/help"]);
+  await sara.keyboard.press("ArrowDown");
   await sara.keyboard.press("ArrowDown");
   await sara.keyboard.press("ArrowDown");
   await expect(chatInput).toHaveAttribute("aria-activedescendant", /.+/);
-  await expect(suggestions.nth(2)).toHaveAttribute("aria-selected", "true");
+  await expect(suggestions.nth(3)).toHaveAttribute("aria-selected", "true");
   await sara.keyboard.press("Tab");
   await expect(chatInput).toHaveValue("/help ");
   await expect(chatInput).toBeFocused();
@@ -82,10 +84,10 @@ test("in Portuguese, the hint and help use the Portuguese names, and /pl still o
   const chatInput = tati.getByLabel("Mensagem");
   const suggestions = tati.getByRole("listbox", { name: "Comandos" }).getByRole("option");
 
-  await expect(tati.getByText("/tocar <link ou nome> · /pular · /ajuda")).toBeVisible();
+  await expect(tati.getByText("/tocar <link ou nome> · /pular · /dançar · /ajuda")).toBeVisible();
 
   await chatInput.pressSequentially("/");
-  await expect(suggestions).toHaveText(["/tocar", "/pular", "/ajuda"]);
+  await expect(suggestions).toHaveText(["/tocar", "/pular", "/dançar", "/ajuda"]);
   await chatInput.pressSequentially("pl");
   await expect(suggestions).toHaveText(["/play"]);
 

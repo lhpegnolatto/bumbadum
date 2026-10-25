@@ -1,4 +1,4 @@
-import { IDLE_FRAME_MS, IDLE_FRAMES } from "@bumbadum/avatar";
+import { danceFrame, IDLE_FRAME_MS, IDLE_FRAMES } from "@bumbadum/avatar";
 import { describe, expect, it } from "vitest";
 import { AvatarAnimation } from "./avatar-animation.ts";
 
@@ -68,5 +68,38 @@ describe("AvatarAnimation", () => {
       frame: 0,
     });
     expect(walk.frame(true, 500, true)).toEqual({ cycle: "walk", frame: 1 });
+  });
+
+  describe("dancing", () => {
+    const SERVER_NOW = 1_700_000_000_000;
+    const FRAME_MS = 60_000 / 220;
+
+    it("dances the player's dance in step with the server clock while standing", () => {
+      const dancer = animation();
+      const frames = [0, 1, 2, 3].map((k) =>
+        dancer.frame(false, 5000, false, {
+          dance: "side-step",
+          serverNow: SERVER_NOW + k * FRAME_MS,
+        }),
+      );
+      expect(frames).toEqual(
+        [0, 1, 2, 3].map((k) => danceFrame("side-step", SERVER_NOW + k * FRAME_MS, false)),
+      );
+    });
+
+    it("holds the dance's still pose under reduced motion", () => {
+      const dancer = animation();
+      expect(
+        dancer.frame(false, 0, true, { dance: "side-step", serverNow: SERVER_NOW + FRAME_MS }),
+      ).toEqual(danceFrame("side-step", 0, true));
+    });
+
+    it("walks, not dances, while the player is moving", () => {
+      const dancer = animation();
+      expect(dancer.frame(true, 0, false, { dance: "side-step", serverNow: SERVER_NOW })).toEqual({
+        cycle: "walk",
+        frame: 1,
+      });
+    });
   });
 });

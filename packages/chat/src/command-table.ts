@@ -27,19 +27,20 @@ export function createCommandTable<Id extends string>(
       if (!ONE_WORD.test(name)) {
         throw new Error(`Command "${command.id}" has a name that is not one word: "${name}"`);
       }
-      const owner = byName.get(normalize(name));
+      const owner = byName.get(normalizeCommandName(name));
       if (owner !== undefined && owner !== command.id) {
         throw new Error(`Commands "${owner}" and "${command.id}" share the name "${name}"`);
       }
-      byName.set(normalize(name), command.id);
+      byName.set(normalizeCommandName(name), command.id);
     }
   }
   return {
     all: commands,
-    find: (name) => byName.get(normalize(name)),
+    find: (name) => byName.get(normalizeCommandName(name)),
   };
 }
 
-function normalize(name: string): string {
-  return name.toLowerCase();
+/** A command name as players may type it: any case, with or without accents. */
+export function normalizeCommandName(name: string): string {
+  return name.normalize("NFD").replace(/\p{M}/gu, "").toLowerCase();
 }

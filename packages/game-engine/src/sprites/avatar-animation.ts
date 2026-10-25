@@ -1,4 +1,10 @@
-import { IDLE_FRAMES, WALK_FRAMES } from "@bumbadum/avatar";
+import {
+  type DanceFrame,
+  type DanceId,
+  danceFrame,
+  IDLE_FRAMES,
+  WALK_FRAMES,
+} from "@bumbadum/avatar";
 
 export interface AvatarAnimationTiming {
   idleFrameMs: number;
@@ -6,12 +12,16 @@ export interface AvatarAnimationTiming {
   walkGraceMs: number;
 }
 
-export interface AvatarAnimationFrame {
-  cycle: "idle" | "walk";
-  frame: number;
+/** An idle or walking frame, facing the player's direction; a dance frame names its own. */
+export type AvatarAnimationFrame = { cycle: "idle" | "walk"; frame: number } | DanceFrame;
+
+/** The dance a standing player is performing, and the server's time to keep it in step. */
+export interface Dancing {
+  dance: DanceId;
+  serverNow: number;
 }
 
-/** Selects the idle or walking artwork and its frame for one player. */
+/** Selects the idle, walking or dancing artwork and its frame for one player. */
 export class AvatarAnimation {
   private readonly idlePhase: number;
   private walkStartedAt: number | undefined;
@@ -24,7 +34,12 @@ export class AvatarAnimation {
     this.idlePhase = sessionPhase(sessionId);
   }
 
-  frame(walking: boolean, now: number, reducedMotion: boolean): AvatarAnimationFrame {
+  frame(
+    walking: boolean,
+    now: number,
+    reducedMotion: boolean,
+    dancing?: Dancing,
+  ): AvatarAnimationFrame {
     if (walking) {
       this.walkStartedAt ??= now;
       this.lastWalkingAt = now;
@@ -38,6 +53,8 @@ export class AvatarAnimation {
         frame: (1 + Math.floor((now - this.walkStartedAt) / this.timing.walkFrameMs)) % WALK_FRAMES,
       };
     }
+
+    if (dancing) return danceFrame(dancing.dance, dancing.serverNow, reducedMotion);
 
     return {
       cycle: "idle",

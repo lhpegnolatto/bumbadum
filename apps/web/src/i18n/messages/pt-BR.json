@@ -37,7 +37,9 @@
       "players": "Pessoas",
       "newMessage": "Nova mensagem",
       "close": "Fechar {panel}"
-    }
+    },
+    "dance": "Dançar",
+    "danceShortcut": "Tecle F"
   },
   "joinRejection": {
     "room-full": "A sala está cheia. Tente de novo daqui a pouco.",
@@ -80,6 +82,10 @@
       "skip": {
         "args": "",
         "description": "Vota para pular a música que está tocando."
+      },
+      "dance": {
+        "args": "",
+        "description": "Começa ou para de dançar, no ritmo de quem já está dançando."
       },
       "help": {
         "args": "",

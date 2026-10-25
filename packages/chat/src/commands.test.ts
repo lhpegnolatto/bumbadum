@@ -23,6 +23,22 @@ describe("commands", () => {
     expect(readChatInput("/ajuda", commands)).toEqual(help);
   });
 
+  it("knows /dance, /dançar and /dancar as the same command: names match without accents", () => {
+    const dance = { kind: "command", command: "dance", args: "" };
+
+    expect(readChatInput("/dance", commands)).toEqual(dance);
+    expect(readChatInput("/dançar", commands)).toEqual(dance);
+    expect(readChatInput("/dancar", commands)).toEqual(dance);
+    expect(readChatInput("/DANÇAR", commands)).toEqual(dance);
+  });
+
+  it("suggests /dançar, then /dance, for /danc typed without the cedilla", () => {
+    expect(suggestCommands("/danc", "pt-BR", commands)).toEqual([
+      { command: "dance", name: "dançar" },
+      { command: "dance", name: "dance" },
+    ]);
+  });
+
   it("suggests /play for /pl in either language, and /tocar for /to", () => {
     const play = [{ command: "play", name: "play" }];
 

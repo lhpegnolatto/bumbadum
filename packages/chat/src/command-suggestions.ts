@@ -1,5 +1,10 @@
 import { COMMAND_PREFIX } from "./chat-input.ts";
-import { type CommandTable, type Language, languages } from "./command-table.ts";
+import {
+  type CommandTable,
+  type Language,
+  languages,
+  normalizeCommandName,
+} from "./command-table.ts";
 
 /** A command name a player could be typing, in one of the languages. */
 export interface CommandSuggestion<Id extends string = string> {
@@ -21,7 +26,7 @@ export function suggestCommands<Id extends string>(
   commands: CommandTable<Id>,
 ): CommandSuggestion<Id>[] {
   if (!draft.startsWith(COMMAND_PREFIX)) return [];
-  const typed = draft.slice(COMMAND_PREFIX.length).toLowerCase();
+  const typed = normalizeCommandName(draft.slice(COMMAND_PREFIX.length));
   if (!NAME_BEING_TYPED.test(typed) || commands.find(typed) !== undefined) return [];
 
   const searched =
@@ -31,7 +36,7 @@ export function suggestCommands<Id extends string>(
   for (const searchedLanguage of searched) {
     for (const command of commands.all) {
       const name = command.names[searchedLanguage];
-      const normalized = name.toLowerCase();
+      const normalized = normalizeCommandName(name);
       if (!normalized.startsWith(typed) || offered.has(normalized)) continue;
       offered.add(normalized);
       suggestions.push({ command: command.id, name });

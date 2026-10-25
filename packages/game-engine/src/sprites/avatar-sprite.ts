@@ -59,9 +59,12 @@ export class AvatarSprite {
     this.worn = { ...avatar };
   }
 
-  /** Shows one animation frame facing `direction`; cheap when nothing changed. */
-  draw(direction: Direction, cycle: AnimationCycle, frame: number): void {
-    const key = `${avatarKey(this.worn)}:${direction}:${cycle}:${frame}`;
+  /**
+   * Shows one animation frame facing `direction`, flipped once more when `flipped`, as a dance
+   * frame may be; cheap when nothing changed.
+   */
+  draw(direction: Direction, cycle: AnimationCycle, frame: number, flipped = false): void {
+    const key = `${avatarKey(this.worn)}:${direction}:${cycle}:${frame}:${flipped}`;
     if (key === this.drawn) return;
     this.drawn = key;
     const frames = avatarFrames(this.worn, direction, cycle, frame);
@@ -76,7 +79,7 @@ export class AvatarSprite {
       layer.visible = layerFrame !== undefined;
       if (!layerFrame) return;
       layer.texture = this.textures.get(layerFrame);
-      layer.scale.x = layerFrame.mirrored ? -1 : 1;
+      layer.scale.x = layerFrame.mirrored !== flipped ? -1 : 1;
     });
   }
 }

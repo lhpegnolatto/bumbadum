@@ -3,13 +3,14 @@
 import { type Avatar, DEFAULT_AVATAR } from "@bumbadum/avatar";
 import { CHAT_MESSAGE, type ChatMessage, type RoomState } from "@bumbadum/protocol";
 import type { Room } from "@colyseus/sdk";
-import { MonitorIcon, ShirtIcon, SmartphoneIcon } from "lucide-react";
+import { MonitorIcon, PartyPopperIcon, ShirtIcon, SmartphoneIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { type CSSProperties, useEffect, useRef, useState } from "react";
 import { useTranslations } from "use-intl";
 import { Alert, AlertDescription } from "@/components/ui/alert.tsx";
 import { Button } from "@/components/ui/button.tsx";
+import { useDance } from "@/features/avatar/use-dance.ts";
 import { useWearAvatar } from "@/features/avatar/use-wear-avatar.ts";
 import { WardrobePanel } from "@/features/avatar/wardrobe-panel.tsx";
 import { ChatHistoryPanel } from "@/features/chat/chat-panel.tsx";
@@ -17,6 +18,7 @@ import { NowPlayingCaption } from "@/features/radio/now-playing.tsx";
 import { QueueList } from "@/features/radio/queue-list.tsx";
 import { RadioProvider } from "@/features/radio/radio-provider.tsx";
 import { RadioScreen } from "@/features/radio/radio-screen.tsx";
+import { useServerClock } from "@/features/radio/use-server-clock.ts";
 import { VolumeControl } from "@/features/radio/volume-control.tsx";
 import { SettingsControl } from "@/features/settings/settings-control.tsx";
 import { ThemeToggle } from "@/features/theme/theme-toggle.tsx";
@@ -151,7 +153,28 @@ function JoinedRoom({
   const visibleWardrobe = useExitPresence(wardrobeOpen ? "wardrobe" : null);
   const activePanelRef = useRef(activePanel);
   const wear = useWearAvatar(room);
+  const dance = useDance(room);
+  const serverNow = useServerClock(room);
+  const { stop: stopDancing, toggle: toggleDance } = dance;
   const canvasRef = useRef<GameCanvasHandle>(null);
+  const wardrobeOpenRef = useRef(wardrobeOpen);
+
+  useEffect(() => {
+    wardrobeOpenRef.current = wardrobeOpen;
+    // Trying on clothes ends a dance.
+    if (wardrobeOpen) stopDancing();
+  }, [wardrobeOpen, stopDancing]);
+
+  useEffect(() => {
+    function danceOnF(event: KeyboardEvent) {
+      if (event.key.toLowerCase() !== "f" || event.repeat || event.defaultPrevented) return;
+      if (event.ctrlKey || event.metaKey || event.altKey || isTextField(event.target)) return;
+      if (wardrobeOpenRef.current) return;
+      toggleDance();
+    }
+    document.addEventListener("keydown", danceOnF);
+    return () => document.removeEventListener("keydown", danceOnF);
+  }, [toggleDance]);
 
   useEffect(() => {
     activePanelRef.current = activePanel;
@@ -225,6 +248,7 @@ function JoinedRoom({
             room={room}
             walking={!wardrobeOpen && !sheetOpen}
             topInset={topInset}
+            serverNow={serverNow}
           />
           {visibleWardrobe.present && (
             <WardrobePanel
@@ -255,6 +279,20 @@ function JoinedRoom({
             <ShirtIcon />
             <span className="compact:sr-only">{t("open")}</span>
           </Button>
+          <Button
+            variant="secondary"
+            size="sm"
+            className="compact:size-11 compact:px-0"
+            aria-pressed={dance.dancing}
+            aria-keyshortcuts="F"
+            // Trying on clothes ends a dance, so none starts while the Wardrobe is open.
+            disabled={wardrobeOpen}
+            title={roomT("danceShortcut")}
+            onClick={toggleDance}
+          >
+            <PartyPopperIcon />
+            <span className="compact:sr-only">{roomT("dance")}</span>
+          </Button>
           <SettingsControl open={activeInterface === "settings"} onOpenChange={setSettings} />
         </div>
         <ChatComposerDock room={room} active={activePanel} hidden={wardrobeOpen} />
@@ -284,7 +322,7 @@ function JoinedRoom({
         >
           <RadioProvider room={room}>
             <div ref={screenBlockRef} className="flex shrink-0 flex-col gap-2 compact:gap-0">
-              <RadioScreen paused={notice !== null} />
+              <RadioScreen paused={notice !== null} serverNow={serverNow} />
               <div className="flex items-center justify-end gap-2 rounded-lg border bg-background/95 p-2 shadow-lg backdrop-blur-sm compact:rounded-none compact:border-x-0 compact:border-t-0 compact:px-3 compact:py-1 compact:shadow-none">
                 <NowPlayingCaption />
                 <VolumeControl />

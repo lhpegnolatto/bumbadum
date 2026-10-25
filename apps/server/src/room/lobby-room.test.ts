@@ -12,6 +12,7 @@ import {
   CLOCK_PING,
   CLOCK_PONG,
   type ClockPong,
+  DANCE_MESSAGE,
   LOBBY_SLUG,
   NOTICE,
   type Notice,
@@ -412,6 +413,79 @@ describe("lobby-room avatars", () => {
 
     expect(avatarOf(ana, ana)).toEqual(changed);
     expect(avatarOf(bia, bia)).toEqual(changed);
+  });
+});
+
+describe("lobby-room dances", () => {
+  /** The dance `room` sees `player` performing, or "" when they are not dancing. */
+  function danceOf(room: ClientRoom<unknown, RoomState>, player: ClientRoom<unknown, RoomState>) {
+    return room.state.players?.get(player.sessionId)?.dance;
+  }
+
+  /** Waits until Bia has Ana's chat message, so every message Ana sent before it is handled. */
+  async function handled(ana: ClientRoom<unknown, RoomState>, bia: ClientRoom<unknown, RoomState>) {
+    const toBia = received<ChatMessage>(bia, CHAT_MESSAGE);
+    say(ana, "after");
+    await expect.poll(() => toBia.map((message) => message.text)).toEqual(["after"]);
+  }
+
+  it("starts and stops a player's dance for everyone to see", async () => {
+    const ana = await joinLobby("Ana");
+    const bia = await joinLobby("Bia");
+    await expect.poll(() => danceOf(bia, ana)).toBe("");
+
+    ana.send(DANCE_MESSAGE, "side-step");
+    await expect.poll(() => danceOf(bia, ana)).toBe("side-step");
+    ana.send(DANCE_MESSAGE, null);
+    await expect.poll(() => danceOf(bia, ana)).toBe("");
+  });
+
+  it("toggles the default dance with /dançar or /dancar, without a chat message", async () => {
+    const ana = await joinLobby("Ana");
+    const bia = await joinLobby("Bia");
+    const toBia = received<ChatMessage>(bia, CHAT_MESSAGE);
+
+    say(ana, "/dançar");
+    await expect.poll(() => danceOf(bia, ana)).toBe("side-step");
+    say(ana, "/dancar");
+    await expect.poll(() => danceOf(bia, ana)).toBe("");
+    expect(toBia).toEqual([]);
+  });
+
+  it("ends the dance on any step intent, even one that only turns the player", async () => {
+    const ana = await joinLobby("Ana");
+    ana.send(DANCE_MESSAGE, "side-step");
+    await expect.poll(() => danceOf(ana, ana)).toBe("side-step");
+
+    await walk(ana, "down");
+    expect(danceOf(ana, ana)).toBe("");
+  });
+
+  it("ignores an unknown dance or a payload that is not one", async () => {
+    const ana = await joinLobby("Ana");
+    const bia = await joinLobby("Bia");
+    ana.send(DANCE_MESSAGE, "side-step");
+    ana.send(DANCE_MESSAGE, "moonwalk");
+    ana.send(DANCE_MESSAGE, { dance: "side-step" });
+    await handled(ana, bia);
+
+    expect(danceOf(bia, ana)).toBe("side-step");
+  });
+
+  it("accepts at most two dance changes a second per player, by message or by command", async () => {
+    const ana = await joinLobby("Ana");
+    const bia = await joinLobby("Bia");
+    ana.send(DANCE_MESSAGE, "side-step");
+    ana.send(DANCE_MESSAGE, null);
+    ana.send(DANCE_MESSAGE, "side-step");
+    say(bia, "/dance");
+    say(bia, "/dance");
+    say(bia, "/dance");
+    await handled(ana, bia);
+    await handled(bia, ana);
+
+    expect(danceOf(bia, ana)).toBe("");
+    expect(danceOf(ana, bia)).toBe("");
   });
 });
 

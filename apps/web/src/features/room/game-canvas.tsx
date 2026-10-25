@@ -29,9 +29,12 @@ export function GameCanvas({
   room,
   walking,
   topInset,
+  serverNow,
 }: {
   ref?: Ref<GameCanvasHandle>;
   room: Room<unknown, RoomState>;
+  /** The server's time now, or `undefined` until it is known: dancers keep in step with it (ADR-0021). */
+  serverNow: () => number | undefined;
   /** Whether the walking keys move the local player; off while a panel such as the wardrobe is open. */
   walking: boolean;
   /** CSS pixels the Screen and Radio strip cover at the top: the camera frames the local player below them. */
@@ -70,6 +73,7 @@ export function GameCanvas({
       const engine = await mountGameEngine(container, {
         sessionId: room.sessionId,
         sendStep: (direction) => room.send(STEP_MESSAGE, direction),
+        serverNow,
       });
       if (cancelled) {
         engine.destroy();
@@ -97,7 +101,7 @@ export function GameCanvas({
       cancelled = true;
       stop?.();
     };
-  }, [room]);
+  }, [room, serverNow]);
 
   return (
     <div ref={containerRef} role="img" aria-label={t("canvasLabel")} className="h-full w-full" />

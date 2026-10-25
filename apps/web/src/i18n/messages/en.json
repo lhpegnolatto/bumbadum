@@ -37,7 +37,9 @@
       "players": "Players",
       "newMessage": "New message",
       "close": "Close {panel}"
-    }
+    },
+    "dance": "Dance",
+    "danceShortcut": "Press F"
   },
   "joinRejection": {
     "room-full": "The room is full. Try again in a little while.",
@@ -80,6 +82,10 @@
       "skip": {
         "args": "",
         "description": "Votes to skip the track on air."
+      },
+      "dance": {
+        "args": "",
+        "description": "Starts or stops dancing, in step with everyone dancing."
       },
       "help": {
         "args": "",

@@ -7,6 +7,7 @@ import { type Command, createCommandTable } from "./command-table.ts";
 const commandList = [
   { id: "play", names: { en: "play", "pt-BR": "tocar" } },
   { id: "skip", names: { en: "skip", "pt-BR": "pular" } },
+  { id: "dance", names: { en: "dance", "pt-BR": "dançar" } },
   { id: "help", names: { en: "help", "pt-BR": "ajuda" } },
 ] as const satisfies readonly Command[];
 

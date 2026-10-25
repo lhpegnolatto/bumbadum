@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 import { useRadioContext } from "./radio-provider.tsx";
 import type { ScreenPlayer } from "./screen-player.ts";
 import { type ScreenReading, type ScreenSync, syncScreen } from "./screen-sync.ts";
-import { localNow, syncServerClock } from "./server-clock.ts";
+import { localNow } from "./server-clock.ts";
 
 declare global {
   interface BumbadumE2E {
@@ -24,9 +24,16 @@ declare global {
  * `paused`, as when a notice covers the room, it stops, and it resumes where
  * the radio is once uncovered.
  */
-export function RadioScreen({ paused }: { paused: boolean }) {
+export function RadioScreen({
+  paused,
+  serverNow,
+}: {
+  paused: boolean;
+  /** The server's time now, or `undefined` until it is known. */
+  serverNow: () => number | undefined;
+}) {
   const t = useTranslations("radio");
-  const { state, meta } = useRadioContext();
+  const { state } = useRadioContext();
   const { nowPlaying, volume, muted } = state;
   const hostRef = useRef<HTMLDivElement>(null);
   const syncRef = useRef<ScreenSync>(undefined);
@@ -42,7 +49,6 @@ export function RadioScreen({ paused }: { paused: boolean }) {
     if (!host) return;
     let cancelled = false;
     let stop: (() => void) | undefined;
-    const clock = syncServerClock(meta.room);
 
     // Loaded on demand: the YouTube player only runs in the browser, and e2e runs never load it.
     const create = isE2E
@@ -55,7 +61,7 @@ export function RadioScreen({ paused }: { paused: boolean }) {
           player.destroy();
           return;
         }
-        const sync = syncScreen({ player, serverNow: clock.now, localNow });
+        const sync = syncScreen({ player, serverNow, localNow });
         const { nowPlaying, volume, muted, paused } = latest.current;
         player.setVolume(volume, muted);
         if (paused) sync.pause();
@@ -71,12 +77,11 @@ export function RadioScreen({ paused }: { paused: boolean }) {
 
     return () => {
       cancelled = true;
-      clock.stop();
       stop?.();
       playerRef.current = undefined;
       syncRef.current = undefined;
     };
-  }, [meta.room]);
+  }, [serverNow]);
 
   useEffect(() => {
     syncRef.current?.show(nowPlaying);
