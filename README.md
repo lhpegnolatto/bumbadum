@@ -8,6 +8,8 @@
 
 Walk in. Say hi. Put on a song. Stay a while.
 
+<a href="https://bumbadum.vercel.app">🎧 Try it live</a>
+
 <p>
   <a href="#what-is-bumbadum">What it is</a> ·
   <a href="#the-interesting-part">The interesting part</a> ·
