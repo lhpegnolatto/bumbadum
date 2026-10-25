@@ -46,11 +46,11 @@ describe("the side step", () => {
   });
 
   it("follows the giro with left, up, right, and down for eight beats", () => {
-    expect(
-      Array.from({ length: 16 }, (_, frame) =>
-        danceFrame("side-step", (16 + frame) * FRAME_MS + 1, false),
-      ).map(({ direction }) => direction),
-    ).toEqual([
+    const giro = Array.from({ length: 16 }, (_, frame) =>
+      danceFrame("side-step", (16 + frame) * FRAME_MS + 1, false),
+    );
+
+    expect(giro.map(({ direction }) => direction)).toEqual([
       "left",
       "left",
       "left",
@@ -67,6 +67,24 @@ describe("the side step", () => {
       "down",
       "down",
       "down",
+    ]);
+    expect(giro.map(({ cycle, frame }) => [cycle, frame])).toEqual([
+      ["walk", 1],
+      ["walk", 2],
+      ["walk", 3],
+      ["walk", 0],
+      ["walk", 1],
+      ["walk", 2],
+      ["walk", 3],
+      ["walk", 0],
+      ["walk", 1],
+      ["walk", 2],
+      ["walk", 3],
+      ["walk", 0],
+      ["walk", 1],
+      ["walk", 2],
+      ["walk", 3],
+      ["walk", 0],
     ]);
 
     expect(danceFrame("side-step", 32 * FRAME_MS + 1, false)).toEqual(
