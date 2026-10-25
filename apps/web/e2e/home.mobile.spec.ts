@@ -32,7 +32,7 @@ test("a player chooses a nickname and an avatar on a phone, then joins", async (
 
   await page.getByRole("tab", { name: "Accessories" }).tap();
   await page.getByRole("tab", { name: "Headwear" }).tap();
-  const cap = page.getByRole("button", { name: "Cap" });
+  const cap = page.getByRole("button", { name: "Cap", exact: true });
   await cap.tap();
   await expect(cap).toHaveAttribute("aria-pressed", "true");
   await choice(page, "Cap, Black").tap();

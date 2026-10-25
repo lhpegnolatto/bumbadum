@@ -66,7 +66,7 @@ test("the wardrobe keeps layered drafts private and publishes the whole avatar",
   await expect(wardrobe.getByRole("button", { name: "Overalls" })).toBeDisabled();
   await wardrobe.getByRole("tab", { name: "Accessories" }).click();
   await wardrobe.getByRole("tab", { name: "Headwear" }).click();
-  await wardrobe.getByRole("button", { name: "Cap" }).click();
+  await wardrobe.getByRole("button", { name: "Cap", exact: true }).click();
   await wardrobe.getByRole("radio", { name: "Cap, Black" }).check({ force: true });
 
   // Only Iris previews it, and she has not moved while the wardrobe is open.

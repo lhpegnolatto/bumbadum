@@ -50,7 +50,7 @@ describe("randomAvatar", () => {
     expect(randomAvatar(() => 0)).toEqual({
       skinTone: 1,
       hair: "afro-auburn",
-      top: "cute-hoodie-baby-blue",
+      top: "basketball-jersey-beige",
       bottom: "flared-skirt-baby-blue",
       footwear: null,
       overgarment: null,
