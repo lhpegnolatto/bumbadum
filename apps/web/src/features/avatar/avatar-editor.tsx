@@ -2,9 +2,8 @@
 
 import {
   type AppearanceLayer,
+  AVATAR_CATALOG,
   type Avatar,
-  availableAvatarOptions,
-  compatibleAvatar,
   OPTIONAL_LAYERS,
 } from "@bumbadum/avatar";
 import { useId, useState } from "react";
@@ -139,7 +138,7 @@ function AppearancePicker({
 }) {
   const t = useTranslations("avatar");
   const selected = value[layer];
-  const options = availableAvatarOptions(layer);
+  const options = AVATAR_CATALOG[layer];
   const styles = [...new Set(options.map(({ style }) => style))];
   const selectedStyle = options.find(({ id }) => id === selected)?.style ?? styles[0];
   const visible = options.filter(({ style }) => style === selectedStyle);
@@ -160,8 +159,7 @@ function AppearancePicker({
   }
 
   function choose(choice: string | null) {
-    const candidate = { ...value, [layer]: choice } as Avatar;
-    if (compatibleAvatar(candidate)) onChange(candidate);
+    onChange({ ...value, [layer]: choice } as Avatar);
   }
 
   return (
@@ -176,34 +174,26 @@ function AppearancePicker({
             onChoose={() => choose(null)}
           />
         ) : null}
-        {styles.map((style) => {
-          const disabled = options
-            .filter((option) => option.style === style)
-            .every((option) => !compatibleAvatar({ ...value, [layer]: option.id } as Avatar));
-          return (
-            <StyleChoice
-              key={style}
-              label={t(`styles.${style}`)}
-              avatar={{ ...value, [layer]: optionOfStyle(style)?.id ?? null } as Avatar}
-              pressed={selectedStyle === style && selected !== null}
-              disabled={disabled}
-              onChoose={() => chooseStyle(style)}
-            />
-          );
-        })}
+        {styles.map((style) => (
+          <StyleChoice
+            key={style}
+            label={t(`styles.${style}`)}
+            avatar={{ ...value, [layer]: optionOfStyle(style)?.id ?? null } as Avatar}
+            pressed={selectedStyle === style && selected !== null}
+            onChoose={() => chooseStyle(style)}
+          />
+        ))}
       </fieldset>
       {selected !== null ? (
         <fieldset className="flex flex-wrap gap-1.5">
           <legend className="mb-1 font-medium text-sm">{t("color")}</legend>
           {visible.map((option) => {
             const avatar = { ...value, [layer]: option.id } as Avatar;
-            const disabled = !compatibleAvatar(avatar);
             return (
               <Choice
                 key={option.id}
                 name={name}
                 checked={selected === option.id}
-                disabled={disabled}
                 label={t("choice.appearance", {
                   style: t(`styles.${option.style}`),
                   color: t(`colors.${option.color}`),
@@ -224,21 +214,18 @@ function StyleChoice({
   label,
   avatar,
   pressed,
-  disabled = false,
   onChoose,
 }: {
   label: string;
   avatar: Avatar;
   pressed: boolean;
-  disabled?: boolean;
   onChoose: () => void;
 }) {
   return (
     <button
       type="button"
-      disabled={disabled}
       aria-pressed={pressed}
-      className="flex w-20 flex-col items-center gap-1 rounded-md border p-1 text-center text-xs leading-tight hover:bg-accent aria-pressed:border-primary aria-pressed:bg-accent disabled:cursor-not-allowed disabled:opacity-40"
+      className="flex w-20 flex-col items-center gap-1 rounded-md border p-1 text-center text-xs leading-tight hover:bg-accent aria-pressed:border-primary aria-pressed:bg-accent"
       onClick={onChoose}
     >
       <AvatarSprite avatar={avatar} scale={CHOICE_SCALE} />
@@ -250,26 +237,23 @@ function StyleChoice({
 function Choice({
   name,
   checked,
-  disabled = false,
   label,
   avatar,
   onChoose,
 }: {
   name: string;
   checked: boolean;
-  disabled?: boolean;
   label: string;
   avatar: Avatar;
   onChoose: () => void;
 }) {
   return (
-    <label className="flex cursor-pointer justify-center rounded-md border border-transparent p-1 hover:bg-accent pointer-coarse:min-w-11 has-checked:border-primary has-checked:bg-accent has-focus-visible:ring-3 has-focus-visible:ring-ring/50 has-disabled:cursor-not-allowed has-disabled:opacity-40">
+    <label className="flex cursor-pointer justify-center rounded-md border border-transparent p-1 hover:bg-accent pointer-coarse:min-w-11 has-checked:border-primary has-checked:bg-accent has-focus-visible:ring-3 has-focus-visible:ring-ring/50">
       <input
         type="radio"
         className="sr-only"
         name={name}
         checked={checked}
-        disabled={disabled}
         onChange={onChoose}
         aria-label={label}
       />

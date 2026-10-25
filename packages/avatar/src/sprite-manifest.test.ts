@@ -6,9 +6,9 @@ describe("avatarFrames", () => {
     const frames = avatarFrames(
       {
         ...DEFAULT_AVATAR,
-        footwear: "boots-black",
+        footwear: "sneakers-black",
         overgarment: "overalls-black",
-        neckwear: "scarf-black",
+        neckwear: "chain-gold",
         eyewear: "round-glasses-black",
         headwear: "cap-black",
       },

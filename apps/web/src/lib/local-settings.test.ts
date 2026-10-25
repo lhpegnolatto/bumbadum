@@ -37,13 +37,15 @@ describe("parseSettings", () => {
     }
   });
 
+  it("repairs an avatar wearing choices no longer offered, keeping the others", () => {
+    const stored = { ...DEFAULT_AVATAR, skinTone: 3, hair: "spiky-red", top: "tunic-blue" };
+    expect(parseSettings(JSON.stringify({ avatar: stored }))).toEqual({
+      avatar: { ...DEFAULT_AVATAR, skinTone: 3, hair: null },
+    });
+  });
+
   it("drops an invalid avatar, keeping the rest", () => {
-    for (const avatar of [
-      { skinTone: 7 },
-      { hair: 1, outfit: 1 },
-      { ...DEFAULT_AVATAR, hair: "unknown" },
-      "1,1,1",
-    ]) {
+    for (const avatar of [{ skinTone: 7 }, { hair: 1, outfit: 1 }, "1,1,1"]) {
       expect(parseSettings(JSON.stringify({ nickname: "Ana", avatar }))).toEqual({
         nickname: "Ana",
       });

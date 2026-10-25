@@ -4,3820 +4,2401 @@ export const GENERATED_CATALOG = {
     {
       "id": "afro-auburn",
       "style": "afro",
-      "color": "auburn",
-      "retired": false
+      "color": "auburn"
     },
     {
       "id": "afro-black",
       "style": "afro",
-      "color": "black",
-      "retired": false
+      "color": "black"
     },
     {
       "id": "afro-blue",
       "style": "afro",
-      "color": "blue",
-      "retired": false
+      "color": "blue"
     },
     {
       "id": "afro-brown",
       "style": "afro",
-      "color": "brown",
-      "retired": false
+      "color": "brown"
     },
     {
       "id": "afro-gray",
       "style": "afro",
-      "color": "gray",
-      "retired": false
+      "color": "gray"
     },
     {
       "id": "afro-green",
       "style": "afro",
-      "color": "green",
-      "retired": false
+      "color": "green"
     },
     {
       "id": "afro-light-brown",
       "style": "afro",
-      "color": "light-brown",
-      "retired": false
+      "color": "light-brown"
     },
     {
       "id": "afro-pink",
       "style": "afro",
-      "color": "pink",
-      "retired": false
+      "color": "pink"
     },
     {
       "id": "afro-platinum",
       "style": "afro",
-      "color": "platinum",
-      "retired": false
+      "color": "platinum"
     },
     {
       "id": "afro-purple",
       "style": "afro",
-      "color": "purple",
-      "retired": false
+      "color": "purple"
     },
     {
       "id": "afro-red",
       "style": "afro",
-      "color": "red",
-      "retired": false
+      "color": "red"
     },
     {
       "id": "afro-yellow",
       "style": "afro",
-      "color": "yellow",
-      "retired": false
-    },
-    {
-      "id": "bowl-auburn",
-      "style": "bowl",
-      "color": "auburn",
-      "retired": false
-    },
-    {
-      "id": "bowl-black",
-      "style": "bowl",
-      "color": "black",
-      "retired": false
-    },
-    {
-      "id": "bowl-blue",
-      "style": "bowl",
-      "color": "blue",
-      "retired": false
-    },
-    {
-      "id": "bowl-brown",
-      "style": "bowl",
-      "color": "brown",
-      "retired": false
-    },
-    {
-      "id": "bowl-gray",
-      "style": "bowl",
-      "color": "gray",
-      "retired": false
-    },
-    {
-      "id": "bowl-green",
-      "style": "bowl",
-      "color": "green",
-      "retired": false
-    },
-    {
-      "id": "bowl-light-brown",
-      "style": "bowl",
-      "color": "light-brown",
-      "retired": false
-    },
-    {
-      "id": "bowl-pink",
-      "style": "bowl",
-      "color": "pink",
-      "retired": false
-    },
-    {
-      "id": "bowl-platinum",
-      "style": "bowl",
-      "color": "platinum",
-      "retired": false
-    },
-    {
-      "id": "bowl-purple",
-      "style": "bowl",
-      "color": "purple",
-      "retired": false
-    },
-    {
-      "id": "bowl-red",
-      "style": "bowl",
-      "color": "red",
-      "retired": false
-    },
-    {
-      "id": "bowl-yellow",
-      "style": "bowl",
-      "color": "yellow",
-      "retired": false
+      "color": "yellow"
     },
     {
       "id": "bun-auburn",
       "style": "bun",
-      "color": "auburn",
-      "retired": false
+      "color": "auburn"
     },
     {
       "id": "bun-black",
       "style": "bun",
-      "color": "black",
-      "retired": false
+      "color": "black"
     },
     {
       "id": "bun-blue",
       "style": "bun",
-      "color": "blue",
-      "retired": false
+      "color": "blue"
     },
     {
       "id": "bun-brown",
       "style": "bun",
-      "color": "brown",
-      "retired": false
+      "color": "brown"
     },
     {
       "id": "bun-gray",
       "style": "bun",
-      "color": "gray",
-      "retired": false
+      "color": "gray"
     },
     {
       "id": "bun-green",
       "style": "bun",
-      "color": "green",
-      "retired": false
+      "color": "green"
     },
     {
       "id": "bun-light-brown",
       "style": "bun",
-      "color": "light-brown",
-      "retired": false
+      "color": "light-brown"
     },
     {
       "id": "bun-pink",
       "style": "bun",
-      "color": "pink",
-      "retired": false
+      "color": "pink"
     },
     {
       "id": "bun-platinum",
       "style": "bun",
-      "color": "platinum",
-      "retired": false
+      "color": "platinum"
     },
     {
       "id": "bun-purple",
       "style": "bun",
-      "color": "purple",
-      "retired": false
+      "color": "purple"
     },
     {
       "id": "bun-red",
       "style": "bun",
-      "color": "red",
-      "retired": false
+      "color": "red"
     },
     {
       "id": "bun-yellow",
       "style": "bun",
-      "color": "yellow",
-      "retired": false
+      "color": "yellow"
     },
     {
       "id": "buzz-cut-black",
       "style": "buzz-cut",
-      "color": "black",
-      "retired": false
+      "color": "black"
     },
     {
       "id": "buzz-cut-bleached",
       "style": "buzz-cut",
-      "color": "bleached",
-      "retired": false
+      "color": "bleached"
     },
     {
       "id": "buzz-cut-blonde",
       "style": "buzz-cut",
-      "color": "blonde",
-      "retired": false
+      "color": "blonde"
     },
     {
       "id": "buzz-cut-blue",
       "style": "buzz-cut",
-      "color": "blue",
-      "retired": false
+      "color": "blue"
     },
     {
       "id": "buzz-cut-brown",
       "style": "buzz-cut",
-      "color": "brown",
-      "retired": false
+      "color": "brown"
     },
     {
       "id": "buzz-cut-ginger",
       "style": "buzz-cut",
-      "color": "ginger",
-      "retired": false
+      "color": "ginger"
     },
     {
       "id": "buzz-cut-gray",
       "style": "buzz-cut",
-      "color": "gray",
-      "retired": false
+      "color": "gray"
     },
     {
       "id": "buzz-cut-green",
       "style": "buzz-cut",
-      "color": "green",
-      "retired": false
+      "color": "green"
     },
     {
       "id": "buzz-cut-light-brown",
       "style": "buzz-cut",
-      "color": "light-brown",
-      "retired": false
+      "color": "light-brown"
     },
     {
       "id": "buzz-cut-platinum",
       "style": "buzz-cut",
-      "color": "platinum",
-      "retired": false
+      "color": "platinum"
     },
     {
       "id": "buzz-cut-purple",
       "style": "buzz-cut",
-      "color": "purple",
-      "retired": false
+      "color": "purple"
     },
     {
       "id": "buzz-cut-red",
       "style": "buzz-cut",
-      "color": "red",
-      "retired": false
-    },
-    {
-      "id": "chanel-fringe-auburn",
-      "style": "chanel-fringe",
-      "color": "auburn",
-      "retired": false
-    },
-    {
-      "id": "chanel-fringe-baby-blue",
-      "style": "chanel-fringe",
-      "color": "baby-blue",
-      "retired": false
-    },
-    {
-      "id": "chanel-fringe-black",
-      "style": "chanel-fringe",
-      "color": "black",
-      "retired": false
-    },
-    {
-      "id": "chanel-fringe-blonde",
-      "style": "chanel-fringe",
-      "color": "blonde",
-      "retired": false
-    },
-    {
-      "id": "chanel-fringe-brown",
-      "style": "chanel-fringe",
-      "color": "brown",
-      "retired": false
-    },
-    {
-      "id": "chanel-fringe-cherry",
-      "style": "chanel-fringe",
-      "color": "cherry",
-      "retired": false
-    },
-    {
-      "id": "chanel-fringe-light-brown",
-      "style": "chanel-fringe",
-      "color": "light-brown",
-      "retired": false
-    },
-    {
-      "id": "chanel-fringe-lilac",
-      "style": "chanel-fringe",
-      "color": "lilac",
-      "retired": false
-    },
-    {
-      "id": "chanel-fringe-mint",
-      "style": "chanel-fringe",
-      "color": "mint",
-      "retired": false
-    },
-    {
-      "id": "chanel-fringe-pastel-pink",
-      "style": "chanel-fringe",
-      "color": "pastel-pink",
-      "retired": false
-    },
-    {
-      "id": "chanel-fringe-peach",
-      "style": "chanel-fringe",
-      "color": "peach",
-      "retired": false
-    },
-    {
-      "id": "chanel-fringe-platinum",
-      "style": "chanel-fringe",
-      "color": "platinum",
-      "retired": false
+      "color": "red"
     },
     {
       "id": "curly-fade-black",
       "style": "curly-fade",
-      "color": "black",
-      "retired": false
+      "color": "black"
     },
     {
       "id": "curly-fade-bleached",
       "style": "curly-fade",
-      "color": "bleached",
-      "retired": false
+      "color": "bleached"
     },
     {
       "id": "curly-fade-blonde",
       "style": "curly-fade",
-      "color": "blonde",
-      "retired": false
+      "color": "blonde"
     },
     {
       "id": "curly-fade-blue",
       "style": "curly-fade",
-      "color": "blue",
-      "retired": false
+      "color": "blue"
     },
     {
       "id": "curly-fade-brown",
       "style": "curly-fade",
-      "color": "brown",
-      "retired": false
+      "color": "brown"
     },
     {
       "id": "curly-fade-ginger",
       "style": "curly-fade",
-      "color": "ginger",
-      "retired": false
+      "color": "ginger"
     },
     {
       "id": "curly-fade-gray",
       "style": "curly-fade",
-      "color": "gray",
-      "retired": false
+      "color": "gray"
     },
     {
       "id": "curly-fade-green",
       "style": "curly-fade",
-      "color": "green",
-      "retired": false
+      "color": "green"
     },
     {
       "id": "curly-fade-light-brown",
       "style": "curly-fade",
-      "color": "light-brown",
-      "retired": false
+      "color": "light-brown"
     },
     {
       "id": "curly-fade-platinum",
       "style": "curly-fade",
-      "color": "platinum",
-      "retired": false
+      "color": "platinum"
     },
     {
       "id": "curly-fade-purple",
       "style": "curly-fade",
-      "color": "purple",
-      "retired": false
+      "color": "purple"
     },
     {
       "id": "curly-fade-red",
       "style": "curly-fade",
-      "color": "red",
-      "retired": false
+      "color": "red"
     },
     {
       "id": "double-buns-auburn",
       "style": "double-buns",
-      "color": "auburn",
-      "retired": false
+      "color": "auburn"
     },
     {
       "id": "double-buns-baby-blue",
       "style": "double-buns",
-      "color": "baby-blue",
-      "retired": false
+      "color": "baby-blue"
     },
     {
       "id": "double-buns-black",
       "style": "double-buns",
-      "color": "black",
-      "retired": false
+      "color": "black"
     },
     {
       "id": "double-buns-blonde",
       "style": "double-buns",
-      "color": "blonde",
-      "retired": false
+      "color": "blonde"
     },
     {
       "id": "double-buns-brown",
       "style": "double-buns",
-      "color": "brown",
-      "retired": false
+      "color": "brown"
     },
     {
       "id": "double-buns-cherry",
       "style": "double-buns",
-      "color": "cherry",
-      "retired": false
+      "color": "cherry"
     },
     {
       "id": "double-buns-light-brown",
       "style": "double-buns",
-      "color": "light-brown",
-      "retired": false
+      "color": "light-brown"
     },
     {
       "id": "double-buns-lilac",
       "style": "double-buns",
-      "color": "lilac",
-      "retired": false
+      "color": "lilac"
     },
     {
       "id": "double-buns-mint",
       "style": "double-buns",
-      "color": "mint",
-      "retired": false
+      "color": "mint"
     },
     {
       "id": "double-buns-pastel-pink",
       "style": "double-buns",
-      "color": "pastel-pink",
-      "retired": false
+      "color": "pastel-pink"
     },
     {
       "id": "double-buns-peach",
       "style": "double-buns",
-      "color": "peach",
-      "retired": false
+      "color": "peach"
     },
     {
       "id": "double-buns-platinum",
       "style": "double-buns",
-      "color": "platinum",
-      "retired": false
+      "color": "platinum"
     },
     {
       "id": "dreads-black",
       "style": "dreads",
-      "color": "black",
-      "retired": false
+      "color": "black"
     },
     {
       "id": "dreads-bleached",
       "style": "dreads",
-      "color": "bleached",
-      "retired": false
+      "color": "bleached"
     },
     {
       "id": "dreads-blonde",
       "style": "dreads",
-      "color": "blonde",
-      "retired": false
+      "color": "blonde"
     },
     {
       "id": "dreads-blue",
       "style": "dreads",
-      "color": "blue",
-      "retired": false
+      "color": "blue"
     },
     {
       "id": "dreads-brown",
       "style": "dreads",
-      "color": "brown",
-      "retired": false
+      "color": "brown"
     },
     {
       "id": "dreads-ginger",
       "style": "dreads",
-      "color": "ginger",
-      "retired": false
+      "color": "ginger"
     },
     {
       "id": "dreads-gray",
       "style": "dreads",
-      "color": "gray",
-      "retired": false
+      "color": "gray"
     },
     {
       "id": "dreads-green",
       "style": "dreads",
-      "color": "green",
-      "retired": false
+      "color": "green"
     },
     {
       "id": "dreads-light-brown",
       "style": "dreads",
-      "color": "light-brown",
-      "retired": false
+      "color": "light-brown"
     },
     {
       "id": "dreads-platinum",
       "style": "dreads",
-      "color": "platinum",
-      "retired": false
+      "color": "platinum"
     },
     {
       "id": "dreads-purple",
       "style": "dreads",
-      "color": "purple",
-      "retired": false
+      "color": "purple"
     },
     {
       "id": "dreads-red",
       "style": "dreads",
-      "color": "red",
-      "retired": false
+      "color": "red"
     },
     {
       "id": "emo-fringe-black",
       "style": "emo-fringe",
-      "color": "black",
-      "retired": false
+      "color": "black"
     },
     {
       "id": "emo-fringe-bleached",
       "style": "emo-fringe",
-      "color": "bleached",
-      "retired": false
+      "color": "bleached"
     },
     {
       "id": "emo-fringe-blonde",
       "style": "emo-fringe",
-      "color": "blonde",
-      "retired": false
+      "color": "blonde"
     },
     {
       "id": "emo-fringe-blue",
       "style": "emo-fringe",
-      "color": "blue",
-      "retired": false
+      "color": "blue"
     },
     {
       "id": "emo-fringe-brown",
       "style": "emo-fringe",
-      "color": "brown",
-      "retired": false
+      "color": "brown"
     },
     {
       "id": "emo-fringe-ginger",
       "style": "emo-fringe",
-      "color": "ginger",
-      "retired": false
+      "color": "ginger"
     },
     {
       "id": "emo-fringe-gray",
       "style": "emo-fringe",
-      "color": "gray",
-      "retired": false
+      "color": "gray"
     },
     {
       "id": "emo-fringe-green",
       "style": "emo-fringe",
-      "color": "green",
-      "retired": false
+      "color": "green"
     },
     {
       "id": "emo-fringe-light-brown",
       "style": "emo-fringe",
-      "color": "light-brown",
-      "retired": false
+      "color": "light-brown"
     },
     {
       "id": "emo-fringe-platinum",
       "style": "emo-fringe",
-      "color": "platinum",
-      "retired": false
+      "color": "platinum"
     },
     {
       "id": "emo-fringe-purple",
       "style": "emo-fringe",
-      "color": "purple",
-      "retired": false
+      "color": "purple"
     },
     {
       "id": "emo-fringe-red",
       "style": "emo-fringe",
-      "color": "red",
-      "retired": false
+      "color": "red"
     },
     {
       "id": "hime-auburn",
       "style": "hime",
-      "color": "auburn",
-      "retired": false
+      "color": "auburn"
     },
     {
       "id": "hime-baby-blue",
       "style": "hime",
-      "color": "baby-blue",
-      "retired": false
+      "color": "baby-blue"
     },
     {
       "id": "hime-black",
       "style": "hime",
-      "color": "black",
-      "retired": false
+      "color": "black"
     },
     {
       "id": "hime-blonde",
       "style": "hime",
-      "color": "blonde",
-      "retired": false
+      "color": "blonde"
     },
     {
       "id": "hime-brown",
       "style": "hime",
-      "color": "brown",
-      "retired": false
+      "color": "brown"
     },
     {
       "id": "hime-cherry",
       "style": "hime",
-      "color": "cherry",
-      "retired": false
+      "color": "cherry"
     },
     {
       "id": "hime-light-brown",
       "style": "hime",
-      "color": "light-brown",
-      "retired": false
+      "color": "light-brown"
     },
     {
       "id": "hime-lilac",
       "style": "hime",
-      "color": "lilac",
-      "retired": false
+      "color": "lilac"
     },
     {
       "id": "hime-mint",
       "style": "hime",
-      "color": "mint",
-      "retired": false
+      "color": "mint"
     },
     {
       "id": "hime-pastel-pink",
       "style": "hime",
-      "color": "pastel-pink",
-      "retired": false
+      "color": "pastel-pink"
     },
     {
       "id": "hime-peach",
       "style": "hime",
-      "color": "peach",
-      "retired": false
+      "color": "peach"
     },
     {
       "id": "hime-platinum",
       "style": "hime",
-      "color": "platinum",
-      "retired": false
-    },
-    {
-      "id": "long-auburn",
-      "style": "long",
-      "color": "auburn",
-      "retired": false
-    },
-    {
-      "id": "long-black",
-      "style": "long",
-      "color": "black",
-      "retired": false
-    },
-    {
-      "id": "long-blue",
-      "style": "long",
-      "color": "blue",
-      "retired": false
-    },
-    {
-      "id": "long-brown",
-      "style": "long",
-      "color": "brown",
-      "retired": false
-    },
-    {
-      "id": "long-gray",
-      "style": "long",
-      "color": "gray",
-      "retired": false
-    },
-    {
-      "id": "long-green",
-      "style": "long",
-      "color": "green",
-      "retired": false
-    },
-    {
-      "id": "long-light-brown",
-      "style": "long",
-      "color": "light-brown",
-      "retired": false
+      "color": "platinum"
     },
     {
       "id": "long-pigtails-auburn",
       "style": "long-pigtails",
-      "color": "auburn",
-      "retired": false
+      "color": "auburn"
     },
     {
       "id": "long-pigtails-baby-blue",
       "style": "long-pigtails",
-      "color": "baby-blue",
-      "retired": false
+      "color": "baby-blue"
     },
     {
       "id": "long-pigtails-black",
       "style": "long-pigtails",
-      "color": "black",
-      "retired": false
+      "color": "black"
     },
     {
       "id": "long-pigtails-blonde",
       "style": "long-pigtails",
-      "color": "blonde",
-      "retired": false
+      "color": "blonde"
     },
     {
       "id": "long-pigtails-brown",
       "style": "long-pigtails",
-      "color": "brown",
-      "retired": false
+      "color": "brown"
     },
     {
       "id": "long-pigtails-cherry",
       "style": "long-pigtails",
-      "color": "cherry",
-      "retired": false
+      "color": "cherry"
     },
     {
       "id": "long-pigtails-light-brown",
       "style": "long-pigtails",
-      "color": "light-brown",
-      "retired": false
+      "color": "light-brown"
     },
     {
       "id": "long-pigtails-lilac",
       "style": "long-pigtails",
-      "color": "lilac",
-      "retired": false
+      "color": "lilac"
     },
     {
       "id": "long-pigtails-mint",
       "style": "long-pigtails",
-      "color": "mint",
-      "retired": false
+      "color": "mint"
     },
     {
       "id": "long-pigtails-pastel-pink",
       "style": "long-pigtails",
-      "color": "pastel-pink",
-      "retired": false
+      "color": "pastel-pink"
     },
     {
       "id": "long-pigtails-peach",
       "style": "long-pigtails",
-      "color": "peach",
-      "retired": false
+      "color": "peach"
     },
     {
       "id": "long-pigtails-platinum",
       "style": "long-pigtails",
-      "color": "platinum",
-      "retired": false
-    },
-    {
-      "id": "long-pink",
-      "style": "long",
-      "color": "pink",
-      "retired": false
-    },
-    {
-      "id": "long-platinum",
-      "style": "long",
-      "color": "platinum",
-      "retired": false
-    },
-    {
-      "id": "long-purple",
-      "style": "long",
-      "color": "purple",
-      "retired": false
-    },
-    {
-      "id": "long-red",
-      "style": "long",
-      "color": "red",
-      "retired": false
-    },
-    {
-      "id": "long-yellow",
-      "style": "long",
-      "color": "yellow",
-      "retired": false
+      "color": "platinum"
     },
     {
       "id": "man-bun-black",
       "style": "man-bun",
-      "color": "black",
-      "retired": false
+      "color": "black"
     },
     {
       "id": "man-bun-bleached",
       "style": "man-bun",
-      "color": "bleached",
-      "retired": false
+      "color": "bleached"
     },
     {
       "id": "man-bun-blonde",
       "style": "man-bun",
-      "color": "blonde",
-      "retired": false
+      "color": "blonde"
     },
     {
       "id": "man-bun-blue",
       "style": "man-bun",
-      "color": "blue",
-      "retired": false
+      "color": "blue"
     },
     {
       "id": "man-bun-brown",
       "style": "man-bun",
-      "color": "brown",
-      "retired": false
+      "color": "brown"
     },
     {
       "id": "man-bun-ginger",
       "style": "man-bun",
-      "color": "ginger",
-      "retired": false
+      "color": "ginger"
     },
     {
       "id": "man-bun-gray",
       "style": "man-bun",
-      "color": "gray",
-      "retired": false
+      "color": "gray"
     },
     {
       "id": "man-bun-green",
       "style": "man-bun",
-      "color": "green",
-      "retired": false
+      "color": "green"
     },
     {
       "id": "man-bun-light-brown",
       "style": "man-bun",
-      "color": "light-brown",
-      "retired": false
+      "color": "light-brown"
     },
     {
       "id": "man-bun-platinum",
       "style": "man-bun",
-      "color": "platinum",
-      "retired": false
+      "color": "platinum"
     },
     {
       "id": "man-bun-purple",
       "style": "man-bun",
-      "color": "purple",
-      "retired": false
+      "color": "purple"
     },
     {
       "id": "man-bun-red",
       "style": "man-bun",
-      "color": "red",
-      "retired": false
+      "color": "red"
     },
     {
       "id": "mohawk-auburn",
       "style": "mohawk",
-      "color": "auburn",
-      "retired": false
+      "color": "auburn"
     },
     {
       "id": "mohawk-black",
       "style": "mohawk",
-      "color": "black",
-      "retired": false
+      "color": "black"
     },
     {
       "id": "mohawk-blue",
       "style": "mohawk",
-      "color": "blue",
-      "retired": false
+      "color": "blue"
     },
     {
       "id": "mohawk-brown",
       "style": "mohawk",
-      "color": "brown",
-      "retired": false
+      "color": "brown"
     },
     {
       "id": "mohawk-gray",
       "style": "mohawk",
-      "color": "gray",
-      "retired": false
+      "color": "gray"
     },
     {
       "id": "mohawk-green",
       "style": "mohawk",
-      "color": "green",
-      "retired": false
+      "color": "green"
     },
     {
       "id": "mohawk-light-brown",
       "style": "mohawk",
-      "color": "light-brown",
-      "retired": false
+      "color": "light-brown"
     },
     {
       "id": "mohawk-pink",
       "style": "mohawk",
-      "color": "pink",
-      "retired": false
+      "color": "pink"
     },
     {
       "id": "mohawk-platinum",
       "style": "mohawk",
-      "color": "platinum",
-      "retired": false
+      "color": "platinum"
     },
     {
       "id": "mohawk-purple",
       "style": "mohawk",
-      "color": "purple",
-      "retired": false
+      "color": "purple"
     },
     {
       "id": "mohawk-red",
       "style": "mohawk",
-      "color": "red",
-      "retired": false
+      "color": "red"
     },
     {
       "id": "mohawk-yellow",
       "style": "mohawk",
-      "color": "yellow",
-      "retired": false
+      "color": "yellow"
     },
     {
       "id": "mullet-black",
       "style": "mullet",
-      "color": "black",
-      "retired": false
+      "color": "black"
     },
     {
       "id": "mullet-bleached",
       "style": "mullet",
-      "color": "bleached",
-      "retired": false
+      "color": "bleached"
     },
     {
       "id": "mullet-blonde",
       "style": "mullet",
-      "color": "blonde",
-      "retired": false
+      "color": "blonde"
     },
     {
       "id": "mullet-blue",
       "style": "mullet",
-      "color": "blue",
-      "retired": false
+      "color": "blue"
     },
     {
       "id": "mullet-brown",
       "style": "mullet",
-      "color": "brown",
-      "retired": false
+      "color": "brown"
     },
     {
       "id": "mullet-ginger",
       "style": "mullet",
-      "color": "ginger",
-      "retired": false
+      "color": "ginger"
     },
     {
       "id": "mullet-gray",
       "style": "mullet",
-      "color": "gray",
-      "retired": false
+      "color": "gray"
     },
     {
       "id": "mullet-green",
       "style": "mullet",
-      "color": "green",
-      "retired": false
+      "color": "green"
     },
     {
       "id": "mullet-light-brown",
       "style": "mullet",
-      "color": "light-brown",
-      "retired": false
+      "color": "light-brown"
     },
     {
       "id": "mullet-platinum",
       "style": "mullet",
-      "color": "platinum",
-      "retired": false
+      "color": "platinum"
     },
     {
       "id": "mullet-purple",
       "style": "mullet",
-      "color": "purple",
-      "retired": false
+      "color": "purple"
     },
     {
       "id": "mullet-red",
       "style": "mullet",
-      "color": "red",
-      "retired": false
-    },
-    {
-      "id": "pigtails-auburn",
-      "style": "pigtails",
-      "color": "auburn",
-      "retired": false
-    },
-    {
-      "id": "pigtails-black",
-      "style": "pigtails",
-      "color": "black",
-      "retired": false
-    },
-    {
-      "id": "pigtails-blue",
-      "style": "pigtails",
-      "color": "blue",
-      "retired": false
-    },
-    {
-      "id": "pigtails-brown",
-      "style": "pigtails",
-      "color": "brown",
-      "retired": false
-    },
-    {
-      "id": "pigtails-gray",
-      "style": "pigtails",
-      "color": "gray",
-      "retired": false
-    },
-    {
-      "id": "pigtails-green",
-      "style": "pigtails",
-      "color": "green",
-      "retired": false
-    },
-    {
-      "id": "pigtails-light-brown",
-      "style": "pigtails",
-      "color": "light-brown",
-      "retired": false
-    },
-    {
-      "id": "pigtails-pink",
-      "style": "pigtails",
-      "color": "pink",
-      "retired": false
-    },
-    {
-      "id": "pigtails-platinum",
-      "style": "pigtails",
-      "color": "platinum",
-      "retired": false
-    },
-    {
-      "id": "pigtails-purple",
-      "style": "pigtails",
-      "color": "purple",
-      "retired": false
-    },
-    {
-      "id": "pigtails-red",
-      "style": "pigtails",
-      "color": "red",
-      "retired": false
-    },
-    {
-      "id": "pigtails-yellow",
-      "style": "pigtails",
-      "color": "yellow",
-      "retired": false
+      "color": "red"
     },
     {
       "id": "ponytail-auburn",
       "style": "ponytail",
-      "color": "auburn",
-      "retired": false
+      "color": "auburn"
     },
     {
       "id": "ponytail-black",
       "style": "ponytail",
-      "color": "black",
-      "retired": false
+      "color": "black"
     },
     {
       "id": "ponytail-blue",
       "style": "ponytail",
-      "color": "blue",
-      "retired": false
+      "color": "blue"
     },
     {
       "id": "ponytail-brown",
       "style": "ponytail",
-      "color": "brown",
-      "retired": false
+      "color": "brown"
     },
     {
       "id": "ponytail-gray",
       "style": "ponytail",
-      "color": "gray",
-      "retired": false
+      "color": "gray"
     },
     {
       "id": "ponytail-green",
       "style": "ponytail",
-      "color": "green",
-      "retired": false
+      "color": "green"
     },
     {
       "id": "ponytail-light-brown",
       "style": "ponytail",
-      "color": "light-brown",
-      "retired": false
+      "color": "light-brown"
     },
     {
       "id": "ponytail-pink",
       "style": "ponytail",
-      "color": "pink",
-      "retired": false
+      "color": "pink"
     },
     {
       "id": "ponytail-platinum",
       "style": "ponytail",
-      "color": "platinum",
-      "retired": false
+      "color": "platinum"
     },
     {
       "id": "ponytail-purple",
       "style": "ponytail",
-      "color": "purple",
-      "retired": false
+      "color": "purple"
     },
     {
       "id": "ponytail-red",
       "style": "ponytail",
-      "color": "red",
-      "retired": false
+      "color": "red"
     },
     {
       "id": "ponytail-yellow",
       "style": "ponytail",
-      "color": "yellow",
-      "retired": false
+      "color": "yellow"
     },
     {
       "id": "quiff-black",
       "style": "quiff",
-      "color": "black",
-      "retired": false
+      "color": "black"
     },
     {
       "id": "quiff-bleached",
       "style": "quiff",
-      "color": "bleached",
-      "retired": false
+      "color": "bleached"
     },
     {
       "id": "quiff-blonde",
       "style": "quiff",
-      "color": "blonde",
-      "retired": false
+      "color": "blonde"
     },
     {
       "id": "quiff-blue",
       "style": "quiff",
-      "color": "blue",
-      "retired": false
+      "color": "blue"
     },
     {
       "id": "quiff-brown",
       "style": "quiff",
-      "color": "brown",
-      "retired": false
+      "color": "brown"
     },
     {
       "id": "quiff-ginger",
       "style": "quiff",
-      "color": "ginger",
-      "retired": false
+      "color": "ginger"
     },
     {
       "id": "quiff-gray",
       "style": "quiff",
-      "color": "gray",
-      "retired": false
+      "color": "gray"
     },
     {
       "id": "quiff-green",
       "style": "quiff",
-      "color": "green",
-      "retired": false
+      "color": "green"
     },
     {
       "id": "quiff-light-brown",
       "style": "quiff",
-      "color": "light-brown",
-      "retired": false
+      "color": "light-brown"
     },
     {
       "id": "quiff-platinum",
       "style": "quiff",
-      "color": "platinum",
-      "retired": false
+      "color": "platinum"
     },
     {
       "id": "quiff-purple",
       "style": "quiff",
-      "color": "purple",
-      "retired": false
+      "color": "purple"
     },
     {
       "id": "quiff-red",
       "style": "quiff",
-      "color": "red",
-      "retired": false
+      "color": "red"
     },
     {
       "id": "short-auburn",
       "style": "short",
-      "color": "auburn",
-      "retired": false
+      "color": "auburn"
     },
     {
       "id": "short-black",
       "style": "short",
-      "color": "black",
-      "retired": false
+      "color": "black"
     },
     {
       "id": "short-blue",
       "style": "short",
-      "color": "blue",
-      "retired": false
+      "color": "blue"
     },
     {
       "id": "short-brown",
       "style": "short",
-      "color": "brown",
-      "retired": false
+      "color": "brown"
     },
     {
       "id": "short-gray",
       "style": "short",
-      "color": "gray",
-      "retired": false
+      "color": "gray"
     },
     {
       "id": "short-green",
       "style": "short",
-      "color": "green",
-      "retired": false
+      "color": "green"
     },
     {
       "id": "short-light-brown",
       "style": "short",
-      "color": "light-brown",
-      "retired": false
+      "color": "light-brown"
     },
     {
       "id": "short-pink",
       "style": "short",
-      "color": "pink",
-      "retired": false
+      "color": "pink"
     },
     {
       "id": "short-platinum",
       "style": "short",
-      "color": "platinum",
-      "retired": false
+      "color": "platinum"
     },
     {
       "id": "short-purple",
       "style": "short",
-      "color": "purple",
-      "retired": false
+      "color": "purple"
     },
     {
       "id": "short-red",
       "style": "short",
-      "color": "red",
-      "retired": false
+      "color": "red"
     },
     {
       "id": "short-yellow",
       "style": "short",
-      "color": "yellow",
-      "retired": false
+      "color": "yellow"
     },
     {
       "id": "side-part-black",
       "style": "side-part",
-      "color": "black",
-      "retired": false
+      "color": "black"
     },
     {
       "id": "side-part-bleached",
       "style": "side-part",
-      "color": "bleached",
-      "retired": false
+      "color": "bleached"
     },
     {
       "id": "side-part-blonde",
       "style": "side-part",
-      "color": "blonde",
-      "retired": false
+      "color": "blonde"
     },
     {
       "id": "side-part-blue",
       "style": "side-part",
-      "color": "blue",
-      "retired": false
+      "color": "blue"
     },
     {
       "id": "side-part-brown",
       "style": "side-part",
-      "color": "brown",
-      "retired": false
+      "color": "brown"
     },
     {
       "id": "side-part-ginger",
       "style": "side-part",
-      "color": "ginger",
-      "retired": false
+      "color": "ginger"
     },
     {
       "id": "side-part-gray",
       "style": "side-part",
-      "color": "gray",
-      "retired": false
+      "color": "gray"
     },
     {
       "id": "side-part-green",
       "style": "side-part",
-      "color": "green",
-      "retired": false
+      "color": "green"
     },
     {
       "id": "side-part-light-brown",
       "style": "side-part",
-      "color": "light-brown",
-      "retired": false
+      "color": "light-brown"
     },
     {
       "id": "side-part-platinum",
       "style": "side-part",
-      "color": "platinum",
-      "retired": false
+      "color": "platinum"
     },
     {
       "id": "side-part-purple",
       "style": "side-part",
-      "color": "purple",
-      "retired": false
+      "color": "purple"
     },
     {
       "id": "side-part-red",
       "style": "side-part",
-      "color": "red",
-      "retired": false
+      "color": "red"
     },
     {
       "id": "side-ponytail-auburn",
       "style": "side-ponytail",
-      "color": "auburn",
-      "retired": false
+      "color": "auburn"
     },
     {
       "id": "side-ponytail-baby-blue",
       "style": "side-ponytail",
-      "color": "baby-blue",
-      "retired": false
+      "color": "baby-blue"
     },
     {
       "id": "side-ponytail-black",
       "style": "side-ponytail",
-      "color": "black",
-      "retired": false
+      "color": "black"
     },
     {
       "id": "side-ponytail-blonde",
       "style": "side-ponytail",
-      "color": "blonde",
-      "retired": false
+      "color": "blonde"
     },
     {
       "id": "side-ponytail-brown",
       "style": "side-ponytail",
-      "color": "brown",
-      "retired": false
+      "color": "brown"
     },
     {
       "id": "side-ponytail-cherry",
       "style": "side-ponytail",
-      "color": "cherry",
-      "retired": false
+      "color": "cherry"
     },
     {
       "id": "side-ponytail-light-brown",
       "style": "side-ponytail",
-      "color": "light-brown",
-      "retired": false
+      "color": "light-brown"
     },
     {
       "id": "side-ponytail-lilac",
       "style": "side-ponytail",
-      "color": "lilac",
-      "retired": false
+      "color": "lilac"
     },
     {
       "id": "side-ponytail-mint",
       "style": "side-ponytail",
-      "color": "mint",
-      "retired": false
+      "color": "mint"
     },
     {
       "id": "side-ponytail-pastel-pink",
       "style": "side-ponytail",
-      "color": "pastel-pink",
-      "retired": false
+      "color": "pastel-pink"
     },
     {
       "id": "side-ponytail-peach",
       "style": "side-ponytail",
-      "color": "peach",
-      "retired": false
+      "color": "peach"
     },
     {
       "id": "side-ponytail-platinum",
       "style": "side-ponytail",
-      "color": "platinum",
-      "retired": false
-    },
-    {
-      "id": "spiky-auburn",
-      "style": "spiky",
-      "color": "auburn",
-      "retired": false
-    },
-    {
-      "id": "spiky-black",
-      "style": "spiky",
-      "color": "black",
-      "retired": false
-    },
-    {
-      "id": "spiky-blue",
-      "style": "spiky",
-      "color": "blue",
-      "retired": false
-    },
-    {
-      "id": "spiky-brown",
-      "style": "spiky",
-      "color": "brown",
-      "retired": false
-    },
-    {
-      "id": "spiky-gray",
-      "style": "spiky",
-      "color": "gray",
-      "retired": false
-    },
-    {
-      "id": "spiky-green",
-      "style": "spiky",
-      "color": "green",
-      "retired": false
-    },
-    {
-      "id": "spiky-light-brown",
-      "style": "spiky",
-      "color": "light-brown",
-      "retired": false
-    },
-    {
-      "id": "spiky-pink",
-      "style": "spiky",
-      "color": "pink",
-      "retired": false
-    },
-    {
-      "id": "spiky-platinum",
-      "style": "spiky",
-      "color": "platinum",
-      "retired": false
-    },
-    {
-      "id": "spiky-purple",
-      "style": "spiky",
-      "color": "purple",
-      "retired": false
-    },
-    {
-      "id": "spiky-red",
-      "style": "spiky",
-      "color": "red",
-      "retired": false
-    },
-    {
-      "id": "spiky-yellow",
-      "style": "spiky",
-      "color": "yellow",
-      "retired": false
+      "color": "platinum"
     },
     {
       "id": "textured-crop-black",
       "style": "textured-crop",
-      "color": "black",
-      "retired": false
+      "color": "black"
     },
     {
       "id": "textured-crop-bleached",
       "style": "textured-crop",
-      "color": "bleached",
-      "retired": false
+      "color": "bleached"
     },
     {
       "id": "textured-crop-blonde",
       "style": "textured-crop",
-      "color": "blonde",
-      "retired": false
+      "color": "blonde"
     },
     {
       "id": "textured-crop-blue",
       "style": "textured-crop",
-      "color": "blue",
-      "retired": false
+      "color": "blue"
     },
     {
       "id": "textured-crop-brown",
       "style": "textured-crop",
-      "color": "brown",
-      "retired": false
+      "color": "brown"
     },
     {
       "id": "textured-crop-ginger",
       "style": "textured-crop",
-      "color": "ginger",
-      "retired": false
+      "color": "ginger"
     },
     {
       "id": "textured-crop-gray",
       "style": "textured-crop",
-      "color": "gray",
-      "retired": false
+      "color": "gray"
     },
     {
       "id": "textured-crop-green",
       "style": "textured-crop",
-      "color": "green",
-      "retired": false
+      "color": "green"
     },
     {
       "id": "textured-crop-light-brown",
       "style": "textured-crop",
-      "color": "light-brown",
-      "retired": false
+      "color": "light-brown"
     },
     {
       "id": "textured-crop-platinum",
       "style": "textured-crop",
-      "color": "platinum",
-      "retired": false
+      "color": "platinum"
     },
     {
       "id": "textured-crop-purple",
       "style": "textured-crop",
-      "color": "purple",
-      "retired": false
+      "color": "purple"
     },
     {
       "id": "textured-crop-red",
       "style": "textured-crop",
-      "color": "red",
-      "retired": false
+      "color": "red"
     },
     {
       "id": "wavy-auburn",
       "style": "wavy",
-      "color": "auburn",
-      "retired": false
+      "color": "auburn"
     },
     {
       "id": "wavy-baby-blue",
       "style": "wavy",
-      "color": "baby-blue",
-      "retired": false
+      "color": "baby-blue"
     },
     {
       "id": "wavy-black",
       "style": "wavy",
-      "color": "black",
-      "retired": false
+      "color": "black"
     },
     {
       "id": "wavy-blonde",
       "style": "wavy",
-      "color": "blonde",
-      "retired": false
+      "color": "blonde"
     },
     {
       "id": "wavy-brown",
       "style": "wavy",
-      "color": "brown",
-      "retired": false
+      "color": "brown"
     },
     {
       "id": "wavy-cherry",
       "style": "wavy",
-      "color": "cherry",
-      "retired": false
+      "color": "cherry"
     },
     {
       "id": "wavy-light-brown",
       "style": "wavy",
-      "color": "light-brown",
-      "retired": false
+      "color": "light-brown"
     },
     {
       "id": "wavy-lilac",
       "style": "wavy",
-      "color": "lilac",
-      "retired": false
+      "color": "lilac"
     },
     {
       "id": "wavy-mint",
       "style": "wavy",
-      "color": "mint",
-      "retired": false
+      "color": "mint"
     },
     {
       "id": "wavy-pastel-pink",
       "style": "wavy",
-      "color": "pastel-pink",
-      "retired": false
+      "color": "pastel-pink"
     },
     {
       "id": "wavy-peach",
       "style": "wavy",
-      "color": "peach",
-      "retired": false
+      "color": "peach"
     },
     {
       "id": "wavy-platinum",
       "style": "wavy",
-      "color": "platinum",
-      "retired": false
+      "color": "platinum"
     }
   ],
   "top": [
     {
       "id": "basketball-jersey-beige",
       "style": "basketball-jersey",
-      "color": "beige",
-      "retired": false
+      "color": "beige"
     },
     {
       "id": "basketball-jersey-black",
       "style": "basketball-jersey",
-      "color": "black",
-      "retired": false
+      "color": "black"
     },
     {
       "id": "basketball-jersey-gray",
       "style": "basketball-jersey",
-      "color": "gray",
-      "retired": false
+      "color": "gray"
     },
     {
       "id": "basketball-jersey-mustard",
       "style": "basketball-jersey",
-      "color": "mustard",
-      "retired": false
+      "color": "mustard"
     },
     {
       "id": "basketball-jersey-navy",
       "style": "basketball-jersey",
-      "color": "navy",
-      "retired": false
+      "color": "navy"
     },
     {
       "id": "basketball-jersey-olive",
       "style": "basketball-jersey",
-      "color": "olive",
-      "retired": false
+      "color": "olive"
     },
     {
       "id": "basketball-jersey-royal-blue",
       "style": "basketball-jersey",
-      "color": "royal-blue",
-      "retired": false
+      "color": "royal-blue"
     },
     {
       "id": "basketball-jersey-white",
       "style": "basketball-jersey",
-      "color": "white",
-      "retired": false
+      "color": "white"
     },
     {
       "id": "basketball-jersey-wine",
       "style": "basketball-jersey",
-      "color": "wine",
-      "retired": false
+      "color": "wine"
     },
     {
       "id": "bomber-jacket-beige",
       "style": "bomber-jacket",
-      "color": "beige",
-      "retired": false
+      "color": "beige"
     },
     {
       "id": "bomber-jacket-black",
       "style": "bomber-jacket",
-      "color": "black",
-      "retired": false
+      "color": "black"
     },
     {
       "id": "bomber-jacket-gray",
       "style": "bomber-jacket",
-      "color": "gray",
-      "retired": false
+      "color": "gray"
     },
     {
       "id": "bomber-jacket-mustard",
       "style": "bomber-jacket",
-      "color": "mustard",
-      "retired": false
+      "color": "mustard"
     },
     {
       "id": "bomber-jacket-navy",
       "style": "bomber-jacket",
-      "color": "navy",
-      "retired": false
+      "color": "navy"
     },
     {
       "id": "bomber-jacket-olive",
       "style": "bomber-jacket",
-      "color": "olive",
-      "retired": false
+      "color": "olive"
     },
     {
       "id": "bomber-jacket-royal-blue",
       "style": "bomber-jacket",
-      "color": "royal-blue",
-      "retired": false
+      "color": "royal-blue"
     },
     {
       "id": "bomber-jacket-white",
       "style": "bomber-jacket",
-      "color": "white",
-      "retired": false
+      "color": "white"
     },
     {
       "id": "bomber-jacket-wine",
       "style": "bomber-jacket",
-      "color": "wine",
-      "retired": false
+      "color": "wine"
     },
     {
       "id": "cute-hoodie-baby-blue",
       "style": "cute-hoodie",
-      "color": "baby-blue",
-      "retired": false
+      "color": "baby-blue"
     },
     {
       "id": "cute-hoodie-black",
       "style": "cute-hoodie",
-      "color": "black",
-      "retired": false
+      "color": "black"
     },
     {
       "id": "cute-hoodie-butter-yellow",
       "style": "cute-hoodie",
-      "color": "butter-yellow",
-      "retired": false
+      "color": "butter-yellow"
     },
     {
       "id": "cute-hoodie-cherry",
       "style": "cute-hoodie",
-      "color": "cherry",
-      "retired": false
+      "color": "cherry"
     },
     {
       "id": "cute-hoodie-lilac",
       "style": "cute-hoodie",
-      "color": "lilac",
-      "retired": false
+      "color": "lilac"
     },
     {
       "id": "cute-hoodie-mint",
       "style": "cute-hoodie",
-      "color": "mint",
-      "retired": false
+      "color": "mint"
     },
     {
       "id": "cute-hoodie-peach",
       "style": "cute-hoodie",
-      "color": "peach",
-      "retired": false
+      "color": "peach"
     },
     {
       "id": "cute-hoodie-pink",
       "style": "cute-hoodie",
-      "color": "pink",
-      "retired": false
+      "color": "pink"
     },
     {
       "id": "cute-hoodie-white",
       "style": "cute-hoodie",
-      "color": "white",
-      "retired": false
-    },
-    {
-      "id": "denim-jacket-black",
-      "style": "denim-jacket",
-      "color": "black",
-      "retired": false
-    },
-    {
-      "id": "denim-jacket-dark-wash",
-      "style": "denim-jacket",
-      "color": "dark-wash",
-      "retired": false
-    },
-    {
-      "id": "denim-jacket-light-wash",
-      "style": "denim-jacket",
-      "color": "light-wash",
-      "retired": false
-    },
-    {
-      "id": "denim-jacket-mid-wash",
-      "style": "denim-jacket",
-      "color": "mid-wash",
-      "retired": false
-    },
-    {
-      "id": "graphic-tee-beige",
-      "style": "graphic-tee",
-      "color": "beige",
-      "retired": false
-    },
-    {
-      "id": "graphic-tee-black",
-      "style": "graphic-tee",
-      "color": "black",
-      "retired": false
-    },
-    {
-      "id": "graphic-tee-gray",
-      "style": "graphic-tee",
-      "color": "gray",
-      "retired": false
-    },
-    {
-      "id": "graphic-tee-mustard",
-      "style": "graphic-tee",
-      "color": "mustard",
-      "retired": false
-    },
-    {
-      "id": "graphic-tee-navy",
-      "style": "graphic-tee",
-      "color": "navy",
-      "retired": false
-    },
-    {
-      "id": "graphic-tee-olive",
-      "style": "graphic-tee",
-      "color": "olive",
-      "retired": false
-    },
-    {
-      "id": "graphic-tee-royal-blue",
-      "style": "graphic-tee",
-      "color": "royal-blue",
-      "retired": false
-    },
-    {
-      "id": "graphic-tee-white",
-      "style": "graphic-tee",
-      "color": "white",
-      "retired": false
-    },
-    {
-      "id": "graphic-tee-wine",
-      "style": "graphic-tee",
-      "color": "wine",
-      "retired": false
+      "color": "white"
     },
     {
       "id": "hoodie-beige",
       "style": "hoodie",
-      "color": "beige",
-      "retired": false
+      "color": "beige"
     },
     {
       "id": "hoodie-black",
       "style": "hoodie",
-      "color": "black",
-      "retired": false
+      "color": "black"
     },
     {
       "id": "hoodie-gray",
       "style": "hoodie",
-      "color": "gray",
-      "retired": false
+      "color": "gray"
     },
     {
       "id": "hoodie-mustard",
       "style": "hoodie",
-      "color": "mustard",
-      "retired": false
+      "color": "mustard"
     },
     {
       "id": "hoodie-navy",
       "style": "hoodie",
-      "color": "navy",
-      "retired": false
+      "color": "navy"
     },
     {
       "id": "hoodie-olive",
       "style": "hoodie",
-      "color": "olive",
-      "retired": false
+      "color": "olive"
     },
     {
       "id": "hoodie-royal-blue",
       "style": "hoodie",
-      "color": "royal-blue",
-      "retired": false
+      "color": "royal-blue"
     },
     {
       "id": "hoodie-white",
       "style": "hoodie",
-      "color": "white",
-      "retired": false
+      "color": "white"
     },
     {
       "id": "hoodie-wine",
       "style": "hoodie",
-      "color": "wine",
-      "retired": false
+      "color": "wine"
     },
     {
       "id": "jacket-black",
       "style": "jacket",
-      "color": "black",
-      "retired": false
+      "color": "black"
     },
     {
       "id": "jacket-blue",
       "style": "jacket",
-      "color": "blue",
-      "retired": false
+      "color": "blue"
     },
     {
       "id": "jacket-brown",
       "style": "jacket",
-      "color": "brown",
-      "retired": false
+      "color": "brown"
     },
     {
       "id": "jacket-cyan",
       "style": "jacket",
-      "color": "cyan",
-      "retired": false
+      "color": "cyan"
     },
     {
       "id": "jacket-gray",
       "style": "jacket",
-      "color": "gray",
-      "retired": false
+      "color": "gray"
     },
     {
       "id": "jacket-green",
       "style": "jacket",
-      "color": "green",
-      "retired": false
+      "color": "green"
     },
     {
       "id": "jacket-orange",
       "style": "jacket",
-      "color": "orange",
-      "retired": false
+      "color": "orange"
     },
     {
       "id": "jacket-pink",
       "style": "jacket",
-      "color": "pink",
-      "retired": false
+      "color": "pink"
     },
     {
       "id": "jacket-purple",
       "style": "jacket",
-      "color": "purple",
-      "retired": false
+      "color": "purple"
     },
     {
       "id": "jacket-red",
       "style": "jacket",
-      "color": "red",
-      "retired": false
+      "color": "red"
     },
     {
       "id": "jacket-white",
       "style": "jacket",
-      "color": "white",
-      "retired": false
+      "color": "white"
     },
     {
       "id": "jacket-yellow",
       "style": "jacket",
-      "color": "yellow",
-      "retired": false
-    },
-    {
-      "id": "long-sleeve-black",
-      "style": "long-sleeve",
-      "color": "black",
-      "retired": false
-    },
-    {
-      "id": "long-sleeve-blue",
-      "style": "long-sleeve",
-      "color": "blue",
-      "retired": false
-    },
-    {
-      "id": "long-sleeve-brown",
-      "style": "long-sleeve",
-      "color": "brown",
-      "retired": false
-    },
-    {
-      "id": "long-sleeve-cyan",
-      "style": "long-sleeve",
-      "color": "cyan",
-      "retired": false
-    },
-    {
-      "id": "long-sleeve-gray",
-      "style": "long-sleeve",
-      "color": "gray",
-      "retired": false
-    },
-    {
-      "id": "long-sleeve-green",
-      "style": "long-sleeve",
-      "color": "green",
-      "retired": false
-    },
-    {
-      "id": "long-sleeve-orange",
-      "style": "long-sleeve",
-      "color": "orange",
-      "retired": false
-    },
-    {
-      "id": "long-sleeve-pink",
-      "style": "long-sleeve",
-      "color": "pink",
-      "retired": false
-    },
-    {
-      "id": "long-sleeve-purple",
-      "style": "long-sleeve",
-      "color": "purple",
-      "retired": false
-    },
-    {
-      "id": "long-sleeve-red",
-      "style": "long-sleeve",
-      "color": "red",
-      "retired": false
-    },
-    {
-      "id": "long-sleeve-white",
-      "style": "long-sleeve",
-      "color": "white",
-      "retired": false
-    },
-    {
-      "id": "long-sleeve-yellow",
-      "style": "long-sleeve",
-      "color": "yellow",
-      "retired": false
+      "color": "yellow"
     },
     {
       "id": "plaid-shirt-gray",
       "style": "plaid-shirt",
-      "color": "gray",
-      "retired": false
+      "color": "gray"
     },
     {
       "id": "plaid-shirt-mustard",
       "style": "plaid-shirt",
-      "color": "mustard",
-      "retired": false
+      "color": "mustard"
     },
     {
       "id": "plaid-shirt-navy",
       "style": "plaid-shirt",
-      "color": "navy",
-      "retired": false
+      "color": "navy"
     },
     {
       "id": "plaid-shirt-olive",
       "style": "plaid-shirt",
-      "color": "olive",
-      "retired": false
+      "color": "olive"
     },
     {
       "id": "plaid-shirt-royal-blue",
       "style": "plaid-shirt",
-      "color": "royal-blue",
-      "retired": false
+      "color": "royal-blue"
     },
     {
       "id": "plaid-shirt-wine",
       "style": "plaid-shirt",
-      "color": "wine",
-      "retired": false
-    },
-    {
-      "id": "ruffle-blouse-baby-blue",
-      "style": "ruffle-blouse",
-      "color": "baby-blue",
-      "retired": false
-    },
-    {
-      "id": "ruffle-blouse-black",
-      "style": "ruffle-blouse",
-      "color": "black",
-      "retired": false
-    },
-    {
-      "id": "ruffle-blouse-butter-yellow",
-      "style": "ruffle-blouse",
-      "color": "butter-yellow",
-      "retired": false
-    },
-    {
-      "id": "ruffle-blouse-cherry",
-      "style": "ruffle-blouse",
-      "color": "cherry",
-      "retired": false
-    },
-    {
-      "id": "ruffle-blouse-lilac",
-      "style": "ruffle-blouse",
-      "color": "lilac",
-      "retired": false
-    },
-    {
-      "id": "ruffle-blouse-mint",
-      "style": "ruffle-blouse",
-      "color": "mint",
-      "retired": false
-    },
-    {
-      "id": "ruffle-blouse-peach",
-      "style": "ruffle-blouse",
-      "color": "peach",
-      "retired": false
-    },
-    {
-      "id": "ruffle-blouse-pink",
-      "style": "ruffle-blouse",
-      "color": "pink",
-      "retired": false
-    },
-    {
-      "id": "ruffle-blouse-white",
-      "style": "ruffle-blouse",
-      "color": "white",
-      "retired": false
-    },
-    {
-      "id": "sailor-blouse-baby-blue",
-      "style": "sailor-blouse",
-      "color": "baby-blue",
-      "retired": false
-    },
-    {
-      "id": "sailor-blouse-black",
-      "style": "sailor-blouse",
-      "color": "black",
-      "retired": false
-    },
-    {
-      "id": "sailor-blouse-butter-yellow",
-      "style": "sailor-blouse",
-      "color": "butter-yellow",
-      "retired": false
-    },
-    {
-      "id": "sailor-blouse-cherry",
-      "style": "sailor-blouse",
-      "color": "cherry",
-      "retired": false
-    },
-    {
-      "id": "sailor-blouse-lilac",
-      "style": "sailor-blouse",
-      "color": "lilac",
-      "retired": false
-    },
-    {
-      "id": "sailor-blouse-mint",
-      "style": "sailor-blouse",
-      "color": "mint",
-      "retired": false
-    },
-    {
-      "id": "sailor-blouse-peach",
-      "style": "sailor-blouse",
-      "color": "peach",
-      "retired": false
-    },
-    {
-      "id": "sailor-blouse-pink",
-      "style": "sailor-blouse",
-      "color": "pink",
-      "retired": false
-    },
-    {
-      "id": "sailor-blouse-white",
-      "style": "sailor-blouse",
-      "color": "white",
-      "retired": false
+      "color": "wine"
     },
     {
       "id": "t-shirt-black",
       "style": "t-shirt",
-      "color": "black",
-      "retired": false
+      "color": "black"
     },
     {
       "id": "t-shirt-blue",
       "style": "t-shirt",
-      "color": "blue",
-      "retired": false
+      "color": "blue"
     },
     {
       "id": "t-shirt-brown",
       "style": "t-shirt",
-      "color": "brown",
-      "retired": false
+      "color": "brown"
     },
     {
       "id": "t-shirt-cyan",
       "style": "t-shirt",
-      "color": "cyan",
-      "retired": false
+      "color": "cyan"
     },
     {
       "id": "t-shirt-gray",
       "style": "t-shirt",
-      "color": "gray",
-      "retired": false
+      "color": "gray"
     },
     {
       "id": "t-shirt-green",
       "style": "t-shirt",
-      "color": "green",
-      "retired": false
+      "color": "green"
     },
     {
       "id": "t-shirt-orange",
       "style": "t-shirt",
-      "color": "orange",
-      "retired": false
+      "color": "orange"
     },
     {
       "id": "t-shirt-pink",
       "style": "t-shirt",
-      "color": "pink",
-      "retired": false
+      "color": "pink"
     },
     {
       "id": "t-shirt-purple",
       "style": "t-shirt",
-      "color": "purple",
-      "retired": false
+      "color": "purple"
     },
     {
       "id": "t-shirt-red",
       "style": "t-shirt",
-      "color": "red",
-      "retired": false
+      "color": "red"
     },
     {
       "id": "t-shirt-white",
       "style": "t-shirt",
-      "color": "white",
-      "retired": false
+      "color": "white"
     },
     {
       "id": "t-shirt-yellow",
       "style": "t-shirt",
-      "color": "yellow",
-      "retired": false
+      "color": "yellow"
     },
     {
       "id": "tank-top-black",
       "style": "tank-top",
-      "color": "black",
-      "retired": false
+      "color": "black"
     },
     {
       "id": "tank-top-blue",
       "style": "tank-top",
-      "color": "blue",
-      "retired": false
+      "color": "blue"
     },
     {
       "id": "tank-top-brown",
       "style": "tank-top",
-      "color": "brown",
-      "retired": false
+      "color": "brown"
     },
     {
       "id": "tank-top-cyan",
       "style": "tank-top",
-      "color": "cyan",
-      "retired": false
+      "color": "cyan"
     },
     {
       "id": "tank-top-gray",
       "style": "tank-top",
-      "color": "gray",
-      "retired": false
+      "color": "gray"
     },
     {
       "id": "tank-top-green",
       "style": "tank-top",
-      "color": "green",
-      "retired": false
+      "color": "green"
     },
     {
       "id": "tank-top-orange",
       "style": "tank-top",
-      "color": "orange",
-      "retired": false
+      "color": "orange"
     },
     {
       "id": "tank-top-pink",
       "style": "tank-top",
-      "color": "pink",
-      "retired": false
+      "color": "pink"
     },
     {
       "id": "tank-top-purple",
       "style": "tank-top",
-      "color": "purple",
-      "retired": false
+      "color": "purple"
     },
     {
       "id": "tank-top-red",
       "style": "tank-top",
-      "color": "red",
-      "retired": false
+      "color": "red"
     },
     {
       "id": "tank-top-white",
       "style": "tank-top",
-      "color": "white",
-      "retired": false
+      "color": "white"
     },
     {
       "id": "tank-top-yellow",
       "style": "tank-top",
-      "color": "yellow",
-      "retired": false
-    },
-    {
-      "id": "tunic-black",
-      "style": "tunic",
-      "color": "black",
-      "retired": false
-    },
-    {
-      "id": "tunic-blue",
-      "style": "tunic",
-      "color": "blue",
-      "retired": false
-    },
-    {
-      "id": "tunic-brown",
-      "style": "tunic",
-      "color": "brown",
-      "retired": false
-    },
-    {
-      "id": "tunic-cyan",
-      "style": "tunic",
-      "color": "cyan",
-      "retired": false
-    },
-    {
-      "id": "tunic-gray",
-      "style": "tunic",
-      "color": "gray",
-      "retired": false
-    },
-    {
-      "id": "tunic-green",
-      "style": "tunic",
-      "color": "green",
-      "retired": false
-    },
-    {
-      "id": "tunic-orange",
-      "style": "tunic",
-      "color": "orange",
-      "retired": false
-    },
-    {
-      "id": "tunic-pink",
-      "style": "tunic",
-      "color": "pink",
-      "retired": false
-    },
-    {
-      "id": "tunic-purple",
-      "style": "tunic",
-      "color": "purple",
-      "retired": false
-    },
-    {
-      "id": "tunic-red",
-      "style": "tunic",
-      "color": "red",
-      "retired": false
-    },
-    {
-      "id": "tunic-white",
-      "style": "tunic",
-      "color": "white",
-      "retired": false
-    },
-    {
-      "id": "tunic-yellow",
-      "style": "tunic",
-      "color": "yellow",
-      "retired": false
+      "color": "yellow"
     }
   ],
   "bottom": [
     {
       "id": "flared-skirt-baby-blue",
       "style": "flared-skirt",
-      "color": "baby-blue",
-      "retired": false
+      "color": "baby-blue"
     },
     {
       "id": "flared-skirt-black",
       "style": "flared-skirt",
-      "color": "black",
-      "retired": false
+      "color": "black"
     },
     {
       "id": "flared-skirt-butter-yellow",
       "style": "flared-skirt",
-      "color": "butter-yellow",
-      "retired": false
+      "color": "butter-yellow"
     },
     {
       "id": "flared-skirt-cherry",
       "style": "flared-skirt",
-      "color": "cherry",
-      "retired": false
+      "color": "cherry"
     },
     {
       "id": "flared-skirt-lilac",
       "style": "flared-skirt",
-      "color": "lilac",
-      "retired": false
+      "color": "lilac"
     },
     {
       "id": "flared-skirt-mint",
       "style": "flared-skirt",
-      "color": "mint",
-      "retired": false
+      "color": "mint"
     },
     {
       "id": "flared-skirt-peach",
       "style": "flared-skirt",
-      "color": "peach",
-      "retired": false
+      "color": "peach"
     },
     {
       "id": "flared-skirt-pink",
       "style": "flared-skirt",
-      "color": "pink",
-      "retired": false
+      "color": "pink"
     },
     {
       "id": "flared-skirt-white",
       "style": "flared-skirt",
-      "color": "white",
-      "retired": false
-    },
-    {
-      "id": "joggers-beige",
-      "style": "joggers",
-      "color": "beige",
-      "retired": false
-    },
-    {
-      "id": "joggers-black",
-      "style": "joggers",
-      "color": "black",
-      "retired": false
-    },
-    {
-      "id": "joggers-gray",
-      "style": "joggers",
-      "color": "gray",
-      "retired": false
-    },
-    {
-      "id": "joggers-mustard",
-      "style": "joggers",
-      "color": "mustard",
-      "retired": false
-    },
-    {
-      "id": "joggers-navy",
-      "style": "joggers",
-      "color": "navy",
-      "retired": false
-    },
-    {
-      "id": "joggers-olive",
-      "style": "joggers",
-      "color": "olive",
-      "retired": false
-    },
-    {
-      "id": "joggers-royal-blue",
-      "style": "joggers",
-      "color": "royal-blue",
-      "retired": false
-    },
-    {
-      "id": "joggers-white",
-      "style": "joggers",
-      "color": "white",
-      "retired": false
-    },
-    {
-      "id": "joggers-wine",
-      "style": "joggers",
-      "color": "wine",
-      "retired": false
+      "color": "white"
     },
     {
       "id": "trousers-black",
       "style": "trousers",
-      "color": "black",
-      "retired": false
+      "color": "black"
     },
     {
       "id": "trousers-blue",
       "style": "trousers",
-      "color": "blue",
-      "retired": false
+      "color": "blue"
     },
     {
       "id": "trousers-brown",
       "style": "trousers",
-      "color": "brown",
-      "retired": false
+      "color": "brown"
     },
     {
       "id": "trousers-cyan",
       "style": "trousers",
-      "color": "cyan",
-      "retired": false
+      "color": "cyan"
     },
     {
       "id": "trousers-gray",
       "style": "trousers",
-      "color": "gray",
-      "retired": false
+      "color": "gray"
     },
     {
       "id": "trousers-green",
       "style": "trousers",
-      "color": "green",
-      "retired": false
+      "color": "green"
     },
     {
       "id": "trousers-orange",
       "style": "trousers",
-      "color": "orange",
-      "retired": false
+      "color": "orange"
     },
     {
       "id": "trousers-pink",
       "style": "trousers",
-      "color": "pink",
-      "retired": false
+      "color": "pink"
     },
     {
       "id": "trousers-purple",
       "style": "trousers",
-      "color": "purple",
-      "retired": false
+      "color": "purple"
     },
     {
       "id": "trousers-red",
       "style": "trousers",
-      "color": "red",
-      "retired": false
+      "color": "red"
     },
     {
       "id": "trousers-white",
       "style": "trousers",
-      "color": "white",
-      "retired": false
+      "color": "white"
     },
     {
       "id": "trousers-yellow",
       "style": "trousers",
-      "color": "yellow",
-      "retired": false
+      "color": "yellow"
     }
   ],
   "footwear": [
     {
-      "id": "boots-black",
-      "style": "boots",
-      "color": "black",
-      "retired": false
-    },
-    {
-      "id": "boots-blue",
-      "style": "boots",
-      "color": "blue",
-      "retired": false
-    },
-    {
-      "id": "boots-brown",
-      "style": "boots",
-      "color": "brown",
-      "retired": false
-    },
-    {
-      "id": "boots-cyan",
-      "style": "boots",
-      "color": "cyan",
-      "retired": false
-    },
-    {
-      "id": "boots-gray",
-      "style": "boots",
-      "color": "gray",
-      "retired": false
-    },
-    {
-      "id": "boots-green",
-      "style": "boots",
-      "color": "green",
-      "retired": false
-    },
-    {
-      "id": "boots-orange",
-      "style": "boots",
-      "color": "orange",
-      "retired": false
-    },
-    {
-      "id": "boots-pink",
-      "style": "boots",
-      "color": "pink",
-      "retired": false
-    },
-    {
-      "id": "boots-purple",
-      "style": "boots",
-      "color": "purple",
-      "retired": false
-    },
-    {
-      "id": "boots-red",
-      "style": "boots",
-      "color": "red",
-      "retired": false
-    },
-    {
-      "id": "boots-white",
-      "style": "boots",
-      "color": "white",
-      "retired": false
-    },
-    {
-      "id": "boots-yellow",
-      "style": "boots",
-      "color": "yellow",
-      "retired": false
-    },
-    {
       "id": "sneakers-beige",
       "style": "sneakers",
-      "color": "beige",
-      "retired": false
+      "color": "beige"
     },
     {
       "id": "sneakers-black",
       "style": "sneakers",
-      "color": "black",
-      "retired": false
+      "color": "black"
     },
     {
       "id": "sneakers-gray",
       "style": "sneakers",
-      "color": "gray",
-      "retired": false
+      "color": "gray"
     },
     {
       "id": "sneakers-mustard",
       "style": "sneakers",
-      "color": "mustard",
-      "retired": false
+      "color": "mustard"
     },
     {
       "id": "sneakers-navy",
       "style": "sneakers",
-      "color": "navy",
-      "retired": false
+      "color": "navy"
     },
     {
       "id": "sneakers-olive",
       "style": "sneakers",
-      "color": "olive",
-      "retired": false
+      "color": "olive"
     },
     {
       "id": "sneakers-royal-blue",
       "style": "sneakers",
-      "color": "royal-blue",
-      "retired": false
+      "color": "royal-blue"
     },
     {
       "id": "sneakers-white",
       "style": "sneakers",
-      "color": "white",
-      "retired": false
+      "color": "white"
     },
     {
       "id": "sneakers-wine",
       "style": "sneakers",
-      "color": "wine",
-      "retired": false
+      "color": "wine"
     }
   ],
   "overgarment": [
     {
       "id": "dress-baby-blue",
       "style": "dress",
-      "color": "baby-blue",
-      "retired": false
+      "color": "baby-blue"
     },
     {
       "id": "dress-black",
       "style": "dress",
-      "color": "black",
-      "retired": false
+      "color": "black"
     },
     {
       "id": "dress-butter-yellow",
       "style": "dress",
-      "color": "butter-yellow",
-      "retired": false
+      "color": "butter-yellow"
     },
     {
       "id": "dress-cherry",
       "style": "dress",
-      "color": "cherry",
-      "retired": false
+      "color": "cherry"
     },
     {
       "id": "dress-lilac",
       "style": "dress",
-      "color": "lilac",
-      "retired": false
+      "color": "lilac"
     },
     {
       "id": "dress-mint",
       "style": "dress",
-      "color": "mint",
-      "retired": false
+      "color": "mint"
     },
     {
       "id": "dress-peach",
       "style": "dress",
-      "color": "peach",
-      "retired": false
+      "color": "peach"
     },
     {
       "id": "dress-pink",
       "style": "dress",
-      "color": "pink",
-      "retired": false
+      "color": "pink"
     },
     {
       "id": "dress-white",
       "style": "dress",
-      "color": "white",
-      "retired": false
+      "color": "white"
     },
     {
       "id": "overalls-black",
       "style": "overalls",
-      "color": "black",
-      "retired": false
+      "color": "black"
     },
     {
       "id": "overalls-blue",
       "style": "overalls",
-      "color": "blue",
-      "retired": false
+      "color": "blue"
     },
     {
       "id": "overalls-brown",
       "style": "overalls",
-      "color": "brown",
-      "retired": false
+      "color": "brown"
     },
     {
       "id": "overalls-cyan",
       "style": "overalls",
-      "color": "cyan",
-      "retired": false
+      "color": "cyan"
     },
     {
       "id": "overalls-gray",
       "style": "overalls",
-      "color": "gray",
-      "retired": false
+      "color": "gray"
     },
     {
       "id": "overalls-green",
       "style": "overalls",
-      "color": "green",
-      "retired": false
+      "color": "green"
     },
     {
       "id": "overalls-orange",
       "style": "overalls",
-      "color": "orange",
-      "retired": false
+      "color": "orange"
     },
     {
       "id": "overalls-pink",
       "style": "overalls",
-      "color": "pink",
-      "retired": false
+      "color": "pink"
     },
     {
       "id": "overalls-purple",
       "style": "overalls",
-      "color": "purple",
-      "retired": false
+      "color": "purple"
     },
     {
       "id": "overalls-red",
       "style": "overalls",
-      "color": "red",
-      "retired": false
+      "color": "red"
     },
     {
       "id": "overalls-white",
       "style": "overalls",
-      "color": "white",
-      "retired": false
+      "color": "white"
     },
     {
       "id": "overalls-yellow",
       "style": "overalls",
-      "color": "yellow",
-      "retired": false
+      "color": "yellow"
     },
     {
       "id": "pinafore-skirt-baby-blue",
       "style": "pinafore-skirt",
-      "color": "baby-blue",
-      "retired": false
+      "color": "baby-blue"
     },
     {
       "id": "pinafore-skirt-black",
       "style": "pinafore-skirt",
-      "color": "black",
-      "retired": false
+      "color": "black"
     },
     {
       "id": "pinafore-skirt-butter-yellow",
       "style": "pinafore-skirt",
-      "color": "butter-yellow",
-      "retired": false
+      "color": "butter-yellow"
     },
     {
       "id": "pinafore-skirt-cherry",
       "style": "pinafore-skirt",
-      "color": "cherry",
-      "retired": false
+      "color": "cherry"
     },
     {
       "id": "pinafore-skirt-lilac",
       "style": "pinafore-skirt",
-      "color": "lilac",
-      "retired": false
+      "color": "lilac"
     },
     {
       "id": "pinafore-skirt-mint",
       "style": "pinafore-skirt",
-      "color": "mint",
-      "retired": false
+      "color": "mint"
     },
     {
       "id": "pinafore-skirt-peach",
       "style": "pinafore-skirt",
-      "color": "peach",
-      "retired": false
+      "color": "peach"
     },
     {
       "id": "pinafore-skirt-pink",
       "style": "pinafore-skirt",
-      "color": "pink",
-      "retired": false
+      "color": "pink"
     },
     {
       "id": "pinafore-skirt-white",
       "style": "pinafore-skirt",
-      "color": "white",
-      "retired": false
-    },
-    {
-      "id": "polka-dot-dress-baby-blue",
-      "style": "polka-dot-dress",
-      "color": "baby-blue",
-      "retired": false
-    },
-    {
-      "id": "polka-dot-dress-black",
-      "style": "polka-dot-dress",
-      "color": "black",
-      "retired": false
-    },
-    {
-      "id": "polka-dot-dress-butter-yellow",
-      "style": "polka-dot-dress",
-      "color": "butter-yellow",
-      "retired": false
-    },
-    {
-      "id": "polka-dot-dress-cherry",
-      "style": "polka-dot-dress",
-      "color": "cherry",
-      "retired": false
-    },
-    {
-      "id": "polka-dot-dress-lilac",
-      "style": "polka-dot-dress",
-      "color": "lilac",
-      "retired": false
-    },
-    {
-      "id": "polka-dot-dress-mint",
-      "style": "polka-dot-dress",
-      "color": "mint",
-      "retired": false
-    },
-    {
-      "id": "polka-dot-dress-peach",
-      "style": "polka-dot-dress",
-      "color": "peach",
-      "retired": false
-    },
-    {
-      "id": "polka-dot-dress-pink",
-      "style": "polka-dot-dress",
-      "color": "pink",
-      "retired": false
-    },
-    {
-      "id": "polka-dot-dress-white",
-      "style": "polka-dot-dress",
-      "color": "white",
-      "retired": false
+      "color": "white"
     }
   ],
   "neckwear": [
     {
       "id": "chain-gold",
       "style": "chain",
-      "color": "gold",
-      "retired": false
+      "color": "gold"
     },
     {
       "id": "chain-silver",
       "style": "chain",
-      "color": "silver",
-      "retired": false
-    },
-    {
-      "id": "scarf-black",
-      "style": "scarf",
-      "color": "black",
-      "retired": false
-    },
-    {
-      "id": "scarf-blue",
-      "style": "scarf",
-      "color": "blue",
-      "retired": false
-    },
-    {
-      "id": "scarf-brown",
-      "style": "scarf",
-      "color": "brown",
-      "retired": false
-    },
-    {
-      "id": "scarf-cyan",
-      "style": "scarf",
-      "color": "cyan",
-      "retired": false
-    },
-    {
-      "id": "scarf-gray",
-      "style": "scarf",
-      "color": "gray",
-      "retired": false
-    },
-    {
-      "id": "scarf-green",
-      "style": "scarf",
-      "color": "green",
-      "retired": false
-    },
-    {
-      "id": "scarf-orange",
-      "style": "scarf",
-      "color": "orange",
-      "retired": false
-    },
-    {
-      "id": "scarf-pink",
-      "style": "scarf",
-      "color": "pink",
-      "retired": false
-    },
-    {
-      "id": "scarf-purple",
-      "style": "scarf",
-      "color": "purple",
-      "retired": false
-    },
-    {
-      "id": "scarf-red",
-      "style": "scarf",
-      "color": "red",
-      "retired": false
-    },
-    {
-      "id": "scarf-white",
-      "style": "scarf",
-      "color": "white",
-      "retired": false
-    },
-    {
-      "id": "scarf-yellow",
-      "style": "scarf",
-      "color": "yellow",
-      "retired": false
+      "color": "silver"
     }
   ],
   "eyewear": [
     {
       "id": "round-glasses-black",
       "style": "round-glasses",
-      "color": "black",
-      "retired": false
+      "color": "black"
     },
     {
       "id": "round-glasses-blue",
       "style": "round-glasses",
-      "color": "blue",
-      "retired": false
+      "color": "blue"
     },
     {
       "id": "round-glasses-gold",
       "style": "round-glasses",
-      "color": "gold",
-      "retired": false
+      "color": "gold"
     },
     {
       "id": "round-glasses-red",
       "style": "round-glasses",
-      "color": "red",
-      "retired": false
+      "color": "red"
     },
     {
       "id": "sunglasses-black",
       "style": "sunglasses",
-      "color": "black",
-      "retired": false
+      "color": "black"
     },
     {
       "id": "sunglasses-blue",
       "style": "sunglasses",
-      "color": "blue",
-      "retired": false
+      "color": "blue"
     },
     {
       "id": "sunglasses-gold",
       "style": "sunglasses",
-      "color": "gold",
-      "retired": false
+      "color": "gold"
     },
     {
       "id": "sunglasses-pink",
       "style": "sunglasses",
-      "color": "pink",
-      "retired": false
+      "color": "pink"
     }
   ],
   "headwear": [
     {
       "id": "backwards-cap-black",
       "style": "backwards-cap",
-      "color": "black",
-      "retired": false
+      "color": "black"
     },
     {
       "id": "backwards-cap-navy",
       "style": "backwards-cap",
-      "color": "navy",
-      "retired": false
+      "color": "navy"
     },
     {
       "id": "backwards-cap-olive",
       "style": "backwards-cap",
-      "color": "olive",
-      "retired": false
+      "color": "olive"
     },
     {
       "id": "backwards-cap-royal-blue",
       "style": "backwards-cap",
-      "color": "royal-blue",
-      "retired": false
+      "color": "royal-blue"
     },
     {
       "id": "backwards-cap-white",
       "style": "backwards-cap",
-      "color": "white",
-      "retired": false
+      "color": "white"
     },
     {
       "id": "backwards-cap-wine",
       "style": "backwards-cap",
-      "color": "wine",
-      "retired": false
+      "color": "wine"
     },
     {
       "id": "bandana-black",
       "style": "bandana",
-      "color": "black",
-      "retired": false
+      "color": "black"
     },
     {
       "id": "bandana-blue",
       "style": "bandana",
-      "color": "blue",
-      "retired": false
+      "color": "blue"
     },
     {
       "id": "bandana-brown",
       "style": "bandana",
-      "color": "brown",
-      "retired": false
+      "color": "brown"
     },
     {
       "id": "bandana-cyan",
       "style": "bandana",
-      "color": "cyan",
-      "retired": false
+      "color": "cyan"
     },
     {
       "id": "bandana-gray",
       "style": "bandana",
-      "color": "gray",
-      "retired": false
+      "color": "gray"
     },
     {
       "id": "bandana-green",
       "style": "bandana",
-      "color": "green",
-      "retired": false
+      "color": "green"
     },
     {
       "id": "bandana-orange",
       "style": "bandana",
-      "color": "orange",
-      "retired": false
+      "color": "orange"
     },
     {
       "id": "bandana-pink",
       "style": "bandana",
-      "color": "pink",
-      "retired": false
+      "color": "pink"
     },
     {
       "id": "bandana-purple",
       "style": "bandana",
-      "color": "purple",
-      "retired": false
+      "color": "purple"
     },
     {
       "id": "bandana-red",
       "style": "bandana",
-      "color": "red",
-      "retired": false
+      "color": "red"
     },
     {
       "id": "bandana-white",
       "style": "bandana",
-      "color": "white",
-      "retired": false
+      "color": "white"
     },
     {
       "id": "bandana-yellow",
       "style": "bandana",
-      "color": "yellow",
-      "retired": false
+      "color": "yellow"
     },
     {
       "id": "beanie-blue",
       "style": "beanie",
-      "color": "blue",
-      "retired": false
+      "color": "blue"
     },
     {
       "id": "beanie-cyan",
       "style": "beanie",
-      "color": "cyan",
-      "retired": false
+      "color": "cyan"
     },
     {
       "id": "beanie-gray",
       "style": "beanie",
-      "color": "gray",
-      "retired": false
+      "color": "gray"
     },
     {
       "id": "beanie-green",
       "style": "beanie",
-      "color": "green",
-      "retired": false
+      "color": "green"
     },
     {
       "id": "beanie-orange",
       "style": "beanie",
-      "color": "orange",
-      "retired": false
+      "color": "orange"
     },
     {
       "id": "beanie-pink",
       "style": "beanie",
-      "color": "pink",
-      "retired": false
+      "color": "pink"
     },
     {
       "id": "beanie-purple",
       "style": "beanie",
-      "color": "purple",
-      "retired": false
+      "color": "purple"
     },
     {
       "id": "beanie-red",
       "style": "beanie",
-      "color": "red",
-      "retired": false
+      "color": "red"
     },
     {
       "id": "bow-black",
       "style": "bow",
-      "color": "black",
-      "retired": false
+      "color": "black"
     },
     {
       "id": "bow-blue",
       "style": "bow",
-      "color": "blue",
-      "retired": false
+      "color": "blue"
     },
     {
       "id": "bow-green",
       "style": "bow",
-      "color": "green",
-      "retired": false
+      "color": "green"
     },
     {
       "id": "bow-headband-baby-blue",
       "style": "bow-headband",
-      "color": "baby-blue",
-      "retired": false
+      "color": "baby-blue"
     },
     {
       "id": "bow-headband-black",
       "style": "bow-headband",
-      "color": "black",
-      "retired": false
+      "color": "black"
     },
     {
       "id": "bow-headband-cherry",
       "style": "bow-headband",
-      "color": "cherry",
-      "retired": false
+      "color": "cherry"
     },
     {
       "id": "bow-headband-lilac",
       "style": "bow-headband",
-      "color": "lilac",
-      "retired": false
+      "color": "lilac"
     },
     {
       "id": "bow-headband-pink",
       "style": "bow-headband",
-      "color": "pink",
-      "retired": false
+      "color": "pink"
     },
     {
       "id": "bow-headband-white",
       "style": "bow-headband",
-      "color": "white",
-      "retired": false
+      "color": "white"
     },
     {
       "id": "bow-pink",
       "style": "bow",
-      "color": "pink",
-      "retired": false
+      "color": "pink"
     },
     {
       "id": "bow-purple",
       "style": "bow",
-      "color": "purple",
-      "retired": false
+      "color": "purple"
     },
     {
       "id": "bow-red",
       "style": "bow",
-      "color": "red",
-      "retired": false
+      "color": "red"
     },
     {
       "id": "bow-white",
       "style": "bow",
-      "color": "white",
-      "retired": false
+      "color": "white"
     },
     {
       "id": "bow-yellow",
       "style": "bow",
-      "color": "yellow",
-      "retired": false
+      "color": "yellow"
     },
     {
       "id": "cap-black",
       "style": "cap",
-      "color": "black",
-      "retired": false
+      "color": "black"
     },
     {
       "id": "cap-blue",
       "style": "cap",
-      "color": "blue",
-      "retired": false
+      "color": "blue"
     },
     {
       "id": "cap-green",
       "style": "cap",
-      "color": "green",
-      "retired": false
+      "color": "green"
     },
     {
       "id": "cap-orange",
       "style": "cap",
-      "color": "orange",
-      "retired": false
+      "color": "orange"
     },
     {
       "id": "cap-pink",
       "style": "cap",
-      "color": "pink",
-      "retired": false
+      "color": "pink"
     },
     {
       "id": "cap-purple",
       "style": "cap",
-      "color": "purple",
-      "retired": false
+      "color": "purple"
     },
     {
       "id": "cap-red",
       "style": "cap",
-      "color": "red",
-      "retired": false
+      "color": "red"
     },
     {
       "id": "cap-white",
       "style": "cap",
-      "color": "white",
-      "retired": false
+      "color": "white"
     },
     {
       "id": "cat-ears-black",
       "style": "cat-ears",
-      "color": "black",
-      "retired": false
+      "color": "black"
     },
     {
       "id": "cat-ears-caramel",
       "style": "cat-ears",
-      "color": "caramel",
-      "retired": false
+      "color": "caramel"
     },
     {
       "id": "cat-ears-lilac",
       "style": "cat-ears",
-      "color": "lilac",
-      "retired": false
+      "color": "lilac"
     },
     {
       "id": "cat-ears-pink",
       "style": "cat-ears",
-      "color": "pink",
-      "retired": false
+      "color": "pink"
     },
     {
       "id": "cat-ears-white",
       "style": "cat-ears",
-      "color": "white",
-      "retired": false
+      "color": "white"
     },
     {
       "id": "crown-gold",
       "style": "crown",
-      "color": "gold",
-      "retired": false
+      "color": "gold"
     },
     {
       "id": "crown-silver",
       "style": "crown",
-      "color": "silver",
-      "retired": false
+      "color": "silver"
     },
     {
       "id": "flat-brim-cap-black",
       "style": "flat-brim-cap",
-      "color": "black",
-      "retired": false
+      "color": "black"
     },
     {
       "id": "flat-brim-cap-navy",
       "style": "flat-brim-cap",
-      "color": "navy",
-      "retired": false
+      "color": "navy"
     },
     {
       "id": "flat-brim-cap-olive",
       "style": "flat-brim-cap",
-      "color": "olive",
-      "retired": false
+      "color": "olive"
     },
     {
       "id": "flat-brim-cap-royal-blue",
       "style": "flat-brim-cap",
-      "color": "royal-blue",
-      "retired": false
+      "color": "royal-blue"
     },
     {
       "id": "flat-brim-cap-white",
       "style": "flat-brim-cap",
-      "color": "white",
-      "retired": false
+      "color": "white"
     },
     {
       "id": "flat-brim-cap-wine",
       "style": "flat-brim-cap",
-      "color": "wine",
-      "retired": false
+      "color": "wine"
     },
     {
       "id": "floral-crown-baby-blue",
       "style": "floral-crown",
-      "color": "baby-blue",
-      "retired": false
+      "color": "baby-blue"
     },
     {
       "id": "floral-crown-butter-yellow",
       "style": "floral-crown",
-      "color": "butter-yellow",
-      "retired": false
+      "color": "butter-yellow"
     },
     {
       "id": "floral-crown-cherry",
       "style": "floral-crown",
-      "color": "cherry",
-      "retired": false
+      "color": "cherry"
     },
     {
       "id": "floral-crown-lilac",
       "style": "floral-crown",
-      "color": "lilac",
-      "retired": false
+      "color": "lilac"
     },
     {
       "id": "floral-crown-pink",
       "style": "floral-crown",
-      "color": "pink",
-      "retired": false
+      "color": "pink"
     },
     {
       "id": "headphones-black",
       "style": "headphones",
-      "color": "black",
-      "retired": false
+      "color": "black"
     },
     {
       "id": "headphones-blue",
       "style": "headphones",
-      "color": "blue",
-      "retired": false
+      "color": "blue"
     },
     {
       "id": "headphones-green",
       "style": "headphones",
-      "color": "green",
-      "retired": false
+      "color": "green"
     },
     {
       "id": "headphones-mustard",
       "style": "headphones",
-      "color": "mustard",
-      "retired": false
+      "color": "mustard"
     },
     {
       "id": "headphones-white-red",
       "style": "headphones",
-      "color": "white-red",
-      "retired": false
+      "color": "white-red"
     },
     {
       "id": "headphones-wine",
       "style": "headphones",
-      "color": "wine",
-      "retired": false
+      "color": "wine"
     },
     {
       "id": "heart-clip-butter-yellow",
       "style": "heart-clip",
-      "color": "butter-yellow",
-      "retired": false
+      "color": "butter-yellow"
     },
     {
       "id": "heart-clip-cherry",
       "style": "heart-clip",
-      "color": "cherry",
-      "retired": false
+      "color": "cherry"
     },
     {
       "id": "heart-clip-lilac",
       "style": "heart-clip",
-      "color": "lilac",
-      "retired": false
+      "color": "lilac"
     },
     {
       "id": "heart-clip-mint",
       "style": "heart-clip",
-      "color": "mint",
-      "retired": false
+      "color": "mint"
     },
     {
       "id": "heart-clip-pink",
       "style": "heart-clip",
-      "color": "pink",
-      "retired": false
+      "color": "pink"
     },
     {
       "id": "short-beanie-black",
       "style": "short-beanie",
-      "color": "black",
-      "retired": false
+      "color": "black"
     },
     {
       "id": "short-beanie-gray",
       "style": "short-beanie",
-      "color": "gray",
-      "retired": false
+      "color": "gray"
     },
     {
       "id": "short-beanie-mustard",
       "style": "short-beanie",
-      "color": "mustard",
-      "retired": false
+      "color": "mustard"
     },
     {
       "id": "short-beanie-navy",
       "style": "short-beanie",
-      "color": "navy",
-      "retired": false
+      "color": "navy"
     },
     {
       "id": "short-beanie-olive",
       "style": "short-beanie",
-      "color": "olive",
-      "retired": false
+      "color": "olive"
     },
     {
       "id": "short-beanie-wine",
       "style": "short-beanie",
-      "color": "wine",
-      "retired": false
+      "color": "wine"
     },
     {
       "id": "straw-hat-black",
       "style": "straw-hat",
-      "color": "black",
-      "retired": false
+      "color": "black"
     },
     {
       "id": "straw-hat-blue",
       "style": "straw-hat",
-      "color": "blue",
-      "retired": false
+      "color": "blue"
     },
     {
       "id": "straw-hat-brown",
       "style": "straw-hat",
-      "color": "brown",
-      "retired": false
+      "color": "brown"
     },
     {
       "id": "straw-hat-straw",
       "style": "straw-hat",
-      "color": "straw",
-      "retired": false
+      "color": "straw"
     },
     {
       "id": "top-hat-black",
       "style": "top-hat",
-      "color": "black",
-      "retired": false
+      "color": "black"
     },
     {
       "id": "top-hat-brown",
       "style": "top-hat",
-      "color": "brown",
-      "retired": false
+      "color": "brown"
     },
     {
       "id": "top-hat-purple",
       "style": "top-hat",
-      "color": "purple",
-      "retired": false
+      "color": "purple"
     },
     {
       "id": "top-hat-red",
       "style": "top-hat",
-      "color": "red",
-      "retired": false
+      "color": "red"
     },
     {
       "id": "top-hat-white",
       "style": "top-hat",
-      "color": "white",
-      "retired": false
+      "color": "white"
     },
     {
       "id": "viking-helmet-bronze",
       "style": "viking-helmet",
-      "color": "bronze",
-      "retired": false
+      "color": "bronze"
     },
     {
       "id": "viking-helmet-gold",
       "style": "viking-helmet",
-      "color": "gold",
-      "retired": false
+      "color": "gold"
     },
     {
       "id": "viking-helmet-iron",
       "style": "viking-helmet",
-      "color": "iron",
-      "retired": false
+      "color": "iron"
     },
     {
       "id": "wizard-hat-black",
       "style": "wizard-hat",
-      "color": "black",
-      "retired": false
+      "color": "black"
     },
     {
       "id": "wizard-hat-blue",
       "style": "wizard-hat",
-      "color": "blue",
-      "retired": false
+      "color": "blue"
     },
     {
       "id": "wizard-hat-cyan",
       "style": "wizard-hat",
-      "color": "cyan",
-      "retired": false
+      "color": "cyan"
     },
     {
       "id": "wizard-hat-green",
       "style": "wizard-hat",
-      "color": "green",
-      "retired": false
+      "color": "green"
     },
     {
       "id": "wizard-hat-purple",
       "style": "wizard-hat",
-      "color": "purple",
-      "retired": false
+      "color": "purple"
     },
     {
       "id": "wizard-hat-red",
       "style": "wizard-hat",
-      "color": "red",
-      "retired": false
+      "color": "red"
     }
   ]
 } as const;
@@ -3871,2492 +2452,1864 @@ export const ASSET_POSITION_BY_ID: Readonly<Record<string, { x: number; y: numbe
     "x": 3168,
     "y": 0
   },
-  "hair:bowl-auburn": {
+  "hair:bun-auburn": {
     "x": 3456,
     "y": 0
   },
-  "hair:bowl-black": {
+  "hair:bun-black": {
     "x": 3744,
     "y": 0
   },
-  "hair:bowl-blue": {
-    "x": 0,
-    "y": 24
-  },
-  "hair:bowl-brown": {
-    "x": 288,
-    "y": 24
-  },
-  "hair:bowl-gray": {
-    "x": 576,
-    "y": 24
-  },
-  "hair:bowl-green": {
-    "x": 864,
-    "y": 24
-  },
-  "hair:bowl-light-brown": {
-    "x": 1152,
-    "y": 24
-  },
-  "hair:bowl-pink": {
-    "x": 1440,
-    "y": 24
-  },
-  "hair:bowl-platinum": {
-    "x": 1728,
-    "y": 24
-  },
-  "hair:bowl-purple": {
-    "x": 2016,
-    "y": 24
-  },
-  "hair:bowl-red": {
-    "x": 2304,
-    "y": 24
-  },
-  "hair:bowl-yellow": {
-    "x": 2592,
-    "y": 24
-  },
-  "hair:bun-auburn": {
-    "x": 2880,
-    "y": 24
-  },
-  "hair:bun-black": {
-    "x": 3168,
-    "y": 24
-  },
   "hair:bun-blue": {
-    "x": 3456,
+    "x": 0,
     "y": 24
   },
   "hair:bun-brown": {
-    "x": 3744,
+    "x": 288,
     "y": 24
   },
   "hair:bun-gray": {
-    "x": 0,
-    "y": 48
+    "x": 576,
+    "y": 24
   },
   "hair:bun-green": {
-    "x": 288,
-    "y": 48
+    "x": 864,
+    "y": 24
   },
   "hair:bun-light-brown": {
-    "x": 576,
-    "y": 48
+    "x": 1152,
+    "y": 24
   },
   "hair:bun-pink": {
-    "x": 864,
-    "y": 48
+    "x": 1440,
+    "y": 24
   },
   "hair:bun-platinum": {
-    "x": 1152,
-    "y": 48
+    "x": 1728,
+    "y": 24
   },
   "hair:bun-purple": {
-    "x": 1440,
-    "y": 48
+    "x": 2016,
+    "y": 24
   },
   "hair:bun-red": {
-    "x": 1728,
-    "y": 48
+    "x": 2304,
+    "y": 24
   },
   "hair:bun-yellow": {
-    "x": 2016,
-    "y": 48
+    "x": 2592,
+    "y": 24
   },
   "hair:buzz-cut-black": {
-    "x": 2304,
-    "y": 48
+    "x": 2880,
+    "y": 24
   },
   "hair:buzz-cut-bleached": {
-    "x": 2592,
-    "y": 48
+    "x": 3168,
+    "y": 24
   },
   "hair:buzz-cut-blonde": {
-    "x": 2880,
-    "y": 48
+    "x": 3456,
+    "y": 24
   },
   "hair:buzz-cut-blue": {
-    "x": 3168,
-    "y": 48
+    "x": 3744,
+    "y": 24
   },
   "hair:buzz-cut-brown": {
-    "x": 3456,
+    "x": 0,
     "y": 48
   },
   "hair:buzz-cut-ginger": {
-    "x": 3744,
+    "x": 288,
     "y": 48
   },
   "hair:buzz-cut-gray": {
-    "x": 0,
-    "y": 72
+    "x": 576,
+    "y": 48
   },
   "hair:buzz-cut-green": {
-    "x": 288,
-    "y": 72
+    "x": 864,
+    "y": 48
   },
   "hair:buzz-cut-light-brown": {
-    "x": 576,
-    "y": 72
+    "x": 1152,
+    "y": 48
   },
   "hair:buzz-cut-platinum": {
-    "x": 864,
-    "y": 72
+    "x": 1440,
+    "y": 48
   },
   "hair:buzz-cut-purple": {
-    "x": 1152,
-    "y": 72
+    "x": 1728,
+    "y": 48
   },
   "hair:buzz-cut-red": {
-    "x": 1440,
-    "y": 72
-  },
-  "hair:chanel-fringe-auburn": {
-    "x": 1728,
-    "y": 72
-  },
-  "hair:chanel-fringe-baby-blue": {
     "x": 2016,
-    "y": 72
-  },
-  "hair:chanel-fringe-black": {
-    "x": 2304,
-    "y": 72
-  },
-  "hair:chanel-fringe-blonde": {
-    "x": 2592,
-    "y": 72
-  },
-  "hair:chanel-fringe-brown": {
-    "x": 2880,
-    "y": 72
-  },
-  "hair:chanel-fringe-cherry": {
-    "x": 3168,
-    "y": 72
-  },
-  "hair:chanel-fringe-light-brown": {
-    "x": 3456,
-    "y": 72
-  },
-  "hair:chanel-fringe-lilac": {
-    "x": 3744,
-    "y": 72
-  },
-  "hair:chanel-fringe-mint": {
-    "x": 0,
-    "y": 96
-  },
-  "hair:chanel-fringe-pastel-pink": {
-    "x": 288,
-    "y": 96
-  },
-  "hair:chanel-fringe-peach": {
-    "x": 576,
-    "y": 96
-  },
-  "hair:chanel-fringe-platinum": {
-    "x": 864,
-    "y": 96
+    "y": 48
   },
   "hair:curly-fade-black": {
-    "x": 1152,
-    "y": 96
+    "x": 2304,
+    "y": 48
   },
   "hair:curly-fade-bleached": {
-    "x": 1440,
-    "y": 96
+    "x": 2592,
+    "y": 48
   },
   "hair:curly-fade-blonde": {
-    "x": 1728,
-    "y": 96
+    "x": 2880,
+    "y": 48
   },
   "hair:curly-fade-blue": {
-    "x": 2016,
-    "y": 96
+    "x": 3168,
+    "y": 48
   },
   "hair:curly-fade-brown": {
-    "x": 2304,
-    "y": 96
+    "x": 3456,
+    "y": 48
   },
   "hair:curly-fade-ginger": {
-    "x": 2592,
-    "y": 96
+    "x": 3744,
+    "y": 48
   },
   "hair:curly-fade-gray": {
-    "x": 2880,
-    "y": 96
+    "x": 0,
+    "y": 72
   },
   "hair:curly-fade-green": {
-    "x": 3168,
-    "y": 96
+    "x": 288,
+    "y": 72
   },
   "hair:curly-fade-light-brown": {
-    "x": 3456,
-    "y": 96
+    "x": 576,
+    "y": 72
   },
   "hair:curly-fade-platinum": {
+    "x": 864,
+    "y": 72
+  },
+  "hair:curly-fade-purple": {
+    "x": 1152,
+    "y": 72
+  },
+  "hair:curly-fade-red": {
+    "x": 1440,
+    "y": 72
+  },
+  "hair:double-buns-auburn": {
+    "x": 1728,
+    "y": 72
+  },
+  "hair:double-buns-baby-blue": {
+    "x": 2016,
+    "y": 72
+  },
+  "hair:double-buns-black": {
+    "x": 2304,
+    "y": 72
+  },
+  "hair:double-buns-blonde": {
+    "x": 2592,
+    "y": 72
+  },
+  "hair:double-buns-brown": {
+    "x": 2880,
+    "y": 72
+  },
+  "hair:double-buns-cherry": {
+    "x": 3168,
+    "y": 72
+  },
+  "hair:double-buns-light-brown": {
+    "x": 3456,
+    "y": 72
+  },
+  "hair:double-buns-lilac": {
+    "x": 3744,
+    "y": 72
+  },
+  "hair:double-buns-mint": {
+    "x": 0,
+    "y": 96
+  },
+  "hair:double-buns-pastel-pink": {
+    "x": 288,
+    "y": 96
+  },
+  "hair:double-buns-peach": {
+    "x": 576,
+    "y": 96
+  },
+  "hair:double-buns-platinum": {
+    "x": 864,
+    "y": 96
+  },
+  "hair:dreads-black": {
+    "x": 1152,
+    "y": 96
+  },
+  "hair:dreads-bleached": {
+    "x": 1440,
+    "y": 96
+  },
+  "hair:dreads-blonde": {
+    "x": 1728,
+    "y": 96
+  },
+  "hair:dreads-blue": {
+    "x": 2016,
+    "y": 96
+  },
+  "hair:dreads-brown": {
+    "x": 2304,
+    "y": 96
+  },
+  "hair:dreads-ginger": {
+    "x": 2592,
+    "y": 96
+  },
+  "hair:dreads-gray": {
+    "x": 2880,
+    "y": 96
+  },
+  "hair:dreads-green": {
+    "x": 3168,
+    "y": 96
+  },
+  "hair:dreads-light-brown": {
+    "x": 3456,
+    "y": 96
+  },
+  "hair:dreads-platinum": {
     "x": 3744,
     "y": 96
   },
-  "hair:curly-fade-purple": {
-    "x": 0,
-    "y": 120
-  },
-  "hair:curly-fade-red": {
-    "x": 288,
-    "y": 120
-  },
-  "hair:double-buns-auburn": {
-    "x": 576,
-    "y": 120
-  },
-  "hair:double-buns-baby-blue": {
-    "x": 864,
-    "y": 120
-  },
-  "hair:double-buns-black": {
-    "x": 1152,
-    "y": 120
-  },
-  "hair:double-buns-blonde": {
-    "x": 1440,
-    "y": 120
-  },
-  "hair:double-buns-brown": {
-    "x": 1728,
-    "y": 120
-  },
-  "hair:double-buns-cherry": {
-    "x": 2016,
-    "y": 120
-  },
-  "hair:double-buns-light-brown": {
-    "x": 2304,
-    "y": 120
-  },
-  "hair:double-buns-lilac": {
-    "x": 2592,
-    "y": 120
-  },
-  "hair:double-buns-mint": {
-    "x": 2880,
-    "y": 120
-  },
-  "hair:double-buns-pastel-pink": {
-    "x": 3168,
-    "y": 120
-  },
-  "hair:double-buns-peach": {
-    "x": 3456,
-    "y": 120
-  },
-  "hair:double-buns-platinum": {
-    "x": 3744,
-    "y": 120
-  },
-  "hair:dreads-black": {
-    "x": 0,
-    "y": 144
-  },
-  "hair:dreads-bleached": {
-    "x": 288,
-    "y": 144
-  },
-  "hair:dreads-blonde": {
-    "x": 576,
-    "y": 144
-  },
-  "hair:dreads-blue": {
-    "x": 864,
-    "y": 144
-  },
-  "hair:dreads-brown": {
-    "x": 1152,
-    "y": 144
-  },
-  "hair:dreads-ginger": {
-    "x": 1440,
-    "y": 144
-  },
-  "hair:dreads-gray": {
-    "x": 1728,
-    "y": 144
-  },
-  "hair:dreads-green": {
-    "x": 2016,
-    "y": 144
-  },
-  "hair:dreads-light-brown": {
-    "x": 2304,
-    "y": 144
-  },
-  "hair:dreads-platinum": {
-    "x": 2592,
-    "y": 144
-  },
   "hair:dreads-purple": {
-    "x": 2880,
-    "y": 144
+    "x": 0,
+    "y": 120
   },
   "hair:dreads-red": {
-    "x": 3168,
-    "y": 144
+    "x": 288,
+    "y": 120
   },
   "hair:emo-fringe-black": {
-    "x": 3456,
-    "y": 144
+    "x": 576,
+    "y": 120
   },
   "hair:emo-fringe-bleached": {
+    "x": 864,
+    "y": 120
+  },
+  "hair:emo-fringe-blonde": {
+    "x": 1152,
+    "y": 120
+  },
+  "hair:emo-fringe-blue": {
+    "x": 1440,
+    "y": 120
+  },
+  "hair:emo-fringe-brown": {
+    "x": 1728,
+    "y": 120
+  },
+  "hair:emo-fringe-ginger": {
+    "x": 2016,
+    "y": 120
+  },
+  "hair:emo-fringe-gray": {
+    "x": 2304,
+    "y": 120
+  },
+  "hair:emo-fringe-green": {
+    "x": 2592,
+    "y": 120
+  },
+  "hair:emo-fringe-light-brown": {
+    "x": 2880,
+    "y": 120
+  },
+  "hair:emo-fringe-platinum": {
+    "x": 3168,
+    "y": 120
+  },
+  "hair:emo-fringe-purple": {
+    "x": 3456,
+    "y": 120
+  },
+  "hair:emo-fringe-red": {
+    "x": 3744,
+    "y": 120
+  },
+  "hair:hime-auburn": {
+    "x": 0,
+    "y": 144
+  },
+  "hair:hime-baby-blue": {
+    "x": 288,
+    "y": 144
+  },
+  "hair:hime-black": {
+    "x": 576,
+    "y": 144
+  },
+  "hair:hime-blonde": {
+    "x": 864,
+    "y": 144
+  },
+  "hair:hime-brown": {
+    "x": 1152,
+    "y": 144
+  },
+  "hair:hime-cherry": {
+    "x": 1440,
+    "y": 144
+  },
+  "hair:hime-light-brown": {
+    "x": 1728,
+    "y": 144
+  },
+  "hair:hime-lilac": {
+    "x": 2016,
+    "y": 144
+  },
+  "hair:hime-mint": {
+    "x": 2304,
+    "y": 144
+  },
+  "hair:hime-pastel-pink": {
+    "x": 2592,
+    "y": 144
+  },
+  "hair:hime-peach": {
+    "x": 2880,
+    "y": 144
+  },
+  "hair:hime-platinum": {
+    "x": 3168,
+    "y": 144
+  },
+  "hair:long-pigtails-auburn": {
+    "x": 3456,
+    "y": 144
+  },
+  "hair:long-pigtails-baby-blue": {
     "x": 3744,
     "y": 144
   },
-  "hair:emo-fringe-blonde": {
-    "x": 0,
-    "y": 168
-  },
-  "hair:emo-fringe-blue": {
-    "x": 288,
-    "y": 168
-  },
-  "hair:emo-fringe-brown": {
-    "x": 576,
-    "y": 168
-  },
-  "hair:emo-fringe-ginger": {
-    "x": 864,
-    "y": 168
-  },
-  "hair:emo-fringe-gray": {
-    "x": 1152,
-    "y": 168
-  },
-  "hair:emo-fringe-green": {
-    "x": 1440,
-    "y": 168
-  },
-  "hair:emo-fringe-light-brown": {
-    "x": 1728,
-    "y": 168
-  },
-  "hair:emo-fringe-platinum": {
-    "x": 2016,
-    "y": 168
-  },
-  "hair:emo-fringe-purple": {
-    "x": 2304,
-    "y": 168
-  },
-  "hair:emo-fringe-red": {
-    "x": 2592,
-    "y": 168
-  },
-  "hair:hime-auburn": {
-    "x": 2880,
-    "y": 168
-  },
-  "hair:hime-baby-blue": {
-    "x": 3168,
-    "y": 168
-  },
-  "hair:hime-black": {
-    "x": 3456,
-    "y": 168
-  },
-  "hair:hime-blonde": {
-    "x": 3744,
-    "y": 168
-  },
-  "hair:hime-brown": {
-    "x": 0,
-    "y": 192
-  },
-  "hair:hime-cherry": {
-    "x": 288,
-    "y": 192
-  },
-  "hair:hime-light-brown": {
-    "x": 576,
-    "y": 192
-  },
-  "hair:hime-lilac": {
-    "x": 864,
-    "y": 192
-  },
-  "hair:hime-mint": {
-    "x": 1152,
-    "y": 192
-  },
-  "hair:hime-pastel-pink": {
-    "x": 1440,
-    "y": 192
-  },
-  "hair:hime-peach": {
-    "x": 1728,
-    "y": 192
-  },
-  "hair:hime-platinum": {
-    "x": 2016,
-    "y": 192
-  },
-  "hair:long-auburn": {
-    "x": 2304,
-    "y": 192
-  },
-  "hair:long-black": {
-    "x": 2592,
-    "y": 192
-  },
-  "hair:long-blue": {
-    "x": 2880,
-    "y": 192
-  },
-  "hair:long-brown": {
-    "x": 3168,
-    "y": 192
-  },
-  "hair:long-gray": {
-    "x": 3456,
-    "y": 192
-  },
-  "hair:long-green": {
-    "x": 3744,
-    "y": 192
-  },
-  "hair:long-light-brown": {
-    "x": 0,
-    "y": 216
-  },
-  "hair:long-pigtails-auburn": {
-    "x": 288,
-    "y": 216
-  },
-  "hair:long-pigtails-baby-blue": {
-    "x": 576,
-    "y": 216
-  },
   "hair:long-pigtails-black": {
-    "x": 864,
-    "y": 216
+    "x": 0,
+    "y": 168
   },
   "hair:long-pigtails-blonde": {
-    "x": 1152,
-    "y": 216
+    "x": 288,
+    "y": 168
   },
   "hair:long-pigtails-brown": {
-    "x": 1440,
-    "y": 216
+    "x": 576,
+    "y": 168
   },
   "hair:long-pigtails-cherry": {
-    "x": 1728,
-    "y": 216
+    "x": 864,
+    "y": 168
   },
   "hair:long-pigtails-light-brown": {
-    "x": 2016,
-    "y": 216
+    "x": 1152,
+    "y": 168
   },
   "hair:long-pigtails-lilac": {
-    "x": 2304,
-    "y": 216
+    "x": 1440,
+    "y": 168
   },
   "hair:long-pigtails-mint": {
-    "x": 2592,
-    "y": 216
+    "x": 1728,
+    "y": 168
   },
   "hair:long-pigtails-pastel-pink": {
-    "x": 2880,
-    "y": 216
+    "x": 2016,
+    "y": 168
   },
   "hair:long-pigtails-peach": {
-    "x": 3168,
-    "y": 216
+    "x": 2304,
+    "y": 168
   },
   "hair:long-pigtails-platinum": {
-    "x": 3456,
-    "y": 216
-  },
-  "hair:long-pink": {
-    "x": 3744,
-    "y": 216
-  },
-  "hair:long-platinum": {
-    "x": 0,
-    "y": 240
-  },
-  "hair:long-purple": {
-    "x": 288,
-    "y": 240
-  },
-  "hair:long-red": {
-    "x": 576,
-    "y": 240
-  },
-  "hair:long-yellow": {
-    "x": 864,
-    "y": 240
+    "x": 2592,
+    "y": 168
   },
   "hair:man-bun-black": {
-    "x": 1152,
-    "y": 240
+    "x": 2880,
+    "y": 168
   },
   "hair:man-bun-bleached": {
-    "x": 1440,
-    "y": 240
+    "x": 3168,
+    "y": 168
   },
   "hair:man-bun-blonde": {
-    "x": 1728,
-    "y": 240
+    "x": 3456,
+    "y": 168
   },
   "hair:man-bun-blue": {
-    "x": 2016,
-    "y": 240
+    "x": 3744,
+    "y": 168
   },
   "hair:man-bun-brown": {
-    "x": 2304,
-    "y": 240
+    "x": 0,
+    "y": 192
   },
   "hair:man-bun-ginger": {
-    "x": 2592,
-    "y": 240
+    "x": 288,
+    "y": 192
   },
   "hair:man-bun-gray": {
-    "x": 2880,
-    "y": 240
+    "x": 576,
+    "y": 192
   },
   "hair:man-bun-green": {
-    "x": 3168,
-    "y": 240
+    "x": 864,
+    "y": 192
   },
   "hair:man-bun-light-brown": {
-    "x": 3456,
-    "y": 240
+    "x": 1152,
+    "y": 192
   },
   "hair:man-bun-platinum": {
+    "x": 1440,
+    "y": 192
+  },
+  "hair:man-bun-purple": {
+    "x": 1728,
+    "y": 192
+  },
+  "hair:man-bun-red": {
+    "x": 2016,
+    "y": 192
+  },
+  "hair:mohawk-auburn": {
+    "x": 2304,
+    "y": 192
+  },
+  "hair:mohawk-black": {
+    "x": 2592,
+    "y": 192
+  },
+  "hair:mohawk-blue": {
+    "x": 2880,
+    "y": 192
+  },
+  "hair:mohawk-brown": {
+    "x": 3168,
+    "y": 192
+  },
+  "hair:mohawk-gray": {
+    "x": 3456,
+    "y": 192
+  },
+  "hair:mohawk-green": {
+    "x": 3744,
+    "y": 192
+  },
+  "hair:mohawk-light-brown": {
+    "x": 0,
+    "y": 216
+  },
+  "hair:mohawk-pink": {
+    "x": 288,
+    "y": 216
+  },
+  "hair:mohawk-platinum": {
+    "x": 576,
+    "y": 216
+  },
+  "hair:mohawk-purple": {
+    "x": 864,
+    "y": 216
+  },
+  "hair:mohawk-red": {
+    "x": 1152,
+    "y": 216
+  },
+  "hair:mohawk-yellow": {
+    "x": 1440,
+    "y": 216
+  },
+  "hair:mullet-black": {
+    "x": 1728,
+    "y": 216
+  },
+  "hair:mullet-bleached": {
+    "x": 2016,
+    "y": 216
+  },
+  "hair:mullet-blonde": {
+    "x": 2304,
+    "y": 216
+  },
+  "hair:mullet-blue": {
+    "x": 2592,
+    "y": 216
+  },
+  "hair:mullet-brown": {
+    "x": 2880,
+    "y": 216
+  },
+  "hair:mullet-ginger": {
+    "x": 3168,
+    "y": 216
+  },
+  "hair:mullet-gray": {
+    "x": 3456,
+    "y": 216
+  },
+  "hair:mullet-green": {
+    "x": 3744,
+    "y": 216
+  },
+  "hair:mullet-light-brown": {
+    "x": 0,
+    "y": 240
+  },
+  "hair:mullet-platinum": {
+    "x": 288,
+    "y": 240
+  },
+  "hair:mullet-purple": {
+    "x": 576,
+    "y": 240
+  },
+  "hair:mullet-red": {
+    "x": 864,
+    "y": 240
+  },
+  "hair:ponytail-auburn": {
+    "x": 1152,
+    "y": 240
+  },
+  "hair:ponytail-black": {
+    "x": 1440,
+    "y": 240
+  },
+  "hair:ponytail-blue": {
+    "x": 1728,
+    "y": 240
+  },
+  "hair:ponytail-brown": {
+    "x": 2016,
+    "y": 240
+  },
+  "hair:ponytail-gray": {
+    "x": 2304,
+    "y": 240
+  },
+  "hair:ponytail-green": {
+    "x": 2592,
+    "y": 240
+  },
+  "hair:ponytail-light-brown": {
+    "x": 2880,
+    "y": 240
+  },
+  "hair:ponytail-pink": {
+    "x": 3168,
+    "y": 240
+  },
+  "hair:ponytail-platinum": {
+    "x": 3456,
+    "y": 240
+  },
+  "hair:ponytail-purple": {
     "x": 3744,
     "y": 240
   },
-  "hair:man-bun-purple": {
-    "x": 0,
-    "y": 264
-  },
-  "hair:man-bun-red": {
-    "x": 288,
-    "y": 264
-  },
-  "hair:mohawk-auburn": {
-    "x": 576,
-    "y": 264
-  },
-  "hair:mohawk-black": {
-    "x": 864,
-    "y": 264
-  },
-  "hair:mohawk-blue": {
-    "x": 1152,
-    "y": 264
-  },
-  "hair:mohawk-brown": {
-    "x": 1440,
-    "y": 264
-  },
-  "hair:mohawk-gray": {
-    "x": 1728,
-    "y": 264
-  },
-  "hair:mohawk-green": {
-    "x": 2016,
-    "y": 264
-  },
-  "hair:mohawk-light-brown": {
-    "x": 2304,
-    "y": 264
-  },
-  "hair:mohawk-pink": {
-    "x": 2592,
-    "y": 264
-  },
-  "hair:mohawk-platinum": {
-    "x": 2880,
-    "y": 264
-  },
-  "hair:mohawk-purple": {
-    "x": 3168,
-    "y": 264
-  },
-  "hair:mohawk-red": {
-    "x": 3456,
-    "y": 264
-  },
-  "hair:mohawk-yellow": {
-    "x": 3744,
-    "y": 264
-  },
-  "hair:mullet-black": {
-    "x": 0,
-    "y": 288
-  },
-  "hair:mullet-bleached": {
-    "x": 288,
-    "y": 288
-  },
-  "hair:mullet-blonde": {
-    "x": 576,
-    "y": 288
-  },
-  "hair:mullet-blue": {
-    "x": 864,
-    "y": 288
-  },
-  "hair:mullet-brown": {
-    "x": 1152,
-    "y": 288
-  },
-  "hair:mullet-ginger": {
-    "x": 1440,
-    "y": 288
-  },
-  "hair:mullet-gray": {
-    "x": 1728,
-    "y": 288
-  },
-  "hair:mullet-green": {
-    "x": 2016,
-    "y": 288
-  },
-  "hair:mullet-light-brown": {
-    "x": 2304,
-    "y": 288
-  },
-  "hair:mullet-platinum": {
-    "x": 2592,
-    "y": 288
-  },
-  "hair:mullet-purple": {
-    "x": 2880,
-    "y": 288
-  },
-  "hair:mullet-red": {
-    "x": 3168,
-    "y": 288
-  },
-  "hair:pigtails-auburn": {
-    "x": 3456,
-    "y": 288
-  },
-  "hair:pigtails-black": {
-    "x": 3744,
-    "y": 288
-  },
-  "hair:pigtails-blue": {
-    "x": 0,
-    "y": 312
-  },
-  "hair:pigtails-brown": {
-    "x": 288,
-    "y": 312
-  },
-  "hair:pigtails-gray": {
-    "x": 576,
-    "y": 312
-  },
-  "hair:pigtails-green": {
-    "x": 864,
-    "y": 312
-  },
-  "hair:pigtails-light-brown": {
-    "x": 1152,
-    "y": 312
-  },
-  "hair:pigtails-pink": {
-    "x": 1440,
-    "y": 312
-  },
-  "hair:pigtails-platinum": {
-    "x": 1728,
-    "y": 312
-  },
-  "hair:pigtails-purple": {
-    "x": 2016,
-    "y": 312
-  },
-  "hair:pigtails-red": {
-    "x": 2304,
-    "y": 312
-  },
-  "hair:pigtails-yellow": {
-    "x": 2592,
-    "y": 312
-  },
-  "hair:ponytail-auburn": {
-    "x": 2880,
-    "y": 312
-  },
-  "hair:ponytail-black": {
-    "x": 3168,
-    "y": 312
-  },
-  "hair:ponytail-blue": {
-    "x": 3456,
-    "y": 312
-  },
-  "hair:ponytail-brown": {
-    "x": 3744,
-    "y": 312
-  },
-  "hair:ponytail-gray": {
-    "x": 0,
-    "y": 336
-  },
-  "hair:ponytail-green": {
-    "x": 288,
-    "y": 336
-  },
-  "hair:ponytail-light-brown": {
-    "x": 576,
-    "y": 336
-  },
-  "hair:ponytail-pink": {
-    "x": 864,
-    "y": 336
-  },
-  "hair:ponytail-platinum": {
-    "x": 1152,
-    "y": 336
-  },
-  "hair:ponytail-purple": {
-    "x": 1440,
-    "y": 336
-  },
   "hair:ponytail-red": {
-    "x": 1728,
-    "y": 336
+    "x": 0,
+    "y": 264
   },
   "hair:ponytail-yellow": {
-    "x": 2016,
-    "y": 336
+    "x": 288,
+    "y": 264
   },
   "hair:quiff-black": {
-    "x": 2304,
-    "y": 336
+    "x": 576,
+    "y": 264
   },
   "hair:quiff-bleached": {
-    "x": 2592,
-    "y": 336
+    "x": 864,
+    "y": 264
   },
   "hair:quiff-blonde": {
-    "x": 2880,
-    "y": 336
+    "x": 1152,
+    "y": 264
   },
   "hair:quiff-blue": {
-    "x": 3168,
-    "y": 336
+    "x": 1440,
+    "y": 264
   },
   "hair:quiff-brown": {
-    "x": 3456,
-    "y": 336
+    "x": 1728,
+    "y": 264
   },
   "hair:quiff-ginger": {
+    "x": 2016,
+    "y": 264
+  },
+  "hair:quiff-gray": {
+    "x": 2304,
+    "y": 264
+  },
+  "hair:quiff-green": {
+    "x": 2592,
+    "y": 264
+  },
+  "hair:quiff-light-brown": {
+    "x": 2880,
+    "y": 264
+  },
+  "hair:quiff-platinum": {
+    "x": 3168,
+    "y": 264
+  },
+  "hair:quiff-purple": {
+    "x": 3456,
+    "y": 264
+  },
+  "hair:quiff-red": {
+    "x": 3744,
+    "y": 264
+  },
+  "hair:short-auburn": {
+    "x": 0,
+    "y": 288
+  },
+  "hair:short-black": {
+    "x": 288,
+    "y": 288
+  },
+  "hair:short-blue": {
+    "x": 576,
+    "y": 288
+  },
+  "hair:short-brown": {
+    "x": 864,
+    "y": 288
+  },
+  "hair:short-gray": {
+    "x": 1152,
+    "y": 288
+  },
+  "hair:short-green": {
+    "x": 1440,
+    "y": 288
+  },
+  "hair:short-light-brown": {
+    "x": 1728,
+    "y": 288
+  },
+  "hair:short-pink": {
+    "x": 2016,
+    "y": 288
+  },
+  "hair:short-platinum": {
+    "x": 2304,
+    "y": 288
+  },
+  "hair:short-purple": {
+    "x": 2592,
+    "y": 288
+  },
+  "hair:short-red": {
+    "x": 2880,
+    "y": 288
+  },
+  "hair:short-yellow": {
+    "x": 3168,
+    "y": 288
+  },
+  "hair:side-part-black": {
+    "x": 3456,
+    "y": 288
+  },
+  "hair:side-part-bleached": {
+    "x": 3744,
+    "y": 288
+  },
+  "hair:side-part-blonde": {
+    "x": 0,
+    "y": 312
+  },
+  "hair:side-part-blue": {
+    "x": 288,
+    "y": 312
+  },
+  "hair:side-part-brown": {
+    "x": 576,
+    "y": 312
+  },
+  "hair:side-part-ginger": {
+    "x": 864,
+    "y": 312
+  },
+  "hair:side-part-gray": {
+    "x": 1152,
+    "y": 312
+  },
+  "hair:side-part-green": {
+    "x": 1440,
+    "y": 312
+  },
+  "hair:side-part-light-brown": {
+    "x": 1728,
+    "y": 312
+  },
+  "hair:side-part-platinum": {
+    "x": 2016,
+    "y": 312
+  },
+  "hair:side-part-purple": {
+    "x": 2304,
+    "y": 312
+  },
+  "hair:side-part-red": {
+    "x": 2592,
+    "y": 312
+  },
+  "hair:side-ponytail-auburn": {
+    "x": 2880,
+    "y": 312
+  },
+  "hair:side-ponytail-baby-blue": {
+    "x": 3168,
+    "y": 312
+  },
+  "hair:side-ponytail-black": {
+    "x": 3456,
+    "y": 312
+  },
+  "hair:side-ponytail-blonde": {
+    "x": 3744,
+    "y": 312
+  },
+  "hair:side-ponytail-brown": {
+    "x": 0,
+    "y": 336
+  },
+  "hair:side-ponytail-cherry": {
+    "x": 288,
+    "y": 336
+  },
+  "hair:side-ponytail-light-brown": {
+    "x": 576,
+    "y": 336
+  },
+  "hair:side-ponytail-lilac": {
+    "x": 864,
+    "y": 336
+  },
+  "hair:side-ponytail-mint": {
+    "x": 1152,
+    "y": 336
+  },
+  "hair:side-ponytail-pastel-pink": {
+    "x": 1440,
+    "y": 336
+  },
+  "hair:side-ponytail-peach": {
+    "x": 1728,
+    "y": 336
+  },
+  "hair:side-ponytail-platinum": {
+    "x": 2016,
+    "y": 336
+  },
+  "hair:textured-crop-black": {
+    "x": 2304,
+    "y": 336
+  },
+  "hair:textured-crop-bleached": {
+    "x": 2592,
+    "y": 336
+  },
+  "hair:textured-crop-blonde": {
+    "x": 2880,
+    "y": 336
+  },
+  "hair:textured-crop-blue": {
+    "x": 3168,
+    "y": 336
+  },
+  "hair:textured-crop-brown": {
+    "x": 3456,
+    "y": 336
+  },
+  "hair:textured-crop-ginger": {
     "x": 3744,
     "y": 336
   },
-  "hair:quiff-gray": {
-    "x": 0,
-    "y": 360
-  },
-  "hair:quiff-green": {
-    "x": 288,
-    "y": 360
-  },
-  "hair:quiff-light-brown": {
-    "x": 576,
-    "y": 360
-  },
-  "hair:quiff-platinum": {
-    "x": 864,
-    "y": 360
-  },
-  "hair:quiff-purple": {
-    "x": 1152,
-    "y": 360
-  },
-  "hair:quiff-red": {
-    "x": 1440,
-    "y": 360
-  },
-  "hair:short-auburn": {
-    "x": 1728,
-    "y": 360
-  },
-  "hair:short-black": {
-    "x": 2016,
-    "y": 360
-  },
-  "hair:short-blue": {
-    "x": 2304,
-    "y": 360
-  },
-  "hair:short-brown": {
-    "x": 2592,
-    "y": 360
-  },
-  "hair:short-gray": {
-    "x": 2880,
-    "y": 360
-  },
-  "hair:short-green": {
-    "x": 3168,
-    "y": 360
-  },
-  "hair:short-light-brown": {
-    "x": 3456,
-    "y": 360
-  },
-  "hair:short-pink": {
-    "x": 3744,
-    "y": 360
-  },
-  "hair:short-platinum": {
-    "x": 0,
-    "y": 384
-  },
-  "hair:short-purple": {
-    "x": 288,
-    "y": 384
-  },
-  "hair:short-red": {
-    "x": 576,
-    "y": 384
-  },
-  "hair:short-yellow": {
-    "x": 864,
-    "y": 384
-  },
-  "hair:side-part-black": {
-    "x": 1152,
-    "y": 384
-  },
-  "hair:side-part-bleached": {
-    "x": 1440,
-    "y": 384
-  },
-  "hair:side-part-blonde": {
-    "x": 1728,
-    "y": 384
-  },
-  "hair:side-part-blue": {
-    "x": 2016,
-    "y": 384
-  },
-  "hair:side-part-brown": {
-    "x": 2304,
-    "y": 384
-  },
-  "hair:side-part-ginger": {
-    "x": 2592,
-    "y": 384
-  },
-  "hair:side-part-gray": {
-    "x": 2880,
-    "y": 384
-  },
-  "hair:side-part-green": {
-    "x": 3168,
-    "y": 384
-  },
-  "hair:side-part-light-brown": {
-    "x": 3456,
-    "y": 384
-  },
-  "hair:side-part-platinum": {
-    "x": 3744,
-    "y": 384
-  },
-  "hair:side-part-purple": {
-    "x": 0,
-    "y": 408
-  },
-  "hair:side-part-red": {
-    "x": 288,
-    "y": 408
-  },
-  "hair:side-ponytail-auburn": {
-    "x": 576,
-    "y": 408
-  },
-  "hair:side-ponytail-baby-blue": {
-    "x": 864,
-    "y": 408
-  },
-  "hair:side-ponytail-black": {
-    "x": 1152,
-    "y": 408
-  },
-  "hair:side-ponytail-blonde": {
-    "x": 1440,
-    "y": 408
-  },
-  "hair:side-ponytail-brown": {
-    "x": 1728,
-    "y": 408
-  },
-  "hair:side-ponytail-cherry": {
-    "x": 2016,
-    "y": 408
-  },
-  "hair:side-ponytail-light-brown": {
-    "x": 2304,
-    "y": 408
-  },
-  "hair:side-ponytail-lilac": {
-    "x": 2592,
-    "y": 408
-  },
-  "hair:side-ponytail-mint": {
-    "x": 2880,
-    "y": 408
-  },
-  "hair:side-ponytail-pastel-pink": {
-    "x": 3168,
-    "y": 408
-  },
-  "hair:side-ponytail-peach": {
-    "x": 3456,
-    "y": 408
-  },
-  "hair:side-ponytail-platinum": {
-    "x": 3744,
-    "y": 408
-  },
-  "hair:spiky-auburn": {
-    "x": 0,
-    "y": 432
-  },
-  "hair:spiky-black": {
-    "x": 288,
-    "y": 432
-  },
-  "hair:spiky-blue": {
-    "x": 576,
-    "y": 432
-  },
-  "hair:spiky-brown": {
-    "x": 864,
-    "y": 432
-  },
-  "hair:spiky-gray": {
-    "x": 1152,
-    "y": 432
-  },
-  "hair:spiky-green": {
-    "x": 1440,
-    "y": 432
-  },
-  "hair:spiky-light-brown": {
-    "x": 1728,
-    "y": 432
-  },
-  "hair:spiky-pink": {
-    "x": 2016,
-    "y": 432
-  },
-  "hair:spiky-platinum": {
-    "x": 2304,
-    "y": 432
-  },
-  "hair:spiky-purple": {
-    "x": 2592,
-    "y": 432
-  },
-  "hair:spiky-red": {
-    "x": 2880,
-    "y": 432
-  },
-  "hair:spiky-yellow": {
-    "x": 3168,
-    "y": 432
-  },
-  "hair:textured-crop-black": {
-    "x": 3456,
-    "y": 432
-  },
-  "hair:textured-crop-bleached": {
-    "x": 3744,
-    "y": 432
-  },
-  "hair:textured-crop-blonde": {
-    "x": 0,
-    "y": 456
-  },
-  "hair:textured-crop-blue": {
-    "x": 288,
-    "y": 456
-  },
-  "hair:textured-crop-brown": {
-    "x": 576,
-    "y": 456
-  },
-  "hair:textured-crop-ginger": {
-    "x": 864,
-    "y": 456
-  },
   "hair:textured-crop-gray": {
-    "x": 1152,
-    "y": 456
+    "x": 0,
+    "y": 360
   },
   "hair:textured-crop-green": {
-    "x": 1440,
-    "y": 456
+    "x": 288,
+    "y": 360
   },
   "hair:textured-crop-light-brown": {
-    "x": 1728,
-    "y": 456
+    "x": 576,
+    "y": 360
   },
   "hair:textured-crop-platinum": {
-    "x": 2016,
-    "y": 456
+    "x": 864,
+    "y": 360
   },
   "hair:textured-crop-purple": {
-    "x": 2304,
-    "y": 456
+    "x": 1152,
+    "y": 360
   },
   "hair:textured-crop-red": {
-    "x": 2592,
-    "y": 456
+    "x": 1440,
+    "y": 360
   },
   "hair:wavy-auburn": {
-    "x": 2880,
-    "y": 456
+    "x": 1728,
+    "y": 360
   },
   "hair:wavy-baby-blue": {
-    "x": 3168,
-    "y": 456
+    "x": 2016,
+    "y": 360
   },
   "hair:wavy-black": {
-    "x": 3456,
-    "y": 456
+    "x": 2304,
+    "y": 360
   },
   "hair:wavy-blonde": {
+    "x": 2592,
+    "y": 360
+  },
+  "hair:wavy-brown": {
+    "x": 2880,
+    "y": 360
+  },
+  "hair:wavy-cherry": {
+    "x": 3168,
+    "y": 360
+  },
+  "hair:wavy-light-brown": {
+    "x": 3456,
+    "y": 360
+  },
+  "hair:wavy-lilac": {
+    "x": 3744,
+    "y": 360
+  },
+  "hair:wavy-mint": {
+    "x": 0,
+    "y": 384
+  },
+  "hair:wavy-pastel-pink": {
+    "x": 288,
+    "y": 384
+  },
+  "hair:wavy-peach": {
+    "x": 576,
+    "y": 384
+  },
+  "hair:wavy-platinum": {
+    "x": 864,
+    "y": 384
+  },
+  "top:basketball-jersey-beige": {
+    "x": 1152,
+    "y": 384
+  },
+  "top:basketball-jersey-black": {
+    "x": 1440,
+    "y": 384
+  },
+  "top:basketball-jersey-gray": {
+    "x": 1728,
+    "y": 384
+  },
+  "top:basketball-jersey-mustard": {
+    "x": 2016,
+    "y": 384
+  },
+  "top:basketball-jersey-navy": {
+    "x": 2304,
+    "y": 384
+  },
+  "top:basketball-jersey-olive": {
+    "x": 2592,
+    "y": 384
+  },
+  "top:basketball-jersey-royal-blue": {
+    "x": 2880,
+    "y": 384
+  },
+  "top:basketball-jersey-white": {
+    "x": 3168,
+    "y": 384
+  },
+  "top:basketball-jersey-wine": {
+    "x": 3456,
+    "y": 384
+  },
+  "top:bomber-jacket-beige": {
+    "x": 3744,
+    "y": 384
+  },
+  "top:bomber-jacket-black": {
+    "x": 0,
+    "y": 408
+  },
+  "top:bomber-jacket-gray": {
+    "x": 288,
+    "y": 408
+  },
+  "top:bomber-jacket-mustard": {
+    "x": 576,
+    "y": 408
+  },
+  "top:bomber-jacket-navy": {
+    "x": 864,
+    "y": 408
+  },
+  "top:bomber-jacket-olive": {
+    "x": 1152,
+    "y": 408
+  },
+  "top:bomber-jacket-royal-blue": {
+    "x": 1440,
+    "y": 408
+  },
+  "top:bomber-jacket-white": {
+    "x": 1728,
+    "y": 408
+  },
+  "top:bomber-jacket-wine": {
+    "x": 2016,
+    "y": 408
+  },
+  "top:cute-hoodie-baby-blue": {
+    "x": 2304,
+    "y": 408
+  },
+  "top:cute-hoodie-black": {
+    "x": 2592,
+    "y": 408
+  },
+  "top:cute-hoodie-butter-yellow": {
+    "x": 2880,
+    "y": 408
+  },
+  "top:cute-hoodie-cherry": {
+    "x": 3168,
+    "y": 408
+  },
+  "top:cute-hoodie-lilac": {
+    "x": 3456,
+    "y": 408
+  },
+  "top:cute-hoodie-mint": {
+    "x": 3744,
+    "y": 408
+  },
+  "top:cute-hoodie-peach": {
+    "x": 0,
+    "y": 432
+  },
+  "top:cute-hoodie-pink": {
+    "x": 288,
+    "y": 432
+  },
+  "top:cute-hoodie-white": {
+    "x": 576,
+    "y": 432
+  },
+  "top:hoodie-beige": {
+    "x": 864,
+    "y": 432
+  },
+  "top:hoodie-black": {
+    "x": 1152,
+    "y": 432
+  },
+  "top:hoodie-gray": {
+    "x": 1440,
+    "y": 432
+  },
+  "top:hoodie-mustard": {
+    "x": 1728,
+    "y": 432
+  },
+  "top:hoodie-navy": {
+    "x": 2016,
+    "y": 432
+  },
+  "top:hoodie-olive": {
+    "x": 2304,
+    "y": 432
+  },
+  "top:hoodie-royal-blue": {
+    "x": 2592,
+    "y": 432
+  },
+  "top:hoodie-white": {
+    "x": 2880,
+    "y": 432
+  },
+  "top:hoodie-wine": {
+    "x": 3168,
+    "y": 432
+  },
+  "top:jacket-black": {
+    "x": 3456,
+    "y": 432
+  },
+  "top:jacket-blue": {
+    "x": 3744,
+    "y": 432
+  },
+  "top:jacket-brown": {
+    "x": 0,
+    "y": 456
+  },
+  "top:jacket-cyan": {
+    "x": 288,
+    "y": 456
+  },
+  "top:jacket-gray": {
+    "x": 576,
+    "y": 456
+  },
+  "top:jacket-green": {
+    "x": 864,
+    "y": 456
+  },
+  "top:jacket-orange": {
+    "x": 1152,
+    "y": 456
+  },
+  "top:jacket-pink": {
+    "x": 1440,
+    "y": 456
+  },
+  "top:jacket-purple": {
+    "x": 1728,
+    "y": 456
+  },
+  "top:jacket-red": {
+    "x": 2016,
+    "y": 456
+  },
+  "top:jacket-white": {
+    "x": 2304,
+    "y": 456
+  },
+  "top:jacket-yellow": {
+    "x": 2592,
+    "y": 456
+  },
+  "top:plaid-shirt-gray": {
+    "x": 2880,
+    "y": 456
+  },
+  "top:plaid-shirt-mustard": {
+    "x": 3168,
+    "y": 456
+  },
+  "top:plaid-shirt-navy": {
+    "x": 3456,
+    "y": 456
+  },
+  "top:plaid-shirt-olive": {
     "x": 3744,
     "y": 456
   },
-  "hair:wavy-brown": {
-    "x": 0,
-    "y": 480
-  },
-  "hair:wavy-cherry": {
-    "x": 288,
-    "y": 480
-  },
-  "hair:wavy-light-brown": {
-    "x": 576,
-    "y": 480
-  },
-  "hair:wavy-lilac": {
-    "x": 864,
-    "y": 480
-  },
-  "hair:wavy-mint": {
-    "x": 1152,
-    "y": 480
-  },
-  "hair:wavy-pastel-pink": {
-    "x": 1440,
-    "y": 480
-  },
-  "hair:wavy-peach": {
-    "x": 1728,
-    "y": 480
-  },
-  "hair:wavy-platinum": {
-    "x": 2016,
-    "y": 480
-  },
-  "top:basketball-jersey-beige": {
-    "x": 2304,
-    "y": 480
-  },
-  "top:basketball-jersey-black": {
-    "x": 2592,
-    "y": 480
-  },
-  "top:basketball-jersey-gray": {
-    "x": 2880,
-    "y": 480
-  },
-  "top:basketball-jersey-mustard": {
-    "x": 3168,
-    "y": 480
-  },
-  "top:basketball-jersey-navy": {
-    "x": 3456,
-    "y": 480
-  },
-  "top:basketball-jersey-olive": {
-    "x": 3744,
-    "y": 480
-  },
-  "top:basketball-jersey-royal-blue": {
-    "x": 0,
-    "y": 504
-  },
-  "top:basketball-jersey-white": {
-    "x": 288,
-    "y": 504
-  },
-  "top:basketball-jersey-wine": {
-    "x": 576,
-    "y": 504
-  },
-  "top:bomber-jacket-beige": {
-    "x": 864,
-    "y": 504
-  },
-  "top:bomber-jacket-black": {
-    "x": 1152,
-    "y": 504
-  },
-  "top:bomber-jacket-gray": {
-    "x": 1440,
-    "y": 504
-  },
-  "top:bomber-jacket-mustard": {
-    "x": 1728,
-    "y": 504
-  },
-  "top:bomber-jacket-navy": {
-    "x": 2016,
-    "y": 504
-  },
-  "top:bomber-jacket-olive": {
-    "x": 2304,
-    "y": 504
-  },
-  "top:bomber-jacket-royal-blue": {
-    "x": 2592,
-    "y": 504
-  },
-  "top:bomber-jacket-white": {
-    "x": 2880,
-    "y": 504
-  },
-  "top:bomber-jacket-wine": {
-    "x": 3168,
-    "y": 504
-  },
-  "top:cute-hoodie-baby-blue": {
-    "x": 3456,
-    "y": 504
-  },
-  "top:cute-hoodie-black": {
-    "x": 3744,
-    "y": 504
-  },
-  "top:cute-hoodie-butter-yellow": {
-    "x": 0,
-    "y": 528
-  },
-  "top:cute-hoodie-cherry": {
-    "x": 288,
-    "y": 528
-  },
-  "top:cute-hoodie-lilac": {
-    "x": 576,
-    "y": 528
-  },
-  "top:cute-hoodie-mint": {
-    "x": 864,
-    "y": 528
-  },
-  "top:cute-hoodie-peach": {
-    "x": 1152,
-    "y": 528
-  },
-  "top:cute-hoodie-pink": {
-    "x": 1440,
-    "y": 528
-  },
-  "top:cute-hoodie-white": {
-    "x": 1728,
-    "y": 528
-  },
-  "top:denim-jacket-black": {
-    "x": 2016,
-    "y": 528
-  },
-  "top:denim-jacket-dark-wash": {
-    "x": 2304,
-    "y": 528
-  },
-  "top:denim-jacket-light-wash": {
-    "x": 2592,
-    "y": 528
-  },
-  "top:denim-jacket-mid-wash": {
-    "x": 2880,
-    "y": 528
-  },
-  "top:graphic-tee-beige": {
-    "x": 3168,
-    "y": 528
-  },
-  "top:graphic-tee-black": {
-    "x": 3456,
-    "y": 528
-  },
-  "top:graphic-tee-gray": {
-    "x": 3744,
-    "y": 528
-  },
-  "top:graphic-tee-mustard": {
-    "x": 0,
-    "y": 552
-  },
-  "top:graphic-tee-navy": {
-    "x": 288,
-    "y": 552
-  },
-  "top:graphic-tee-olive": {
-    "x": 576,
-    "y": 552
-  },
-  "top:graphic-tee-royal-blue": {
-    "x": 864,
-    "y": 552
-  },
-  "top:graphic-tee-white": {
-    "x": 1152,
-    "y": 552
-  },
-  "top:graphic-tee-wine": {
-    "x": 1440,
-    "y": 552
-  },
-  "top:hoodie-beige": {
-    "x": 1728,
-    "y": 552
-  },
-  "top:hoodie-black": {
-    "x": 2016,
-    "y": 552
-  },
-  "top:hoodie-gray": {
-    "x": 2304,
-    "y": 552
-  },
-  "top:hoodie-mustard": {
-    "x": 2592,
-    "y": 552
-  },
-  "top:hoodie-navy": {
-    "x": 2880,
-    "y": 552
-  },
-  "top:hoodie-olive": {
-    "x": 3168,
-    "y": 552
-  },
-  "top:hoodie-royal-blue": {
-    "x": 3456,
-    "y": 552
-  },
-  "top:hoodie-white": {
-    "x": 3744,
-    "y": 552
-  },
-  "top:hoodie-wine": {
-    "x": 0,
-    "y": 576
-  },
-  "top:jacket-black": {
-    "x": 288,
-    "y": 576
-  },
-  "top:jacket-blue": {
-    "x": 576,
-    "y": 576
-  },
-  "top:jacket-brown": {
-    "x": 864,
-    "y": 576
-  },
-  "top:jacket-cyan": {
-    "x": 1152,
-    "y": 576
-  },
-  "top:jacket-gray": {
-    "x": 1440,
-    "y": 576
-  },
-  "top:jacket-green": {
-    "x": 1728,
-    "y": 576
-  },
-  "top:jacket-orange": {
-    "x": 2016,
-    "y": 576
-  },
-  "top:jacket-pink": {
-    "x": 2304,
-    "y": 576
-  },
-  "top:jacket-purple": {
-    "x": 2592,
-    "y": 576
-  },
-  "top:jacket-red": {
-    "x": 2880,
-    "y": 576
-  },
-  "top:jacket-white": {
-    "x": 3168,
-    "y": 576
-  },
-  "top:jacket-yellow": {
-    "x": 3456,
-    "y": 576
-  },
-  "top:long-sleeve-black": {
-    "x": 3744,
-    "y": 576
-  },
-  "top:long-sleeve-blue": {
-    "x": 0,
-    "y": 600
-  },
-  "top:long-sleeve-brown": {
-    "x": 288,
-    "y": 600
-  },
-  "top:long-sleeve-cyan": {
-    "x": 576,
-    "y": 600
-  },
-  "top:long-sleeve-gray": {
-    "x": 864,
-    "y": 600
-  },
-  "top:long-sleeve-green": {
-    "x": 1152,
-    "y": 600
-  },
-  "top:long-sleeve-orange": {
-    "x": 1440,
-    "y": 600
-  },
-  "top:long-sleeve-pink": {
-    "x": 1728,
-    "y": 600
-  },
-  "top:long-sleeve-purple": {
-    "x": 2016,
-    "y": 600
-  },
-  "top:long-sleeve-red": {
-    "x": 2304,
-    "y": 600
-  },
-  "top:long-sleeve-white": {
-    "x": 2592,
-    "y": 600
-  },
-  "top:long-sleeve-yellow": {
-    "x": 2880,
-    "y": 600
-  },
-  "top:plaid-shirt-gray": {
-    "x": 3168,
-    "y": 600
-  },
-  "top:plaid-shirt-mustard": {
-    "x": 3456,
-    "y": 600
-  },
-  "top:plaid-shirt-navy": {
-    "x": 3744,
-    "y": 600
-  },
-  "top:plaid-shirt-olive": {
-    "x": 0,
-    "y": 624
-  },
   "top:plaid-shirt-royal-blue": {
-    "x": 288,
-    "y": 624
+    "x": 0,
+    "y": 480
   },
   "top:plaid-shirt-wine": {
-    "x": 576,
-    "y": 624
-  },
-  "top:ruffle-blouse-baby-blue": {
-    "x": 864,
-    "y": 624
-  },
-  "top:ruffle-blouse-black": {
-    "x": 1152,
-    "y": 624
-  },
-  "top:ruffle-blouse-butter-yellow": {
-    "x": 1440,
-    "y": 624
-  },
-  "top:ruffle-blouse-cherry": {
-    "x": 1728,
-    "y": 624
-  },
-  "top:ruffle-blouse-lilac": {
-    "x": 2016,
-    "y": 624
-  },
-  "top:ruffle-blouse-mint": {
-    "x": 2304,
-    "y": 624
-  },
-  "top:ruffle-blouse-peach": {
-    "x": 2592,
-    "y": 624
-  },
-  "top:ruffle-blouse-pink": {
-    "x": 2880,
-    "y": 624
-  },
-  "top:ruffle-blouse-white": {
-    "x": 3168,
-    "y": 624
-  },
-  "top:sailor-blouse-baby-blue": {
-    "x": 3456,
-    "y": 624
-  },
-  "top:sailor-blouse-black": {
-    "x": 3744,
-    "y": 624
-  },
-  "top:sailor-blouse-butter-yellow": {
-    "x": 0,
-    "y": 648
-  },
-  "top:sailor-blouse-cherry": {
     "x": 288,
-    "y": 648
-  },
-  "top:sailor-blouse-lilac": {
-    "x": 576,
-    "y": 648
-  },
-  "top:sailor-blouse-mint": {
-    "x": 864,
-    "y": 648
-  },
-  "top:sailor-blouse-peach": {
-    "x": 1152,
-    "y": 648
-  },
-  "top:sailor-blouse-pink": {
-    "x": 1440,
-    "y": 648
-  },
-  "top:sailor-blouse-white": {
-    "x": 1728,
-    "y": 648
+    "y": 480
   },
   "top:t-shirt-black": {
-    "x": 2016,
-    "y": 648
+    "x": 576,
+    "y": 480
   },
   "top:t-shirt-blue": {
-    "x": 2304,
-    "y": 648
+    "x": 864,
+    "y": 480
   },
   "top:t-shirt-brown": {
-    "x": 2592,
-    "y": 648
+    "x": 1152,
+    "y": 480
   },
   "top:t-shirt-cyan": {
-    "x": 2880,
-    "y": 648
+    "x": 1440,
+    "y": 480
   },
   "top:t-shirt-gray": {
-    "x": 3168,
-    "y": 648
+    "x": 1728,
+    "y": 480
   },
   "top:t-shirt-green": {
-    "x": 3456,
-    "y": 648
+    "x": 2016,
+    "y": 480
   },
   "top:t-shirt-orange": {
+    "x": 2304,
+    "y": 480
+  },
+  "top:t-shirt-pink": {
+    "x": 2592,
+    "y": 480
+  },
+  "top:t-shirt-purple": {
+    "x": 2880,
+    "y": 480
+  },
+  "top:t-shirt-red": {
+    "x": 3168,
+    "y": 480
+  },
+  "top:t-shirt-white": {
+    "x": 3456,
+    "y": 480
+  },
+  "top:t-shirt-yellow": {
+    "x": 3744,
+    "y": 480
+  },
+  "top:tank-top-black": {
+    "x": 0,
+    "y": 504
+  },
+  "top:tank-top-blue": {
+    "x": 288,
+    "y": 504
+  },
+  "top:tank-top-brown": {
+    "x": 576,
+    "y": 504
+  },
+  "top:tank-top-cyan": {
+    "x": 864,
+    "y": 504
+  },
+  "top:tank-top-gray": {
+    "x": 1152,
+    "y": 504
+  },
+  "top:tank-top-green": {
+    "x": 1440,
+    "y": 504
+  },
+  "top:tank-top-orange": {
+    "x": 1728,
+    "y": 504
+  },
+  "top:tank-top-pink": {
+    "x": 2016,
+    "y": 504
+  },
+  "top:tank-top-purple": {
+    "x": 2304,
+    "y": 504
+  },
+  "top:tank-top-red": {
+    "x": 2592,
+    "y": 504
+  },
+  "top:tank-top-white": {
+    "x": 2880,
+    "y": 504
+  },
+  "top:tank-top-yellow": {
+    "x": 3168,
+    "y": 504
+  },
+  "bottom:flared-skirt-baby-blue": {
+    "x": 3456,
+    "y": 504
+  },
+  "bottom:flared-skirt-black": {
+    "x": 3744,
+    "y": 504
+  },
+  "bottom:flared-skirt-butter-yellow": {
+    "x": 0,
+    "y": 528
+  },
+  "bottom:flared-skirt-cherry": {
+    "x": 288,
+    "y": 528
+  },
+  "bottom:flared-skirt-lilac": {
+    "x": 576,
+    "y": 528
+  },
+  "bottom:flared-skirt-mint": {
+    "x": 864,
+    "y": 528
+  },
+  "bottom:flared-skirt-peach": {
+    "x": 1152,
+    "y": 528
+  },
+  "bottom:flared-skirt-pink": {
+    "x": 1440,
+    "y": 528
+  },
+  "bottom:flared-skirt-white": {
+    "x": 1728,
+    "y": 528
+  },
+  "bottom:trousers-black": {
+    "x": 2016,
+    "y": 528
+  },
+  "bottom:trousers-blue": {
+    "x": 2304,
+    "y": 528
+  },
+  "bottom:trousers-brown": {
+    "x": 2592,
+    "y": 528
+  },
+  "bottom:trousers-cyan": {
+    "x": 2880,
+    "y": 528
+  },
+  "bottom:trousers-gray": {
+    "x": 3168,
+    "y": 528
+  },
+  "bottom:trousers-green": {
+    "x": 3456,
+    "y": 528
+  },
+  "bottom:trousers-orange": {
+    "x": 3744,
+    "y": 528
+  },
+  "bottom:trousers-pink": {
+    "x": 0,
+    "y": 552
+  },
+  "bottom:trousers-purple": {
+    "x": 288,
+    "y": 552
+  },
+  "bottom:trousers-red": {
+    "x": 576,
+    "y": 552
+  },
+  "bottom:trousers-white": {
+    "x": 864,
+    "y": 552
+  },
+  "bottom:trousers-yellow": {
+    "x": 1152,
+    "y": 552
+  },
+  "footwear:sneakers-beige": {
+    "x": 1440,
+    "y": 552
+  },
+  "footwear:sneakers-black": {
+    "x": 1728,
+    "y": 552
+  },
+  "footwear:sneakers-gray": {
+    "x": 2016,
+    "y": 552
+  },
+  "footwear:sneakers-mustard": {
+    "x": 2304,
+    "y": 552
+  },
+  "footwear:sneakers-navy": {
+    "x": 2592,
+    "y": 552
+  },
+  "footwear:sneakers-olive": {
+    "x": 2880,
+    "y": 552
+  },
+  "footwear:sneakers-royal-blue": {
+    "x": 3168,
+    "y": 552
+  },
+  "footwear:sneakers-white": {
+    "x": 3456,
+    "y": 552
+  },
+  "footwear:sneakers-wine": {
+    "x": 3744,
+    "y": 552
+  },
+  "overgarment:dress-baby-blue": {
+    "x": 0,
+    "y": 576
+  },
+  "overgarment:dress-black": {
+    "x": 288,
+    "y": 576
+  },
+  "overgarment:dress-butter-yellow": {
+    "x": 576,
+    "y": 576
+  },
+  "overgarment:dress-cherry": {
+    "x": 864,
+    "y": 576
+  },
+  "overgarment:dress-lilac": {
+    "x": 1152,
+    "y": 576
+  },
+  "overgarment:dress-mint": {
+    "x": 1440,
+    "y": 576
+  },
+  "overgarment:dress-peach": {
+    "x": 1728,
+    "y": 576
+  },
+  "overgarment:dress-pink": {
+    "x": 2016,
+    "y": 576
+  },
+  "overgarment:dress-white": {
+    "x": 2304,
+    "y": 576
+  },
+  "overgarment:overalls-black": {
+    "x": 2592,
+    "y": 576
+  },
+  "overgarment:overalls-blue": {
+    "x": 2880,
+    "y": 576
+  },
+  "overgarment:overalls-brown": {
+    "x": 3168,
+    "y": 576
+  },
+  "overgarment:overalls-cyan": {
+    "x": 3456,
+    "y": 576
+  },
+  "overgarment:overalls-gray": {
+    "x": 3744,
+    "y": 576
+  },
+  "overgarment:overalls-green": {
+    "x": 0,
+    "y": 600
+  },
+  "overgarment:overalls-orange": {
+    "x": 288,
+    "y": 600
+  },
+  "overgarment:overalls-pink": {
+    "x": 576,
+    "y": 600
+  },
+  "overgarment:overalls-purple": {
+    "x": 864,
+    "y": 600
+  },
+  "overgarment:overalls-red": {
+    "x": 1152,
+    "y": 600
+  },
+  "overgarment:overalls-white": {
+    "x": 1440,
+    "y": 600
+  },
+  "overgarment:overalls-yellow": {
+    "x": 1728,
+    "y": 600
+  },
+  "overgarment:pinafore-skirt-baby-blue": {
+    "x": 2016,
+    "y": 600
+  },
+  "overgarment:pinafore-skirt-black": {
+    "x": 2304,
+    "y": 600
+  },
+  "overgarment:pinafore-skirt-butter-yellow": {
+    "x": 2592,
+    "y": 600
+  },
+  "overgarment:pinafore-skirt-cherry": {
+    "x": 2880,
+    "y": 600
+  },
+  "overgarment:pinafore-skirt-lilac": {
+    "x": 3168,
+    "y": 600
+  },
+  "overgarment:pinafore-skirt-mint": {
+    "x": 3456,
+    "y": 600
+  },
+  "overgarment:pinafore-skirt-peach": {
+    "x": 3744,
+    "y": 600
+  },
+  "overgarment:pinafore-skirt-pink": {
+    "x": 0,
+    "y": 624
+  },
+  "overgarment:pinafore-skirt-white": {
+    "x": 288,
+    "y": 624
+  },
+  "neckwear:chain-gold": {
+    "x": 576,
+    "y": 624
+  },
+  "neckwear:chain-silver": {
+    "x": 864,
+    "y": 624
+  },
+  "eyewear:round-glasses-black": {
+    "x": 1152,
+    "y": 624
+  },
+  "eyewear:round-glasses-blue": {
+    "x": 1440,
+    "y": 624
+  },
+  "eyewear:round-glasses-gold": {
+    "x": 1728,
+    "y": 624
+  },
+  "eyewear:round-glasses-red": {
+    "x": 2016,
+    "y": 624
+  },
+  "eyewear:sunglasses-black": {
+    "x": 2304,
+    "y": 624
+  },
+  "eyewear:sunglasses-blue": {
+    "x": 2592,
+    "y": 624
+  },
+  "eyewear:sunglasses-gold": {
+    "x": 2880,
+    "y": 624
+  },
+  "eyewear:sunglasses-pink": {
+    "x": 3168,
+    "y": 624
+  },
+  "headwear:backwards-cap-black": {
+    "x": 3456,
+    "y": 624
+  },
+  "headwear:backwards-cap-navy": {
+    "x": 3744,
+    "y": 624
+  },
+  "headwear:backwards-cap-olive": {
+    "x": 0,
+    "y": 648
+  },
+  "headwear:backwards-cap-royal-blue": {
+    "x": 288,
+    "y": 648
+  },
+  "headwear:backwards-cap-white": {
+    "x": 576,
+    "y": 648
+  },
+  "headwear:backwards-cap-wine": {
+    "x": 864,
+    "y": 648
+  },
+  "headwear:bandana-black": {
+    "x": 1152,
+    "y": 648
+  },
+  "headwear:bandana-blue": {
+    "x": 1440,
+    "y": 648
+  },
+  "headwear:bandana-brown": {
+    "x": 1728,
+    "y": 648
+  },
+  "headwear:bandana-cyan": {
+    "x": 2016,
+    "y": 648
+  },
+  "headwear:bandana-gray": {
+    "x": 2304,
+    "y": 648
+  },
+  "headwear:bandana-green": {
+    "x": 2592,
+    "y": 648
+  },
+  "headwear:bandana-orange": {
+    "x": 2880,
+    "y": 648
+  },
+  "headwear:bandana-pink": {
+    "x": 3168,
+    "y": 648
+  },
+  "headwear:bandana-purple": {
+    "x": 3456,
+    "y": 648
+  },
+  "headwear:bandana-red": {
     "x": 3744,
     "y": 648
   },
-  "top:t-shirt-pink": {
-    "x": 0,
-    "y": 672
-  },
-  "top:t-shirt-purple": {
-    "x": 288,
-    "y": 672
-  },
-  "top:t-shirt-red": {
-    "x": 576,
-    "y": 672
-  },
-  "top:t-shirt-white": {
-    "x": 864,
-    "y": 672
-  },
-  "top:t-shirt-yellow": {
-    "x": 1152,
-    "y": 672
-  },
-  "top:tank-top-black": {
-    "x": 1440,
-    "y": 672
-  },
-  "top:tank-top-blue": {
-    "x": 1728,
-    "y": 672
-  },
-  "top:tank-top-brown": {
-    "x": 2016,
-    "y": 672
-  },
-  "top:tank-top-cyan": {
-    "x": 2304,
-    "y": 672
-  },
-  "top:tank-top-gray": {
-    "x": 2592,
-    "y": 672
-  },
-  "top:tank-top-green": {
-    "x": 2880,
-    "y": 672
-  },
-  "top:tank-top-orange": {
-    "x": 3168,
-    "y": 672
-  },
-  "top:tank-top-pink": {
-    "x": 3456,
-    "y": 672
-  },
-  "top:tank-top-purple": {
-    "x": 3744,
-    "y": 672
-  },
-  "top:tank-top-red": {
-    "x": 0,
-    "y": 696
-  },
-  "top:tank-top-white": {
-    "x": 288,
-    "y": 696
-  },
-  "top:tank-top-yellow": {
-    "x": 576,
-    "y": 696
-  },
-  "top:tunic-black": {
-    "x": 864,
-    "y": 696
-  },
-  "top:tunic-blue": {
-    "x": 1152,
-    "y": 696
-  },
-  "top:tunic-brown": {
-    "x": 1440,
-    "y": 696
-  },
-  "top:tunic-cyan": {
-    "x": 1728,
-    "y": 696
-  },
-  "top:tunic-gray": {
-    "x": 2016,
-    "y": 696
-  },
-  "top:tunic-green": {
-    "x": 2304,
-    "y": 696
-  },
-  "top:tunic-orange": {
-    "x": 2592,
-    "y": 696
-  },
-  "top:tunic-pink": {
-    "x": 2880,
-    "y": 696
-  },
-  "top:tunic-purple": {
-    "x": 3168,
-    "y": 696
-  },
-  "top:tunic-red": {
-    "x": 3456,
-    "y": 696
-  },
-  "top:tunic-white": {
-    "x": 3744,
-    "y": 696
-  },
-  "top:tunic-yellow": {
-    "x": 0,
-    "y": 720
-  },
-  "bottom:flared-skirt-baby-blue": {
-    "x": 288,
-    "y": 720
-  },
-  "bottom:flared-skirt-black": {
-    "x": 576,
-    "y": 720
-  },
-  "bottom:flared-skirt-butter-yellow": {
-    "x": 864,
-    "y": 720
-  },
-  "bottom:flared-skirt-cherry": {
-    "x": 1152,
-    "y": 720
-  },
-  "bottom:flared-skirt-lilac": {
-    "x": 1440,
-    "y": 720
-  },
-  "bottom:flared-skirt-mint": {
-    "x": 1728,
-    "y": 720
-  },
-  "bottom:flared-skirt-peach": {
-    "x": 2016,
-    "y": 720
-  },
-  "bottom:flared-skirt-pink": {
-    "x": 2304,
-    "y": 720
-  },
-  "bottom:flared-skirt-white": {
-    "x": 2592,
-    "y": 720
-  },
-  "bottom:joggers-beige": {
-    "x": 2880,
-    "y": 720
-  },
-  "bottom:joggers-black": {
-    "x": 3168,
-    "y": 720
-  },
-  "bottom:joggers-gray": {
-    "x": 3456,
-    "y": 720
-  },
-  "bottom:joggers-mustard": {
-    "x": 3744,
-    "y": 720
-  },
-  "bottom:joggers-navy": {
-    "x": 0,
-    "y": 744
-  },
-  "bottom:joggers-olive": {
-    "x": 288,
-    "y": 744
-  },
-  "bottom:joggers-royal-blue": {
-    "x": 576,
-    "y": 744
-  },
-  "bottom:joggers-white": {
-    "x": 864,
-    "y": 744
-  },
-  "bottom:joggers-wine": {
-    "x": 1152,
-    "y": 744
-  },
-  "bottom:trousers-black": {
-    "x": 1440,
-    "y": 744
-  },
-  "bottom:trousers-blue": {
-    "x": 1728,
-    "y": 744
-  },
-  "bottom:trousers-brown": {
-    "x": 2016,
-    "y": 744
-  },
-  "bottom:trousers-cyan": {
-    "x": 2304,
-    "y": 744
-  },
-  "bottom:trousers-gray": {
-    "x": 2592,
-    "y": 744
-  },
-  "bottom:trousers-green": {
-    "x": 2880,
-    "y": 744
-  },
-  "bottom:trousers-orange": {
-    "x": 3168,
-    "y": 744
-  },
-  "bottom:trousers-pink": {
-    "x": 3456,
-    "y": 744
-  },
-  "bottom:trousers-purple": {
-    "x": 3744,
-    "y": 744
-  },
-  "bottom:trousers-red": {
-    "x": 0,
-    "y": 768
-  },
-  "bottom:trousers-white": {
-    "x": 288,
-    "y": 768
-  },
-  "bottom:trousers-yellow": {
-    "x": 576,
-    "y": 768
-  },
-  "footwear:boots-black": {
-    "x": 864,
-    "y": 768
-  },
-  "footwear:boots-blue": {
-    "x": 1152,
-    "y": 768
-  },
-  "footwear:boots-brown": {
-    "x": 1440,
-    "y": 768
-  },
-  "footwear:boots-cyan": {
-    "x": 1728,
-    "y": 768
-  },
-  "footwear:boots-gray": {
-    "x": 2016,
-    "y": 768
-  },
-  "footwear:boots-green": {
-    "x": 2304,
-    "y": 768
-  },
-  "footwear:boots-orange": {
-    "x": 2592,
-    "y": 768
-  },
-  "footwear:boots-pink": {
-    "x": 2880,
-    "y": 768
-  },
-  "footwear:boots-purple": {
-    "x": 3168,
-    "y": 768
-  },
-  "footwear:boots-red": {
-    "x": 3456,
-    "y": 768
-  },
-  "footwear:boots-white": {
-    "x": 3744,
-    "y": 768
-  },
-  "footwear:boots-yellow": {
-    "x": 0,
-    "y": 792
-  },
-  "footwear:sneakers-beige": {
-    "x": 288,
-    "y": 792
-  },
-  "footwear:sneakers-black": {
-    "x": 576,
-    "y": 792
-  },
-  "footwear:sneakers-gray": {
-    "x": 864,
-    "y": 792
-  },
-  "footwear:sneakers-mustard": {
-    "x": 1152,
-    "y": 792
-  },
-  "footwear:sneakers-navy": {
-    "x": 1440,
-    "y": 792
-  },
-  "footwear:sneakers-olive": {
-    "x": 1728,
-    "y": 792
-  },
-  "footwear:sneakers-royal-blue": {
-    "x": 2016,
-    "y": 792
-  },
-  "footwear:sneakers-white": {
-    "x": 2304,
-    "y": 792
-  },
-  "footwear:sneakers-wine": {
-    "x": 2592,
-    "y": 792
-  },
-  "overgarment:dress-baby-blue": {
-    "x": 2880,
-    "y": 792
-  },
-  "overgarment:dress-black": {
-    "x": 3168,
-    "y": 792
-  },
-  "overgarment:dress-butter-yellow": {
-    "x": 3456,
-    "y": 792
-  },
-  "overgarment:dress-cherry": {
-    "x": 3744,
-    "y": 792
-  },
-  "overgarment:dress-lilac": {
-    "x": 0,
-    "y": 816
-  },
-  "overgarment:dress-mint": {
-    "x": 288,
-    "y": 816
-  },
-  "overgarment:dress-peach": {
-    "x": 576,
-    "y": 816
-  },
-  "overgarment:dress-pink": {
-    "x": 864,
-    "y": 816
-  },
-  "overgarment:dress-white": {
-    "x": 1152,
-    "y": 816
-  },
-  "overgarment:overalls-black": {
-    "x": 1440,
-    "y": 816
-  },
-  "overgarment:overalls-blue": {
-    "x": 1728,
-    "y": 816
-  },
-  "overgarment:overalls-brown": {
-    "x": 2016,
-    "y": 816
-  },
-  "overgarment:overalls-cyan": {
-    "x": 2304,
-    "y": 816
-  },
-  "overgarment:overalls-gray": {
-    "x": 2592,
-    "y": 816
-  },
-  "overgarment:overalls-green": {
-    "x": 2880,
-    "y": 816
-  },
-  "overgarment:overalls-orange": {
-    "x": 3168,
-    "y": 816
-  },
-  "overgarment:overalls-pink": {
-    "x": 3456,
-    "y": 816
-  },
-  "overgarment:overalls-purple": {
-    "x": 3744,
-    "y": 816
-  },
-  "overgarment:overalls-red": {
-    "x": 0,
-    "y": 840
-  },
-  "overgarment:overalls-white": {
-    "x": 288,
-    "y": 840
-  },
-  "overgarment:overalls-yellow": {
-    "x": 576,
-    "y": 840
-  },
-  "overgarment:pinafore-skirt-baby-blue": {
-    "x": 864,
-    "y": 840
-  },
-  "overgarment:pinafore-skirt-black": {
-    "x": 1152,
-    "y": 840
-  },
-  "overgarment:pinafore-skirt-butter-yellow": {
-    "x": 1440,
-    "y": 840
-  },
-  "overgarment:pinafore-skirt-cherry": {
-    "x": 1728,
-    "y": 840
-  },
-  "overgarment:pinafore-skirt-lilac": {
-    "x": 2016,
-    "y": 840
-  },
-  "overgarment:pinafore-skirt-mint": {
-    "x": 2304,
-    "y": 840
-  },
-  "overgarment:pinafore-skirt-peach": {
-    "x": 2592,
-    "y": 840
-  },
-  "overgarment:pinafore-skirt-pink": {
-    "x": 2880,
-    "y": 840
-  },
-  "overgarment:pinafore-skirt-white": {
-    "x": 3168,
-    "y": 840
-  },
-  "overgarment:polka-dot-dress-baby-blue": {
-    "x": 3456,
-    "y": 840
-  },
-  "overgarment:polka-dot-dress-black": {
-    "x": 3744,
-    "y": 840
-  },
-  "overgarment:polka-dot-dress-butter-yellow": {
-    "x": 0,
-    "y": 864
-  },
-  "overgarment:polka-dot-dress-cherry": {
-    "x": 288,
-    "y": 864
-  },
-  "overgarment:polka-dot-dress-lilac": {
-    "x": 576,
-    "y": 864
-  },
-  "overgarment:polka-dot-dress-mint": {
-    "x": 864,
-    "y": 864
-  },
-  "overgarment:polka-dot-dress-peach": {
-    "x": 1152,
-    "y": 864
-  },
-  "overgarment:polka-dot-dress-pink": {
-    "x": 1440,
-    "y": 864
-  },
-  "overgarment:polka-dot-dress-white": {
-    "x": 1728,
-    "y": 864
-  },
-  "neckwear:chain-gold": {
-    "x": 2016,
-    "y": 864
-  },
-  "neckwear:chain-silver": {
-    "x": 2304,
-    "y": 864
-  },
-  "neckwear:scarf-black": {
-    "x": 2592,
-    "y": 864
-  },
-  "neckwear:scarf-blue": {
-    "x": 2880,
-    "y": 864
-  },
-  "neckwear:scarf-brown": {
-    "x": 3168,
-    "y": 864
-  },
-  "neckwear:scarf-cyan": {
-    "x": 3456,
-    "y": 864
-  },
-  "neckwear:scarf-gray": {
-    "x": 3744,
-    "y": 864
-  },
-  "neckwear:scarf-green": {
-    "x": 0,
-    "y": 888
-  },
-  "neckwear:scarf-orange": {
-    "x": 288,
-    "y": 888
-  },
-  "neckwear:scarf-pink": {
-    "x": 576,
-    "y": 888
-  },
-  "neckwear:scarf-purple": {
-    "x": 864,
-    "y": 888
-  },
-  "neckwear:scarf-red": {
-    "x": 1152,
-    "y": 888
-  },
-  "neckwear:scarf-white": {
-    "x": 1440,
-    "y": 888
-  },
-  "neckwear:scarf-yellow": {
-    "x": 1728,
-    "y": 888
-  },
-  "eyewear:round-glasses-black": {
-    "x": 2016,
-    "y": 888
-  },
-  "eyewear:round-glasses-blue": {
-    "x": 2304,
-    "y": 888
-  },
-  "eyewear:round-glasses-gold": {
-    "x": 2592,
-    "y": 888
-  },
-  "eyewear:round-glasses-red": {
-    "x": 2880,
-    "y": 888
-  },
-  "eyewear:sunglasses-black": {
-    "x": 3168,
-    "y": 888
-  },
-  "eyewear:sunglasses-blue": {
-    "x": 3456,
-    "y": 888
-  },
-  "eyewear:sunglasses-gold": {
-    "x": 3744,
-    "y": 888
-  },
-  "eyewear:sunglasses-pink": {
-    "x": 0,
-    "y": 912
-  },
-  "headwear:backwards-cap-black": {
-    "x": 288,
-    "y": 912
-  },
-  "headwear:backwards-cap-navy": {
-    "x": 576,
-    "y": 912
-  },
-  "headwear:backwards-cap-olive": {
-    "x": 864,
-    "y": 912
-  },
-  "headwear:backwards-cap-royal-blue": {
-    "x": 1152,
-    "y": 912
-  },
-  "headwear:backwards-cap-white": {
-    "x": 1440,
-    "y": 912
-  },
-  "headwear:backwards-cap-wine": {
-    "x": 1728,
-    "y": 912
-  },
-  "headwear:bandana-black": {
-    "x": 2016,
-    "y": 912
-  },
-  "headwear:bandana-blue": {
-    "x": 2304,
-    "y": 912
-  },
-  "headwear:bandana-brown": {
-    "x": 2592,
-    "y": 912
-  },
-  "headwear:bandana-cyan": {
-    "x": 2880,
-    "y": 912
-  },
-  "headwear:bandana-gray": {
-    "x": 3168,
-    "y": 912
-  },
-  "headwear:bandana-green": {
-    "x": 3456,
-    "y": 912
-  },
-  "headwear:bandana-orange": {
-    "x": 3744,
-    "y": 912
-  },
-  "headwear:bandana-pink": {
-    "x": 0,
-    "y": 936
-  },
-  "headwear:bandana-purple": {
-    "x": 288,
-    "y": 936
-  },
-  "headwear:bandana-red": {
-    "x": 576,
-    "y": 936
-  },
   "headwear:bandana-white": {
-    "x": 864,
-    "y": 936
+    "x": 0,
+    "y": 672
   },
   "headwear:bandana-yellow": {
-    "x": 1152,
-    "y": 936
+    "x": 288,
+    "y": 672
   },
   "headwear:beanie-blue": {
-    "x": 1440,
-    "y": 936
+    "x": 576,
+    "y": 672
   },
   "headwear:beanie-cyan": {
-    "x": 1728,
-    "y": 936
+    "x": 864,
+    "y": 672
   },
   "headwear:beanie-gray": {
-    "x": 2016,
-    "y": 936
+    "x": 1152,
+    "y": 672
   },
   "headwear:beanie-green": {
-    "x": 2304,
-    "y": 936
+    "x": 1440,
+    "y": 672
   },
   "headwear:beanie-orange": {
-    "x": 2592,
-    "y": 936
+    "x": 1728,
+    "y": 672
   },
   "headwear:beanie-pink": {
-    "x": 2880,
-    "y": 936
+    "x": 2016,
+    "y": 672
   },
   "headwear:beanie-purple": {
-    "x": 3168,
-    "y": 936
+    "x": 2304,
+    "y": 672
   },
   "headwear:beanie-red": {
-    "x": 3456,
-    "y": 936
+    "x": 2592,
+    "y": 672
   },
   "headwear:bow-black": {
-    "x": 3744,
-    "y": 936
+    "x": 2880,
+    "y": 672
   },
   "headwear:bow-blue": {
-    "x": 0,
-    "y": 960
+    "x": 3168,
+    "y": 672
   },
   "headwear:bow-green": {
-    "x": 288,
-    "y": 960
+    "x": 3456,
+    "y": 672
   },
   "headwear:bow-headband-baby-blue": {
-    "x": 576,
-    "y": 960
+    "x": 3744,
+    "y": 672
   },
   "headwear:bow-headband-black": {
-    "x": 864,
-    "y": 960
+    "x": 0,
+    "y": 696
   },
   "headwear:bow-headband-cherry": {
-    "x": 1152,
-    "y": 960
+    "x": 288,
+    "y": 696
   },
   "headwear:bow-headband-lilac": {
-    "x": 1440,
-    "y": 960
+    "x": 576,
+    "y": 696
   },
   "headwear:bow-headband-pink": {
-    "x": 1728,
-    "y": 960
+    "x": 864,
+    "y": 696
   },
   "headwear:bow-headband-white": {
-    "x": 2016,
-    "y": 960
+    "x": 1152,
+    "y": 696
   },
   "headwear:bow-pink": {
-    "x": 2304,
-    "y": 960
+    "x": 1440,
+    "y": 696
   },
   "headwear:bow-purple": {
-    "x": 2592,
-    "y": 960
+    "x": 1728,
+    "y": 696
   },
   "headwear:bow-red": {
-    "x": 2880,
-    "y": 960
+    "x": 2016,
+    "y": 696
   },
   "headwear:bow-white": {
-    "x": 3168,
-    "y": 960
+    "x": 2304,
+    "y": 696
   },
   "headwear:bow-yellow": {
-    "x": 3456,
-    "y": 960
+    "x": 2592,
+    "y": 696
   },
   "headwear:cap-black": {
-    "x": 3744,
-    "y": 960
+    "x": 2880,
+    "y": 696
   },
   "headwear:cap-blue": {
-    "x": 0,
-    "y": 984
+    "x": 3168,
+    "y": 696
   },
   "headwear:cap-green": {
-    "x": 288,
-    "y": 984
+    "x": 3456,
+    "y": 696
   },
   "headwear:cap-orange": {
-    "x": 576,
-    "y": 984
+    "x": 3744,
+    "y": 696
   },
   "headwear:cap-pink": {
-    "x": 864,
-    "y": 984
+    "x": 0,
+    "y": 720
   },
   "headwear:cap-purple": {
-    "x": 1152,
-    "y": 984
+    "x": 288,
+    "y": 720
   },
   "headwear:cap-red": {
-    "x": 1440,
-    "y": 984
+    "x": 576,
+    "y": 720
   },
   "headwear:cap-white": {
-    "x": 1728,
-    "y": 984
+    "x": 864,
+    "y": 720
   },
   "headwear:cat-ears-black": {
-    "x": 2016,
-    "y": 984
+    "x": 1152,
+    "y": 720
   },
   "headwear:cat-ears-caramel": {
-    "x": 2304,
-    "y": 984
+    "x": 1440,
+    "y": 720
   },
   "headwear:cat-ears-lilac": {
-    "x": 2592,
-    "y": 984
+    "x": 1728,
+    "y": 720
   },
   "headwear:cat-ears-pink": {
-    "x": 2880,
-    "y": 984
+    "x": 2016,
+    "y": 720
   },
   "headwear:cat-ears-white": {
-    "x": 3168,
-    "y": 984
+    "x": 2304,
+    "y": 720
   },
   "headwear:crown-gold": {
-    "x": 3456,
-    "y": 984
+    "x": 2592,
+    "y": 720
   },
   "headwear:crown-silver": {
-    "x": 3744,
-    "y": 984
+    "x": 2880,
+    "y": 720
   },
   "headwear:flat-brim-cap-black": {
-    "x": 0,
-    "y": 1008
+    "x": 3168,
+    "y": 720
   },
   "headwear:flat-brim-cap-navy": {
-    "x": 288,
-    "y": 1008
+    "x": 3456,
+    "y": 720
   },
   "headwear:flat-brim-cap-olive": {
-    "x": 576,
-    "y": 1008
+    "x": 3744,
+    "y": 720
   },
   "headwear:flat-brim-cap-royal-blue": {
-    "x": 864,
-    "y": 1008
+    "x": 0,
+    "y": 744
   },
   "headwear:flat-brim-cap-white": {
-    "x": 1152,
-    "y": 1008
+    "x": 288,
+    "y": 744
   },
   "headwear:flat-brim-cap-wine": {
-    "x": 1440,
-    "y": 1008
+    "x": 576,
+    "y": 744
   },
   "headwear:floral-crown-baby-blue": {
-    "x": 1728,
-    "y": 1008
+    "x": 864,
+    "y": 744
   },
   "headwear:floral-crown-butter-yellow": {
-    "x": 2016,
-    "y": 1008
+    "x": 1152,
+    "y": 744
   },
   "headwear:floral-crown-cherry": {
-    "x": 2304,
-    "y": 1008
+    "x": 1440,
+    "y": 744
   },
   "headwear:floral-crown-lilac": {
-    "x": 2592,
-    "y": 1008
+    "x": 1728,
+    "y": 744
   },
   "headwear:floral-crown-pink": {
-    "x": 2880,
-    "y": 1008
+    "x": 2016,
+    "y": 744
   },
   "headwear:headphones-black": {
-    "x": 3168,
-    "y": 1008
+    "x": 2304,
+    "y": 744
   },
   "headwear:headphones-blue": {
-    "x": 3456,
-    "y": 1008
+    "x": 2592,
+    "y": 744
   },
   "headwear:headphones-green": {
-    "x": 3744,
-    "y": 1008
+    "x": 2880,
+    "y": 744
   },
   "headwear:headphones-mustard": {
-    "x": 0,
-    "y": 1032
+    "x": 3168,
+    "y": 744
   },
   "headwear:headphones-white-red": {
-    "x": 288,
-    "y": 1032
+    "x": 3456,
+    "y": 744
   },
   "headwear:headphones-wine": {
-    "x": 576,
-    "y": 1032
+    "x": 3744,
+    "y": 744
   },
   "headwear:heart-clip-butter-yellow": {
-    "x": 864,
-    "y": 1032
+    "x": 0,
+    "y": 768
   },
   "headwear:heart-clip-cherry": {
-    "x": 1152,
-    "y": 1032
+    "x": 288,
+    "y": 768
   },
   "headwear:heart-clip-lilac": {
-    "x": 1440,
-    "y": 1032
+    "x": 576,
+    "y": 768
   },
   "headwear:heart-clip-mint": {
-    "x": 1728,
-    "y": 1032
+    "x": 864,
+    "y": 768
   },
   "headwear:heart-clip-pink": {
-    "x": 2016,
-    "y": 1032
+    "x": 1152,
+    "y": 768
   },
   "headwear:short-beanie-black": {
-    "x": 2304,
-    "y": 1032
+    "x": 1440,
+    "y": 768
   },
   "headwear:short-beanie-gray": {
-    "x": 2592,
-    "y": 1032
+    "x": 1728,
+    "y": 768
   },
   "headwear:short-beanie-mustard": {
-    "x": 2880,
-    "y": 1032
+    "x": 2016,
+    "y": 768
   },
   "headwear:short-beanie-navy": {
-    "x": 3168,
-    "y": 1032
+    "x": 2304,
+    "y": 768
   },
   "headwear:short-beanie-olive": {
-    "x": 3456,
-    "y": 1032
+    "x": 2592,
+    "y": 768
   },
   "headwear:short-beanie-wine": {
-    "x": 3744,
-    "y": 1032
+    "x": 2880,
+    "y": 768
   },
   "headwear:straw-hat-black": {
-    "x": 0,
-    "y": 1056
+    "x": 3168,
+    "y": 768
   },
   "headwear:straw-hat-blue": {
-    "x": 288,
-    "y": 1056
+    "x": 3456,
+    "y": 768
   },
   "headwear:straw-hat-brown": {
-    "x": 576,
-    "y": 1056
+    "x": 3744,
+    "y": 768
   },
   "headwear:straw-hat-straw": {
-    "x": 864,
-    "y": 1056
+    "x": 0,
+    "y": 792
   },
   "headwear:top-hat-black": {
-    "x": 1152,
-    "y": 1056
+    "x": 288,
+    "y": 792
   },
   "headwear:top-hat-brown": {
-    "x": 1440,
-    "y": 1056
+    "x": 576,
+    "y": 792
   },
   "headwear:top-hat-purple": {
-    "x": 1728,
-    "y": 1056
+    "x": 864,
+    "y": 792
   },
   "headwear:top-hat-red": {
-    "x": 2016,
-    "y": 1056
+    "x": 1152,
+    "y": 792
   },
   "headwear:top-hat-white": {
-    "x": 2304,
-    "y": 1056
+    "x": 1440,
+    "y": 792
   },
   "headwear:viking-helmet-bronze": {
-    "x": 2592,
-    "y": 1056
+    "x": 1728,
+    "y": 792
   },
   "headwear:viking-helmet-gold": {
-    "x": 2880,
-    "y": 1056
+    "x": 2016,
+    "y": 792
   },
   "headwear:viking-helmet-iron": {
-    "x": 3168,
-    "y": 1056
+    "x": 2304,
+    "y": 792
   },
   "headwear:wizard-hat-black": {
-    "x": 3456,
-    "y": 1056
+    "x": 2592,
+    "y": 792
   },
   "headwear:wizard-hat-blue": {
-    "x": 3744,
-    "y": 1056
+    "x": 2880,
+    "y": 792
   },
   "headwear:wizard-hat-cyan": {
-    "x": 0,
-    "y": 1080
+    "x": 3168,
+    "y": 792
   },
   "headwear:wizard-hat-green": {
-    "x": 288,
-    "y": 1080
+    "x": 3456,
+    "y": 792
   },
   "headwear:wizard-hat-purple": {
-    "x": 576,
-    "y": 1080
+    "x": 3744,
+    "y": 792
   },
   "headwear:wizard-hat-red": {
-    "x": 864,
-    "y": 1080
+    "x": 0,
+    "y": 816
   }
 };

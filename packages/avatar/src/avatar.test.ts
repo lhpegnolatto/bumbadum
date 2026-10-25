@@ -1,12 +1,5 @@
 import { describe, expect, it } from "vitest";
-import {
-  AVATAR_CATALOG,
-  availableAvatarOptions,
-  avatarFrames,
-  DEFAULT_AVATAR,
-  parseAvatar,
-  randomAvatar,
-} from "./index.ts";
+import { DEFAULT_AVATAR, parseAvatar, randomAvatar, repairAvatar } from "./index.ts";
 
 const dressed = {
   skinTone: 2,
@@ -29,12 +22,6 @@ describe("parseAvatar", () => {
     expect(parseAvatar({ ...dressed, hair: "unknown" })).toBeUndefined();
     expect(parseAvatar({ ...dressed, top: undefined })).toBeUndefined();
     expect(parseAvatar({ ...dressed, skinTone: 5 })).toBeUndefined();
-  });
-
-  it("rejects an incompatible tunic and overalls", () => {
-    expect(
-      parseAvatar({ ...dressed, top: "tunic-blue", overgarment: "overalls-blue" }),
-    ).toBeUndefined();
   });
 
   it("rejects anything that is not an object", () => {
@@ -78,21 +65,35 @@ describe("DEFAULT_AVATAR", () => {
   });
 });
 
-describe("retired appearance choices", () => {
-  it("keeps a published choice parseable and renderable while hiding it from new selections", () => {
-    const option = AVATAR_CATALOG.hair[0];
-    const mutable = option as { retired: boolean };
-    mutable.retired = true;
-    try {
-      const retired = { ...DEFAULT_AVATAR, hair: option.id };
-      expect(availableAvatarOptions("hair").some(({ id }) => id === option.id)).toBe(false);
-      expect(randomAvatar(() => 0).hair).not.toBe(option.id);
-      expect(parseAvatar(retired)).toEqual(retired);
-      expect(avatarFrames(retired, "down", "idle", 0).some(({ layer }) => layer === "hair")).toBe(
-        true,
-      );
-    } finally {
-      mutable.retired = false;
-    }
+describe("repairAvatar", () => {
+  it("keeps a valid avatar unchanged", () => {
+    expect(repairAvatar(dressed)).toEqual(dressed);
+  });
+
+  it("drops a removed style from an optional layer and keeps everything else", () => {
+    const stored = {
+      ...dressed,
+      hair: "bowl-black",
+      footwear: "boots-black",
+      eyewear: "sunglasses-gold",
+    };
+
+    expect(repairAvatar(stored)).toEqual({ ...dressed, hair: null, eyewear: "sunglasses-gold" });
+  });
+
+  it("puts the default choice on a required layer whose style was removed", () => {
+    const stored = { ...dressed, top: "tunic-blue", bottom: "joggers-black" };
+
+    expect(repairAvatar(stored)).toEqual({
+      ...dressed,
+      top: "t-shirt-blue",
+      bottom: "trousers-blue",
+    });
+  });
+
+  it("does not repair something that is not an avatar", () => {
+    expect(repairAvatar(undefined)).toBeUndefined();
+    expect(repairAvatar([])).toBeUndefined();
+    expect(repairAvatar({ ...dressed, skinTone: 5 })).toBeUndefined();
   });
 });

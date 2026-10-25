@@ -1,4 +1,4 @@
-import { type Avatar, DEFAULT_AVATAR, parseAvatar } from "@bumbadum/avatar";
+import { type Avatar, DEFAULT_AVATAR, parseAvatar, repairAvatar } from "@bumbadum/avatar";
 import { type SchemaType, schema, t } from "@colyseus/schema";
 
 /** A player's complete layered avatar. Empty strings represent optional layers not worn. */
@@ -31,18 +31,18 @@ export function avatarStateValue(avatar: Avatar) {
 }
 
 export function avatarFromState(state: AvatarState): Avatar {
-  const avatar = parseAvatarState(state);
+  const avatar = parseAvatar(avatarInput(state));
   if (!avatar) throw new Error("room contains an invalid avatar");
   return avatar;
 }
 
-/** Returns a valid avatar for rendering, tolerating old or incomplete room state. */
+/** Returns a valid avatar for rendering, tolerating old, incomplete or removed choices. */
 export function avatarFromStateOrDefault(state: AvatarState): Avatar {
-  return parseAvatarState(state) ?? DEFAULT_AVATAR;
+  return repairAvatar(avatarInput(state)) ?? DEFAULT_AVATAR;
 }
 
-function parseAvatarState(state: AvatarState): Avatar | undefined {
-  return parseAvatar({
+function avatarInput(state: AvatarState) {
+  return {
     ...state,
     hair: state.hair || null,
     footwear: state.footwear || null,
@@ -50,5 +50,5 @@ function parseAvatarState(state: AvatarState): Avatar | undefined {
     neckwear: state.neckwear || null,
     eyewear: state.eyewear || null,
     headwear: state.headwear || null,
-  });
+  };
 }

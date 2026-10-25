@@ -3,14 +3,13 @@ export {
   type AppearanceLayer,
   AVATAR_CATALOG,
   type Avatar,
-  availableAvatarOptions,
   avatarKey,
   type CatalogOption,
-  compatibleAvatar,
   DEFAULT_AVATAR,
   OPTIONAL_LAYERS,
   parseAvatar,
   randomAvatar,
+  repairAvatar,
   sameAvatar,
 } from "./avatar.ts";
 export {

@@ -127,7 +127,7 @@ Required clothing worn on the lower half of an avatar.
 _Avoid_: trousers, lower body
 
 **Footwear**:
-An optional wearable layer over an avatar's feet, such as boots.
+An optional wearable layer over an avatar's feet, such as sneakers.
 _Avoid_: shoes, foot accessory
 
 **Overgarment**:
@@ -135,7 +135,7 @@ An optional wearable layer over an avatar's top and bottom, such as overalls.
 _Avoid_: outfit, full body
 
 **Neckwear**:
-An optional wearable layer around an avatar's neck, such as a scarf.
+An optional wearable layer around an avatar's neck, such as a chain.
 _Avoid_: neck accessory
 
 **Headwear**:

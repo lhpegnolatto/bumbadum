@@ -14,6 +14,16 @@ describe("avatarFromStateOrDefault", () => {
     expect(avatarFromStateOrDefault(oldState)).toEqual(DEFAULT_AVATAR);
   });
 
+  it("repairs an avatar wearing choices this client no longer offers", () => {
+    const state = {
+      ...avatarStateValue({ ...DEFAULT_AVATAR, skinTone: 2 }),
+      hair: "bowl-black",
+      bottom: "joggers-black",
+    } as AvatarState;
+
+    expect(avatarFromStateOrDefault(state)).toEqual({ ...DEFAULT_AVATAR, skinTone: 2, hair: null });
+  });
+
   it("keeps a valid avatar unchanged", () => {
     const state = avatarStateValue({ ...DEFAULT_AVATAR, skinTone: 4 }) as AvatarState;
 

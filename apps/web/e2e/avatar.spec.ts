@@ -61,9 +61,8 @@ test("the wardrobe keeps layered drafts private and publishes the whole avatar",
   await wardrobe.getByRole("button", { name: "Dress", exact: true }).click();
   await expect(wardrobe.getByRole("radio", { name: "Dress, Pink" })).toBeVisible();
   await wardrobe.getByRole("tab", { name: "Top" }).click();
-  await wardrobe.getByRole("button", { name: "Tunic" }).click();
-  await wardrobe.getByRole("tab", { name: "One-piece" }).click();
-  await expect(wardrobe.getByRole("button", { name: "Overalls" })).toBeDisabled();
+  await wardrobe.getByRole("button", { name: "T-shirt", exact: true }).click();
+  await wardrobe.getByRole("radio", { name: "T-shirt, Black" }).check({ force: true });
   await wardrobe.getByRole("tab", { name: "Accessories" }).click();
   await wardrobe.getByRole("tab", { name: "Headwear" }).click();
   await wardrobe.getByRole("button", { name: "Cap", exact: true }).click();
@@ -75,12 +74,10 @@ test("the wardrobe keeps layered drafts private and publishes the whole avatar",
 
   await wardrobe.getByRole("button", { name: "Apply" }).click();
   await expect(wardrobe).toBeHidden();
-  const color = start.avatar.top.split("-").at(-1);
-  if (!color) throw new Error("Iris's top has no color");
   const worn = {
     ...start.avatar,
     skinTone,
-    top: `tunic-${color}`,
+    top: "t-shirt-black",
     overgarment: "dress-baby-blue",
     headwear: "cap-black",
   };

@@ -1,4 +1,4 @@
-import { type Avatar, DEFAULT_AVATAR, parseAvatar } from "@bumbadum/avatar";
+import { type Avatar, DEFAULT_AVATAR, repairAvatar } from "@bumbadum/avatar";
 import { useSyncExternalStore } from "react";
 import { z } from "zod";
 import { type Locale, locales } from "../i18n/locale.ts";
@@ -16,11 +16,7 @@ const settingsSchema = z.object({
   locale: z.enum(locales).optional().catch(undefined),
   avatar: z
     .unknown()
-    .transform((input) => {
-      const avatar = parseAvatar(input);
-      if (avatar) return avatar;
-      return migrateLegacyAvatar(input);
-    })
+    .transform((input) => migrateLegacyAvatar(input) ?? repairAvatar(input))
     .optional(),
   /** The radio's volume for this player only, 0 to 100. */
   volume: z.number().int().min(0).max(100).optional().catch(undefined),

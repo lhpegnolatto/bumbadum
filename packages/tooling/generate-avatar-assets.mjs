@@ -21,7 +21,6 @@ const layers = [
 ];
 const cycles = ["idle", "walk"];
 const kebabCase = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
-const retired = new Set(JSON.parse(await readFile(path.join(sourceRoot, "retired.json"), "utf8")));
 
 const entries = [];
 for (const layer of layers) {
@@ -120,18 +119,9 @@ const catalog = Object.fromEntries(
     layer,
     entries
       .filter((entry) => entry.layer === layer)
-      .map(({ layer: optionLayer, id, style, color }) => ({
-        id,
-        style,
-        color,
-        retired: retired.has(`${optionLayer}:${id}`),
-      })),
+      .map(({ id, style, color }) => ({ id, style, color })),
   ]),
 );
-for (const retiredId of retired) {
-  if (!entries.some(({ layer, id }) => `${layer}:${id}` === retiredId))
-    throw new Error(`retired avatar asset is missing: ${retiredId}`);
-}
 const positions = Object.fromEntries(
   entries.map((entry, row) => [
     `${entry.layer}:${entry.id}`,
