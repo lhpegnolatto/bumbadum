@@ -53,12 +53,19 @@ test("the Message input moves into open Chat and Escape releases focus before cl
 
   await chat.click();
   const panel = page.getByRole("region", { name: "Chat" });
-  const panelBounds = await panel.boundingBox();
-  const openBounds = await input.boundingBox();
-  if (!closedBounds || !panelBounds || !openBounds) throw new Error("Chat has no visible bounds");
-  expect(openBounds.x).toBeGreaterThanOrEqual(panelBounds.x);
-  expect(openBounds.x + openBounds.width).toBeLessThanOrEqual(panelBounds.x + panelBounds.width);
-  expect(openBounds.y).toBeGreaterThan(closedBounds.y);
+  // Both slide in, so measure once they have settled inside the panel.
+  await expect(async () => {
+    const panelBounds = await panel.boundingBox();
+    const openBounds = await input.boundingBox();
+    if (!closedBounds || !panelBounds || !openBounds) throw new Error("Chat has no visible bounds");
+    expect(openBounds.x).toBeGreaterThanOrEqual(panelBounds.x);
+    expect(openBounds.x + openBounds.width).toBeLessThanOrEqual(panelBounds.x + panelBounds.width);
+    expect(openBounds.y).toBeGreaterThanOrEqual(panelBounds.y);
+    expect(openBounds.y + openBounds.height).toBeLessThanOrEqual(
+      panelBounds.y + panelBounds.height,
+    );
+    expect(openBounds).not.toEqual(closedBounds);
+  }).toPass();
 
   await page.getByRole("img", { name: "The room" }).click({ position: { x: 10, y: 10 } });
   await page.keyboard.press("Enter");
