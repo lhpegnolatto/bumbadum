@@ -242,6 +242,8 @@
     "open": "Guarda-roupa",
     "shortcut": "Tecle C",
     "title": "Guarda-roupa",
+    "nicknameLabel": "Apelido",
+    "nicknameInvalid": "Escolha um apelido com 1 a 16 caracteres.",
     "cancel": "Cancelar",
     "apply": "Aplicar",
     "close": "Fechar o guarda-roupa"

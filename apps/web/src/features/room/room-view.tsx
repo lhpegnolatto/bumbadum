@@ -50,6 +50,7 @@ import {
   RoomPanelControls,
   RoomPanelFrame,
 } from "./room-panel-dock.tsx";
+import { useChangeNickname } from "./use-change-nickname.ts";
 import { useExitPresence } from "./use-exit-presence.ts";
 import { type PresentPlayer, useRoom } from "./use-room.ts";
 import { WaitingScreen, WaitingTimedOut } from "./waiting-screen.tsx";
@@ -133,17 +134,19 @@ function ConnectedRoom({
     );
   }
 
-  return <JoinedRoom room={status.room} players={players} worn={avatar} />;
+  return <JoinedRoom room={status.room} players={players} worn={avatar} nickname={nickname} />;
 }
 
 function JoinedRoom({
   room,
   players,
   worn,
+  nickname,
 }: {
   room: Room<unknown, RoomState>;
   players: PresentPlayer[];
   worn: Avatar;
+  nickname: string;
 }) {
   const t = useTranslations("wardrobe");
   const roomT = useTranslations("room");
@@ -164,6 +167,7 @@ function JoinedRoom({
   const visibleWardrobe = useExitPresence(wardrobeOpen ? "wardrobe" : null);
   const activePanelRef = useRef(activePanel);
   const wear = useWearAvatar(room);
+  const changeNickname = useChangeNickname(room);
   const dance = useDance(room);
   const serverNow = useServerClock(room);
   const { stop: stopDancing, toggle: toggleDance } = dance;
@@ -276,8 +280,10 @@ function JoinedRoom({
           {visibleWardrobe.present && (
             <WardrobePanel
               worn={worn}
+              nickname={nickname}
               open={visibleWardrobe.open}
               onWear={wear}
+              onRename={changeNickname}
               onClose={() => setActiveInterface(null)}
               // Beside the rail on desktop, at most 34rem wide and as tall as its content, scrolling
               // once it would reach the Wardrobe and Settings buttons; in the compact layout, the
