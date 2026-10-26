@@ -71,6 +71,10 @@ describe("lobbyMap", () => {
     expect(lobbyCarCollisionWorld.isBlocked(80 * 16 + 8, 10 * 16 + 8)).toBe(false);
   });
 
+  it("keeps the checkered flag post out of the autodrome approach", () => {
+    expect(lobbyCarCollisionWorld.isBlocked(2260, 191)).toBe(false);
+  });
+
   it("blocks the stage and the buildings", () => {
     expect(isWalkable(lobbyMap, { x: 70, y: 6 })).toBe(false);
     expect(isWalkable(lobbyMap, { x: 42, y: 6 })).toBe(false);

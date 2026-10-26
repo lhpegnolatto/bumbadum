@@ -619,7 +619,7 @@ export const PLAZA_V2_COLLISION_OBJECTS = [
   {
     "name": "flag-checkered",
     "x": 2258,
-    "y": 191,
+    "y": 185,
     "width": 6,
     "height": 5
   },
