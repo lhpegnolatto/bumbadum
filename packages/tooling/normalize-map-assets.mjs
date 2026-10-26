@@ -146,6 +146,10 @@ const removedChairCollisionTiles = [
 for (const [x, y] of removedChairCollisionTiles) {
   canonicalCollision.data[y * originalTiled.width + x] = 0;
 }
+// Keep the top parking exit open so cars can pull out into the autodrome approach.
+for (let x = 61; x <= 73; x += 1) {
+  canonicalCollision.data[22 * originalTiled.width + x] = 0;
+}
 originalTiled.layers.push({
   id: 9,
   name: "spawn",

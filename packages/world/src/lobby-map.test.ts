@@ -71,6 +71,13 @@ describe("lobbyMap", () => {
     }
   });
 
+  it("keeps the parking exit open for cars", () => {
+    for (let x = 61; x <= 73; x += 1) {
+      expect(isWalkable(lobbyMap, { x, y: 22 })).toBe(true);
+      expect(lobbyCarCollisionWorld.isBlocked(x * 16 + 8, 22 * 16 + 8)).toBe(false);
+    }
+  });
+
   it("keeps the marked autodrome surface free for cars", () => {
     expect(lobbyCarCollisionWorld.isBlocked(80 * 16 + 8, 10 * 16 + 8)).toBe(false);
   });
