@@ -77,7 +77,6 @@ describe("lobbyMap", () => {
 
   it("keeps the race sign lamp collision outside the sharp curve", () => {
     expect(lobbyCarCollisionWorld.isBlockedByObject(2109, 422)).toBe(false);
-    expect(lobbyCarCollisionWorld.isBlockedByObject(2090, 422)).toBe(true);
   });
 
   it("blocks the stage and the buildings", () => {

@@ -1262,13 +1262,6 @@ export const PLAZA_V2_COLLISION_OBJECTS = [
   },
   {
     "name": "lamp",
-    "x": 2088,
-    "y": 420,
-    "width": 6,
-    "height": 5
-  },
-  {
-    "name": "lamp",
     "x": 1817,
     "y": 420,
     "width": 6,
