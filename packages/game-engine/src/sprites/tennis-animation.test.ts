@@ -43,7 +43,10 @@ describe("tennisBallPose", () => {
   it("exposes alternating flight frames, directional trail and contact effects", () => {
     expect(tennisBallPose(timeline, 1_100).frame).toBe(1);
     expect(tennisBallPose(timeline, 1_200).frame).toBe(0);
-    expect(tennisBallPose(timeline, 1_250).trail).toEqual({ frame: 1, mirrored: false });
+    expect(tennisBallPose(timeline, 1_250).trail).toMatchObject({ frame: 1 });
+    expect(tennisBallPose(timeline, 1_250).trail?.angle).toBeCloseTo(
+      Math.atan2(-400, -120) - Math.atan2(1, -1),
+    );
 
     expect(tennisBallPose(timeline, 2_000)).toMatchObject({
       phase: "contact",

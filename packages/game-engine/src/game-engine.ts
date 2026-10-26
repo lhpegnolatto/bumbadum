@@ -72,6 +72,8 @@ const TENNIS_BALL_SHADOW = "/sprites/effects/ball-shadow-8x4.png";
 const TENNIS_BALL_TRAIL = "/sprites/effects/ball-trail-16.png";
 const TENNIS_IMPACT = "/sprites/effects/impact-16.png";
 const TENNIS_RACKET = "/sprites/effects/racket-sheet.png";
+const TENNIS_SCOREBOARD = { x: 40, y: 38, width: 56, height: 34, base: 72 } as const;
+const TENNIS_SIDE_COLORS = { top: 0xf6c453, bottom: 0x55d68a } as const;
 /** How many recent Confetti throws the engine remembers for end-to-end tests. */
 const DRAWN_THROWS_KEPT = 20;
 
@@ -237,6 +239,7 @@ export async function mountGameEngine(
     // Dynamic cars occupy these same parking anchors; keeping the decorative Tiled cars would
     // render a second car underneath every spawned vehicle.
     if (object.name.startsWith("car-")) continue;
+    if (object.name === "scoreboard") continue;
     const { x, y, width, height } = object.frame;
     const texture = new Texture({
       source: objectsAtlas.source,
@@ -246,6 +249,17 @@ export async function mountGameEngine(
     sprite.zIndex = objectDepth(object);
     depthSorted.addChild(sprite);
   }
+  const scoreboard = new Sprite(
+    new Texture({
+      source: objectsAtlas.source,
+      frame: new Rectangle(214, 359, TENNIS_SCOREBOARD.width, TENNIS_SCOREBOARD.height),
+    }),
+  );
+  scoreboard.position.set(TENNIS_SCOREBOARD.x, TENNIS_SCOREBOARD.y);
+  scoreboard.zIndex = TENNIS_SCOREBOARD.base;
+  const scoreboardMarks = new Graphics();
+  scoreboardMarks.zIndex = TENNIS_SCOREBOARD.base + 1;
+  depthSorted.addChild(scoreboard, scoreboardMarks);
   // Thrown confetti flies above every player and object.
   const confettiLayer = new Container();
   const confetti = new ConfettiThrowSprites(confettiLayer, confettiProjectile, confettiImpact);
@@ -355,6 +369,7 @@ export async function mountGameEngine(
 
   const drawTennis = (snapshot: TennisRenderSnapshot | undefined) => {
     if (!snapshot) return;
+    drawTennisScoreboard(scoreboardMarks, snapshot.topScore, snapshot.bottomScore);
     const participantIds = new Set(
       snapshot.participants.map((participant) => participant.sessionId),
     );
@@ -374,6 +389,7 @@ export async function mountGameEngine(
       view.avatar.draw(participant.side === "top" ? "down" : "up", "idle", 0);
       view.avatar.view.position.set(participant.x, participant.y + TILE_SIZE);
       view.avatar.view.zIndex = 100_000 + participant.y;
+      view.racket.tint = TENNIS_SIDE_COLORS[participant.side];
       const racketFrame = snapshot.rackets.find(
         (racket) => racket.sessionId === participant.sessionId,
       );
@@ -381,10 +397,8 @@ export async function mountGameEngine(
         const texture = racketTextures[racketFrame.frame.row * 4 + racketFrame.frame.column];
         if (!texture) continue;
         view.racket.texture = texture;
-        view.racket.position.set(
-          participant.x,
-          participant.y + (participant.side === "top" ? 20 : -4),
-        );
+        // The racket sheet is an effect overlay. Its bottom edge shares the avatar's feet.
+        view.racket.position.set(participant.x, participant.y + TILE_SIZE);
         view.racket.zIndex = view.avatar.view.zIndex + (participant.side === "top" ? 1 : -1);
       }
     }
@@ -399,7 +413,7 @@ export async function mountGameEngine(
     tennisBallShadowSprite.position.set(pose.shadow.x, pose.shadow.y);
     if (pose.trail) {
       tennisTrailSprite.texture = tennisTrailTextures[pose.trail.frame];
-      tennisTrailSprite.scale.x = pose.trail.mirrored ? -1 : 1;
+      tennisTrailSprite.rotation = pose.trail.angle;
       tennisTrailSprite.position.set(pose.position.x, pose.position.y);
     }
     if (pose.impactFrame !== undefined) {
@@ -663,7 +677,7 @@ export async function mountGameEngine(
     drawnTennis() {
       return tennisState
         ? tennisRenderSnapshot(tennisState, serverNow() ?? Date.now())
-        : { status: "idle", participants: [], rackets: [] };
+        : { status: "idle", topScore: 0, bottomScore: 0, participants: [], rackets: [] };
     },
     showBubble(id, text) {
       bubbles.show(id, text, performance.now());
@@ -753,4 +767,37 @@ function carAvatarPosition(direction: Direction): [number, number] {
 
 function sameAvatar(a: Avatar, b: AvatarState): boolean {
   return avatarsMatch(a, avatarFromStateOrDefault(b));
+}
+
+function drawTennisScoreboard(graphics: Graphics, topScore: number, bottomScore: number): void {
+  graphics.clear();
+  // Hide the two decorative dashes baked into the base scoreboard before drawing the live score.
+  graphics.rect(49, 47, 11, 6).fill(0x000000);
+  graphics.rect(75, 47, 11, 6).fill(0x000000);
+  drawScoreDigit(graphics, 53, 47, topScore, TENNIS_SIDE_COLORS.top);
+  drawScoreDigit(graphics, 79, 47, bottomScore, TENNIS_SIDE_COLORS.bottom);
+}
+
+function drawScoreDigit(
+  graphics: Graphics,
+  x: number,
+  y: number,
+  score: number,
+  color: number,
+): void {
+  const glyphs = [
+    ["111", "101", "101", "101", "111"],
+    ["010", "110", "010", "010", "111"],
+    ["111", "001", "111", "100", "111"],
+    ["111", "001", "111", "001", "111"],
+    ["101", "101", "111", "001", "001"],
+    ["111", "100", "111", "001", "111"],
+  ] as const;
+  const glyph = glyphs[Math.max(0, Math.min(5, score))];
+  if (!glyph) return;
+  for (const [row, line] of glyph.entries()) {
+    for (const [column, pixel] of [...line].entries()) {
+      if (pixel === "1") graphics.rect(x + column, y + row, 1, 1).fill(color);
+    }
+  }
 }

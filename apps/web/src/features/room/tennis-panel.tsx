@@ -1,6 +1,6 @@
 "use client";
 
-import type { RoomState, TennisSteerDirection } from "@bumbadum/protocol";
+import type { RoomState } from "@bumbadum/protocol";
 import type { Room } from "@colyseus/sdk";
 import { CircleDotIcon, LogInIcon, LogOutIcon } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -15,14 +15,12 @@ export function TennisPanel({
   serverNow,
   onJoin,
   onLeave,
-  onSteer,
 }: {
   room: Room<unknown, RoomState>;
   state: TennisViewState;
   serverNow: () => number | undefined;
   onJoin: () => void;
   onLeave: () => void;
-  onSteer: (direction: TennisSteerDirection | null) => void;
 }) {
   const t = useTranslations("room.tennis");
   const [now, setNow] = useState(() => serverNow() ?? Date.now());
@@ -65,7 +63,7 @@ export function TennisPanel({
   return (
     <section
       aria-label={t("title")}
-      className="absolute top-[var(--room-overlay-edge)] left-[var(--room-overlay-edge)] z-20 w-64 rounded-lg border bg-background/95 p-3 shadow-lg backdrop-blur-sm compact:top-[calc(var(--room-top-inset)_+_0.75rem)] compact:left-3"
+      className="absolute top-[var(--room-overlay-edge)] right-[calc(var(--room-rail-width)_+_var(--room-overlay-edge)_+_var(--room-overlay-gap))] z-20 w-64 rounded-lg border bg-background/95 p-3 shadow-lg backdrop-blur-sm compact:top-[calc(var(--room-top-inset)_+_0.75rem)] compact:right-3 compact:left-3 compact:w-auto"
     >
       <div className="flex items-center gap-2">
         <CircleDotIcon className="size-4" aria-hidden="true" />
@@ -107,48 +105,10 @@ export function TennisPanel({
         )}
       </div>
       {state.isParticipant && isActiveMatch(state.matchStatus) && (
-        <p className="mt-2 text-xs text-muted-foreground">{t("controls")}</p>
-      )}
-      {state.isParticipant && isActiveMatch(state.matchStatus) && (
         <div className="sr-only" aria-live="polite">
           {t("side", { side: state.side === "top" ? t("top") : t("bottom") })}
         </div>
       )}
-      <SteeringButtons
-        enabled={state.isParticipant && isActiveMatch(state.matchStatus)}
-        onSteer={onSteer}
-        t={t}
-      />
     </section>
-  );
-}
-
-function SteeringButtons({
-  enabled,
-  onSteer,
-  t,
-}: {
-  enabled: boolean;
-  onSteer: (direction: TennisSteerDirection | null) => void;
-  t: ReturnType<typeof useTranslations<"room.tennis">>;
-}) {
-  return (
-    <div className="mt-2 flex gap-2">
-      {(["left", "right"] as const).map((direction) => (
-        <Button
-          key={direction}
-          size="sm"
-          variant="secondary"
-          disabled={!enabled}
-          aria-label={t(direction)}
-          onPointerDown={() => onSteer(direction)}
-          onPointerUp={() => onSteer(null)}
-          onPointerCancel={() => onSteer(null)}
-          onPointerLeave={() => onSteer(null)}
-        >
-          {t(direction)}
-        </Button>
-      ))}
-    </div>
   );
 }

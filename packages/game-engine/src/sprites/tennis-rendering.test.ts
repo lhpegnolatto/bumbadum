@@ -5,6 +5,7 @@ import { tennisRenderSnapshot } from "../index.ts";
 function tennisState(): TennisState {
   return {
     matchStatus: "rally",
+    score: { top: 0, bottom: 0 },
     participants: new Map([
       ["top-id", { side: "top", x: 120 }],
       ["bottom-id", { side: "bottom", x: 208 }],

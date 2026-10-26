@@ -24,6 +24,7 @@ import { PLAZA_V2_TENNIS_COURT, PLAZA_V2_TENNIS_LINE } from "@bumbadum/world";
 import type { Client } from "@colyseus/core";
 
 const COUNTDOWN_MS = 3_000;
+const POINT_PAUSE_MS = 2_000;
 const RECONNECTION_GRACE_MS = 20_000;
 const CELEBRATION_MS = 2_000;
 const BOUNCE_FRACTION = 0.68;
@@ -266,7 +267,14 @@ export class TennisActivity {
       return;
     }
 
-    this.#launchRally(result.match.rally, now);
+    this.#scheduleRally(result.match.rally, now);
+  }
+
+  #scheduleRally(rally: TennisMatch["rally"], now: number) {
+    if (rally === null || this.#match === null) return;
+    this.#state.ball = undefined;
+    this.#state.matchStatus = "countdown";
+    this.#state.countdownEndsAt = now + POINT_PAUSE_MS;
   }
 
   #launchRally(rally: TennisMatch["rally"], launchedAt: number) {

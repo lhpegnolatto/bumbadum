@@ -89,7 +89,6 @@ export function GameCanvas({
   const containerRef = useRef<HTMLDivElement>(null);
   const engineRef = useRef<GameEngine>(undefined);
   const walkingRef = useRef(walking);
-  const topInsetRef = useRef(topInset);
   const carContextRef = useRef<CarContext>({ carId: "", nearbyCarId: null });
   const pressedCarKeysRef = useRef(new Map<string, Direction>());
   const onCarContextChangeRef = useRef(onCarContextChange);
@@ -112,11 +111,6 @@ export function GameCanvas({
     walkingRef.current = walking;
     engineRef.current?.setWalking(walking);
   }, [walking]);
-
-  useEffect(() => {
-    topInsetRef.current = topInset;
-    engineRef.current?.setTopInset(topInset);
-  }, [topInset]);
 
   useEffect(() => {
     const directionByKey: Record<string, Direction> = {
@@ -184,7 +178,7 @@ export function GameCanvas({
         return;
       }
       engine.setWalking(walkingRef.current);
-      engine.setTopInset(topInsetRef.current);
+      engine.setTopInset(0);
       engineRef.current = engine;
       const onStateChange = (state: RoomState) => {
         engine.applyState(state);
@@ -240,7 +234,13 @@ export function GameCanvas({
   }, [room, serverNow]);
 
   return (
-    <div ref={containerRef} role="img" aria-label={t("canvasLabel")} className="h-full w-full" />
+    <div
+      ref={containerRef}
+      role="img"
+      aria-label={t("canvasLabel")}
+      className="absolute left-0 w-full overflow-hidden"
+      style={{ top: topInset, height: `calc(100% - ${topInset}px)` }}
+    />
   );
 }
 

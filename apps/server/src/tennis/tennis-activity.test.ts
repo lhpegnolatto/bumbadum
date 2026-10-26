@@ -100,7 +100,10 @@ describe("TennisActivity lifecycle", () => {
         if (!participant) throw new Error("expected the receiving participant state");
         participant.x = ball.targetX;
       }
-      activity.update(0, ball.contactAt);
+      activity.update(0, ball.contactAt + 2_000);
+      if (room.state.ball === undefined && room.state.matchStatus === "countdown") {
+        activity.update(0, ball.contactAt + 4_000);
+      }
       if (room.state.matchStatus === "complete") break;
     }
 

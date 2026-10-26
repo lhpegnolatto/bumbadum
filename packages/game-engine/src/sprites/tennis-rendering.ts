@@ -32,6 +32,8 @@ export interface DrawnTennisRacket {
 
 export interface TennisRenderSnapshot {
   status: TennisState["matchStatus"];
+  topScore: number;
+  bottomScore: number;
   participants: DrawnTennisParticipant[];
   ball?: DrawnTennisBall;
   rackets: DrawnTennisRacket[];
@@ -85,5 +87,12 @@ export function tennisRenderSnapshot(state: TennisState, now: number): TennisRen
       }))
     : [];
 
-  return { status: state.matchStatus, participants, ball, rackets };
+  return {
+    status: state.matchStatus,
+    topScore: state.score.top,
+    bottomScore: state.score.bottom,
+    participants,
+    ball,
+    rackets,
+  };
 }

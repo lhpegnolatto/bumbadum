@@ -27,6 +27,9 @@ test("a phone shows the world across the viewport, the Screen on top and the pla
 
   // The Radio strip sits right below the Screen, and the camera frames Pia below both.
   const topInset = await screenAndStripBottom(page);
+  const canvas = await boundsOf(page.locator("canvas"));
+  expect(canvas.y).toBeGreaterThanOrEqual(topInset);
+  expect(canvas.y + canvas.height).toBeLessThanOrEqual(viewport.height);
   const mute = await boundsOf(page.getByRole("button", { name: "Mute" }));
   expect(mute.y).toBeGreaterThanOrEqual(screen.y + screen.height);
   expect(mute.y + mute.height).toBeLessThanOrEqual(topInset);

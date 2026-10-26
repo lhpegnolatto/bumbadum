@@ -29,7 +29,7 @@ export interface TennisBallTimeline {
 
 export interface TennisBallTrail {
   frame: 0 | 1;
-  mirrored: boolean;
+  angle: number;
 }
 
 export interface TennisBallPose {
@@ -122,7 +122,10 @@ export function tennisBallPose(timeline: TennisBallTimeline, now: number): Tenni
       trail: {
         frame: (Math.floor(Math.max(0, now - timeline.launchedAt) / TENNIS_BALL_TRAIL_FRAME_MS) %
           2) as 0 | 1,
-        mirrored: timeline.to.x < timeline.from.x,
+        // The source trail points down-left. Rotate it to the vector opposite the flight.
+        angle:
+          Math.atan2(timeline.from.y - timeline.to.y, timeline.from.x - timeline.to.x) -
+          Math.atan2(1, -1),
       },
     };
   }

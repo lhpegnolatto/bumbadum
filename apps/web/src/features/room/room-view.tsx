@@ -314,7 +314,6 @@ function JoinedRoom({
             serverNow={serverNow}
             onJoin={tennis.join}
             onLeave={tennis.leave}
-            onSteer={tennis.steer}
           />
           {visibleWardrobe.present && (
             <WardrobePanel
