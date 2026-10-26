@@ -1,0 +1,25 @@
+AUTODROMO + CARROS PILOTAVEIS (escala 16x16, mesma do avatar 24x24)
+
+MAPA (pasta mapa_praca_v2): agora 110x40 tiles (1760x640 px). A rua da direita continua ate o autodromo.
+- Estacionamento com 24 vagas (camada "vagas" no Tiled: ponto, direcao, ocupada) e carros parados.
+- Autodromo: pista oval de 64 px de largura com zebras, linha de chegada quadriculada, portico de largada com
+  semaforo, grid de 4 posicoes (camada "largada"), arquibancada, podio, pneus, barreiras, placa CORRIDA.
+- Camada "zona_pista" (tiles) marca onde e pista. autodromo.json traz geometria da pista, vagas e grid.
+- Colisao atualizada (carros parados, arquibancada, pneus, barreiras, podio...). A pista e livre.
+
+CARROS (pasta carros): 2 modelos (conversivel, kart) x 8 cores.
+- Cada carro tem 2 folhas 144x144: <modelo>_<cor>_fundo.png e _frente.png (3x3 celulas de 48x48).
+  Linhas: baixo, direita, cima (esquerda = espelhar a linha da direita).
+  Colunas: 0 parado, 1 andando A, 2 andando B (carro sobe 1 px e a roda gira).
+- Ordem de desenho: carro_fundo -> avatar -> carro_frente. Assim o avatar (com cabelo, chapeu etc.) aparece sentado.
+- Avatar dentro do carro: use o quadro idle 0 na direcao do carro e cole a celula 24x24 em
+  baixo (12,12), direita (10,11), cima (12,12) da celula do carro. No quadro 2 suba o avatar 1 px.
+- _parado_completo.png = fundo+frente juntos, para carro estacionado sem motorista.
+- Ancora do carro: centro da base em (24,44).
+
+ANIMACAO DE PILOTAGEM
+- Andando: alterne colunas 1 e 2 a cada ~100 ms (60 ms em alta velocidade).
+- Troque a linha pela direcao dominante do movimento (4 direcoes).
+- FX (pasta fx): fumaca_escapamento_16 (4 quadros, nasce no escapamento), poeira_derrapagem_24x16 (curvas/freio),
+  linhas_velocidade_16 (2 quadros, atras do carro em alta velocidade). Posicao do escapamento em carros.json.
+- corrida_demo.gif mostra 5 carros dando voltas no sentido horario.

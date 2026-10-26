@@ -1,0 +1,374 @@
+{
+  "arbusto": {
+    "x": 6,
+    "y": 6,
+    "w": 18,
+    "h": 14
+  },
+  "arbusto_flor": {
+    "x": 30,
+    "y": 6,
+    "w": 18,
+    "h": 14
+  },
+  "arquibancada": {
+    "x": 54,
+    "y": 6,
+    "w": 192,
+    "h": 72
+  },
+  "arvore_a": {
+    "x": 252,
+    "y": 6,
+    "w": 42,
+    "h": 50
+  },
+  "arvore_alta": {
+    "x": 300,
+    "y": 6,
+    "w": 30,
+    "h": 52
+  },
+  "arvore_b": {
+    "x": 336,
+    "y": 6,
+    "w": 42,
+    "h": 50
+  },
+  "arvore_c": {
+    "x": 384,
+    "y": 6,
+    "w": 42,
+    "h": 50
+  },
+  "arvore_jovem": {
+    "x": 432,
+    "y": 6,
+    "w": 26,
+    "h": 36
+  },
+  "arvore_rosa": {
+    "x": 464,
+    "y": 6,
+    "w": 42,
+    "h": 50
+  },
+  "banco": {
+    "x": 512,
+    "y": 6,
+    "w": 32,
+    "h": 16
+  },
+  "banco_vertical": {
+    "x": 550,
+    "y": 6,
+    "w": 12,
+    "h": 30
+  },
+  "bandeira_quadriculada": {
+    "x": 568,
+    "y": 6,
+    "w": 18,
+    "h": 40
+  },
+  "bandeira_rosa": {
+    "x": 592,
+    "y": 6,
+    "w": 16,
+    "h": 50
+  },
+  "bandeira_roxa": {
+    "x": 614,
+    "y": 6,
+    "w": 16,
+    "h": 50
+  },
+  "bandeirinhas": {
+    "x": 636,
+    "y": 6,
+    "w": 100,
+    "h": 10
+  },
+  "bandeirinhas_curta": {
+    "x": 742,
+    "y": 6,
+    "w": 60,
+    "h": 10
+  },
+  "barreira_6": {
+    "x": 808,
+    "y": 6,
+    "w": 50,
+    "h": 10
+  },
+  "cadeira": {
+    "x": 864,
+    "y": 6,
+    "w": 14,
+    "h": 16
+  },
+  "caixa_som": {
+    "x": 884,
+    "y": 6,
+    "w": 28,
+    "h": 46
+  },
+  "caixa_som_baixa": {
+    "x": 918,
+    "y": 6,
+    "w": 28,
+    "h": 30
+  },
+  "carro_conversivel_amarelo_2": {
+    "x": 952,
+    "y": 6,
+    "w": 48,
+    "h": 48
+  },
+  "carro_conversivel_azul_0": {
+    "x": 6,
+    "y": 84,
+    "w": 48,
+    "h": 48
+  },
+  "carro_conversivel_branco_0": {
+    "x": 60,
+    "y": 84,
+    "w": 48,
+    "h": 48
+  },
+  "carro_conversivel_preto_0": {
+    "x": 114,
+    "y": 84,
+    "w": 48,
+    "h": 48
+  },
+  "carro_conversivel_preto_2": {
+    "x": 168,
+    "y": 84,
+    "w": 48,
+    "h": 48
+  },
+  "carro_conversivel_rosa_0": {
+    "x": 222,
+    "y": 84,
+    "w": 48,
+    "h": 48
+  },
+  "carro_conversivel_roxo_2": {
+    "x": 276,
+    "y": 84,
+    "w": 48,
+    "h": 48
+  },
+  "carro_conversivel_vermelho_0": {
+    "x": 330,
+    "y": 84,
+    "w": 48,
+    "h": 48
+  },
+  "carro_conversivel_vermelho_2": {
+    "x": 384,
+    "y": 84,
+    "w": 48,
+    "h": 48
+  },
+  "carro_kart_amarelo_2": {
+    "x": 438,
+    "y": 84,
+    "w": 48,
+    "h": 48
+  },
+  "carro_kart_azul_0": {
+    "x": 492,
+    "y": 84,
+    "w": 48,
+    "h": 48
+  },
+  "carro_kart_azul_2": {
+    "x": 546,
+    "y": 84,
+    "w": 48,
+    "h": 48
+  },
+  "carro_kart_branco_2": {
+    "x": 600,
+    "y": 84,
+    "w": 48,
+    "h": 48
+  },
+  "carro_kart_rosa_2": {
+    "x": 654,
+    "y": 84,
+    "w": 48,
+    "h": 48
+  },
+  "carro_kart_roxo_0": {
+    "x": 708,
+    "y": 84,
+    "w": 48,
+    "h": 48
+  },
+  "carro_kart_verde_2": {
+    "x": 762,
+    "y": 84,
+    "w": 48,
+    "h": 48
+  },
+  "carro_kart_vermelho_2": {
+    "x": 816,
+    "y": 84,
+    "w": 48,
+    "h": 48
+  },
+  "cerca": {
+    "x": 870,
+    "y": 84,
+    "w": 48,
+    "h": 14
+  },
+  "cone": {
+    "x": 924,
+    "y": 84,
+    "w": 10,
+    "h": 12
+  },
+  "food_truck": {
+    "x": 940,
+    "y": 84,
+    "w": 68,
+    "h": 50
+  },
+  "hidrante": {
+    "x": 6,
+    "y": 140,
+    "w": 10,
+    "h": 13
+  },
+  "jardineira_amarela": {
+    "x": 22,
+    "y": 140,
+    "w": 18,
+    "h": 18
+  },
+  "jardineira_rosa": {
+    "x": 46,
+    "y": 140,
+    "w": 18,
+    "h": 18
+  },
+  "lixeira": {
+    "x": 70,
+    "y": 140,
+    "w": 12,
+    "h": 15
+  },
+  "mesa_guarda_sol": {
+    "x": 88,
+    "y": 140,
+    "w": 34,
+    "h": 34
+  },
+  "mesa_piquenique": {
+    "x": 128,
+    "y": 140,
+    "w": 34,
+    "h": 26
+  },
+  "palco": {
+    "x": 168,
+    "y": 140,
+    "w": 256,
+    "h": 150
+  },
+  "pinheiro": {
+    "x": 430,
+    "y": 140,
+    "w": 26,
+    "h": 42
+  },
+  "placa_cardapio": {
+    "x": 462,
+    "y": 140,
+    "w": 14,
+    "h": 18
+  },
+  "placa_corrida": {
+    "x": 482,
+    "y": 140,
+    "w": 70,
+    "h": 40
+  },
+  "placa_estacionamento": {
+    "x": 558,
+    "y": 140,
+    "w": 16,
+    "h": 34
+  },
+  "pneus": {
+    "x": 580,
+    "y": 140,
+    "w": 16,
+    "h": 20
+  },
+  "podio": {
+    "x": 602,
+    "y": 140,
+    "w": 52,
+    "h": 34
+  },
+  "portico_largada": {
+    "x": 660,
+    "y": 140,
+    "w": 88,
+    "h": 56
+  },
+  "poste": {
+    "x": 754,
+    "y": 140,
+    "w": 12,
+    "h": 44
+  },
+  "predio_cafe": {
+    "x": 772,
+    "y": 140,
+    "w": 128,
+    "h": 140
+  },
+  "predio_discos": {
+    "x": 6,
+    "y": 296,
+    "w": 128,
+    "h": 140
+  },
+  "predio_radio": {
+    "x": 140,
+    "y": 296,
+    "w": 128,
+    "h": 176
+  },
+  "predio_tijolo": {
+    "x": 274,
+    "y": 296,
+    "w": 128,
+    "h": 176
+  },
+  "quiosque_listrado": {
+    "x": 408,
+    "y": 296,
+    "w": 50,
+    "h": 52
+  },
+  "tenda_azul": {
+    "x": 464,
+    "y": 296,
+    "w": 50,
+    "h": 52
+  },
+  "tenda_branca": {
+    "x": 520,
+    "y": 296,
+    "w": 50,
+    "h": 52
+  }
+}
