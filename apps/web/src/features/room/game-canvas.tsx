@@ -18,6 +18,7 @@ import {
   type ConfettiThrown,
   type RoomState,
   STEP_MESSAGE,
+  TENNIS_STEER_MESSAGE,
 } from "@bumbadum/protocol";
 import type { Room } from "@colyseus/sdk";
 import { type Ref, useEffect, useImperativeHandle, useRef } from "react";
@@ -175,6 +176,7 @@ export function GameCanvas({
       const engine = await mountGameEngine(container, {
         sessionId: room.sessionId,
         sendStep: (direction) => room.send(STEP_MESSAGE, direction),
+        sendTennisSteer: (direction) => room.send(TENNIS_STEER_MESSAGE, direction),
         serverNow,
       });
       if (cancelled) {

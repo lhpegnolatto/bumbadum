@@ -53,3 +53,11 @@ export {
   tennisBallPose,
   tennisRacketFrame,
 } from "./sprites/tennis-animation.ts";
+export {
+  type DrawnTennisBall,
+  type DrawnTennisParticipant,
+  type DrawnTennisRacket,
+  TENNIS_BASELINE_Y,
+  type TennisRenderSnapshot,
+  tennisRenderSnapshot,
+} from "./sprites/tennis-rendering.ts";

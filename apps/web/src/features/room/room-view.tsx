@@ -53,9 +53,11 @@ import {
   RoomPanelControls,
   RoomPanelFrame,
 } from "./room-panel-dock.tsx";
+import { TennisPanel } from "./tennis-panel.tsx";
 import { useChangeNickname } from "./use-change-nickname.ts";
 import { useExitPresence } from "./use-exit-presence.ts";
 import { type PresentPlayer, useRoom } from "./use-room.ts";
+import { isActiveMatch, useTennis } from "./use-tennis.ts";
 import { WaitingScreen, WaitingTimedOut } from "./waiting-screen.tsx";
 
 export function RoomView({ slug }: { slug: string }) {
@@ -177,11 +179,13 @@ function JoinedRoom({
   const wear = useWearAvatar(room);
   const changeNickname = useChangeNickname(room);
   const dance = useDance(room);
+  const tennis = useTennis(room);
   const serverNow = useServerClock(room);
   const { stop: stopDancing, toggle: toggleDance } = dance;
   const canvasRef = useRef<GameCanvasHandle>(null);
   const wardrobeOpenRef = useRef(wardrobeOpen);
   const carContextRef = useRef(carContext);
+  const tennisParticipantRef = useRef(tennis.state.isParticipant);
 
   useEffect(() => {
     wardrobeOpenRef.current = wardrobeOpen;
@@ -197,11 +201,16 @@ function JoinedRoom({
   }, [carContext]);
 
   useEffect(() => {
+    tennisParticipantRef.current = tennis.state.isParticipant;
+  }, [tennis.state.isParticipant]);
+
+  useEffect(() => {
     function danceOnF(event: KeyboardEvent) {
       if (event.key.toLowerCase() !== "f" || event.repeat || event.defaultPrevented) return;
       if (event.ctrlKey || event.metaKey || event.altKey || isTextField(event.target)) return;
       if (wardrobeOpenRef.current) return;
       if (carContextRef.current.carId) return;
+      if (tennisParticipantRef.current) return;
       toggleDance();
     }
     document.addEventListener("keydown", danceOnF);
@@ -214,6 +223,7 @@ function JoinedRoom({
       if (event.ctrlKey || event.metaKey || event.altKey || isTextField(event.target)) return;
       if (wardrobeOpenRef.current) return;
       if (carContextRef.current.carId) return;
+      if (tennisParticipantRef.current) return;
       room.send(CONFETTI_THROW_MESSAGE);
     }
     document.addEventListener("keydown", throwConfettiOnE);
@@ -291,10 +301,20 @@ function JoinedRoom({
           <GameCanvas
             ref={canvasRef}
             room={room}
-            walking={!wardrobeOpen && !sheetOpen && !carContext.carId}
+            walking={
+              !wardrobeOpen && !sheetOpen && !carContext.carId && !tennis.state.isParticipant
+            }
             topInset={topInset}
             serverNow={serverNow}
             onCarContextChange={setCarContext}
+          />
+          <TennisPanel
+            room={room}
+            state={tennis.state}
+            serverNow={serverNow}
+            onJoin={tennis.join}
+            onLeave={tennis.leave}
+            onSteer={tennis.steer}
           />
           {visibleWardrobe.present && (
             <WardrobePanel
@@ -357,7 +377,7 @@ function JoinedRoom({
               aria-pressed={dance.dancing}
               aria-keyshortcuts="F"
               // Trying on clothes ends a dance, so none starts while the Wardrobe is open.
-              disabled={wardrobeOpen || Boolean(carContext.carId)}
+              disabled={wardrobeOpen || Boolean(carContext.carId) || tennis.state.isParticipant}
               title={roomT("danceShortcut")}
               onClick={toggleDance}
             >
@@ -370,7 +390,7 @@ function JoinedRoom({
               className="compact:size-11 compact:px-0"
               aria-keyshortcuts="E"
               // A throw ends a dance, so, like one, none starts while the Wardrobe is open.
-              disabled={wardrobeOpen || Boolean(carContext.carId)}
+              disabled={wardrobeOpen || Boolean(carContext.carId) || tennis.state.isParticipant}
               title={roomT("confettiShortcut")}
               onClick={() => room.send(CONFETTI_THROW_MESSAGE)}
             >
@@ -392,7 +412,15 @@ function JoinedRoom({
         {/* Bottom centre on a phone; above the Wardrobe and Settings buttons on a touch tablet. */}
         <AnalogueStick
           hidden={activeInterface !== null}
-          onSteer={(direction) => canvasRef.current?.steer(direction)}
+          onSteer={(direction) => {
+            if (tennis.state.isParticipant && isActiveMatch(tennis.state.matchStatus)) {
+              if (direction === "left" || direction === "right" || direction === null) {
+                tennis.steer(direction);
+              }
+              return;
+            }
+            canvasRef.current?.steer(direction);
+          }}
           className="absolute bottom-[calc(var(--room-overlay-edge)_+_env(safe-area-inset-bottom)_+_2.75rem)] left-[var(--room-overlay-edge)] z-20 compact:bottom-[var(--room-safe-bottom)] compact:left-[calc(50%_-_3.5rem)]"
         />
         {/* The Screen and Radio stay visible; one optional room panel uses the space beneath them. */}

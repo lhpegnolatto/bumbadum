@@ -363,6 +363,25 @@ describe("lobby-room Tennis activity", () => {
     expect(events[0]?.code).toBe("match-started");
   });
 
+  it("preserves a Tennis side when a dropped participant reconnects", async () => {
+    const ana = await joinLobby("Ana");
+    const bia = await joinLobby("Bia");
+    ana.reconnection.minUptime = 0;
+    ana.send(TENNIS_JOIN_MESSAGE);
+    bia.send(TENNIS_JOIN_MESSAGE);
+
+    await expect.poll(() => ana.state.tennis.matchStatus).toBe("countdown");
+    const sideBeforeDrop = ana.state.tennis.participants.get(ana.sessionId)?.side;
+    const reconnected = new Promise<void>((resolve) => ana.onReconnect(resolve));
+
+    ana.connection.close(CloseCode.MAY_TRY_RECONNECT);
+    await reconnected;
+
+    expect(ana.state.tennis.participants.get(ana.sessionId)?.side).toBe(sideBeforeDrop);
+    expect(ana.state.tennis.participants.has(ana.sessionId)).toBe(true);
+    expect(ana.state.tennis.matchStatus).toMatch(/countdown|rally/);
+  });
+
   it("accepts only horizontal steering during a match", async () => {
     const ana = await joinLobby("Ana");
     const bia = await joinLobby("Bia");

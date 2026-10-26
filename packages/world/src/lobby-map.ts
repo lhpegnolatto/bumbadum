@@ -6,6 +6,11 @@ import {
   PLAZA_V2_TRACK_ROWS,
 } from "./plaza-v2-map.generated.ts";
 
+export {
+  PLAZA_V2_TENNIS_COURT,
+  PLAZA_V2_TENNIS_LINE,
+} from "./plaza-v2-map.generated.ts";
+
 /** The lobby's map: the tennis/autodrome plaza, generated from its Tiled project (ADR-0016). */
 export const lobbyMap = createMap(PLAZA_V2_ROWS);
 

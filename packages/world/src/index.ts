@@ -22,6 +22,8 @@ export {
   lobbyCarCollisionWorld,
   lobbyMap,
   lobbyParkingSpots,
+  PLAZA_V2_TENNIS_COURT,
+  PLAZA_V2_TENNIS_LINE,
 } from "./lobby-map.ts";
 export { createMap, type GameMap, isWalkable, type Tile } from "./map.ts";
 export {

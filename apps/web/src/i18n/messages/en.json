@@ -45,6 +45,29 @@
     "car": {
       "enter": "Enter car",
       "exit": "Dismount"
+    },
+    "tennis": {
+      "title": "Tennis",
+      "ready": "Join the line from inside the hall.",
+      "join": "Join the line",
+      "leaveLine": "Leave the line",
+      "leaveMatch": "Leave match",
+      "next": "You are next",
+      "inLine": "Position {position} in line",
+      "countdown": "Starting in {seconds}…",
+      "playing": "Your match is on",
+      "youWin": "You win!",
+      "youLose": "Match over",
+      "score": "Score",
+      "scoreLabel": "Top {top}, bottom {bottom}",
+      "youAreNext": "You are next",
+      "getReady": "The current match is almost over.",
+      "controls": "Move sideways to meet the ball.",
+      "side": "You play on the {side} side.",
+      "top": "top",
+      "bottom": "bottom",
+      "left": "Left",
+      "right": "Right"
     }
   },
   "joinRejection": {

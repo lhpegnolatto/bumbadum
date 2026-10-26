@@ -45,6 +45,29 @@
     "car": {
       "enter": "Entrar no carro",
       "exit": "Desmontar"
+    },
+    "tennis": {
+      "title": "Tênis",
+      "ready": "Entre na fila dentro do hall.",
+      "join": "Entrar na fila",
+      "leaveLine": "Sair da fila",
+      "leaveMatch": "Sair da partida",
+      "next": "Você é o próximo",
+      "inLine": "Posição {position} na fila",
+      "countdown": "Começa em {seconds}…",
+      "playing": "Sua partida está valendo",
+      "youWin": "Você venceu!",
+      "youLose": "Partida encerrada",
+      "score": "Placar",
+      "scoreLabel": "Cima {top}, baixo {bottom}",
+      "youAreNext": "Você é o próximo",
+      "getReady": "A partida atual está prestes a acabar.",
+      "controls": "Ande de lado para alcançar a bola.",
+      "side": "Você joga no lado de {side}.",
+      "top": "cima",
+      "bottom": "baixo",
+      "left": "Esquerda",
+      "right": "Direita"
     }
   },
   "joinRejection": {

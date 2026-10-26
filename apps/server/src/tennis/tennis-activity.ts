@@ -18,13 +18,12 @@ import {
   type TennisMatch,
   type TennisRules,
 } from "@bumbadum/tennis";
+import { PLAZA_V2_TENNIS_COURT, PLAZA_V2_TENNIS_LINE } from "@bumbadum/world";
 import type { Client } from "@colyseus/core";
-import {
-  PLAZA_V2_TENNIS_COURT,
-  PLAZA_V2_TENNIS_LINE,
-} from "../../../../packages/world/src/plaza-v2-map.generated.ts";
 
 const COUNTDOWN_MS = 3_000;
+const RECONNECTION_GRACE_MS = 20_000;
+const CELEBRATION_MS = 2_000;
 const BOUNCE_FRACTION = 0.68;
 const LATERAL_SPEED = 96;
 const TENNIS_LINE_CAPACITY = PLAZA_V2_TENNIS_LINE.length;
@@ -61,8 +60,11 @@ export class TennisActivity {
   readonly #random: RandomSource;
   readonly #rules: TennisRules;
   readonly #steering = new Map<string, TennisSteerDirection>();
+  readonly #enrolled = new Set<string>();
+  readonly #reconnectionDeadlines = new Map<string, number>();
   #line = createTennisLine(TENNIS_LINE_CAPACITY);
   #match: TennisMatch | null = null;
+  #celebrationEndsAt = 0;
 
   constructor(room: TennisActivityRoom, options: TennisActivityOptions = {}) {
     this.#room = room;
@@ -82,8 +84,10 @@ export class TennisActivity {
   }
 
   join(sessionId: string, now = this.#now()): void {
+    if (this.#enrolled.has(sessionId)) return;
     const result = joinTennisLine(this.#line, sessionId);
     if (result.status === "full" || result.status === "already-joined") return;
+    this.#enrolled.add(sessionId);
     this.#line = result.line;
     this.#syncQueue();
     this.#positionQueuedPlayers();
@@ -92,14 +96,15 @@ export class TennisActivity {
 
   leave(sessionId: string, now = this.#now()): void {
     if (this.isInMatch(sessionId)) {
-      // TODO(tennis-reconnect): replace cancellation with the ADR-0027 grace-period
-      // abandonment result once the domain exposes that transition.
-      this.#cancelMatch();
-      this.#startIfReady(now);
+      this.#enrolled.delete(sessionId);
+      this.#reconnectionDeadlines.delete(sessionId);
+      this.#steering.delete(sessionId);
+      this.#resolveAbandonment(sessionId, now);
       return;
     }
 
     this.#line = leaveTennisLine(this.#line, sessionId);
+    this.#enrolled.delete(sessionId);
     this.#syncQueue();
     this.#positionQueuedPlayers();
     this.#startIfReady(now);
@@ -110,8 +115,24 @@ export class TennisActivity {
     this.#steering.set(sessionId, direction);
   }
 
+  /** Marks a connected match participant as temporarily unavailable. */
+  drop(sessionId: string, now = this.#now()): void {
+    if (!this.isInMatch(sessionId) || this.#state.matchStatus === "complete") return;
+    this.#reconnectionDeadlines.set(sessionId, now + RECONNECTION_GRACE_MS);
+  }
+
+  /** Cancels a pending abandonment when the same session reconnects. */
+  reconnect(sessionId: string): void {
+    this.#reconnectionDeadlines.delete(sessionId);
+  }
+
   /** Advances continuous lateral movement and server-timed Rally transitions. */
   update(deltaTimeMs: number, now = this.#now()): void {
+    this.#expireReconnects(now);
+    if (this.#state.matchStatus === "complete") {
+      if (now >= this.#celebrationEndsAt) this.#finishCelebration(now);
+      return;
+    }
     if (this.#match === null) return;
     this.#moveParticipants(deltaTimeMs);
 
@@ -130,6 +151,18 @@ export class TennisActivity {
   /** Removes a queue/match seat when Colyseus finally considers the client gone. */
   removePlayer(sessionId: string, now = this.#now()): void {
     this.#steering.delete(sessionId);
+    if (this.isInMatch(sessionId)) {
+      if (this.#state.matchStatus === "complete") {
+        this.#enrolled.delete(sessionId);
+        return;
+      }
+      const deadline = this.#reconnectionDeadlines.get(sessionId);
+      if (deadline !== undefined && now < deadline) return;
+      this.#reconnectionDeadlines.delete(sessionId);
+      this.#enrolled.delete(sessionId);
+      this.#resolveAbandonment(sessionId, now);
+      return;
+    }
     this.leave(sessionId, now);
   }
 
@@ -140,6 +173,7 @@ export class TennisActivity {
 
     this.#line = result.line;
     this.#match = result.match;
+    this.#celebrationEndsAt = 0;
     this.#state.matchStatus = "countdown";
     this.#state.countdownEndsAt = now + COUNTDOWN_MS;
     this.#state.winnerId = "";
@@ -226,14 +260,7 @@ export class TennisActivity {
     this.#notifyNextPlayers();
 
     if (result.outcome === "match-complete") {
-      this.#state.matchStatus = "complete";
-      this.#state.winnerId = result.pointWonBy;
-      this.#state.countdownEndsAt = 0;
-      this.#state.ball = undefined;
-      this.#room.broadcast(TENNIS_EVENT, {
-        code: "match-complete",
-        params: { winnerId: result.pointWonBy, reason: "points" },
-      });
+      this.#completeMatch(result.pointWonBy, "points", now);
       return;
     }
 
@@ -308,7 +335,36 @@ export class TennisActivity {
     });
   }
 
-  #cancelMatch() {
+  #expireReconnects(now: number) {
+    for (const [sessionId, deadline] of this.#reconnectionDeadlines) {
+      if (deadline > now) continue;
+      this.#reconnectionDeadlines.delete(sessionId);
+      if (this.isInMatch(sessionId)) this.#resolveAbandonment(sessionId, now);
+    }
+  }
+
+  #resolveAbandonment(abandonedId: string, now: number) {
+    if (this.#match === null || this.#state.matchStatus === "complete") return;
+    const winnerId = this.#match.players.find((playerId) => playerId !== abandonedId);
+    if (winnerId === undefined) return;
+    this.#completeMatch(winnerId, "abandonment", now);
+  }
+
+  #completeMatch(winnerId: string, reason: "points" | "abandonment", now: number) {
+    this.#state.matchStatus = "complete";
+    this.#state.winnerId = winnerId;
+    this.#state.countdownEndsAt = 0;
+    this.#state.ball = undefined;
+    this.#celebrationEndsAt = now + CELEBRATION_MS;
+    this.#room.broadcast(TENNIS_EVENT, {
+      code: "match-complete",
+      params: { winnerId, reason },
+    });
+  }
+
+  #finishCelebration(now: number) {
+    if (this.#match === null) return;
+    const finishedPlayers = this.#match.players;
     this.#match = null;
     this.#state.matchStatus = "idle";
     this.#state.countdownEndsAt = 0;
@@ -318,7 +374,22 @@ export class TennisActivity {
     this.#state.score.top = 0;
     this.#state.score.bottom = 0;
     this.#state.servingSide = "top";
+    this.#celebrationEndsAt = 0;
     this.#steering.clear();
+    this.#reconnectionDeadlines.clear();
+
+    for (const sessionId of finishedPlayers) {
+      if (!this.#enrolled.has(sessionId)) continue;
+      if (!this.#room.player(sessionId)) {
+        this.#enrolled.delete(sessionId);
+        continue;
+      }
+      const result = joinTennisLine(this.#line, sessionId);
+      if (result.status === "joined") this.#line = result.line;
+    }
+    this.#syncQueue();
+    this.#positionQueuedPlayers();
+    this.#startIfReady(now);
   }
 }
 

@@ -1,3 +1,4 @@
+import type { TennisSteerDirection } from "@bumbadum/protocol";
 import type { Direction } from "@bumbadum/world";
 import type { StepRepeater } from "./movement/step-repeater.ts";
 
@@ -50,5 +51,41 @@ export function listenToDirectionKeys(repeater: StepRepeater, enabled: () => boo
     window.removeEventListener("keyup", onKeyUp);
     window.removeEventListener("focusin", onFocusIn);
     window.removeEventListener("blur", onBlur);
+  };
+}
+
+/** Feeds left/right keys to a Tennis intent while the local player is in a match. */
+export function listenToTennisDirectionKeys(
+  steer: (direction: TennisSteerDirection | null) => void,
+  enabled: () => boolean,
+): () => void {
+  const onKeyDown = (event: KeyboardEvent) => {
+    if (!enabled() || event.repeat || event.ctrlKey || event.metaKey || event.altKey) return;
+    if (isTextField(event.target)) return;
+    const key = event.key.toLowerCase();
+    const direction =
+      event.key === "ArrowLeft" || key === "a"
+        ? "left"
+        : event.key === "ArrowRight" || key === "d"
+          ? "right"
+          : null;
+    if (!direction) return;
+    event.preventDefault();
+    steer(direction);
+  };
+  const onKeyUp = (event: KeyboardEvent) => {
+    if (!enabled() || isTextField(event.target)) return;
+    const key = event.key.toLowerCase();
+    if (event.key !== "ArrowLeft" && event.key !== "ArrowRight" && key !== "a" && key !== "d")
+      return;
+    event.preventDefault();
+    steer(null);
+  };
+  window.addEventListener("keydown", onKeyDown);
+  window.addEventListener("keyup", onKeyUp);
+  return () => {
+    window.removeEventListener("keydown", onKeyDown);
+    window.removeEventListener("keyup", onKeyUp);
+    steer(null);
   };
 }
