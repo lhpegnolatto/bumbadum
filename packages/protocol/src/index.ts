@@ -43,8 +43,16 @@ export {
   joinRejections,
 } from "./room/join-rejection.ts";
 export { NICKNAME_MESSAGE } from "./room/nickname-change.ts";
-export { PlayerState, RoomState } from "./room/room-state.ts";
+export { CarState, PlayerState, RoomState } from "./room/room-state.ts";
 export { LOBBY_SLUG, ROOM_TYPE } from "./room/room-type.ts";
+export {
+  CAR_DRIVE_MESSAGE,
+  CAR_ENTER_MESSAGE,
+  CAR_EXIT_MESSAGE,
+  parseCarDriveIntent,
+  parseCarEnterIntent,
+  parseCarExitIntent,
+} from "./world/car-intent.ts";
 export {
   CONFETTI_THROW_MESSAGE,
   CONFETTI_THROWN,

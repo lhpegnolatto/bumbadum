@@ -1,5 +1,29 @@
-import { createMap } from "./map.ts";
-import { PLAZA_ROWS } from "./plaza-map.generated.ts";
+import { createMap, isWalkable } from "./map.ts";
+import {
+  PLAZA_V2_COLLISION_OBJECTS,
+  PLAZA_V2_PARKING_SPOTS,
+  PLAZA_V2_ROWS,
+} from "./plaza-v2-map.generated.ts";
 
-/** The lobby's map: the music plaza, generated from its Tiled project (ADR-0016). */
-export const lobbyMap = createMap(PLAZA_ROWS);
+/** The lobby's map: the v2 music plaza, generated from its Tiled project (ADR-0016). */
+export const lobbyMap = createMap(PLAZA_V2_ROWS);
+
+export const lobbyParkingSpots = PLAZA_V2_PARKING_SPOTS;
+
+/** Pixel-space collision geometry for Cars, including blocked map objects. */
+export const lobbyCarCollisionWorld = {
+  isBlocked(x: number, y: number): boolean {
+    const tileX = Math.floor(x / 16);
+    const tileY = Math.floor(y / 16);
+    return !isWalkable(lobbyMap, { x: tileX, y: tileY }) || this.isBlockedByObject(x, y);
+  },
+  isBlockedByObject(x: number, y: number): boolean {
+    return PLAZA_V2_COLLISION_OBJECTS.some(
+      (object) =>
+        x >= object.x &&
+        x <= object.x + object.width &&
+        y >= object.y &&
+        y <= object.y + object.height,
+    );
+  },
+};

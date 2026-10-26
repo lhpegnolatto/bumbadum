@@ -8,6 +8,11 @@
   "exports": {
     "./tsconfig/base.json": "./tsconfig/base.json"
   },
+  "scripts": {
+    "map:normalize": "node normalize-map-assets.mjs",
+    "map:v2:generate": "node generate-map-assets.mjs --map=plaza-v2",
+    "map:v2:check": "node generate-map-assets.mjs --map=plaza-v2 --check"
+  },
   "devDependencies": {
     "sharp": "0.35.5"
   }

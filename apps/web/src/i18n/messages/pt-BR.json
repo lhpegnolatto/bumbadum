@@ -41,7 +41,11 @@
     "dance": "Dançar",
     "danceShortcut": "Tecle F",
     "confetti": "Confete",
-    "confettiShortcut": "Tecle E"
+    "confettiShortcut": "Tecle E",
+    "car": {
+      "enter": "Entrar no carro",
+      "exit": "Desmontar"
+    }
   },
   "joinRejection": {
     "room-full": "A sala está cheia. Tente de novo daqui a pouco.",

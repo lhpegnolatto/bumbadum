@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { objectDepth, playerDepth } from "./index.ts";
+import { carDepth, objectDepth, playerDepth } from "./index.ts";
 import { PLAZA_OBJECTS } from "./plaza-objects.generated.ts";
 
 /** A player on tile row 12 stands with their feet on world pixel row 208. */
@@ -22,6 +22,10 @@ describe("depth order", () => {
     const tree = { base: 200 };
     expect(playerDepth({ x: 30, y: 11.4 })).toBeLessThan(objectDepth(tree));
     expect(playerDepth({ x: 30, y: 11.6 })).toBeGreaterThan(objectDepth(tree));
+  });
+
+  it("keeps a car's feet in the same depth system as a player", () => {
+    expect(carDepth(onRow12)).toBe(playerDepth(onRow12));
   });
 
   it("removes the central chairs while preserving surrounding objects", () => {

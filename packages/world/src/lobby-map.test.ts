@@ -11,12 +11,12 @@ function allTiles(): Tile[] {
 }
 
 describe("lobbyMap", () => {
-  it("is the 60 by 40 tile plaza", () => {
-    expect({ width: lobbyMap.width, height: lobbyMap.height }).toEqual({ width: 60, height: 40 });
+  it("is the 110 by 40 plaza with the autodrome extension", () => {
+    expect({ width: lobbyMap.width, height: lobbyMap.height }).toEqual({ width: 110, height: 40 });
   });
 
-  it("spawns players on a walkable tile in the open plaza below the audience", () => {
-    expect(lobbyMap.spawnPoint).toEqual({ x: 30, y: 22 });
+  it("spawns players on a walkable tile in the plaza", () => {
+    expect(lobbyMap.spawnPoint).toEqual({ x: 55, y: 22 });
     expect(isWalkable(lobbyMap, lobbyMap.spawnPoint)).toBe(true);
   });
 
@@ -38,13 +38,9 @@ describe("lobbyMap", () => {
     expect(walkable.length).toBeGreaterThan(1500);
   });
 
-  it("keeps the cleared central dance area walkable", () => {
-    const chairColumns = [22, 25, 28, 31, 33, 36];
-    const clearedRows = [12, 14, 16, 18];
-    const clearedTiles = clearedRows.flatMap((y) => chairColumns.map((x) => ({ x, y })));
-
-    expect(clearedTiles).toHaveLength(24);
-    expect(clearedTiles.every((tile) => isWalkable(lobbyMap, tile))).toBe(true);
+  it("keeps the plaza spawn and autodrome approach walkable", () => {
+    expect(isWalkable(lobbyMap, { x: 80, y: 22 })).toBe(true);
+    expect(isWalkable(lobbyMap, { x: 100, y: 22 })).toBe(true);
   });
 
   it("blocks the stage and the buildings", () => {

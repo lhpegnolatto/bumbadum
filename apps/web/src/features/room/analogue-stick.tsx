@@ -10,7 +10,7 @@ import { stickDirection } from "./stick-direction.ts";
 const CENTRE = { x: 0, y: 0 };
 
 /**
- * A fixed touch stick that steers the local player in four directions while a thumb holds it.
+ * A fixed touch stick that steers the local player or car in four directions while a thumb holds it.
  * Shown only where the primary pointer is coarse; `hidden` also hides it and stops steering.
  */
 export function AnalogueStick({

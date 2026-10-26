@@ -4,6 +4,7 @@
  * The plaza's objects: each one's frame in objects.png, the world pixel where its top-left
  * corner is drawn, and its base (bottom edge), which places it in depth order.
  */
+// biome-ignore format: generated data is serialized from Tiled.
 export const PLAZA_OBJECTS: readonly {
   name: string;
   frame: { x: number; y: number; width: number; height: number };

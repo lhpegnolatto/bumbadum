@@ -72,6 +72,26 @@ _Avoid_: emote, projectile, shot
 Where a Confetti throw lands: on the first Player ahead, short of the first blocked tile, or at the end of the throw's reach.
 _Avoid_: hit, aim, destination
 
+**Car**:
+A shared rideable object in a Room that a Player may enter, drive and leave. A Car has a visual model and colour, but is not owned by a Player.
+_Avoid_: vehicle, kart (unless referring specifically to the model)
+
+**Driver**:
+The Player currently occupying a Car and controlling its movement.
+_Avoid_: rider, owner
+
+**Parking space**:
+A marked place in the parking area where a Car may be left when it is not being driven.
+_Avoid_: spot, slot
+
+**Autodrome**:
+The marked circuit area of the Map, including its starting grid and race decorations. In the first driving release it is a free-drive landmark, not a race mode; Cars may also cross other walkable areas of the Map.
+_Avoid_: track (when referring to the whole area), circuit (when referring to the whole area)
+
+**Free drive**:
+The shared activity in which Players drive Cars around the Map without a race countdown, lap ranking or finish condition.
+_Avoid_: race, match
+
 ### Radio
 
 **Radio**:

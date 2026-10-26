@@ -41,7 +41,11 @@
     "dance": "Dance",
     "danceShortcut": "Press F",
     "confetti": "Confetti",
-    "confettiShortcut": "Press E"
+    "confettiShortcut": "Press E",
+    "car": {
+      "enter": "Enter car",
+      "exit": "Dismount"
+    }
   },
   "joinRejection": {
     "room-full": "The room is full. Try again in a little while.",

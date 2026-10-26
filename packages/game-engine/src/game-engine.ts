@@ -2,18 +2,20 @@ import {
   type Avatar,
   sameAvatar as avatarsMatch,
   type DanceId,
+  DEFAULT_AVATAR,
   FRAME_SIZE,
   IDLE_FRAME_MS,
 } from "@bumbadum/avatar";
 import {
   type AvatarState,
   avatarFromStateOrDefault,
+  type CarState,
   type ConfettiThrown,
   danceOf,
   type PlayerState,
   type RoomState,
 } from "@bumbadum/protocol";
-import { type Direction, lobbyMap, STEPS_PER_SECOND } from "@bumbadum/world";
+import { type Direction, isDirection, lobbyMap, STEPS_PER_SECOND } from "@bumbadum/world";
 import {
   Application,
   Assets,
@@ -32,10 +34,11 @@ import { type Bump, bumpOffset, Glide, isBumping, type Point } from "./movement/
 import { Steering } from "./movement/steering.ts";
 import { type Pose, StepPredictor } from "./movement/step-predictor.ts";
 import { StepRepeater } from "./movement/step-repeater.ts";
-import { PLAZA_OBJECTS } from "./plaza-objects.generated.ts";
+import { PLAZA_V2_OBJECTS } from "./plaza-v2-objects.generated.ts";
 import { SpeechBubbles } from "./speech-bubbles.ts";
 import { AvatarAnimation } from "./sprites/avatar-animation.ts";
 import { AvatarSprite, FrameTextures } from "./sprites/avatar-sprite.ts";
+import { CarRenderer } from "./sprites/car-renderer.ts";
 import { ConfettiThrowSprites } from "./sprites/confetti-throw-sprites.ts";
 
 /** Screen pixels between the top of an avatar's frame and their nickname. */
@@ -55,9 +58,9 @@ const CORRECTION_SLIDE_MS = 120;
 const ANIMATION_TIMING = { idleFrameMs: IDLE_FRAME_MS, walkFrameMs: 100, walkGraceMs: 60 };
 
 // The Lobby's art, generated from its Tiled project (ADR-0016).
-const PLAZA_FLOOR = "/sprites/plaza/floor.png";
-const PLAZA_OBJECTS_ATLAS = "/sprites/plaza/objects.png";
-const PLAZA_LIGHTS = "/sprites/plaza/lights.png";
+const PLAZA_FLOOR = "/sprites/plaza-v2/floor.png";
+const PLAZA_OBJECTS_ATLAS = "/sprites/plaza-v2/objects.png";
+const PLAZA_LIGHTS = "/sprites/plaza-v2/lights.png";
 const SOUND_NOTES = "/sprites/effects/fx-notas-4q-arco-iris.png";
 const CONFETTI_HAND = "/sprites/effects/confetti-hand.png";
 const CONFETTI_PROJECTILE = "/sprites/effects/confetti-projectile.png";
@@ -76,6 +79,8 @@ export interface GameEngineOptions {
   sessionId: string;
   /** Sends a step intent to the room. */
   sendStep(direction: Direction): void;
+  /** Sends the persistent direction while the local Player is driving a Car. */
+  sendCarDrive?(direction: Direction): void;
   /** The server's time now, or `undefined` until it is known: dancers keep in step with it. */
   serverNow(): number | undefined;
 }
@@ -133,10 +138,19 @@ interface PlayerView {
   bump?: Bump;
 }
 
+interface CarView {
+  renderer: CarRenderer;
+  avatar: AvatarSprite;
+  x: number;
+  y: number;
+  targetX: number;
+  targetY: number;
+}
+
 /** Creates the PixiJS canvas inside `container` and returns the API React drives. */
 export async function mountGameEngine(
   container: HTMLElement,
-  { sessionId, sendStep, serverNow }: GameEngineOptions,
+  { sessionId, sendStep, sendCarDrive, serverNow }: GameEngineOptions,
 ): Promise<GameEngine> {
   const map = lobbyMap;
   TextureStyle.defaultOptions.scaleMode = "nearest";
@@ -170,11 +184,28 @@ export async function mountGameEngine(
     Assets.load<Texture>(CONFETTI_PROJECTILE),
     Assets.load<Texture>(CONFETTI_IMPACT),
   ]);
+  const carFx = await Promise.all([
+    Assets.load<Texture>("/sprites/plaza-v2/cars/exhaust-smoke-16.png"),
+    Assets.load<Texture>("/sprites/plaza-v2/cars/drift-dust-24x16.png"),
+    Assets.load<Texture>("/sprites/plaza-v2/cars/speed-lines-16.png"),
+  ]);
+  const carTextures = new Map<string, { background: Texture; front: Texture }>();
+  await Promise.all(
+    ["kart", "convertible"].flatMap((model) =>
+      ["red", "yellow", "green", "blue", "purple", "pink", "white", "black"].map(async (color) => {
+        const [background, front] = await Promise.all([
+          Assets.load<Texture>(`/sprites/plaza-v2/cars/${model}/${model}-${color}-back.png`),
+          Assets.load<Texture>(`/sprites/plaza-v2/cars/${model}/${model}-${color}-front.png`),
+        ]);
+        carTextures.set(`${model}:${color}`, { background, front });
+      }),
+    ),
+  );
 
   const world = new Container();
   // Players and objects lower on the map are drawn in front of the ones above them.
   const depthSorted = new Container({ sortableChildren: true });
-  for (const object of PLAZA_OBJECTS) {
+  for (const object of PLAZA_V2_OBJECTS) {
     const { x, y, width, height } = object.frame;
     const texture = new Texture({
       source: objectsAtlas.source,
@@ -210,6 +241,9 @@ export async function mountGameEngine(
   const stopWatchingRatio = onDevicePixelRatioChange(fitToContainer);
 
   const avatars = new Map<string, PlayerView>();
+  const cars = new Map<string, CarView>();
+  const carSnapshots = new Map<string, CarState>();
+  const playerSnapshots = new Map<string, PlayerState>();
   let predictor: StepPredictor | undefined;
   const repeater = new StepRepeater({
     stepIntervalMs: STEP_INTERVAL_MS,
@@ -217,6 +251,7 @@ export async function mountGameEngine(
   });
   let walking = true;
   let topInset = 0;
+  let localCarId = "";
   const stopListening = listenToDirectionKeys(repeater, () => walking);
   const steering = new Steering(repeater);
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -242,7 +277,12 @@ export async function mountGameEngine(
   const walkLocalPlayer = (now: number) => {
     const direction = repeater.tick(now);
     const me = avatars.get(sessionId);
-    if (!direction || !predictor || !me) return;
+    if (!direction || !me) return;
+    if (localCarId) {
+      sendCarDrive?.(direction);
+      return;
+    }
+    if (!predictor) return;
     const { send, moved } = predictor.step(direction);
     if (send) sendStep(direction);
     me.direction = predictor.pose.direction;
@@ -257,7 +297,10 @@ export async function mountGameEngine(
     const danceNow = serverNow() ?? animationNow;
     walkLocalPlayer(now);
     // Follows the glide, not the bump, so a blocked step does not shake the view.
-    const focus = avatars.get(sessionId)?.glide.at(now) ?? map.spawnPoint;
+    const localCar = localCarId ? carSnapshots.get(localCarId) : undefined;
+    const focus = localCar
+      ? { x: localCar.x / TILE_SIZE - 0.5, y: localCar.y / TILE_SIZE - 1 }
+      : (avatars.get(sessionId)?.glide.at(now) ?? map.spawnPoint);
     const camera = cameraOn(map, app.screen, tileCentre(focus), app.renderer.resolution, topInset);
     world.scale.set(camera.scale);
     world.position.set(camera.x, camera.y);
@@ -300,6 +343,29 @@ export async function mountGameEngine(
         world.y + (view.y - FRAME_SIZE + AVATAR_TOP_INSET) * world.scale.y - LABEL_GAP,
       );
     }
+    for (const [id, car] of cars) {
+      const state = carSnapshots.get(id);
+      if (!state) continue;
+      const direction = isDirection(state.input)
+        ? state.input
+        : directionFromVelocity(state.velocityX, state.velocityY);
+      const speed = Math.hypot(state.velocityX, state.velocityY) / TILE_SIZE;
+      car.x += (car.targetX - car.x) * 0.35;
+      car.y += (car.targetY - car.y) * 0.35;
+      car.renderer.placePixel({ x: car.x, y: car.y });
+      car.renderer.update(
+        { direction, speed, drifting: speed > 5 && Boolean(state.input) },
+        animationNow,
+        reducedMotion.matches,
+      );
+      const driver = state.driverId ? playerSnapshots.get(state.driverId) : undefined;
+      car.avatar.view.visible = Boolean(driver);
+      if (driver) {
+        car.avatar.wear(avatarOf(driver.avatar));
+        car.avatar.draw(direction, "idle", 0);
+        car.avatar.view.position.set(0, -4);
+      }
+    }
     confetti.update(now, reducedMotion.matches, (id) => {
       const view = avatars.get(id)?.sprite.view;
       return view && { x: view.x, y: view.y };
@@ -313,6 +379,15 @@ export async function mountGameEngine(
   return {
     applyState(state) {
       const now = performance.now();
+      playerSnapshots.clear();
+      state.players.forEach((player, id) => {
+        playerSnapshots.set(id, player);
+      });
+      carSnapshots.clear();
+      state.cars.forEach((car, id) => {
+        carSnapshots.set(id, car);
+      });
+      localCarId = state.players.get(sessionId)?.carId ?? "";
       for (const [id, avatar] of avatars) {
         if (!state.players.has(id)) {
           avatar.sprite.view.destroy({ children: true });
@@ -333,6 +408,8 @@ export async function mountGameEngine(
           avatar.nickname = player.nickname;
         }
         avatar.dance = danceOf(player);
+        avatar.sprite.view.visible = !player.carId;
+        avatar.label.visible = !player.carId;
         if (id === sessionId) {
           if (!predictor) {
             predictor = new StepPredictor(map, player, player.stepIntents);
@@ -350,6 +427,41 @@ export async function mountGameEngine(
         }
         avatar.direction = player.direction;
       });
+      state.cars.forEach((car, id) => {
+        if (cars.has(id)) return;
+        const carTexturePair = carTextures.get(`${car.model}:${car.color}`);
+        if (!carTexturePair) return;
+        const driver = car.driverId ? state.players.get(car.driverId) : undefined;
+        const avatar = new AvatarSprite(
+          textures,
+          driver ? avatarOf(driver.avatar) : DEFAULT_AVATAR,
+          soundNotes,
+          confettiHand,
+        );
+        avatar.view.visible = Boolean(driver);
+        const renderer = new CarRenderer({
+          textures: {
+            background: carTexturePair.background,
+            front: carTexturePair.front,
+            fx: { smoke: carFx[0], dust: carFx[1], speedLines: carFx[2] },
+          },
+          avatar: avatar.view,
+        });
+        depthSorted.addChild(renderer.view);
+        cars.set(id, { renderer, avatar, x: car.x, y: car.y, targetX: car.x, targetY: car.y });
+      });
+      state.cars.forEach((car, id) => {
+        const view = cars.get(id);
+        if (view) {
+          view.targetX = car.x;
+          view.targetY = car.y;
+        }
+      });
+      for (const [id, car] of cars) {
+        if (state.cars.has(id)) continue;
+        car.renderer.view.destroy({ children: true });
+        cars.delete(id);
+      }
     },
     drawnPlayers() {
       return [...avatars].map(([id, avatar]) => {
@@ -451,6 +563,11 @@ function tileCentre(point: Point): { x: number; y: number } {
 
 function avatarOf(state: AvatarState): Avatar {
   return avatarFromStateOrDefault(state);
+}
+
+function directionFromVelocity(x: number, y: number): Direction {
+  if (Math.abs(x) >= Math.abs(y)) return x < 0 ? "left" : "right";
+  return y < 0 ? "up" : "down";
 }
 
 function sameAvatar(a: Avatar, b: AvatarState): boolean {

@@ -1,0 +1,21 @@
+{
+  "cellSize": [48, 48],
+  "directions": ["down", "right", "up", "left"],
+  "frames": {
+    "idle": 0,
+    "driveA": 1,
+    "driveB": 2
+  },
+  "layers": ["car-back", "avatar", "car-front"],
+  "avatarOffsets": {
+    "down": [12, 12],
+    "right": [10, 11],
+    "up": [12, 12]
+  },
+  "anchor": [24, 44],
+  "animation": {
+    "normalMilliseconds": 100,
+    "highSpeedMilliseconds": 60
+  },
+  "models": ["kart", "convertible"]
+}

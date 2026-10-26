@@ -1,0 +1,452 @@
+{
+  "type": "tileset",
+  "version": "1.10",
+  "name": "objects",
+  "tilewidth": 256,
+  "tileheight": 176,
+  "tilecount": 62,
+  "columns": 0,
+  "grid": {
+    "orientation": "orthogonal",
+    "width": 1,
+    "height": 1
+  },
+  "margin": 0,
+  "spacing": 0,
+  "tiles": [
+    {
+      "id": 0,
+      "image": "objects/shrub.png",
+      "imagewidth": 18,
+      "imageheight": 14,
+      "type": "shrub"
+    },
+    {
+      "id": 1,
+      "image": "objects/shrub-flower.png",
+      "imagewidth": 18,
+      "imageheight": 14,
+      "type": "shrub-flower"
+    },
+    {
+      "id": 2,
+      "image": "objects/grandstand.png",
+      "imagewidth": 192,
+      "imageheight": 72,
+      "type": "grandstand"
+    },
+    {
+      "id": 3,
+      "image": "objects/tree-a.png",
+      "imagewidth": 42,
+      "imageheight": 50,
+      "type": "tree-a"
+    },
+    {
+      "id": 4,
+      "image": "objects/tree-tall.png",
+      "imagewidth": 30,
+      "imageheight": 52,
+      "type": "tree-tall"
+    },
+    {
+      "id": 5,
+      "image": "objects/tree-b.png",
+      "imagewidth": 42,
+      "imageheight": 50,
+      "type": "tree-b"
+    },
+    {
+      "id": 6,
+      "image": "objects/tree-c.png",
+      "imagewidth": 42,
+      "imageheight": 50,
+      "type": "tree-c"
+    },
+    {
+      "id": 7,
+      "image": "objects/tree-young.png",
+      "imagewidth": 26,
+      "imageheight": 36,
+      "type": "tree-young"
+    },
+    {
+      "id": 8,
+      "image": "objects/tree-pink.png",
+      "imagewidth": 42,
+      "imageheight": 50,
+      "type": "tree-pink"
+    },
+    {
+      "id": 9,
+      "image": "objects/bench.png",
+      "imagewidth": 32,
+      "imageheight": 16,
+      "type": "bench"
+    },
+    {
+      "id": 10,
+      "image": "objects/bench-vertical.png",
+      "imagewidth": 12,
+      "imageheight": 30,
+      "type": "bench-vertical"
+    },
+    {
+      "id": 11,
+      "image": "objects/flag-checkered.png",
+      "imagewidth": 18,
+      "imageheight": 40,
+      "type": "flag-checkered"
+    },
+    {
+      "id": 12,
+      "image": "objects/flag-pink.png",
+      "imagewidth": 16,
+      "imageheight": 50,
+      "type": "flag-pink"
+    },
+    {
+      "id": 13,
+      "image": "objects/flag-purple.png",
+      "imagewidth": 16,
+      "imageheight": 50,
+      "type": "flag-purple"
+    },
+    {
+      "id": 14,
+      "image": "objects/bunting.png",
+      "imagewidth": 100,
+      "imageheight": 10,
+      "type": "bunting"
+    },
+    {
+      "id": 15,
+      "image": "objects/bunting-short.png",
+      "imagewidth": 60,
+      "imageheight": 10,
+      "type": "bunting-short"
+    },
+    {
+      "id": 16,
+      "image": "objects/barrier-6.png",
+      "imagewidth": 50,
+      "imageheight": 10,
+      "type": "barrier-6"
+    },
+    {
+      "id": 17,
+      "image": "objects/chair.png",
+      "imagewidth": 14,
+      "imageheight": 16,
+      "type": "chair"
+    },
+    {
+      "id": 18,
+      "image": "objects/speaker-speaker.png",
+      "imagewidth": 28,
+      "imageheight": 46,
+      "type": "speaker-speaker"
+    },
+    {
+      "id": 19,
+      "image": "objects/speaker-speaker-low.png",
+      "imagewidth": 28,
+      "imageheight": 30,
+      "type": "speaker-speaker-low"
+    },
+    {
+      "id": 20,
+      "image": "objects/car-convertible-yellow-2.png",
+      "imagewidth": 48,
+      "imageheight": 48,
+      "type": "car-convertible-yellow-2"
+    },
+    {
+      "id": 21,
+      "image": "objects/car-convertible-blue-0.png",
+      "imagewidth": 48,
+      "imageheight": 48,
+      "type": "car-convertible-blue-0"
+    },
+    {
+      "id": 22,
+      "image": "objects/car-convertible-white-0.png",
+      "imagewidth": 48,
+      "imageheight": 48,
+      "type": "car-convertible-white-0"
+    },
+    {
+      "id": 23,
+      "image": "objects/car-convertible-black-0.png",
+      "imagewidth": 48,
+      "imageheight": 48,
+      "type": "car-convertible-black-0"
+    },
+    {
+      "id": 24,
+      "image": "objects/car-convertible-black-2.png",
+      "imagewidth": 48,
+      "imageheight": 48,
+      "type": "car-convertible-black-2"
+    },
+    {
+      "id": 25,
+      "image": "objects/car-convertible-pink-0.png",
+      "imagewidth": 48,
+      "imageheight": 48,
+      "type": "car-convertible-pink-0"
+    },
+    {
+      "id": 26,
+      "image": "objects/car-convertible-purple-2.png",
+      "imagewidth": 48,
+      "imageheight": 48,
+      "type": "car-convertible-purple-2"
+    },
+    {
+      "id": 27,
+      "image": "objects/car-convertible-red-0.png",
+      "imagewidth": 48,
+      "imageheight": 48,
+      "type": "car-convertible-red-0"
+    },
+    {
+      "id": 28,
+      "image": "objects/car-convertible-red-2.png",
+      "imagewidth": 48,
+      "imageheight": 48,
+      "type": "car-convertible-red-2"
+    },
+    {
+      "id": 29,
+      "image": "objects/car-kart-yellow-2.png",
+      "imagewidth": 48,
+      "imageheight": 48,
+      "type": "car-kart-yellow-2"
+    },
+    {
+      "id": 30,
+      "image": "objects/car-kart-blue-0.png",
+      "imagewidth": 48,
+      "imageheight": 48,
+      "type": "car-kart-blue-0"
+    },
+    {
+      "id": 31,
+      "image": "objects/car-kart-blue-2.png",
+      "imagewidth": 48,
+      "imageheight": 48,
+      "type": "car-kart-blue-2"
+    },
+    {
+      "id": 32,
+      "image": "objects/car-kart-white-2.png",
+      "imagewidth": 48,
+      "imageheight": 48,
+      "type": "car-kart-white-2"
+    },
+    {
+      "id": 33,
+      "image": "objects/car-kart-pink-2.png",
+      "imagewidth": 48,
+      "imageheight": 48,
+      "type": "car-kart-pink-2"
+    },
+    {
+      "id": 34,
+      "image": "objects/car-kart-purple-0.png",
+      "imagewidth": 48,
+      "imageheight": 48,
+      "type": "car-kart-purple-0"
+    },
+    {
+      "id": 35,
+      "image": "objects/car-kart-green-2.png",
+      "imagewidth": 48,
+      "imageheight": 48,
+      "type": "car-kart-green-2"
+    },
+    {
+      "id": 36,
+      "image": "objects/car-kart-red-2.png",
+      "imagewidth": 48,
+      "imageheight": 48,
+      "type": "car-kart-red-2"
+    },
+    {
+      "id": 37,
+      "image": "objects/fence.png",
+      "imagewidth": 48,
+      "imageheight": 14,
+      "type": "fence"
+    },
+    {
+      "id": 38,
+      "image": "objects/cone.png",
+      "imagewidth": 10,
+      "imageheight": 12,
+      "type": "cone"
+    },
+    {
+      "id": 39,
+      "image": "objects/food-truck.png",
+      "imagewidth": 68,
+      "imageheight": 50,
+      "type": "food-truck"
+    },
+    {
+      "id": 40,
+      "image": "objects/hydrant.png",
+      "imagewidth": 10,
+      "imageheight": 13,
+      "type": "hydrant"
+    },
+    {
+      "id": 41,
+      "image": "objects/planter-yellow.png",
+      "imagewidth": 18,
+      "imageheight": 18,
+      "type": "planter-yellow"
+    },
+    {
+      "id": 42,
+      "image": "objects/planter-pink.png",
+      "imagewidth": 18,
+      "imageheight": 18,
+      "type": "planter-pink"
+    },
+    {
+      "id": 43,
+      "image": "objects/trash.png",
+      "imagewidth": 12,
+      "imageheight": 15,
+      "type": "trash"
+    },
+    {
+      "id": 44,
+      "image": "objects/table-sun-shade.png",
+      "imagewidth": 34,
+      "imageheight": 34,
+      "type": "table-sun-shade"
+    },
+    {
+      "id": 45,
+      "image": "objects/table-picnic.png",
+      "imagewidth": 34,
+      "imageheight": 26,
+      "type": "table-picnic"
+    },
+    {
+      "id": 46,
+      "image": "objects/stage.png",
+      "imagewidth": 256,
+      "imageheight": 150,
+      "type": "stage"
+    },
+    {
+      "id": 47,
+      "image": "objects/pine.png",
+      "imagewidth": 26,
+      "imageheight": 42,
+      "type": "pine"
+    },
+    {
+      "id": 48,
+      "image": "objects/sign-menu.png",
+      "imagewidth": 14,
+      "imageheight": 18,
+      "type": "sign-menu"
+    },
+    {
+      "id": 49,
+      "image": "objects/sign-race.png",
+      "imagewidth": 70,
+      "imageheight": 40,
+      "type": "sign-race"
+    },
+    {
+      "id": 50,
+      "image": "objects/sign-parking.png",
+      "imagewidth": 16,
+      "imageheight": 34,
+      "type": "sign-parking"
+    },
+    {
+      "id": 51,
+      "image": "objects/tires.png",
+      "imagewidth": 16,
+      "imageheight": 20,
+      "type": "tires"
+    },
+    {
+      "id": 52,
+      "image": "objects/podium.png",
+      "imagewidth": 52,
+      "imageheight": 34,
+      "type": "podium"
+    },
+    {
+      "id": 53,
+      "image": "objects/starting-grid.png",
+      "imagewidth": 88,
+      "imageheight": 56,
+      "type": "starting-grid"
+    },
+    {
+      "id": 54,
+      "image": "objects/lamp.png",
+      "imagewidth": 12,
+      "imageheight": 44,
+      "type": "lamp"
+    },
+    {
+      "id": 55,
+      "image": "objects/building-cafe.png",
+      "imagewidth": 128,
+      "imageheight": 140,
+      "type": "building-cafe"
+    },
+    {
+      "id": 56,
+      "image": "objects/building-records.png",
+      "imagewidth": 128,
+      "imageheight": 140,
+      "type": "building-records"
+    },
+    {
+      "id": 57,
+      "image": "objects/building-radio.png",
+      "imagewidth": 128,
+      "imageheight": 176,
+      "type": "building-radio"
+    },
+    {
+      "id": 58,
+      "image": "objects/building-brick.png",
+      "imagewidth": 128,
+      "imageheight": 176,
+      "type": "building-brick"
+    },
+    {
+      "id": 59,
+      "image": "objects/kiosk-striped.png",
+      "imagewidth": 50,
+      "imageheight": 52,
+      "type": "kiosk-striped"
+    },
+    {
+      "id": 60,
+      "image": "objects/tent-blue.png",
+      "imagewidth": 50,
+      "imageheight": 52,
+      "type": "tent-blue"
+    },
+    {
+      "id": 61,
+      "image": "objects/tent-white.png",
+      "imagewidth": 50,
+      "imageheight": 52,
+      "type": "tent-white"
+    }
+  ]
+}

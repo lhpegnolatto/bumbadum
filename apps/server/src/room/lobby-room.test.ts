@@ -4,6 +4,9 @@ import {
   type Announcement,
   AVATAR_MESSAGE,
   avatarFromState,
+  CAR_DRIVE_MESSAGE,
+  CAR_ENTER_MESSAGE,
+  CAR_EXIT_MESSAGE,
   CHAT_HISTORY,
   CHAT_INPUT,
   CHAT_MESSAGE,
@@ -104,6 +107,51 @@ async function rejectionOf(join: Promise<unknown>): Promise<string> {
 }
 
 describe("lobby-room", () => {
+  describe("cars", () => {
+    it("publishes a deterministic fleet of twelve cars", async () => {
+      const room = await joinLobby("Ana");
+
+      await expect.poll(() => room.state.cars?.size).toBe(12);
+      expect([...room.state.cars.keys()]).toEqual(
+        Array.from({ length: 12 }, (_, index) => `car-${index + 1}`),
+      );
+    });
+
+    it("lets a nearby player enter and steer a car from server-owned state", async () => {
+      const room = await joinLobby("Ana");
+      await expect.poll(() => room.state.cars?.size).toBe(12);
+      const first = room.state.cars.get("car-1");
+      const player = colyseus.getRoomById<RoomState>(room.roomId).state.players.get(room.sessionId);
+      if (!first || !player) throw new Error("expected the first car and player");
+      player.x = Math.floor(first.x / 16);
+      player.y = Math.floor(first.y / 16);
+
+      room.send(CAR_ENTER_MESSAGE);
+      await expect.poll(() => room.state.players.get(room.sessionId)?.carId).toBe("car-1");
+
+      room.send(CAR_DRIVE_MESSAGE, "right");
+      await expect.poll(() => room.state.cars.get("car-1")?.input).toBe("right");
+    });
+
+    it("keeps a dismounted car in place with a server expiry lease", async () => {
+      const room = await joinLobby("Ana");
+      await expect.poll(() => room.state.cars?.size).toBe(12);
+      const first = room.state.cars.get("car-1");
+      const player = colyseus.getRoomById<RoomState>(room.roomId).state.players.get(room.sessionId);
+      if (!first || !player) throw new Error("expected the first car and player");
+      player.x = Math.floor(first.x / 16);
+      player.y = Math.floor(first.y / 16);
+
+      room.send(CAR_ENTER_MESSAGE);
+      await expect.poll(() => room.state.players.get(room.sessionId)?.carId).toBe("car-1");
+      room.send(CAR_EXIT_MESSAGE);
+
+      await expect.poll(() => room.state.players.get(room.sessionId)?.carId).toBe("");
+      expect(room.state.cars.get("car-1")?.respawnAt).toBeGreaterThan(0);
+      expect(room.state.cars.get("car-1")?.driverId).toBe("");
+    });
+  });
+
   it("returns a client error when join options are invalid", async () => {
     const response = await fetch(`http://127.0.0.1:${TEST_PORT}/matchmake/join/${ROOM_TYPE}`, {
       method: "POST",

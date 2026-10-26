@@ -16,6 +16,11 @@ export function playerDepth(at: Point): number {
   return (at.y + 1) * TILE_SIZE;
 }
 
+/** Cars use the same feet/anchor convention as avatars, so they share the room's depth order. */
+export function carDepth(at: Point): number {
+  return playerDepth(at);
+}
+
 /** The depth key of a placed object, from its sprite's bottom edge in world pixels. */
 export function objectDepth(object: { base: number }): number {
   return object.base - OBJECT_TIE_BREAK;

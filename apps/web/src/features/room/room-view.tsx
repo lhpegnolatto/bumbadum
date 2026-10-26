@@ -10,6 +10,8 @@ import {
 } from "@bumbadum/protocol";
 import type { Room } from "@colyseus/sdk";
 import {
+  CarFrontIcon,
+  LogOutIcon,
   MonitorIcon,
   PartyPopperIcon,
   ShirtIcon,
@@ -36,7 +38,7 @@ import { SettingsControl } from "@/features/settings/settings-control.tsx";
 import { ThemeToggle } from "@/features/theme/theme-toggle.tsx";
 import { useSettings } from "@/lib/local-settings.ts";
 import { AnalogueStick } from "./analogue-stick.tsx";
-import { GameCanvas, type GameCanvasHandle } from "./game-canvas.tsx";
+import { type CarContext, GameCanvas, type GameCanvasHandle } from "./game-canvas.tsx";
 import { PlayerList } from "./player-list.tsx";
 import {
   useCompactLayout,
@@ -160,6 +162,7 @@ function JoinedRoom({
   const compact = useCompactLayout();
   const [activeInterface, setActiveInterface] = useState<RoomInterface>(null);
   const [hasUnreadChat, setHasUnreadChat] = useState(false);
+  const [carContext, setCarContext] = useState<CarContext>({ carId: "", nearbyCarId: null });
   const activePanel: RoomPanel = isRoomPanel(activeInterface) ? activeInterface : null;
   const wardrobeOpen = activeInterface === "wardrobe";
   // In the compact layout an open panel or the Wardrobe is a sheet over the world: the player
@@ -281,9 +284,10 @@ function JoinedRoom({
           <GameCanvas
             ref={canvasRef}
             room={room}
-            walking={!wardrobeOpen && !sheetOpen}
+            walking={!wardrobeOpen && !sheetOpen && !carContext.carId}
             topInset={topInset}
             serverNow={serverNow}
+            onCarContextChange={setCarContext}
           />
           {visibleWardrobe.present && (
             <WardrobePanel
@@ -301,6 +305,21 @@ function JoinedRoom({
             />
           )}
         </div>
+        {(carContext.carId || carContext.nearbyCarId) && (
+          <div className="absolute bottom-[var(--room-overlay-edge)] left-1/2 z-20 -translate-x-1/2 compact:bottom-[calc(var(--room-safe-bottom)_+_5rem)]">
+            <Button
+              variant="secondary"
+              size="sm"
+              aria-label={carContext.carId ? roomT("car.exit") : roomT("car.enter")}
+              onClick={() =>
+                carContext.carId ? canvasRef.current?.exitCar() : canvasRef.current?.enterCar()
+              }
+            >
+              {carContext.carId ? <LogOutIcon /> : <CarFrontIcon />}
+              {carContext.carId ? roomT("car.exit") : roomT("car.enter")}
+            </Button>
+          </div>
+        )}
         <div
           className={`absolute bottom-[var(--room-overlay-edge)] left-[var(--room-overlay-edge)] z-20 flex items-center gap-2 compact:bottom-[var(--room-safe-bottom)] compact:left-3 compact:flex-col ${hiddenUnderSheet}`}
         >
