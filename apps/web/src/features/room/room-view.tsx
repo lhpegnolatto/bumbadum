@@ -306,66 +306,70 @@ function JoinedRoom({
           )}
         </div>
         <div
-          className={`absolute bottom-[var(--room-overlay-edge)] left-[var(--room-overlay-edge)] z-20 flex items-center gap-2 compact:bottom-[var(--room-safe-bottom)] compact:left-3 compact:flex-col ${hiddenUnderSheet}`}
+          className={`absolute bottom-[var(--room-overlay-edge)] left-[var(--room-overlay-edge)] z-20 flex flex-col items-start gap-2 compact:bottom-[var(--room-safe-bottom)] compact:left-3 ${hiddenUnderSheet}`}
         >
-          {(carContext.carId || carContext.nearbyCarId) && (
+          <div className="flex items-center gap-2">
             <Button
               variant="secondary"
               size="sm"
               className="compact:size-11 compact:px-0"
-              aria-label={carContext.carId ? roomT("car.exit") : roomT("car.enter")}
+              aria-expanded={wardrobeOpen}
+              aria-keyshortcuts="C"
+              title={t("shortcut")}
               onClick={() =>
-                carContext.carId ? canvasRef.current?.exitCar() : canvasRef.current?.enterCar()
+                setActiveInterface((current) => (current === "wardrobe" ? null : "wardrobe"))
               }
             >
-              {carContext.carId ? <LogOutIcon /> : <CarFrontIcon />}
-              <span className="compact:sr-only">
-                {carContext.carId ? roomT("car.exit") : roomT("car.enter")}
-              </span>
+              <ShirtIcon />
+              <span className="compact:sr-only">{t("open")}</span>
             </Button>
-          )}
-          <Button
-            variant="secondary"
-            size="sm"
-            className="compact:size-11 compact:px-0"
-            aria-expanded={wardrobeOpen}
-            aria-keyshortcuts="C"
-            title={t("shortcut")}
-            onClick={() =>
-              setActiveInterface((current) => (current === "wardrobe" ? null : "wardrobe"))
-            }
-          >
-            <ShirtIcon />
-            <span className="compact:sr-only">{t("open")}</span>
-          </Button>
-          <Button
-            variant="secondary"
-            size="sm"
-            className="compact:size-11 compact:px-0"
-            aria-pressed={dance.dancing}
-            aria-keyshortcuts="F"
-            // Trying on clothes ends a dance, so none starts while the Wardrobe is open.
-            disabled={wardrobeOpen}
-            title={roomT("danceShortcut")}
-            onClick={toggleDance}
-          >
-            <PartyPopperIcon />
-            <span className="compact:sr-only">{roomT("dance")}</span>
-          </Button>
-          <Button
-            variant="secondary"
-            size="sm"
-            className="compact:size-11 compact:px-0"
-            aria-keyshortcuts="E"
-            // A throw ends a dance, so, like one, none starts while the Wardrobe is open.
-            disabled={wardrobeOpen}
-            title={roomT("confettiShortcut")}
-            onClick={() => room.send(CONFETTI_THROW_MESSAGE)}
-          >
-            <SparklesIcon />
-            <span className="compact:sr-only">{roomT("confetti")}</span>
-          </Button>
-          <SettingsControl open={activeInterface === "settings"} onOpenChange={setSettings} />
+            <SettingsControl open={activeInterface === "settings"} onOpenChange={setSettings} />
+          </div>
+          <div className="flex items-center gap-2">
+            {(carContext.carId || carContext.nearbyCarId) && (
+              <Button
+                variant="secondary"
+                size="sm"
+                className="compact:size-11 compact:px-0"
+                aria-label={carContext.carId ? roomT("car.exit") : roomT("car.enter")}
+                onClick={() =>
+                  carContext.carId ? canvasRef.current?.exitCar() : canvasRef.current?.enterCar()
+                }
+              >
+                {carContext.carId ? <LogOutIcon /> : <CarFrontIcon />}
+                <span className="compact:sr-only">
+                  {carContext.carId ? roomT("car.exit") : roomT("car.enter")}
+                </span>
+              </Button>
+            )}
+            <Button
+              variant="secondary"
+              size="sm"
+              className="compact:size-11 compact:px-0"
+              aria-pressed={dance.dancing}
+              aria-keyshortcuts="F"
+              // Trying on clothes ends a dance, so none starts while the Wardrobe is open.
+              disabled={wardrobeOpen}
+              title={roomT("danceShortcut")}
+              onClick={toggleDance}
+            >
+              <PartyPopperIcon />
+              <span className="compact:sr-only">{roomT("dance")}</span>
+            </Button>
+            <Button
+              variant="secondary"
+              size="sm"
+              className="compact:size-11 compact:px-0"
+              aria-keyshortcuts="E"
+              // A throw ends a dance, so, like one, none starts while the Wardrobe is open.
+              disabled={wardrobeOpen}
+              title={roomT("confettiShortcut")}
+              onClick={() => room.send(CONFETTI_THROW_MESSAGE)}
+            >
+              <SparklesIcon />
+              <span className="compact:sr-only">{roomT("confetti")}</span>
+            </Button>
+          </div>
         </div>
         <ChatComposerDock room={room} active={activePanel} hidden={wardrobeOpen} />
         <div
