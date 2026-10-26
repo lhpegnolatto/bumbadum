@@ -4,7 +4,7 @@
 
 **Blocked by:** None — can start immediately.
 
-**Status:** ready-for-agent
+**Status:** resolved
 
 - [x] Starting timings: trees and shrubs 4 frames over ~2.4 s, flags and bunting 3 frames over ~0.5 s; tuned with a human in the prototype. (Starting timings in place; tuning with a human and a visual review of the frames are still to do.)
 - [x] The generator exports animation frames and durations, and fails on a frame from another tileset.
@@ -23,3 +23,7 @@
 - `generate-map-assets.mjs` packs every frame into `objects.png` after the existing tiles, so earlier atlas positions do not move. Each animated object in `plaza-v2-objects.generated.ts` gets `animation: { frame, duration }[]`. The generator fails on a frame that is not in the objects tileset, a frame of another size, or a duration that is not a positive whole number. `@bumbadum/world`'s tests now also reject stale plaza-v2 output.
 - `game-engine/src/sprites/ambient-animation.ts`: `ambientFrame(durations, now, phase, reducedMotion)` and `ambientPhase(position)`, which hashes the object's world position into [0, 1). The engine swaps each animated sprite's texture in the ticker. Speakers are not animated yet (ticket 05).
 - **Needs a human:** review the generated frames in the running game, retouch them by hand or tune the script, and tune the timings in Tiled. Re-running the script overwrites retouched frames.
+
+## Comments
+
+The v7 bundle's authored frames replace the script-generated ones and the phase hash; see 06 and 07.

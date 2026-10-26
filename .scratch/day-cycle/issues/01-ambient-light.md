@@ -4,7 +4,7 @@
 
 **Blocked by:** None — can start immediately.
 
-**Status:** ready-for-agent
+**Status:** resolved
 
 - [x] `daylight` returns the table's values exactly at each keyframe, interpolates linearly between neighbours, wraps from 20:30 to 00:00, and treats minutes as a fraction of the hour. Unit-tested.
 - [x] `parcial` is 15% and `acendendo` is 60% Lamp glow.
@@ -36,3 +36,7 @@ Proposed colours, awaiting calibration (preview with `/r/<slug>?time=HH:MM`):
 Night leaves white at about 63% luminance.
 
 Still open: the calibration box needs a human to look at every Day period with a Tennis match and a Car in view (no separate prototype was built; `?time=` is the preview). `pnpm check` is green except three `apps/server` `lobby-room` Tennis tests that already fail at `f0e0a9e`, before this change (the server depends on neither `game-engine` nor `web`).
+
+## Comments
+
+The v7 bundle's calibrated lighting table replaces the proposed colours above; see 07.
