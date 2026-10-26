@@ -72,7 +72,7 @@ describe("lobbyMap", () => {
   });
 
   it("keeps the checkered flag post out of the autodrome approach", () => {
-    expect(lobbyCarCollisionWorld.isBlocked(2260, 191)).toBe(false);
+    expect(lobbyCarCollisionWorld.isBlockedByObject(2260, 191)).toBe(false);
   });
 
   it("blocks the stage and the buildings", () => {

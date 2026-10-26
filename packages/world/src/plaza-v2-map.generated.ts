@@ -617,13 +617,6 @@ export const PLAZA_V2_COLLISION_OBJECTS = [
     "height": 5
   },
   {
-    "name": "flag-checkered",
-    "x": 2258,
-    "y": 185,
-    "width": 6,
-    "height": 5
-  },
-  {
     "name": "flag-purple",
     "x": 913,
     "y": 193,
