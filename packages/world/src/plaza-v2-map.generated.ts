@@ -3459,13 +3459,13 @@ export const PLAZA_V2_AMBIENT_NPCS = [
   },
   {
     "name": "bob-marley",
-    "x": 752,
-    "y": 384
+    "x": 656,
+    "y": 416
   },
   {
     "name": "freddie-mercury",
-    "x": 1456,
-    "y": 384
+    "x": 1424,
+    "y": 672
   },
   {
     "name": "whitney-houston",
@@ -3479,8 +3479,8 @@ export const PLAZA_V2_AMBIENT_NPCS = [
   },
   {
     "name": "raul-seixas",
-    "x": 784,
-    "y": 560
+    "x": 832,
+    "y": 480
   },
   {
     "name": "detonator",
@@ -3489,8 +3489,8 @@ export const PLAZA_V2_AMBIENT_NPCS = [
   },
   {
     "name": "rita-lee",
-    "x": 784,
-    "y": 720
+    "x": 1280,
+    "y": 384
   },
   {
     "name": "luiz-gonzaga",

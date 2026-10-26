@@ -115,7 +115,7 @@ export const AMBIENT_NPCS: readonly AmbientNpc[] = [
     avatar: avatar(2, "short-ginger", "t-shirt-red", "flared-skirt-white", {
       eyewear: "round-glasses-black",
     }),
-    direction: "right",
+    direction: "left",
     dance: "side-step",
   },
   {
