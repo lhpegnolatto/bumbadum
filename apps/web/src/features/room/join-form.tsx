@@ -52,7 +52,7 @@ export function JoinForm() {
         />
         {invalid && (
           <p id="nickname-error" className="text-destructive text-sm">
-            {t("nicknameInvalid")}
+            {t("nicknameInvalid", { max: NICKNAME_MAX_LENGTH })}
           </p>
         )}
         <Button type="submit" className="pointer-coarse:h-11">

@@ -3,7 +3,7 @@
     "tagline": "A cozy place to listen to music with friends.",
     "nicknameLabel": "Nickname",
     "nicknamePlaceholder": "What should we call you?",
-    "nicknameInvalid": "Pick a nickname with 1 to 16 characters.",
+    "nicknameInvalid": "Pick a nickname with 1 to {max} characters.",
     "join": "Join",
     "languageLabel": "Language"
   },
@@ -46,7 +46,7 @@
   "joinRejection": {
     "room-full": "The room is full. Try again in a little while.",
     "invalid-room": "That room doesn't exist. Head back home and join the lobby.",
-    "invalid-nickname": "That nickname can't be used. Pick one with 1 to 16 characters.",
+    "invalid-nickname": "That nickname can't be used. Pick one with 1 to {max} characters.",
     "invalid-avatar": "That avatar can't be used. Pick another one on the home page."
   },
   "waiting": {
@@ -243,7 +243,7 @@
     "shortcut": "Press C",
     "title": "Wardrobe",
     "nicknameLabel": "Nickname",
-    "nicknameInvalid": "Pick a nickname with 1 to 16 characters.",
+    "nicknameInvalid": "Pick a nickname with 1 to {max} characters.",
     "cancel": "Cancel",
     "apply": "Apply",
     "close": "Close the wardrobe"

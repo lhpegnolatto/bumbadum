@@ -95,7 +95,7 @@ export function WardrobePanel({
           />
           {!nextNickname && (
             <p id="wardrobe-nickname-error" className="text-destructive text-sm">
-              {t("nicknameInvalid")}
+              {t("nicknameInvalid", { max: NICKNAME_MAX_LENGTH })}
             </p>
           )}
         </div>

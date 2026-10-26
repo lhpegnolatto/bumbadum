@@ -172,6 +172,8 @@ function StyleCarousel({
 /** The cards of a tab, and which one the draft wears. */
 function useCards(tab: EditorTab, value: Avatar): { cards: Card[]; worn: number } {
   const t = useTranslations("avatar");
+  // The colour last worn on this tab, so passing through "none" keeps it.
+  const [lastColor, setLastColor] = useState<string>();
   if (tab === "skinTone") {
     const cards = [1, 2, 3, 4].map((skinTone) => ({
       key: String(skinTone),
@@ -183,10 +185,12 @@ function useCards(tab: EditorTab, value: Avatar): { cards: Card[]; worn: number 
 
   const options = AVATAR_CATALOG[tab];
   const current = options.find(({ id }) => id === value[tab]);
+  if (current && current.color !== lastColor) setLastColor(current.color);
+  const color = current?.color ?? lastColor;
   const styles = [...new Set(options.map(({ style }) => style))];
-  /** The option a style switches to: the current colour when the style has it. */
+  /** The option a style switches to: the colour last worn when the style has it. */
   const optionOfStyle = (style: string) =>
-    options.find((option) => option.style === style && option.color === current?.color) ??
+    options.find((option) => option.style === style && option.color === color) ??
     options.find((option) => option.style === style);
 
   const cards: Card[] = styles.map((style) => ({

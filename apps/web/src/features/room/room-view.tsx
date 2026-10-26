@@ -5,6 +5,7 @@ import {
   CHAT_MESSAGE,
   type ChatMessage,
   CONFETTI_THROW_MESSAGE,
+  NICKNAME_MAX_LENGTH,
   type RoomState,
 } from "@bumbadum/protocol";
 import type { Room } from "@colyseus/sdk";
@@ -125,7 +126,9 @@ function ConnectedRoom({
       <main className="mx-auto flex min-h-dvh max-w-md flex-col justify-center gap-4 p-6">
         <FloatingThemeToggle />
         <Alert variant="destructive">
-          <AlertDescription>{t(`joinRejection.${status.rejection}`)}</AlertDescription>
+          <AlertDescription>
+            {t(`joinRejection.${status.rejection}`, { max: NICKNAME_MAX_LENGTH })}
+          </AlertDescription>
         </Alert>
         <Button render={<Link href="/" />} nativeButton={false} variant="outline">
           {t("room.backHome")}
@@ -165,6 +168,8 @@ function JoinedRoom({
   const hiddenUnderSheet = activePanel || wardrobeOpen ? "compact:hidden" : "";
   const visiblePanel = useExitPresence(activePanel);
   const visibleWardrobe = useExitPresence(wardrobeOpen ? "wardrobe" : null);
+  // Each opening starts a fresh draft, even one during the previous closing animation.
+  const [wardrobeOpenings, setWardrobeOpenings] = useState(0);
   const activePanelRef = useRef(activePanel);
   const wear = useWearAvatar(room);
   const changeNickname = useChangeNickname(room);
@@ -177,7 +182,10 @@ function JoinedRoom({
   useEffect(() => {
     wardrobeOpenRef.current = wardrobeOpen;
     // Trying on clothes ends a dance.
-    if (wardrobeOpen) stopDancing();
+    if (wardrobeOpen) {
+      stopDancing();
+      setWardrobeOpenings((openings) => openings + 1);
+    }
   }, [wardrobeOpen, stopDancing]);
 
   useEffect(() => {
@@ -279,6 +287,7 @@ function JoinedRoom({
           />
           {visibleWardrobe.present && (
             <WardrobePanel
+              key={wardrobeOpenings}
               worn={worn}
               nickname={nickname}
               open={visibleWardrobe.open}

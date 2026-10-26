@@ -138,6 +138,10 @@ _Avoid_: skin, colour, body type
 One independently selected part of an avatar's appearance: hair, top, bottom, footwear, overgarment, neckwear, eyewear or headwear. Skin tone is part of the avatar but is not wearable.
 _Avoid_: slot, category, outfit
 
+**Style**:
+One look of an Appearance layer, such as a hoodie or a ponytail, whatever its colour. A player wears a Style in one of its colours.
+_Avoid_: model, item, variant
+
 **Hair**:
 An optional hairstyle and hair colour an avatar wears.
 _Avoid_: haircut, hairdo
@@ -149,6 +153,10 @@ _Avoid_: dye, hair palette
 **Fabric colour**:
 One of the fixed colours every fabric wearable is offered in, from clothing to caps and bows. All fabric wearables share the same fabric colours. Wearables made of other materials, such as a gold chain or a straw hat, keep colours of their own.
 _Avoid_: colourway, clothing palette
+
+**Swatch**:
+A round sample of one colour of the worn Style, which the Wardrobe offers to recolour it.
+_Avoid_: colour chip, colour button
 
 **Top**:
 Required clothing worn on an avatar's torso.
@@ -191,5 +199,5 @@ An optional wearable detail added around or above an avatar's clothing, such as 
 _Avoid_: decoration, extra layer
 
 **Wardrobe**:
-The editor where a player previews appearance changes and chooses which avatar to wear.
+The editor where a player tries on Styles in private, one carousel of cards per Appearance layer whose centred card is worn, and recolours them with Swatches. In the room it also holds the player's Nickname, and only Apply publishes the draft.
 _Avoid_: closet, character creator

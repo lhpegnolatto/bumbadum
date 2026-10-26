@@ -3,7 +3,7 @@
     "tagline": "Um cantinho aconchegante para ouvir música com os amigos.",
     "nicknameLabel": "Apelido",
     "nicknamePlaceholder": "Como podemos te chamar?",
-    "nicknameInvalid": "Escolha um apelido com 1 a 16 caracteres.",
+    "nicknameInvalid": "Escolha um apelido com 1 a {max} caracteres.",
     "join": "Entrar",
     "languageLabel": "Idioma"
   },
@@ -46,7 +46,7 @@
   "joinRejection": {
     "room-full": "A sala está cheia. Tente de novo daqui a pouco.",
     "invalid-room": "Essa sala não existe. Volte ao início e entre no lobby.",
-    "invalid-nickname": "Esse apelido não pode ser usado. Escolha um com 1 a 16 caracteres.",
+    "invalid-nickname": "Esse apelido não pode ser usado. Escolha um com 1 a {max} caracteres.",
     "invalid-avatar": "Esse avatar não pode ser usado. Escolha outro na página inicial."
   },
   "waiting": {
@@ -243,7 +243,7 @@
     "shortcut": "Tecle C",
     "title": "Guarda-roupa",
     "nicknameLabel": "Apelido",
-    "nicknameInvalid": "Escolha um apelido com 1 a 16 caracteres.",
+    "nicknameInvalid": "Escolha um apelido com 1 a {max} caracteres.",
     "cancel": "Cancelar",
     "apply": "Aplicar",
     "close": "Fechar o guarda-roupa"
