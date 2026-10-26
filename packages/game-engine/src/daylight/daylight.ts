@@ -110,13 +110,13 @@ const DAY_PERIODS: readonly DayPeriod[] = [
     litWindows: 0,
   },
   {
-    // The bundle gives 17.8 h (17:48).
+    // The bundle gives 17.8 h (17:48); softened here so the sunset tint stays subtle in-game.
     name: "Sunset",
     at: 17.8,
-    saturation: 1.08,
-    multiply: [0.98, 0.74, 0.6],
-    overlay: [250, 130, 80],
-    overlayStrength: 0.18,
+    saturation: 1.03,
+    multiply: [0.98, 0.86, 0.76],
+    overlay: [250, 170, 120],
+    overlayStrength: 0.1,
     lampGlow: 0.55,
     litWindows: 1,
   },

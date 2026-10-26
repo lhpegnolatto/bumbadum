@@ -14,7 +14,7 @@ function lit(light: AmbientLight, [r, g, b]: [number, number, number]): [number,
 
 const luminance = ([r, g, b]: [number, number, number]) => 0.2126 * r + 0.7152 * g + 0.0722 * b;
 
-/** A keyframe of the v7 bundle's `iluminacao/iluminacao.json`, with its overlay colour in 0–255. */
+/** A keyframe of the game's lighting table, with its overlay colour in 0–255. */
 function keyframe(
   saturation: number,
   multiply: [number, number, number],
@@ -41,10 +41,10 @@ describe("daylight", () => {
     ["12:30 Midday", at(12, 30), keyframe(1.05, [1.04, 1.04, 1.02], [255, 255, 255], 0, 0, 0)],
     ["15:30 Afternoon", at(15, 30), keyframe(1, [1, 0.95, 0.86], [255, 214, 150], 0.08, 0, 0)],
     // The bundle puts Sunset at 17.8 h, which is 17:48.
-    ["17:48 Sunset", at(17, 48), keyframe(1.08, [0.98, 0.74, 0.6], [250, 130, 80], 0.18, 0.55, 1)],
+    ["17:48 Sunset", at(17, 48), keyframe(1.03, [0.98, 0.86, 0.76], [250, 170, 120], 0.1, 0.55, 1)],
     ["19:00 Dusk", at(19), keyframe(0.95, [0.62, 0.58, 0.88], [96, 72, 170], 0.2, 0.85, 1)],
     ["20:30 Night", at(20, 30), NIGHT],
-  ])("gives the v7 lighting table's values at %s", (_, time, expected) => {
+  ])("gives the lighting table's values at %s", (_, time, expected) => {
     const { ambientLight, lampGlow, litWindows } = daylightAt(time);
     expect(lampGlow).toBeCloseTo(expected.lampGlow, 10);
     expect(litWindows).toBeCloseTo(expected.litWindows, 10);
