@@ -7,8 +7,8 @@ function tennisState(): TennisState {
     matchStatus: "rally",
     score: { top: 0, bottom: 0 },
     participants: new Map([
-      ["top-id", { side: "top", x: 120 }],
-      ["bottom-id", { side: "bottom", x: 208 }],
+      ["top-id", { kind: "player", side: "top", x: 120 }],
+      ["bottom-id", { kind: "player", side: "bottom", x: 208 }],
     ]),
     ball: {
       fromSide: "top",
@@ -29,8 +29,8 @@ describe("tennisRenderSnapshot", () => {
     const snapshot = tennisRenderSnapshot(tennisState(), 2_000);
 
     expect(snapshot.participants).toEqual([
-      { sessionId: "top-id", side: "top", x: 120, y: 66 },
-      { sessionId: "bottom-id", side: "bottom", x: 208, y: 582 },
+      { sessionId: "top-id", kind: "player", side: "top", x: 120, y: 66 },
+      { sessionId: "bottom-id", kind: "player", side: "bottom", x: 208, y: 582 },
     ]);
   });
 

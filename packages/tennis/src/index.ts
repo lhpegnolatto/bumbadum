@@ -1,5 +1,41 @@
 export type PlayerId = string;
 
+export type TennisParticipant =
+  | { readonly kind: "player"; readonly id: PlayerId }
+  | { readonly kind: "coach"; readonly id: "coach" };
+
+export const COACH_QUEUE_WAIT_SECONDS = 15;
+
+export const FRIENDLY_COACH_DIFFICULTY = {
+  reachTiles: 1,
+} as const;
+
+export interface CoachDifficulty {
+  readonly reachTiles: number;
+}
+
+export function createCoachParticipant(): TennisParticipant {
+  return { kind: "coach", id: "coach" };
+}
+
+export interface SoloCoachPairingInput {
+  readonly lobbyPlayerCount: number;
+  readonly queuedPlayerCount: number;
+  readonly secondsAlone: number;
+}
+
+export function shouldPairSoloHumanWithCoach({
+  lobbyPlayerCount,
+  queuedPlayerCount,
+  secondsAlone,
+}: SoloCoachPairingInput): boolean {
+  if (queuedPlayerCount !== 1 || lobbyPlayerCount < 1) {
+    return false;
+  }
+
+  return lobbyPlayerCount === 1 || secondsAlone >= COACH_QUEUE_WAIT_SECONDS;
+}
+
 export type TennisSide = "top" | "bottom";
 
 export interface RandomSource {
@@ -33,6 +69,15 @@ export const DEFAULT_TENNIS_RULES: TennisRules = {
   maxSpeedMultiplier: 2,
   contactToleranceTiles: 1,
 };
+
+export function shouldCoachRebound(
+  targetX: number,
+  coachX: number,
+  rules: TennisRules = DEFAULT_TENNIS_RULES,
+  difficulty: CoachDifficulty = FRIENDLY_COACH_DIFFICULTY,
+): boolean {
+  return Math.abs(targetX - coachX) <= rules.court.tileSize * difficulty.reachTiles;
+}
 
 export interface TennisLine {
   readonly capacity: number;

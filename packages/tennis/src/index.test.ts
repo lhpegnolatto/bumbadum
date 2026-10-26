@@ -1,12 +1,17 @@
 import { describe, expect, it } from "vitest";
 import {
   attemptRebound,
+  COACH_QUEUE_WAIT_SECONDS,
+  createCoachParticipant,
   createTennisLine,
   DEFAULT_TENNIS_RULES,
+  FRIENDLY_COACH_DIFFICULTY,
   joinTennisLine,
   leaveTennisLine,
   type Rally,
   type RandomSource,
+  shouldCoachRebound,
+  shouldPairSoloHumanWithCoach,
   startNextTennisMatch,
   type TennisMatch,
 } from "./index.ts";
@@ -65,6 +70,47 @@ function activeRally(match: TennisMatch): Rally {
 }
 
 describe("Tennis line", () => {
+  it("identifies the Coach as a non-human Tennis participant", () => {
+    expect(createCoachParticipant()).toEqual({ kind: "coach", id: "coach" });
+  });
+
+  it("pairs a solo human immediately when they are the only Lobby player", () => {
+    expect(
+      shouldPairSoloHumanWithCoach({
+        lobbyPlayerCount: 1,
+        queuedPlayerCount: 1,
+        secondsAlone: 0,
+      }),
+    ).toBe(true);
+  });
+
+  it("pairs a solo queue after the configured wait when the Lobby has other players", () => {
+    expect(
+      shouldPairSoloHumanWithCoach({
+        lobbyPlayerCount: 2,
+        queuedPlayerCount: 1,
+        secondsAlone: COACH_QUEUE_WAIT_SECONDS,
+      }),
+    ).toBe(true);
+    expect(
+      shouldPairSoloHumanWithCoach({
+        lobbyPlayerCount: 2,
+        queuedPlayerCount: 1,
+        secondsAlone: COACH_QUEUE_WAIT_SECONDS - 0.1,
+      }),
+    ).toBe(false);
+  });
+
+  it("does not pair the Coach when the queue is no longer solo", () => {
+    expect(
+      shouldPairSoloHumanWithCoach({
+        lobbyPlayerCount: 1,
+        queuedPlayerCount: 2,
+        secondsAlone: COACH_QUEUE_WAIT_SECONDS,
+      }),
+    ).toBe(false);
+  });
+
   it("starts new points at the tuned faster default ball speed", () => {
     const result = startNextTennisMatch(lineWithPlayers("alice", "bob"), sequenceRandom(0, 0, 0));
 
@@ -88,6 +134,33 @@ describe("Tennis line", () => {
     line = leaveTennisLine(line, "alice");
     expect(line.playerIds).toEqual(["bob"]);
     expect(leaveTennisLine(line, "alice")).toBe(line);
+  });
+});
+
+describe("Tennis Coach", () => {
+  it("uses a deterministic friendly reach policy", () => {
+    const coachX = 160;
+    const targetX = coachX + DEFAULT_TENNIS_RULES.court.tileSize;
+
+    expect(
+      shouldCoachRebound(targetX, coachX, DEFAULT_TENNIS_RULES, FRIENDLY_COACH_DIFFICULTY),
+    ).toBe(true);
+    expect(
+      shouldCoachRebound(
+        targetX + DEFAULT_TENNIS_RULES.court.tileSize,
+        coachX,
+        DEFAULT_TENNIS_RULES,
+        FRIENDLY_COACH_DIFFICULTY,
+      ),
+    ).toBe(false);
+  });
+
+  it("allows a configured difficulty to widen the Coach reach", () => {
+    expect(
+      shouldCoachRebound(160 + DEFAULT_TENNIS_RULES.court.tileSize * 2, 160, DEFAULT_TENNIS_RULES, {
+        reachTiles: 2,
+      }),
+    ).toBe(true);
   });
 });
 

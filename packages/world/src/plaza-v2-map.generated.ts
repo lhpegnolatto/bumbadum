@@ -3445,3 +3445,41 @@ export const PLAZA_V2_TENNIS_LINE = [
     "y": 440
   }
 ] as const;
+// biome-ignore format: generated data is serialized from Tiled.
+export const PLAZA_V2_AMBIENT_NPCS = [
+  {
+    "name": "david-bowie",
+    "x": 360,
+    "y": 56
+  },
+  {
+    "name": "aretha-franklin",
+    "x": 776,
+    "y": 56
+  },
+  {
+    "name": "bob-marley",
+    "x": 1256,
+    "y": 56
+  },
+  {
+    "name": "freddie-mercury",
+    "x": 1736,
+    "y": 56
+  },
+  {
+    "name": "whitney-houston",
+    "x": 520,
+    "y": 744
+  },
+  {
+    "name": "prince",
+    "x": 1608,
+    "y": 744
+  },
+  {
+    "name": "tennis-coach",
+    "x": 472,
+    "y": 648
+  }
+] as const;

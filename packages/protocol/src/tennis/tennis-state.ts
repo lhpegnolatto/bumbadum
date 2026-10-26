@@ -2,10 +2,16 @@ import { type SchemaType, schema, t } from "@colyseus/schema";
 
 export type TennisSide = "top" | "bottom";
 export type TennisMatchStatus = "idle" | "countdown" | "rally" | "complete";
+export type TennisParticipantKind = "player" | "coach";
+
+/** Stable protocol identity for the permanent Tennis Coach. */
+export const TENNIS_COACH_ID = "coach";
 
 /** The two participants' authoritative horizontal position during a match. */
 export const TennisParticipantState = schema(
   {
+    /** Whether this participant is backed by a human session or the Coach NPC. */
+    kind: t.string<TennisParticipantKind>().default("player"),
     side: t.string<TennisSide>(),
     /** Pixel coordinate on the participant's baseline. */
     x: t.float64(),

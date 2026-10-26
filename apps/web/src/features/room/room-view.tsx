@@ -2,6 +2,7 @@
 
 import { type Avatar, DEFAULT_AVATAR } from "@bumbadum/avatar";
 import {
+  AMBIENT_NPC_INTERACT_MESSAGE,
   CHAT_MESSAGE,
   type ChatMessage,
   CONFETTI_THROW_MESSAGE,
@@ -308,6 +309,7 @@ function JoinedRoom({
               topInset={topInset}
               serverNow={serverNow}
               onCarContextChange={setCarContext}
+              onAmbientNpcInteract={(npc) => room.send(AMBIENT_NPC_INTERACT_MESSAGE, npc.id)}
             />
             <TennisPanel
               room={room}

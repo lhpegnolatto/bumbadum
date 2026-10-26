@@ -1,6 +1,7 @@
 import {
   CONFETTI_THROWN,
   type ConfettiThrown,
+  TENNIS_COACH_ID,
   TENNIS_EVENT,
   TENNIS_NOTICE,
   TennisBallState,
@@ -11,11 +12,15 @@ import {
 } from "@bumbadum/protocol";
 import {
   attemptRebound,
+  type CoachDifficulty,
   createTennisLine,
   DEFAULT_TENNIS_RULES,
+  FRIENDLY_COACH_DIFFICULTY,
   joinTennisLine,
   leaveTennisLine,
   type RandomSource,
+  shouldCoachRebound,
+  shouldPairSoloHumanWithCoach,
   startNextTennisMatch,
   type TennisMatch,
   type TennisRules,
@@ -44,6 +49,7 @@ export interface TennisActivityPlayer {
 
 export interface TennisActivityRoom {
   readonly state: TennisState;
+  playerCount(): number;
   player(sessionId: string): TennisActivityPlayer | undefined;
   client(sessionId: string): Client | undefined;
   broadcast(type: string, message: unknown): void;
@@ -53,6 +59,7 @@ export interface TennisActivityOptions {
   now?: () => number;
   random?: RandomSource;
   rules?: TennisRules;
+  coachDifficulty?: CoachDifficulty;
 }
 
 /** The server-side owner of Tennis queue, match lifecycle, inputs and Rally timing. */
@@ -62,12 +69,14 @@ export class TennisActivity {
   readonly #now: () => number;
   readonly #random: RandomSource;
   readonly #rules: TennisRules;
+  readonly #coachDifficulty: CoachDifficulty;
   readonly #steering = new Map<string, TennisSteerDirection>();
   readonly #enrolled = new Set<string>();
   readonly #reconnectionDeadlines = new Map<string, number>();
   #line = createTennisLine(TENNIS_LINE_CAPACITY);
   #match: TennisMatch | null = null;
   #celebrationEndsAt = 0;
+  #soloQueuedAt = 0;
 
   constructor(room: TennisActivityRoom, options: TennisActivityOptions = {}) {
     this.#room = room;
@@ -75,6 +84,7 @@ export class TennisActivity {
     this.#now = options.now ?? Date.now;
     this.#random = options.random ?? { next: () => Math.random() };
     this.#rules = options.rules ?? DEFAULT_TENNIS_RULES;
+    this.#coachDifficulty = options.coachDifficulty ?? FRIENDLY_COACH_DIFFICULTY;
     this.#syncQueue();
   }
 
@@ -92,6 +102,7 @@ export class TennisActivity {
     if (result.status === "full" || result.status === "already-joined") return;
     this.#enrolled.add(sessionId);
     this.#line = result.line;
+    this.#soloQueuedAt = this.#line.playerIds.length === 1 ? now : 0;
     this.#syncQueue();
     this.#positionQueuedPlayers();
     this.#startIfReady(now);
@@ -108,6 +119,7 @@ export class TennisActivity {
 
     this.#line = leaveTennisLine(this.#line, sessionId);
     this.#enrolled.delete(sessionId);
+    if (this.#line.playerIds.length !== 1) this.#soloQueuedAt = 0;
     this.#syncQueue();
     this.#positionQueuedPlayers();
     this.#startIfReady(now);
@@ -136,7 +148,10 @@ export class TennisActivity {
       if (now >= this.#celebrationEndsAt) this.#finishCelebration(now);
       return;
     }
-    if (this.#match === null) return;
+    if (this.#match === null) {
+      this.#startIfReady(now);
+      return;
+    }
     this.#moveParticipants(deltaTimeMs);
 
     if (this.#state.matchStatus === "countdown") {
@@ -170,11 +185,25 @@ export class TennisActivity {
   }
 
   #startIfReady(now: number) {
-    if (this.#match !== null || this.#line.playerIds.length < 2) return;
-    const result = startNextTennisMatch(this.#line, this.#random, this.#rules);
+    if (this.#match !== null) return;
+    const shouldStartCoach =
+      this.#line.playerIds.length === 1 &&
+      shouldPairSoloHumanWithCoach({
+        lobbyPlayerCount: this.#room.playerCount(),
+        queuedPlayerCount: this.#line.playerIds.length,
+        secondsAlone:
+          this.#soloQueuedAt === 0 ? 0 : Math.max(0, (now - this.#soloQueuedAt) / 1_000),
+      });
+    if (this.#line.playerIds.length < 2 && !shouldStartCoach) return;
+
+    const matchLine = shouldStartCoach
+      ? { ...this.#line, playerIds: [...this.#line.playerIds, TENNIS_COACH_ID] }
+      : this.#line;
+    const result = startNextTennisMatch(matchLine, this.#random, this.#rules);
     if (result.match === null) return;
 
-    this.#line = result.line;
+    this.#line = shouldStartCoach ? { ...this.#line, playerIds: [] } : result.line;
+    this.#soloQueuedAt = 0;
     this.#match = result.match;
     this.#celebrationEndsAt = 0;
     this.#state.matchStatus = "countdown";
@@ -189,11 +218,12 @@ export class TennisActivity {
     for (const side of ["top", "bottom"] as const) {
       const sessionId = this.#match.playerBySide[side];
       const participant = new TennisParticipantState();
+      participant.kind = sessionId === TENNIS_COACH_ID ? "coach" : "player";
       participant.side = side;
       participant.x = spawnFor(side).x;
       this.#state.participants.set(sessionId, participant);
       this.#placeParticipant(sessionId, side, participant.x);
-      this.#steering.set(sessionId, null);
+      if (sessionId !== TENNIS_COACH_ID) this.#steering.set(sessionId, null);
     }
 
     this.#room.broadcast(TENNIS_EVENT, {
@@ -213,6 +243,9 @@ export class TennisActivity {
       const sessionId = this.#match.playerBySide[side];
       const participant = this.#state.participants.get(sessionId);
       if (!participant) continue;
+      if (sessionId === TENNIS_COACH_ID) {
+        continue;
+      }
       const direction = this.#steering.get(sessionId);
       if (direction === "left") participant.x -= LATERAL_SPEED * elapsedSeconds;
       if (direction === "right") participant.x += LATERAL_SPEED * elapsedSeconds;
@@ -228,6 +261,14 @@ export class TennisActivity {
     const receivingPlayerId = this.#match.playerBySide[receivingSide];
     const participant = this.#state.participants.get(receivingPlayerId);
     if (!participant) return;
+
+    if (receivingPlayerId === TENNIS_COACH_ID) {
+      participant.x = this.#coachX(
+        this.#match.rally?.targetX ?? participant.x,
+        participant.x,
+        receivingSide,
+      );
+    }
 
     const result = attemptRebound(
       this.#match,
@@ -324,6 +365,7 @@ export class TennisActivity {
   }
 
   #placeParticipant(sessionId: string, side: TennisSide, x: number) {
+    if (sessionId === TENNIS_COACH_ID) return;
     const player = this.#room.player(sessionId);
     if (!player) return;
     player.x = Math.floor(x / 16);
@@ -404,8 +446,11 @@ export class TennisActivity {
   }
 
   #sendPlayersToHall(sessionIds: readonly string[]) {
-    sessionIds.forEach((sessionId, index) => {
-      const marker = PLAZA_V2_TENNIS_LINE[index];
+    let markerIndex = 0;
+    sessionIds.forEach((sessionId) => {
+      if (sessionId === TENNIS_COACH_ID) return;
+      const marker = PLAZA_V2_TENNIS_LINE[markerIndex];
+      markerIndex += 1;
       const player = this.#room.player(sessionId);
       if (!marker || !player) return;
       player.x = Math.floor(marker.x / 16);
@@ -414,6 +459,24 @@ export class TennisActivity {
       player.dance = "";
       player.carId = "";
     });
+  }
+
+  #coachX(targetX: number, currentX: number, side: TennisSide): number {
+    const bounds = spawnFor(side);
+    const canReach = shouldCoachRebound(targetX, currentX, this.#rules, this.#coachDifficulty);
+    if (canReach && this.#random.next() >= 0.15) return targetX;
+
+    if (canReach) {
+      const awayFromTarget = targetX <= (bounds.xMin + bounds.xMax) / 2 ? 1 : -1;
+      return clamp(
+        targetX + awayFromTarget * this.#rules.court.tileSize * 2,
+        bounds.xMin,
+        bounds.xMax,
+      );
+    }
+
+    const towardTarget = Math.sign(targetX - currentX) || 1;
+    return clamp(currentX + towardTarget * this.#rules.court.tileSize, bounds.xMin, bounds.xMax);
   }
 }
 

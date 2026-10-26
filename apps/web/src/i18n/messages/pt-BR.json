@@ -153,7 +153,8 @@
       "track-already-queued": "Essa música já está na fila.",
       "track-too-many-waiting": "Você já tem 3 músicas esperando. Deixe uma tocar primeiro.",
       "skip-nothing-on-air": "Nada está tocando, então não há o que pular.",
-      "skip-already-voted": "Você já votou para pular esta música ({votes} de {needed})."
+      "skip-already-voted": "Você já votou para pular esta música ({votes} de {needed}).",
+      "ambient-npc-interaction": "{npcId, select, david-bowie {David Bowie: Um pouco de poeira estelar deixa qualquer sala mais interessante.} aretha-franklin {Aretha Franklin: Respeito é sempre uma boa canção para cantar juntos.} bob-marley {Bob Marley: Um bom ritmo pode unir a sala inteira.} freddie-mercury {Freddie Mercury: Encontre sua voz e entregue tudo no refrão.} whitney-houston {Whitney Houston: A melhor harmonia deixa espaço para todo mundo brilhar.} prince {Prince: Um pouco de roxo nunca fez mal a uma grande apresentação.} other {Uma memória musical fica no ar.}}"
     }
   },
   "avatar": {

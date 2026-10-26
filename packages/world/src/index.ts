@@ -1,3 +1,4 @@
+export { AMBIENT_NPC_POSITIONS, type AmbientNpcId } from "./ambient-npcs.ts";
 export {
   advanceCar,
   CAR_ABANDONMENT_MS,

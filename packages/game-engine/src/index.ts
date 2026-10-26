@@ -1,5 +1,13 @@
 export type { Direction } from "@bumbadum/world";
 export { CAR_INTERACTION_RADIUS } from "@bumbadum/world";
+export {
+  AMBIENT_NPC_INTERACTION_RADIUS,
+  AMBIENT_NPCS,
+  type AmbientNpc,
+  ambientNpcTiles,
+  isAmbientNpcRosterValid,
+  nearestAmbientNpc,
+} from "./ambient-npcs.ts";
 export { type Camera, cameraOn } from "./camera.ts";
 export {
   type AmbientLight,

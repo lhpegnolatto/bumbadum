@@ -29,6 +29,12 @@ import {
   Texture,
   TextureStyle,
 } from "pixi.js";
+import {
+  AMBIENT_NPCS,
+  type AmbientNpc,
+  nearestAmbientNpc as findNearestAmbientNpc,
+  TENNIS_COACH_NPC,
+} from "./ambient-npcs.ts";
 import { cameraOn, TILE_SIZE } from "./camera.ts";
 import { ambientLightMatrix, daylightAt } from "./daylight/daylight.ts";
 import { objectDepth, playerDepth } from "./depth.ts";
@@ -108,6 +114,8 @@ export interface GameEngineOptions {
    * hour (18.5 is 18:30): the Ambient light and the Lamp glow follow it.
    */
   timeOfDay(): number;
+  /** Receives a local interaction with the nearest Ambient NPC. */
+  onAmbientNpcInteract?(npc: AmbientNpc): void;
 }
 
 /** A player as the engine draws them: the tile they stand on or glide towards. */
@@ -150,6 +158,10 @@ export interface GameEngine {
   steer(direction: Direction | null): void;
   /** Holds or releases horizontal input for the local Tennis participant. */
   steerTennis(direction: TennisSteerDirection | null): void;
+  /** The nearest Ambient NPC to the local Player, when one is within interaction distance. */
+  nearestAmbientNpc(): AmbientNpc | null;
+  /** Invokes the host callback for the nearest Ambient NPC, returning whether one was found. */
+  interactWithNearestNpc(): boolean;
   /**
    * CSS pixels at the top of the canvas that room interface covers, such as the Screen on a
    * phone: the local player is framed below them (ADR-0018). 0, the default, frames the whole canvas.
@@ -192,10 +204,24 @@ interface AmbientObjectView {
   speaker: boolean;
 }
 
+interface AmbientNpcView {
+  npc: AmbientNpc;
+  sprite: AvatarSprite;
+  label: Container;
+}
+
 /** Creates the PixiJS canvas inside `container` and returns the API React drives. */
 export async function mountGameEngine(
   container: HTMLElement,
-  { sessionId, sendStep, sendCarDrive, sendTennisSteer, serverNow, timeOfDay }: GameEngineOptions,
+  {
+    sessionId,
+    sendStep,
+    sendCarDrive,
+    sendTennisSteer,
+    serverNow,
+    timeOfDay,
+    onAmbientNpcInteract,
+  }: GameEngineOptions,
 ): Promise<GameEngine> {
   const map = lobbyMap;
   TextureStyle.defaultOptions.scaleMode = "nearest";
@@ -452,6 +478,13 @@ export async function mountGameEngine(
   world.addChild(scene, lightLayer);
   const labels = new Container();
   app.stage.addChild(world, labels);
+  const ambientNpcViews: AmbientNpcView[] = [...AMBIENT_NPCS, TENNIS_COACH_NPC].map((npc) => {
+    const sprite = new AvatarSprite(textures, npc.avatar, soundNotes, confettiHand);
+    const label = drawNickname(npc.name);
+    depthSorted.addChild(sprite.view);
+    labels.addChild(label);
+    return { npc, sprite, label };
+  });
   // Last on the stage, so bubbles stay above every avatar and label.
   const bubbles = new SpeechBubbles(app.stage, app.screen);
 
@@ -492,6 +525,11 @@ export async function mountGameEngine(
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
   let onAir = false;
 
+  const nearestNpc = (): AmbientNpc | undefined => {
+    const player = avatars.get(sessionId);
+    return player ? findNearestAmbientNpc(player.glide.at(performance.now())) : undefined;
+  };
+
   const racketTextures = Array.from(
     { length: 16 },
     (_, index) =>
@@ -501,8 +539,8 @@ export async function mountGameEngine(
       }),
   );
 
-  const addTennisParticipant = (id: string, player: PlayerState): TennisParticipantView => {
-    const avatar = new AvatarSprite(textures, avatarOf(player.avatar), soundNotes, confettiHand);
+  const addTennisParticipant = (id: string, playerAvatar: Avatar): TennisParticipantView => {
+    const avatar = new AvatarSprite(textures, playerAvatar, soundNotes, confettiHand);
     const racket = new Sprite(racketTextures[0]);
     racket.anchor.set(0.5, 1);
     tennisLayer.addChild(racket, avatar.view);
@@ -530,11 +568,23 @@ export async function mountGameEngine(
     }
     for (const participant of snapshot.participants) {
       const player = playerSnapshots.get(participant.sessionId);
-      if (!player) continue;
       const view =
         tennisParticipants.get(participant.sessionId) ??
-        addTennisParticipant(participant.sessionId, player);
-      view.avatar.wear(avatarOf(player.avatar));
+        addTennisParticipant(
+          participant.sessionId,
+          participant.kind === "coach"
+            ? TENNIS_COACH_NPC.avatar
+            : player
+              ? avatarOf(player.avatar)
+              : DEFAULT_AVATAR,
+        );
+      view.avatar.wear(
+        participant.kind === "coach"
+          ? TENNIS_COACH_NPC.avatar
+          : player
+            ? avatarOf(player.avatar)
+            : DEFAULT_AVATAR,
+      );
       view.avatar.draw(participant.side === "top" ? "down" : "up", "idle", 0);
       view.avatar.view.position.set(participant.x, participant.y + TILE_SIZE);
       view.avatar.view.zIndex = 100_000 + participant.y;
@@ -707,6 +757,17 @@ export async function mountGameEngine(
       avatar.label.position.set(
         world.x + view.x * world.scale.x,
         world.y + (view.y - FRAME_SIZE + AVATAR_TOP_INSET) * world.scale.y - LABEL_GAP,
+      );
+    }
+    const npcFrame = reducedMotion.matches ? 0 : Math.floor(animationNow / IDLE_FRAME_MS) % 4;
+    for (const { npc, sprite, label } of ambientNpcViews) {
+      const position = tileCentre(npc.position);
+      sprite.view.position.set(position.x, position.y + TILE_SIZE / 2);
+      sprite.view.zIndex = playerDepth(npc.position);
+      sprite.draw(npc.direction, "idle", npcFrame);
+      label.position.set(
+        world.x + sprite.view.x * world.scale.x,
+        world.y + (sprite.view.y - FRAME_SIZE + AVATAR_TOP_INSET) * world.scale.y - LABEL_GAP,
       );
     }
     for (const [id, car] of cars) {
@@ -924,6 +985,15 @@ export async function mountGameEngine(
     },
     steerTennis(direction) {
       sendTennisSteer?.(direction);
+    },
+    nearestAmbientNpc() {
+      return nearestNpc() ?? null;
+    },
+    interactWithNearestNpc() {
+      const npc = nearestNpc();
+      if (!npc) return false;
+      onAmbientNpcInteract?.(npc);
+      return true;
     },
     setTopInset(pixels) {
       topInset = pixels;

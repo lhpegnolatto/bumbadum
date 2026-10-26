@@ -1,5 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { parseTennisEvent, parseTennisNotice, TENNIS_EVENT, TENNIS_NOTICE } from "../index.ts";
+import {
+  parseTennisEvent,
+  parseTennisNotice,
+  TENNIS_COACH_ID,
+  TENNIS_EVENT,
+  TENNIS_NOTICE,
+} from "../index.ts";
 
 describe("Tennis events and notices", () => {
   it("parses public match events as code-plus-params data", () => {
@@ -13,6 +19,18 @@ describe("Tennis events and notices", () => {
       params: { winnerId: "player-1", topScore: 3, bottomScore: 2 },
     });
     expect(TENNIS_EVENT).toBe("tennis-event");
+  });
+
+  it("accepts the permanent Tennis Coach as a match participant", () => {
+    expect(
+      parseTennisEvent({
+        code: "match-started",
+        params: { topPlayerId: TENNIS_COACH_ID, bottomPlayerId: "player-1" },
+      }),
+    ).toEqual({
+      code: "match-started",
+      params: { topPlayerId: TENNIS_COACH_ID, bottomPlayerId: "player-1" },
+    });
   });
 
   it("parses the private next-player notice", () => {

@@ -1,5 +1,6 @@
 import { type Avatar, DEFAULT_AVATAR } from "@bumbadum/avatar";
 import {
+  AMBIENT_NPC_INTERACT_MESSAGE,
   ANNOUNCEMENT,
   type Announcement,
   AVATAR_MESSAGE,
@@ -26,6 +27,7 @@ import {
   ROOM_TYPE,
   type RoomState,
   STEP_MESSAGE,
+  TENNIS_COACH_ID,
   TENNIS_EVENT,
   TENNIS_JOIN_MESSAGE,
   TENNIS_LEAVE_MESSAGE,
@@ -327,6 +329,16 @@ describe("lobby-room", () => {
 });
 
 describe("lobby-room Tennis activity", () => {
+  it("starts an immediate Coach match when the only Player joins the line", async () => {
+    const ana = await joinLobby("Ana");
+
+    ana.send(TENNIS_JOIN_MESSAGE);
+
+    await expect.poll(() => ana.state.tennis.matchStatus).toBe("countdown");
+    expect(ana.state.tennis.participants.get(TENNIS_COACH_ID)?.kind).toBe("coach");
+    expect(ana.state.tennis.participants.has(ana.sessionId)).toBe(true);
+  });
+
   it("does not let a driver join the Tennis line", async () => {
     const ana = await joinLobby("Ana");
     await expect.poll(() => ana.state.cars?.size).toBe(12);
@@ -457,6 +469,30 @@ describe("lobby-room Tennis activity", () => {
       .toBe(1);
     await expect.poll(() => events.some((event) => event.code === "point-scored")).toBe(true);
   }, 20_000);
+});
+
+describe("lobby-room Ambient NPCs", () => {
+  it("answers a nearby NPC interaction privately and rejects a distant one", async () => {
+    const ana = await joinLobby("Ana");
+    const notices = received<Notice>(ana, NOTICE);
+    const serverPlayer = colyseus
+      .getRoomById<RoomState>(ana.roomId)
+      .state.players.get(ana.sessionId);
+    if (!serverPlayer) throw new Error("expected Ana's server player");
+
+    serverPlayer.x = 22;
+    serverPlayer.y = 3;
+    ana.send(AMBIENT_NPC_INTERACT_MESSAGE, "david-bowie");
+    await expect
+      .poll(() => notices)
+      .toEqual([{ code: "ambient-npc-interaction", params: { npcId: "david-bowie" } }]);
+
+    serverPlayer.x = 40;
+    serverPlayer.y = 20;
+    ana.send(AMBIENT_NPC_INTERACT_MESSAGE, "david-bowie");
+    await new Promise((resolve) => setTimeout(resolve, 50));
+    expect(notices).toHaveLength(1);
+  });
 });
 
 /** Everything `room` receives of one message type, in arrival order. */

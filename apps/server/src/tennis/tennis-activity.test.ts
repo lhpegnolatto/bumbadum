@@ -34,6 +34,45 @@ describe("TennisActivity lifecycle", () => {
     expect(room.state.matchStatus).toBe("rally");
   });
 
+  it("starts an immediate Coach match when the Lobby has one Player", () => {
+    room = new FakeTennisRoom(["alice"]);
+    activity = new TennisActivity(room, { now: () => now, random: { next: () => 0 } });
+
+    activity.join("alice", now);
+
+    expect(room.state.matchStatus).toBe("countdown");
+    expect([...room.state.queue]).toEqual([]);
+    expect(room.state.participants.get("coach")).toMatchObject({ kind: "coach" });
+    expect(room.state.participants.get("alice")).toMatchObject({ kind: "player" });
+  });
+
+  it("starts a Coach match after one queued Player waits fifteen seconds", () => {
+    room = new FakeTennisRoom(["alice", "bob"]);
+    activity = new TennisActivity(room, { now: () => now, random: { next: () => 0 } });
+
+    activity.join("alice", now);
+    activity.update(0, now + 14_999);
+    expect(room.state.matchStatus).toBe("idle");
+
+    activity.update(0, now + 15_000);
+
+    expect(room.state.matchStatus).toBe("countdown");
+    expect(room.state.participants.get("coach")).toMatchObject({ kind: "coach" });
+  });
+
+  it("prioritizes a human match when another queued Player joins first", () => {
+    room = new FakeTennisRoom(["alice", "bob"]);
+    activity = new TennisActivity(room, { now: () => now, random: { next: () => 0 } });
+
+    activity.join("alice", now);
+    activity.join("bob", now + 1);
+
+    expect(room.state.matchStatus).toBe("countdown");
+    expect(room.state.participants.has("coach")).toBe(false);
+    expect(room.state.participants.has("alice")).toBe(true);
+    expect(room.state.participants.has("bob")).toBe(true);
+  });
+
   it("awards abandonment to the connected opponent after grace expires", () => {
     activity.join("alice", now);
     activity.join("bob", now);
@@ -137,8 +176,10 @@ describe("TennisActivity lifecycle", () => {
 
     activity.update(0, 100_000);
 
-    expect(room.state.matchStatus).toBe("idle");
-    expect([...room.state.queue]).toEqual(["carol"]);
+    expect(room.state.matchStatus).toBe("countdown");
+    expect([...room.state.queue]).toEqual([]);
+    expect(room.state.participants.get("carol")).toMatchObject({ kind: "player" });
+    expect(room.state.participants.get("coach")).toMatchObject({ kind: "coach" });
   });
 });
 
@@ -161,6 +202,10 @@ class FakeTennisRoom implements TennisActivityRoom {
 
   player(sessionId: string): TennisActivityPlayer | undefined {
     return this.#players.get(sessionId);
+  }
+
+  playerCount(): number {
+    return this.#players.size;
   }
 
   client() {

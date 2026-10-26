@@ -63,13 +63,20 @@ export {
   type TennisSteerDirection,
 } from "./tennis/tennis-intent.ts";
 export {
+  TENNIS_COACH_ID,
   TennisBallState,
   type TennisMatchStatus,
+  type TennisParticipantKind,
   TennisParticipantState,
   TennisScoreState,
   type TennisSide,
   TennisState,
 } from "./tennis/tennis-state.ts";
+export {
+  AMBIENT_NPC_INTERACT_MESSAGE,
+  type AmbientNpcId,
+  parseAmbientNpcInteractIntent,
+} from "./world/ambient-npc-intent.ts";
 export {
   CAR_DRIVE_MESSAGE,
   CAR_ENTER_MESSAGE,

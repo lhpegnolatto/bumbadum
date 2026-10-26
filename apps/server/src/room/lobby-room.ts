@@ -1,5 +1,6 @@
 import { type DanceId, DEFAULT_DANCE } from "@bumbadum/avatar";
 import {
+  AMBIENT_NPC_INTERACT_MESSAGE,
   AVATAR_MESSAGE,
   avatarStateValue,
   CAR_DRIVE_MESSAGE,
@@ -20,7 +21,9 @@ import {
   LOBBY_SLUG,
   NICKNAME_MESSAGE,
   NOT_DANCING,
+  NOTICE,
   PlayerState,
+  parseAmbientNpcInteractIntent,
   parseAvatarChange,
   parseCarDriveIntent,
   parseCarEnterIntent,
@@ -40,6 +43,7 @@ import {
   TENNIS_STEER_MESSAGE,
 } from "@bumbadum/protocol";
 import {
+  AMBIENT_NPC_POSITIONS,
   advanceCar,
   CAR_COUNT,
   type CarMotion,
@@ -82,6 +86,7 @@ const CONFETTI_THROW_RATE = { capacity: 3, perSecond: 1 };
 /** Car input is persistent, so a player can steer at a comfortable network rate. */
 const CAR_DRIVE_RATE = { capacity: 3, perSecond: 12 };
 const CAR_INTERACTION_RATE = { capacity: 2, perSecond: 2 };
+const AMBIENT_NPC_INTERACTION_RATE = { capacity: 2, perSecond: 2 };
 const TENNIS_LINE_ACTION_RATE = { capacity: 2, perSecond: 2 };
 const TENNIS_STEER_RATE = { capacity: 3, perSecond: 12 };
 const TILE_SIZE = 16;
@@ -113,6 +118,7 @@ export class LobbyRoom extends Room<{ state: RoomState; client: LobbyClient }> {
   private readonly confettiThrowLimits = new Map<string, TokenBucket>();
   private readonly carDriveLimits = new Map<string, TokenBucket>();
   private readonly carInteractionLimits = new Map<string, TokenBucket>();
+  private readonly ambientNpcInteractionLimits = new Map<string, TokenBucket>();
   private readonly tennisLineActionLimits = new Map<string, TokenBucket>();
   private readonly tennisSteerLimits = new Map<string, TokenBucket>();
   private readonly carMotions = new Map<string, CarMotion>();
@@ -142,6 +148,19 @@ export class LobbyRoom extends Room<{ state: RoomState; client: LobbyClient }> {
       // Any step intent ends a dance, even one the rate refuses or that only turns the player.
       player.dance = NOT_DANCING;
       if (!this.stepLimits.get(client.sessionId)?.take(performance.now())) return;
+      const offset = {
+        up: { x: 0, y: -1 },
+        down: { x: 0, y: 1 },
+        left: { x: -1, y: 0 },
+        right: { x: 1, y: 0 },
+      }[direction];
+      const nextTile = { x: player.x + offset.x, y: player.y + offset.y };
+      if (
+        Object.values(AMBIENT_NPC_POSITIONS).some(
+          (position) => position.x === nextTile.x && position.y === nextTile.y,
+        )
+      )
+        return;
       const { tile } = step(lobbyMap, player, direction);
       player.x = tile.x;
       player.y = tile.y;
@@ -226,6 +245,16 @@ export class LobbyRoom extends Room<{ state: RoomState; client: LobbyClient }> {
       if (!this.tennisSteerLimits.get(client.sessionId)?.take(now)) return;
       this.#tennis.steer(client.sessionId, direction);
     },
+    [AMBIENT_NPC_INTERACT_MESSAGE]: (client: LobbyClient, payload: unknown) => {
+      const npcId = parseAmbientNpcInteractIntent(payload);
+      const player = this.state.players.get(client.sessionId);
+      if (!npcId || !player) return;
+      if (!this.ambientNpcInteractionLimits.get(client.sessionId)?.take(performance.now())) return;
+      const position = AMBIENT_NPC_POSITIONS[npcId];
+      if (!position) return;
+      if (Math.hypot(player.x - position.x, player.y - position.y) > 1.5) return;
+      client.send(NOTICE, { code: "ambient-npc-interaction", params: { npcId } });
+    },
   };
 
   override onCreate({ catalog, search }: LobbyRoomOptions) {
@@ -256,6 +285,7 @@ export class LobbyRoom extends Room<{ state: RoomState; client: LobbyClient }> {
     }
     this.#tennis = new TennisActivity({
       state: this.state.tennis,
+      playerCount: () => this.state.players.size,
       player: (sessionId) => this.state.players.get(sessionId),
       client: (sessionId) => this.clients.find((client) => client.sessionId === sessionId),
       broadcast: (type, message) => this.broadcast(type, message),
@@ -311,6 +341,10 @@ export class LobbyRoom extends Room<{ state: RoomState; client: LobbyClient }> {
     this.carInteractionLimits.set(
       client.sessionId,
       new TokenBucket(CAR_INTERACTION_RATE, performance.now()),
+    );
+    this.ambientNpcInteractionLimits.set(
+      client.sessionId,
+      new TokenBucket(AMBIENT_NPC_INTERACTION_RATE, performance.now()),
     );
     this.tennisLineActionLimits.set(
       client.sessionId,
@@ -398,6 +432,7 @@ export class LobbyRoom extends Room<{ state: RoomState; client: LobbyClient }> {
     this.confettiThrowLimits.delete(client.sessionId);
     this.carDriveLimits.delete(client.sessionId);
     this.carInteractionLimits.delete(client.sessionId);
+    this.ambientNpcInteractionLimits.delete(client.sessionId);
     this.tennisLineActionLimits.delete(client.sessionId);
     this.tennisSteerLimits.delete(client.sessionId);
     this.#chat.farewell(client, nickname);

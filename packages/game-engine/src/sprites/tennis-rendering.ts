@@ -1,4 +1,4 @@
-import type { TennisState } from "@bumbadum/protocol";
+import type { TennisParticipantKind, TennisState } from "@bumbadum/protocol";
 import {
   type TennisBallPose,
   type TennisRacketFrame,
@@ -12,6 +12,7 @@ export const TENNIS_BASELINE_Y = { top: 66, bottom: 582 } as const;
 
 export interface DrawnTennisParticipant {
   sessionId: string;
+  kind: TennisParticipantKind;
   side: TennisSide;
   x: number;
   y: number;
@@ -46,6 +47,7 @@ export interface TennisRenderSnapshot {
 export function tennisRenderSnapshot(state: TennisState, now: number): TennisRenderSnapshot {
   const participants = [...state.participants].map(([sessionId, participant]) => ({
     sessionId,
+    kind: participant.kind ?? "player",
     side: participant.side,
     x: participant.x,
     y: TENNIS_BASELINE_Y[participant.side],

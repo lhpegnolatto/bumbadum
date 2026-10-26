@@ -153,7 +153,8 @@
       "track-already-queued": "That track is already in the queue.",
       "track-too-many-waiting": "You already have 3 tracks waiting. Let one play first.",
       "skip-nothing-on-air": "Nothing is playing, so there's nothing to skip.",
-      "skip-already-voted": "You already voted to skip this track ({votes} of {needed})."
+      "skip-already-voted": "You already voted to skip this track ({votes} of {needed}).",
+      "ambient-npc-interaction": "{npcId, select, david-bowie {David Bowie: A little stardust makes every room more interesting.} aretha-franklin {Aretha Franklin: Respect is always a good song to sing together.} bob-marley {Bob Marley: One good rhythm can bring a whole room together.} freddie-mercury {Freddie Mercury: Find your voice, then give the chorus everything.} whitney-houston {Whitney Houston: The best harmony leaves space for everyone to shine.} prince {Prince: A little purple never hurt a great performance.} other {A musical memory lingers in the room.}}"
     }
   },
   "avatar": {

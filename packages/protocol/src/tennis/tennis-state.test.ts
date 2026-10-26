@@ -1,5 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { RoomState, TennisBallState, TennisParticipantState, TennisState } from "../index.ts";
+import {
+  RoomState,
+  TENNIS_COACH_ID,
+  TennisBallState,
+  TennisParticipantState,
+  TennisState,
+} from "../index.ts";
 
 describe("Tennis schemas", () => {
   it("is present in the shared room state", () => {
@@ -48,6 +54,22 @@ describe("Tennis schemas", () => {
       launchedAt: 1_000,
       bounceAt: 1_680,
       contactAt: 2_000,
+    });
+  });
+
+  it("distinguishes the permanent Tennis Coach from human session participants", () => {
+    const state = new TennisState();
+    const coach = new TennisParticipantState();
+    coach.kind = "coach";
+    coach.side = "top";
+    coach.x = 160;
+    state.participants.set(TENNIS_COACH_ID, coach);
+
+    expect(TENNIS_COACH_ID).toBe("coach");
+    expect(state.participants.get(TENNIS_COACH_ID)).toMatchObject({
+      kind: "coach",
+      side: "top",
+      x: 160,
     });
   });
 });

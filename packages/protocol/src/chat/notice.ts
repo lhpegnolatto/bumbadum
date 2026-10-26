@@ -31,6 +31,8 @@ export type Notice =
   /** `/skip` with nothing on air. */
   | { code: "skip-nothing-on-air"; params?: undefined }
   /** `/skip` again on the same track: the vote stands as it was. */
-  | { code: "skip-already-voted"; params: { votes: number; needed: number } };
+  | { code: "skip-already-voted"; params: { votes: number; needed: number } }
+  /** A private response from an explicitly interacted-with Ambient NPC. */
+  | { code: "ambient-npc-interaction"; params: { npcId: string } };
 
 export type NoticeCode = Notice["code"];

@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  type AmbientNpc,
   CAR_INTERACTION_RADIUS,
   type Direction,
   type DrawnConfettiThrow,
@@ -63,6 +64,8 @@ export interface GameCanvasHandle {
   steer(direction: Direction | null): void;
   enterCar(): void;
   exitCar(): void;
+  nearestAmbientNpc(): AmbientNpc | null;
+  interactWithNearestNpc(): boolean;
 }
 
 /**
@@ -76,6 +79,7 @@ export function GameCanvas({
   topInset,
   serverNow,
   onCarContextChange,
+  onAmbientNpcInteract,
 }: {
   ref?: Ref<GameCanvasHandle>;
   room: Room<unknown, RoomState>;
@@ -86,6 +90,7 @@ export function GameCanvas({
   /** CSS pixels the Screen and Radio strip cover at the top: the camera frames the local player below them. */
   topInset: number;
   onCarContextChange: (context: CarContext) => void;
+  onAmbientNpcInteract?: (npc: AmbientNpc) => void;
 }) {
   const t = useTranslations("room");
   const {
@@ -100,6 +105,8 @@ export function GameCanvas({
   const pressedCarKeysRef = useRef(new Map<string, Direction>());
   const onCarContextChangeRef = useRef(onCarContextChange);
   onCarContextChangeRef.current = onCarContextChange;
+  const onAmbientNpcInteractRef = useRef(onAmbientNpcInteract);
+  onAmbientNpcInteractRef.current = onAmbientNpcInteract;
 
   useImperativeHandle(
     ref,
@@ -110,6 +117,8 @@ export function GameCanvas({
       },
       enterCar: () => room.send(CAR_ENTER_MESSAGE),
       exitCar: () => room.send(CAR_EXIT_MESSAGE),
+      nearestAmbientNpc: () => engineRef.current?.nearestAmbientNpc() ?? null,
+      interactWithNearestNpc: () => engineRef.current?.interactWithNearestNpc() ?? false,
     }),
     [room],
   );
@@ -133,6 +142,11 @@ export function GameCanvas({
     function driveOnKey(event: KeyboardEvent) {
       if (event.repeat || event.defaultPrevented || isTextField(event.target)) return;
       const key = event.key.toLowerCase();
+      if (key === "i") {
+        event.preventDefault();
+        engineRef.current?.interactWithNearestNpc();
+        return;
+      }
       const carContext = carContextRef.current;
       const carAction = carActionForKey(key, carContext.carId, carContext.nearbyCarId);
       if (carAction) {
@@ -186,6 +200,7 @@ export function GameCanvas({
         sendTennisSteer: (direction) => room.send(TENNIS_STEER_MESSAGE, direction),
         serverNow,
         timeOfDay: () => fixedTimeOfDay ?? deviceTimeOfDay(new Date()),
+        onAmbientNpcInteract: (npc) => onAmbientNpcInteractRef.current?.(npc),
       });
       if (cancelled) {
         engine.destroy();

@@ -30,6 +30,7 @@ const maps = {
       startingGrid: "starting-grid",
       tennisCourt: "tennis-court",
       tennisLine: "tennis-line",
+      ambientNpcs: "ambient-npcs",
     },
     prefix: "PLAZA_V2",
   },
@@ -138,6 +139,16 @@ function walkabilitySource(map) {
       )} as const;`,
       `// biome-ignore format: generated data is serialized from Tiled.\nexport const ${config.prefix}_TENNIS_LINE = ${JSON.stringify(
         tennisLine.objects.map(pointObject),
+        null,
+        2,
+      )} as const;`,
+    );
+  }
+  if (config.layers.ambientNpcs) {
+    const ambientNpcs = layer(map, config.layers.ambientNpcs, "objectgroup");
+    generated.push(
+      `// biome-ignore format: generated data is serialized from Tiled.\nexport const ${config.prefix}_AMBIENT_NPCS = ${JSON.stringify(
+        ambientNpcs.objects.map(pointObject),
         null,
         2,
       )} as const;`,
