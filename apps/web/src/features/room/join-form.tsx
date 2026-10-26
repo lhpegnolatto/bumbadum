@@ -59,7 +59,7 @@ export function JoinForm() {
           {t("join")}
         </Button>
       </div>
-      <div className="sm:w-80">
+      <div className="sm:w-96">
         <AvatarEditor value={avatar} onChange={setAvatar} />
       </div>
     </form>

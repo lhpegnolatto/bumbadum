@@ -129,11 +129,9 @@
     }
   },
   "avatar": {
-    "label": "Avatar",
     "sectionsLabel": "Personalização do avatar",
-    "clothingLabel": "Categorias de roupas",
-    "accessoriesLabel": "Categorias de acessórios",
-    "style": "Estilo",
+    "previous": "Estilo anterior",
+    "next": "Próximo estilo",
     "color": "Cor",
     "none": "Nenhum",
     "layers": {
@@ -146,12 +144,6 @@
       "neckwear": "Pescoço",
       "eyewear": "Óculos",
       "headwear": "Cabeça"
-    },
-    "sections": {
-      "skinTone": "Corpo",
-      "hair": "Cabelo",
-      "clothing": "Roupas",
-      "accessories": "Acessórios"
     },
     "choice": {
       "skinTone": "Tom de pele {number}",
@@ -249,7 +241,7 @@
     "open": "Guarda-roupa",
     "shortcut": "Tecle C",
     "title": "Guarda-roupa",
-    "hint": "Só você vê essas mudanças até aplicá-las.",
+    "cancel": "Cancelar",
     "apply": "Aplicar",
     "close": "Fechar o guarda-roupa"
   },

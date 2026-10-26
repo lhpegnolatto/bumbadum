@@ -8,7 +8,10 @@ import { Button } from "@/components/ui/button.tsx";
 import { cn } from "@/lib/utils.ts";
 import { AvatarEditor } from "./avatar-editor.tsx";
 
-/** The avatar editor inside the room, placed by `className`. Only Apply publishes its draft. */
+/**
+ * The avatar editor inside the room, placed by `className`. Only Apply publishes its draft; Cancel,
+ * the close button and Escape discard it.
+ */
 export function WardrobePanel({
   worn,
   open,
@@ -58,21 +61,23 @@ export function WardrobePanel({
         className,
       )}
     >
-      <header className="flex items-start justify-between gap-2">
-        <div className="flex flex-col gap-1">
+      <header className="flex flex-col gap-3">
+        <div className="flex items-center justify-between gap-2">
           <h2 id="wardrobe-title" className="font-heading font-semibold text-lg">
             {t("title")}
           </h2>
-          <p className="text-muted-foreground text-sm">{t("hint")}</p>
+          <Button variant="ghost" size="icon" aria-label={t("close")} onClick={onClose}>
+            <XIcon />
+          </Button>
         </div>
-        <Button variant="ghost" size="icon" aria-label={t("close")} onClick={onClose}>
-          <XIcon />
-        </Button>
       </header>
       <AvatarEditor value={draft} onChange={setDraft} />
-      <Button className="self-end" onClick={apply}>
-        {t("apply")}
-      </Button>
+      <footer className="mt-auto flex justify-end gap-2">
+        <Button variant="outline" onClick={onClose}>
+          {t("cancel")}
+        </Button>
+        <Button onClick={apply}>{t("apply")}</Button>
+      </footer>
     </section>
   );
 }

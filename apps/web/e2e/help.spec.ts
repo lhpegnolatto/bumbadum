@@ -13,7 +13,9 @@ test("/help gives the sender a notice listing the commands, and the other player
   await quim.getByRole("button", { name: "Chat", exact: true }).click();
   await rita.getByRole("button", { name: "Chat", exact: true }).click();
 
-  await expect(quim.getByText("/play <link or name> · /skip · /dance · /confetti · /help")).toBeVisible();
+  await expect(
+    quim.getByText("/play <link or name> · /skip · /dance · /confetti · /help"),
+  ).toBeVisible();
 
   await say(quim, "/help");
   await say(quim, "after asking for help");
@@ -86,7 +88,9 @@ test("in Portuguese, the hint and help use the Portuguese names, and /pl still o
   const chatInput = tati.getByLabel("Mensagem");
   const suggestions = tati.getByRole("listbox", { name: "Comandos" }).getByRole("option");
 
-  await expect(tati.getByText("/tocar <link ou nome> · /pular · /dançar · /confete · /ajuda")).toBeVisible();
+  await expect(
+    tati.getByText("/tocar <link ou nome> · /pular · /dançar · /confete · /ajuda"),
+  ).toBeVisible();
 
   await chatInput.pressSequentially("/");
   await expect(suggestions).toHaveText(["/tocar", "/pular", "/dançar", "/confete", "/ajuda"]);

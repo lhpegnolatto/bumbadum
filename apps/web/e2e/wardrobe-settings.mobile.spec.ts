@@ -1,4 +1,5 @@
 import type { Locator, Page } from "@playwright/test";
+import { centreCard, centredCard } from "./avatar-editor.ts";
 import { drawnPlayer, expect, test } from "./join-lobby.ts";
 
 test("the Wardrobe opens as a sheet below the Radio strip, keeps its draft private and wears on Apply", async ({
@@ -48,7 +49,7 @@ test("the Wardrobe opens as a sheet below the Radio strip, keeps its draft priva
   // A draft is only Ondina's, and she does not walk while the sheet is open.
   const skinTone = (start.avatar.skinTone % 4) + 1;
   await page.keyboard.press("ArrowLeft");
-  await wardrobe.getByRole("radio", { name: `Skin tone ${skinTone}` }).check({ force: true });
+  await centreCard(wardrobe, `Skin tone ${skinTone}`);
   expect(await drawnPlayer(friend, "Ondina")).toMatchObject({ avatar: start.avatar });
   expect(await drawnPlayer(page, "Ondina")).toMatchObject({ x: start.x, y: start.y });
 
@@ -57,12 +58,10 @@ test("the Wardrobe opens as a sheet below the Radio strip, keeps its draft priva
   await expect(wardrobe).toBeHidden();
   await expect(wardrobeButton).toBeVisible();
   await wardrobeButton.tap();
-  await expect(
-    wardrobe.getByRole("radio", { name: `Skin tone ${start.avatar.skinTone}` }),
-  ).toBeChecked();
+  await expect(centredCard(wardrobe)).toHaveAccessibleName(`Skin tone ${start.avatar.skinTone}`);
 
   // Apply wears it for everyone and closes the sheet.
-  await wardrobe.getByRole("radio", { name: `Skin tone ${skinTone}` }).check({ force: true });
+  await centreCard(wardrobe, `Skin tone ${skinTone}`);
   await wardrobe.getByRole("button", { name: "Apply" }).tap();
   await expect(wardrobe).toBeHidden();
   const worn = { ...start.avatar, skinTone };

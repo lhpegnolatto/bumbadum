@@ -214,13 +214,14 @@ function JoinedRoom({
   );
 
   useEffect(() => {
-    function openOnC(event: KeyboardEvent) {
+    // C opens the Wardrobe, and closes it again discarding the draft.
+    function toggleWardrobeOnC(event: KeyboardEvent) {
       if (event.key.toLowerCase() !== "c" || event.repeat || event.defaultPrevented) return;
       if (event.ctrlKey || event.metaKey || event.altKey || isTextField(event.target)) return;
-      setActiveInterface("wardrobe");
+      setActiveInterface((current) => (current === "wardrobe" ? null : "wardrobe"));
     }
-    document.addEventListener("keydown", openOnC);
-    return () => document.removeEventListener("keydown", openOnC);
+    document.addEventListener("keydown", toggleWardrobeOnC);
+    return () => document.removeEventListener("keydown", toggleWardrobeOnC);
   }, []);
 
   useEffect(() => {
@@ -278,9 +279,10 @@ function JoinedRoom({
               open={visibleWardrobe.open}
               onWear={wear}
               onClose={() => setActiveInterface(null)}
-              // Beside the rail and ending with it, above the Wardrobe and Settings buttons, on
-              // desktop; in the compact layout, the sheet below the Radio strip, above the rail's box.
-              className={`absolute top-[var(--room-overlay-edge)] right-[calc(var(--room-rail-width)_+_var(--room-overlay-edge)_+_var(--room-overlay-gap))] bottom-[var(--room-rail-bottom)] left-[var(--room-overlay-edge)] z-10 compact:inset-x-0 compact:top-[var(--room-top-inset)] compact:bottom-0 compact:z-30 compact:backdrop-blur-none ${COMPACT_SHEET}`}
+              // Beside the rail on desktop, at most 34rem wide and as tall as its content, scrolling
+              // once it would reach the Wardrobe and Settings buttons; in the compact layout, the
+              // sheet below the Radio strip, above the rail's box.
+              className={`absolute top-[var(--room-overlay-edge)] right-[calc(var(--room-rail-width)_+_var(--room-overlay-edge)_+_var(--room-overlay-gap))] left-[var(--room-overlay-edge)] z-10 max-h-[calc(100%_-_var(--room-overlay-edge)_-_var(--room-rail-bottom))] max-w-[34rem] compact:inset-x-0 compact:top-[var(--room-top-inset)] compact:bottom-0 compact:z-30 compact:max-h-none compact:max-w-none compact:backdrop-blur-none ${COMPACT_SHEET}`}
             />
           )}
         </div>

@@ -1,4 +1,5 @@
 import type { Page } from "@playwright/test";
+import { centreCard, centredCard } from "./avatar-editor.ts";
 import { drawnPlayer, expect, leaveLobby, test } from "./join-lobby.ts";
 
 /** The smallest target a fingertip hits reliably, in CSS pixels. */
@@ -18,23 +19,17 @@ test("a player chooses a nickname and an avatar on a phone, then joins", async (
   await nickname.tap();
   await nickname.fill("Teo");
 
-  const currentTone = await page
-    .getByRole("radio", { name: /^Skin tone \d$/, checked: true })
-    .getAttribute("aria-label");
+  const currentTone = await centredCard(page).textContent();
   const skinTone = (Number(currentTone?.at(-1)) % 4) + 1;
-  await choice(page, `Skin tone ${skinTone}`).tap();
-  await expect(page.getByRole("radio", { name: `Skin tone ${skinTone}` })).toBeChecked();
+  await centreCard(page, `Skin tone ${skinTone}`);
 
-  await page.getByRole("tab", { name: "Clothing" }).tap();
   await page.getByRole("tab", { name: "One-piece" }).tap();
-  await page.getByRole("button", { name: "Dress", exact: true }).tap();
+  await centreCard(page, "Dress");
   await expect(page.getByRole("radio", { name: "Dress, Pink" })).toBeVisible();
 
-  await page.getByRole("tab", { name: "Accessories" }).tap();
   await page.getByRole("tab", { name: "Headwear" }).tap();
-  const cap = page.getByRole("button", { name: "Cap", exact: true });
-  await cap.tap();
-  await expect(cap).toHaveAttribute("aria-pressed", "true");
+  await centreCard(page, "Cap");
+  // The swatches sit in view, so a fingertip taps one.
   await choice(page, "Cap, Black").tap();
   await expect(page.getByRole("radio", { name: "Cap, Black" })).toBeChecked();
   await expectToFitThePhone(page);
@@ -53,6 +48,8 @@ function choice(page: Page, name: string) {
 
 /** The page does not scroll sideways, and every control is big enough for a fingertip. */
 async function expectToFitThePhone(page: Page) {
+  // Controls are measured at rest, not while they pop in.
+  await page.evaluate(() => Promise.all(document.getAnimations().map(({ finished }) => finished)));
   const { pageWidth, viewportWidth } = await page.evaluate(() => ({
     pageWidth: document.documentElement.scrollWidth,
     viewportWidth: window.innerWidth,

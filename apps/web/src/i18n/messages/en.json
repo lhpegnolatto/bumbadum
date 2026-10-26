@@ -129,11 +129,9 @@
     }
   },
   "avatar": {
-    "label": "Avatar",
     "sectionsLabel": "Avatar customization",
-    "clothingLabel": "Clothing categories",
-    "accessoriesLabel": "Accessory categories",
-    "style": "Style",
+    "previous": "Previous style",
+    "next": "Next style",
     "color": "Color",
     "none": "None",
     "layers": {
@@ -146,12 +144,6 @@
       "neckwear": "Neckwear",
       "eyewear": "Eyewear",
       "headwear": "Headwear"
-    },
-    "sections": {
-      "skinTone": "Body",
-      "hair": "Hair",
-      "clothing": "Clothing",
-      "accessories": "Accessories"
     },
     "choice": {
       "skinTone": "Skin tone {number}",
@@ -249,7 +241,7 @@
     "open": "Wardrobe",
     "shortcut": "Press C",
     "title": "Wardrobe",
-    "hint": "Only you see these changes until you apply them.",
+    "cancel": "Cancel",
     "apply": "Apply",
     "close": "Close the wardrobe"
   },

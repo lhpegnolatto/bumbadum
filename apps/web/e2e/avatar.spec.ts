@@ -1,3 +1,4 @@
+import { centreCard, centredCard } from "./avatar-editor.ts";
 import { drawnPlayer, expect, test } from "./join-lobby.ts";
 
 test("the wardrobe is a wide exclusive overlay that leaves the Screen available", async ({
@@ -26,7 +27,12 @@ test("the wardrobe is a wide exclusive overlay that leaves the Screen available"
   const screenBounds = await screen.boundingBox();
   if (!wardrobeBounds || !screenBounds) throw new Error("Room overlays have no bounds");
   expect(wardrobeBounds.width).toBeGreaterThan(352);
+  // At most 34rem wide and as tall as its content, ending well above the Wardrobe button.
+  expect(wardrobeBounds.width).toBeLessThanOrEqual(544);
   expect(wardrobeBounds.x + wardrobeBounds.width).toBeLessThanOrEqual(screenBounds.x);
+  const buttonBounds = await wardrobeButton.boundingBox();
+  if (!buttonBounds) throw new Error("The Wardrobe button has no bounds");
+  expect(wardrobeBounds.y + wardrobeBounds.height).toBeLessThan(buttonBounds.y - 32);
 
   await chatButton.click();
   await expect(wardrobe).toBeHidden();
@@ -55,17 +61,28 @@ test("the wardrobe keeps layered drafts private and publishes the whole avatar",
   const wardrobe = iris.getByRole("dialog", { name: "Wardrobe" });
   await expect(wardrobe).toBeVisible();
   await iris.keyboard.press("ArrowLeft");
-  await iris.getByRole("radio", { name: `Skin tone ${skinTone}` }).check({ force: true });
-  await wardrobe.getByRole("tab", { name: "Clothing" }).click();
+  // The editor opens on the skin tones, centred on the one worn.
+  await expect(centredCard(wardrobe)).toHaveAccessibleName(`Skin tone ${start.avatar.skinTone}`);
+  await centreCard(wardrobe, `Skin tone ${skinTone}`);
   await wardrobe.getByRole("tab", { name: "One-piece" }).click();
-  await wardrobe.getByRole("button", { name: "Dress", exact: true }).click();
+  await centreCard(wardrobe, "Dress");
   await expect(wardrobe.getByRole("radio", { name: "Dress, Pink" })).toBeVisible();
   await wardrobe.getByRole("tab", { name: "Top" }).click();
-  await wardrobe.getByRole("button", { name: "T-shirt", exact: true }).click();
+  await centreCard(wardrobe, "T-shirt");
   await wardrobe.getByRole("radio", { name: "T-shirt, Black" }).check({ force: true });
-  await wardrobe.getByRole("tab", { name: "Accessories" }).click();
   await wardrobe.getByRole("tab", { name: "Headwear" }).click();
+  await centreCard(wardrobe, "Cap");
+
+  // The arrows and the arrow keys move the centre, which is what is worn; a tap on a card in view
+  // brings it back.
+  await wardrobe.getByRole("button", { name: "Next style" }).click();
+  await expect(centredCard(wardrobe)).not.toHaveAccessibleName("Cap");
+  await wardrobe.getByRole("button", { name: "Previous style" }).click();
+  await expect(centredCard(wardrobe)).toHaveAccessibleName("Cap");
+  await centredCard(wardrobe).press("ArrowRight");
+  await expect(centredCard(wardrobe)).not.toHaveAccessibleName("Cap");
   await wardrobe.getByRole("button", { name: "Cap", exact: true }).click();
+  await expect(centredCard(wardrobe)).toHaveAccessibleName("Cap");
   await wardrobe.getByRole("radio", { name: "Cap, Black" }).check({ force: true });
 
   // Only Iris previews it, and she has not moved while the wardrobe is open.
@@ -86,26 +103,29 @@ test("the wardrobe keeps layered drafts private and publishes the whole avatar",
   const stored = await iris.evaluate(() => localStorage.getItem("bumbadum:settings:v1"));
   expect(JSON.parse(stored ?? "{}").avatar).toEqual(worn);
 
+  // Cancel, the close button, C and Escape each discard a draft.
   const cancelledTone = (skinTone % 4) + 1;
-  await iris.getByRole("button", { name: "Wardrobe" }).click();
-  await expect(wardrobe).toBeVisible();
-  await wardrobe.getByRole("tab", { name: "Body" }).click();
-  await iris.getByRole("radio", { name: `Skin tone ${cancelledTone}` }).check({ force: true });
-  await wardrobe.getByRole("button", { name: "Close the wardrobe" }).click();
-  await expect(wardrobe).toBeHidden();
+  const discards = [
+    () => wardrobe.getByRole("button", { name: "Cancel" }).click(),
+    () => wardrobe.getByRole("button", { name: "Close the wardrobe" }).click(),
+    () => iris.keyboard.press("KeyC"),
+    () => iris.keyboard.press("Escape"),
+  ];
+  for (const discard of discards) {
+    await iris.getByRole("button", { name: "Wardrobe", exact: true }).click();
+    await expect(wardrobe).toBeVisible();
+    await expect(centredCard(wardrobe)).toHaveAccessibleName(`Skin tone ${skinTone}`);
+    await centreCard(wardrobe, `Skin tone ${cancelledTone}`);
+    await discard();
+    await expect(wardrobe).toBeHidden();
+  }
   await expect.poll(async () => (await drawnPlayer(joca, "Iris"))?.avatar).toEqual(worn);
   expect(
     JSON.parse((await iris.evaluate(() => localStorage.getItem("bumbadum:settings:v1"))) ?? "{}")
       .avatar,
   ).toEqual(worn);
 
-  // Escape also cancels, and the directional keys walk again once it is closed.
-  await iris.getByRole("button", { name: "Wardrobe" }).click();
-  await wardrobe.getByRole("tab", { name: "Body" }).click();
-  await iris.getByRole("radio", { name: `Skin tone ${cancelledTone}` }).check({ force: true });
-  await iris.keyboard.press("Escape");
-  await expect(wardrobe).toBeHidden();
-  await expect.poll(async () => (await drawnPlayer(joca, "Iris"))?.avatar).toEqual(worn);
+  // The directional keys walk again once it is closed.
   await iris.keyboard.press("ArrowLeft");
   await expect.poll(() => drawnPlayer(iris, "Iris")).toMatchObject({ x: start.x - 1 });
 });
