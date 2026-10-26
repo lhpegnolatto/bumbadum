@@ -71,7 +71,7 @@ export const AMBIENT_NPCS: readonly AmbientNpc[] = [
     avatar: avatar(2, "short-black", "tank-top-white", "trousers-black", {
       eyewear: "sunglasses-black",
     }),
-    direction: "left",
+    direction: "right",
   },
   {
     id: "whitney-houston",
@@ -100,12 +100,10 @@ export const AMBIENT_NPCS: readonly AmbientNpc[] = [
     direction: "right",
   },
   {
-    id: "detonator",
-    name: "Detonator",
-    position: npcPosition("detonator"),
-    avatar: avatar(2, "short-black", "tank-top-black", "trousers-black", {
-      eyewear: "sunglasses-black",
-    }),
+    id: "michael-jackson",
+    name: "Michael Jackson",
+    position: npcPosition("michael-jackson"),
+    avatar: avatar(2, "short-black", "jacket-white", "trousers-black"),
     direction: "left",
   },
   {

@@ -18,22 +18,22 @@ describe("Ambient NPC roster", () => {
 
   it("keeps the plaza center open while placing tributes around its edges", () => {
     const edgeTributes = AMBIENT_NPCS.filter(({ id }) =>
-      ["bob-marley", "freddie-mercury", "detonator", "luiz-gonzaga"].includes(id),
+      ["bob-marley", "michael-jackson", "luiz-gonzaga"].includes(id),
     );
     expect(edgeTributes.every(({ position }) => position.x < 50 || position.x > 84)).toBe(true);
     expect(AMBIENT_NPCS.some(({ dance }) => dance === "side-step")).toBe(true);
     expect(AMBIENT_NPCS.find(({ id }) => id === "david-bowie")?.direction).toBe("up");
     expect(AMBIENT_NPCS.find(({ id }) => id === "aretha-franklin")?.direction).toBe("up");
     expect(AMBIENT_NPCS.find(({ id }) => id === "bob-marley")?.direction).toBe("right");
-    expect(AMBIENT_NPCS.find(({ id }) => id === "freddie-mercury")?.direction).toBe("left");
+    expect(AMBIENT_NPCS.find(({ id }) => id === "freddie-mercury")?.direction).toBe("right");
     expect(AMBIENT_NPCS.find(({ id }) => id === "rita-lee")?.dance).toBe("side-step");
   });
 
   it("anchors the four adjusted tributes to recognizable plaza landmarks", () => {
     expect(AMBIENT_NPCS.find(({ id }) => id === "bob-marley")?.position).toEqual({ x: 41, y: 26 });
     expect(AMBIENT_NPCS.find(({ id }) => id === "freddie-mercury")?.position).toEqual({
-      x: 89,
-      y: 42,
+      x: 75,
+      y: 38,
     });
     expect(AMBIENT_NPCS.find(({ id }) => id === "raul-seixas")?.position).toEqual({ x: 52, y: 30 });
     expect(AMBIENT_NPCS.find(({ id }) => id === "rita-lee")?.position).toEqual({ x: 80, y: 24 });

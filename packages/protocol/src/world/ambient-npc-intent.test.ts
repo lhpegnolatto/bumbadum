@@ -4,7 +4,7 @@ import { AMBIENT_NPC_INTERACT_MESSAGE, parseAmbientNpcInteractIntent } from "../
 describe("Ambient NPC interaction intent", () => {
   it("accepts a known NPC id", () => {
     expect(parseAmbientNpcInteractIntent("david-bowie")).toBe("david-bowie");
-    expect(parseAmbientNpcInteractIntent("raul-seixas")).toBe("raul-seixas");
+    expect(parseAmbientNpcInteractIntent("michael-jackson")).toBe("michael-jackson");
     expect(AMBIENT_NPC_INTERACT_MESSAGE).toBe("ambient-npc-interact");
   });
 

@@ -11,7 +11,7 @@ const ambientNpcIdSchema = z.enum([
   "whitney-houston",
   "prince",
   "raul-seixas",
-  "detonator",
+  "michael-jackson",
   "rita-lee",
   "luiz-gonzaga",
 ]);

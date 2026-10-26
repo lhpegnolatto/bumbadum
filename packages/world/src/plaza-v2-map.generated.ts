@@ -3464,8 +3464,8 @@ export const PLAZA_V2_AMBIENT_NPCS = [
   },
   {
     "name": "freddie-mercury",
-    "x": 1424,
-    "y": 672
+    "x": 1200,
+    "y": 608
   },
   {
     "name": "whitney-houston",
@@ -3483,7 +3483,7 @@ export const PLAZA_V2_AMBIENT_NPCS = [
     "y": 480
   },
   {
-    "name": "detonator",
+    "name": "michael-jackson",
     "x": 1392,
     "y": 560
   },
