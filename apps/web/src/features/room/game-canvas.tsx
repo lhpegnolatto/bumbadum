@@ -44,6 +44,7 @@ export interface CarSnapshot {
   y: number;
   velocityX: number;
   velocityY: number;
+  direction: Direction;
   driverId: string;
   respawnAt: number;
 }
@@ -250,6 +251,7 @@ function carSnapshot(id: string, car: CarState): CarSnapshot {
     y: car.y,
     velocityX: car.velocityX,
     velocityY: car.velocityY,
+    direction: car.direction,
     driverId: car.driverId,
     respawnAt: car.respawnAt,
   };

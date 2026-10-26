@@ -160,9 +160,9 @@ originalTiled.layers.push({
       id: 7000,
       name: "spawn",
       type: "spawn",
-      // Keep the shared Lobby spawn in the plaza at tile (30, 22).
+      // Keep the shared Lobby spawn in the plaza immediately below the stage at tile (30, 19).
       x: 488,
-      y: 360,
+      y: 312,
       point: true,
       width: 0,
       height: 0,

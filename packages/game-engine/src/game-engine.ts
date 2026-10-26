@@ -349,9 +349,7 @@ export async function mountGameEngine(
     for (const [id, car] of cars) {
       const state = carSnapshots.get(id);
       if (!state) continue;
-      const direction = isDirection(state.input)
-        ? state.input
-        : directionFromVelocity(state.velocityX, state.velocityY);
+      const direction = isDirection(state.direction) ? state.direction : "down";
       const speed = Math.hypot(state.velocityX, state.velocityY) / TILE_SIZE;
       car.x += (car.targetX - car.x) * 0.35;
       car.y += (car.targetY - car.y) * 0.35;
@@ -566,11 +564,6 @@ function tileCentre(point: Point): { x: number; y: number } {
 
 function avatarOf(state: AvatarState): Avatar {
   return avatarFromStateOrDefault(state);
-}
-
-function directionFromVelocity(x: number, y: number): Direction {
-  if (Math.abs(x) >= Math.abs(y)) return x < 0 ? "left" : "right";
-  return y < 0 ? "up" : "down";
 }
 
 /** The 24×24 avatar's feet aligned to the 32×32 car sheet's direction-specific offsets. */

@@ -43,6 +43,7 @@ export interface CarMotion {
   y: number;
   velocityX: number;
   velocityY: number;
+  direction: Direction;
   input?: Direction;
   driverId?: string;
   respawnAt?: number;
@@ -55,7 +56,7 @@ export function createCar(input: {
   x: number;
   y: number;
 }): CarMotion {
-  return { ...input, velocityX: 0, velocityY: 0 };
+  return { ...input, velocityX: 0, velocityY: 0, direction: "down" };
 }
 
 /** Advances one authoritative car. Players are intentionally absent from this collision interface. */
@@ -76,6 +77,7 @@ export function advanceCar(
     remaining -= config.simulationStepMs;
     const direction = next.input;
     if (direction) {
+      next.direction = direction;
       const offset = OFFSETS[direction];
       const currentSpeed = Math.hypot(next.velocityX, next.velocityY);
       const speed = approach(currentSpeed, config.maxSpeed, config.acceleration * dt);

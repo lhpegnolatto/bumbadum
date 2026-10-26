@@ -41,6 +41,16 @@ describe("car driving", () => {
     expect(moving.velocityX).toBeGreaterThan(0);
     expect(moving.y).toBe(80);
     expect(moving.input).toBe("right");
+    expect(moving.direction).toBe("right");
+  });
+
+  it("keeps its last driving direction after stopping and dismounting", () => {
+    const moving = advanceCar(car({ input: "left", driverId: "player-1" }), 250, openWorld, []);
+    const stopped = advanceCar({ ...moving, input: undefined }, 250, openWorld, []);
+    const parked = dismountCar(stopped, 10_000);
+
+    expect(stopped.direction).toBe("left");
+    expect(parked.direction).toBe("left");
   });
 
   it("drifts briefly while changing direction", () => {

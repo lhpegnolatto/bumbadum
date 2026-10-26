@@ -368,6 +368,7 @@ export class LobbyRoom extends Room<{ state: RoomState; client: LobbyClient }> {
     carState.y = car.y;
     carState.velocityX = car.velocityX;
     carState.velocityY = car.velocityY;
+    carState.direction = car.direction;
     carState.input = car.input ?? "down";
     carState.driverId = car.driverId ?? "";
     carState.respawnAt = car.respawnAt ?? 0;

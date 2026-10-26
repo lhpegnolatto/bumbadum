@@ -12,6 +12,7 @@ export const CarState = schema(
     y: t.float64(),
     velocityX: t.float64(),
     velocityY: t.float64(),
+    direction: t.string<Direction>(),
     input: t.string<Direction>(),
     driverId: t.string(),
     respawnAt: t.float64(),
