@@ -269,7 +269,13 @@ export class TennisActivity {
     if (!participant) return;
 
     const coachMisses =
-      receivingPlayerId === TENNIS_COACH_ID && shouldCoachMiss(this.#random, this.#coachDifficulty);
+      receivingPlayerId === TENNIS_COACH_ID &&
+      shouldCoachMiss(
+        this.#random,
+        this.#match.rally?.speed ?? this.#rules.initialBallSpeed,
+        this.#rules,
+        this.#coachDifficulty,
+      );
     const attemptX = coachMisses
       ? participant.x + this.#rules.court.tileSize * (this.#rules.court.contactToleranceTiles + 1)
       : participant.x;

@@ -9,13 +9,15 @@ export const COACH_QUEUE_WAIT_SECONDS = 15;
 export const FRIENDLY_COACH_DIFFICULTY = {
   reachTiles: 1,
   moveTilesPerSecond: 10,
-  missChance: 0.2,
+  minMissChance: 0.05,
+  maxMissChance: 0.2,
 } as const;
 
 export interface CoachDifficulty {
   readonly reachTiles: number;
   readonly moveTilesPerSecond: number;
-  readonly missChance: number;
+  readonly minMissChance: number;
+  readonly maxMissChance: number;
 }
 
 export function createCoachParticipant(): TennisParticipant {
@@ -46,13 +48,6 @@ export interface RandomSource {
   next(): number;
 }
 
-export function shouldCoachMiss(
-  random: RandomSource,
-  difficulty: CoachDifficulty = FRIENDLY_COACH_DIFFICULTY,
-): boolean {
-  return random.next() < difficulty.missChance;
-}
-
 export interface TennisCourtRules {
   singlesMinX: number;
   singlesMaxX: number;
@@ -80,6 +75,30 @@ export const DEFAULT_TENNIS_RULES: TennisRules = {
   maxSpeedMultiplier: 2,
   contactToleranceTiles: 1,
 };
+
+export function coachMissChance(
+  ballSpeed: number,
+  rules: TennisRules = DEFAULT_TENNIS_RULES,
+  difficulty: CoachDifficulty = FRIENDLY_COACH_DIFFICULTY,
+): number {
+  const speedRange = rules.initialBallSpeed * (rules.maxSpeedMultiplier - 1);
+  const speedProgress =
+    speedRange <= 0
+      ? 1
+      : Math.min(Math.max((ballSpeed - rules.initialBallSpeed) / speedRange, 0), 1);
+  return (
+    difficulty.minMissChance + (difficulty.maxMissChance - difficulty.minMissChance) * speedProgress
+  );
+}
+
+export function shouldCoachMiss(
+  random: RandomSource,
+  ballSpeed: number,
+  rules: TennisRules = DEFAULT_TENNIS_RULES,
+  difficulty: CoachDifficulty = FRIENDLY_COACH_DIFFICULTY,
+): boolean {
+  return random.next() < coachMissChance(ballSpeed, rules, difficulty);
+}
 
 export function shouldCoachRebound(
   targetX: number,

@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   attemptRebound,
   COACH_QUEUE_WAIT_SECONDS,
+  coachMissChance,
   createCoachParticipant,
   createTennisLine,
   DEFAULT_TENNIS_RULES,
@@ -166,8 +167,23 @@ describe("Tennis Coach", () => {
   });
 
   it("uses the configured middle-ground miss chance", () => {
-    expect(shouldCoachMiss({ next: () => 0.19 })).toBe(true);
-    expect(shouldCoachMiss({ next: () => 0.2 })).toBe(false);
+    expect(coachMissChance(DEFAULT_TENNIS_RULES.initialBallSpeed)).toBe(0.05);
+    expect(
+      coachMissChance(
+        DEFAULT_TENNIS_RULES.initialBallSpeed * DEFAULT_TENNIS_RULES.maxSpeedMultiplier,
+      ),
+    ).toBe(0.2);
+    expect(
+      coachMissChance(
+        DEFAULT_TENNIS_RULES.initialBallSpeed * 1.5,
+        DEFAULT_TENNIS_RULES,
+        FRIENDLY_COACH_DIFFICULTY,
+      ),
+    ).toBeCloseTo(0.125);
+    expect(shouldCoachMiss({ next: () => 0.04 }, DEFAULT_TENNIS_RULES.initialBallSpeed)).toBe(true);
+    expect(shouldCoachMiss({ next: () => 0.05 }, DEFAULT_TENNIS_RULES.initialBallSpeed)).toBe(
+      false,
+    );
   });
 });
 
