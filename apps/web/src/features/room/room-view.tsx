@@ -332,6 +332,7 @@ function JoinedRoom({
                 size="sm"
                 className="compact:size-11 compact:px-0"
                 aria-label={carContext.carId ? roomT("car.exit") : roomT("car.enter")}
+                aria-keyshortcuts="Q"
                 onClick={() =>
                   carContext.carId ? canvasRef.current?.exitCar() : canvasRef.current?.enterCar()
                 }

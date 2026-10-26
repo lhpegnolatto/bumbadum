@@ -23,7 +23,7 @@ import type { Room } from "@colyseus/sdk";
 import { type Ref, useEffect, useImperativeHandle, useRef } from "react";
 import { useTranslations } from "use-intl";
 import { exposeToE2E } from "@/lib/e2e.ts";
-import { activeCarDirection } from "./car-keyboard.ts";
+import { activeCarDirection, carActionForKey } from "./car-keyboard.ts";
 
 declare global {
   interface BumbadumE2E {
@@ -130,10 +130,18 @@ export function GameCanvas({
     };
     function driveOnKey(event: KeyboardEvent) {
       if (event.repeat || event.defaultPrevented || isTextField(event.target)) return;
-      const direction = directionByKey[event.key.toLowerCase()];
+      const key = event.key.toLowerCase();
+      const carContext = carContextRef.current;
+      const carAction = carActionForKey(key, carContext.carId, carContext.nearbyCarId);
+      if (carAction) {
+        event.preventDefault();
+        if (carAction === "enter") room.send(CAR_ENTER_MESSAGE);
+        else room.send(CAR_EXIT_MESSAGE);
+        return;
+      }
+      const direction = directionByKey[key];
       if (!direction || !carContextRef.current.carId) return;
       event.preventDefault();
-      const key = event.key.toLowerCase();
       pressedCarKeysRef.current.delete(key);
       pressedCarKeysRef.current.set(key, direction);
       room.send(CAR_DRIVE_MESSAGE, direction);
