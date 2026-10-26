@@ -206,7 +206,7 @@ export class TennisActivity {
   }
 
   #moveParticipants(deltaTimeMs: number) {
-    if (this.#state.matchStatus !== "countdown" && this.#state.matchStatus !== "rally") return;
+    if (this.#state.matchStatus !== "rally") return;
     const elapsedSeconds = Math.min(Math.max(deltaTimeMs, 0), 250) / 1_000;
     for (const side of ["top", "bottom"] as const) {
       if (this.#match === null) return;
@@ -275,6 +275,7 @@ export class TennisActivity {
     this.#state.ball = undefined;
     this.#state.matchStatus = "countdown";
     this.#state.countdownEndsAt = now + POINT_PAUSE_MS;
+    for (const sessionId of this.#match.players) this.#steering.set(sessionId, null);
   }
 
   #launchRally(rally: TennisMatch["rally"], launchedAt: number) {

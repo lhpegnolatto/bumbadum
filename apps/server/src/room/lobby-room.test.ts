@@ -327,6 +327,19 @@ describe("lobby-room", () => {
 });
 
 describe("lobby-room Tennis activity", () => {
+  it("does not let a driver join the Tennis line", async () => {
+    const ana = await joinLobby("Ana");
+
+    ana.send(CAR_ENTER_MESSAGE);
+    await expect.poll(() => ana.state.players.get(ana.sessionId)?.carId).toBe("car-1");
+
+    ana.send(TENNIS_JOIN_MESSAGE);
+    await new Promise((resolve) => setTimeout(resolve, 100));
+
+    expect([...ana.state.tennis.queue]).not.toContain(ana.sessionId);
+    expect(ana.state.tennis.participants.has(ana.sessionId)).toBe(false);
+  });
+
   it("keeps waiting players FIFO and lets them leave the line", async () => {
     const ana = await joinLobby("Ana");
     const bia = await joinLobby("Bia");

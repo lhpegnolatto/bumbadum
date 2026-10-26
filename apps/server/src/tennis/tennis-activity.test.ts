@@ -61,6 +61,29 @@ describe("TennisActivity lifecycle", () => {
     expect(activity.isInMatch("alice")).toBe(true);
   });
 
+  it("freezes participants during the pause between points", () => {
+    activity.join("alice", now);
+    activity.join("bob", now);
+    activity.update(0, now + 3_000);
+
+    const ball = room.state.ball;
+    if (!ball) throw new Error("expected an active Rally");
+    const receiverId = [...room.state.participants].find(
+      ([, participant]) => participant.side === ball.receivingSide,
+    )?.[0];
+    if (!receiverId) throw new Error("expected a receiving participant");
+    const receiver = room.state.participants.get(receiverId);
+    if (!receiver) throw new Error("expected the receiving participant state");
+    const xAfterPoint = receiver.x;
+
+    activity.update(0, ball.contactAt);
+    expect(room.state.matchStatus).toBe("countdown");
+    activity.steer(receiverId, "left");
+    activity.update(1_000, ball.contactAt + 1_000);
+
+    expect(receiver.x).toBe(xAfterPoint);
+  });
+
   it("awards an immediate point-based exit when a participant leaves explicitly", () => {
     activity.join("alice", now);
     activity.join("bob", now);

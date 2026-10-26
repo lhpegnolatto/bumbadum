@@ -91,7 +91,7 @@ export function TennisPanel({
       )}
 
       <div className="mt-3 flex gap-2">
-        {state.queuePosition === null && !state.isParticipant && state.inHall && (
+        {state.queuePosition === null && !state.isParticipant && state.inHall && !state.inCar && (
           <Button size="sm" onClick={onJoin}>
             <LogInIcon />
             {t("join")}

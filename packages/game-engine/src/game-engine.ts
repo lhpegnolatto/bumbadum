@@ -390,6 +390,8 @@ export async function mountGameEngine(
       view.avatar.view.position.set(participant.x, participant.y + TILE_SIZE);
       view.avatar.view.zIndex = 100_000 + participant.y;
       view.racket.tint = TENNIS_SIDE_COLORS[participant.side];
+      view.racket.position.set(participant.x, participant.y + TILE_SIZE);
+      view.racket.zIndex = view.avatar.view.zIndex + (participant.side === "top" ? 1 : -1);
       const racketFrame = snapshot.rackets.find(
         (racket) => racket.sessionId === participant.sessionId,
       );
@@ -397,9 +399,6 @@ export async function mountGameEngine(
         const texture = racketTextures[racketFrame.frame.row * 4 + racketFrame.frame.column];
         if (!texture) continue;
         view.racket.texture = texture;
-        // The racket sheet is an effect overlay. Its bottom edge shares the avatar's feet.
-        view.racket.position.set(participant.x, participant.y + TILE_SIZE);
-        view.racket.zIndex = view.avatar.view.zIndex + (participant.side === "top" ? 1 : -1);
       }
     }
     tennisTrailSprite.visible = Boolean(snapshot.ball?.pose.trail);

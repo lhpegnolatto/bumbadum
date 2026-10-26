@@ -207,6 +207,8 @@ export class LobbyRoom extends Room<{ state: RoomState; client: LobbyClient }> {
     },
     [TENNIS_JOIN_MESSAGE]: (client: LobbyClient, payload: unknown) => {
       if (!parseTennisJoinIntent(payload)) return;
+      const player = this.state.players.get(client.sessionId);
+      if (!player || player.carId) return;
       const now = Date.now();
       if (!this.tennisLineActionLimits.get(client.sessionId)?.take(now)) return;
       this.#tennis.join(client.sessionId, now);

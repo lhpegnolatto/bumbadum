@@ -17,6 +17,7 @@ type LobbyRoom = Room<unknown, RoomState>;
 
 export interface TennisViewState {
   inHall: boolean;
+  inCar: boolean;
   queuePosition: number | null;
   matchStatus: RoomState["tennis"]["matchStatus"];
   countdownEndsAt: number;
@@ -84,6 +85,7 @@ function readTennisState(room: LobbyRoom): TennisViewState {
   if (!tennis) {
     return {
       inHall: me ? isTennisHallPosition(me.x, me.y) : false,
+      inCar: Boolean(me?.carId),
       queuePosition: null,
       matchStatus: "idle",
       countdownEndsAt: 0,
@@ -97,6 +99,7 @@ function readTennisState(room: LobbyRoom): TennisViewState {
   }
   return {
     inHall: me ? isTennisHallPosition(me.x, me.y) : false,
+    inCar: Boolean(me?.carId),
     queuePosition:
       tennis.queue.indexOf(room.sessionId) >= 0 ? tennis.queue.indexOf(room.sessionId) : null,
     matchStatus: tennis.matchStatus,
