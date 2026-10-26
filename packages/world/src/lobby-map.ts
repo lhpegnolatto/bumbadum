@@ -6,7 +6,7 @@ import {
   PLAZA_V2_TRACK_ROWS,
 } from "./plaza-v2-map.generated.ts";
 
-/** The lobby's map: the v2 music plaza, generated from its Tiled project (ADR-0016). */
+/** The lobby's map: the tennis/autodrome plaza, generated from its Tiled project (ADR-0016). */
 export const lobbyMap = createMap(PLAZA_V2_ROWS);
 
 export const lobbyParkingSpots = PLAZA_V2_PARKING_SPOTS;
@@ -14,8 +14,8 @@ export const lobbyParkingSpots = PLAZA_V2_PARKING_SPOTS;
 // Cars need a forgiving apron around the parking lot to pull out without catching
 // on decorative lamps, signs, or the baked parking barriers with their collision radius.
 const PARKING_DRIVE_ZONE = {
-  left: 944,
-  right: 1216,
+  left: 1584,
+  right: 1856,
   top: 272,
   bottom: 640,
 };

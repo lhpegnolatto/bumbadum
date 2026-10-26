@@ -18,12 +18,12 @@ function allTiles(): Tile[] {
 }
 
 describe("lobbyMap", () => {
-  it("is the 110 by 40 plaza with the autodrome extension", () => {
-    expect({ width: lobbyMap.width, height: lobbyMap.height }).toEqual({ width: 110, height: 40 });
+  it("is the 150 by 40 plaza with the tennis and autodrome extensions", () => {
+    expect({ width: lobbyMap.width, height: lobbyMap.height }).toEqual({ width: 150, height: 40 });
   });
 
   it("spawns players on a walkable tile in the plaza", () => {
-    expect(lobbyMap.spawnPoint).toEqual({ x: 30, y: 19 });
+    expect(lobbyMap.spawnPoint).toEqual({ x: 70, y: 19 });
     expect(isWalkable(lobbyMap, lobbyMap.spawnPoint)).toBe(true);
   });
 
@@ -46,24 +46,24 @@ describe("lobbyMap", () => {
   });
 
   it("keeps the plaza spawn and autodrome approach walkable", () => {
-    expect(isWalkable(lobbyMap, { x: 80, y: 22 })).toBe(true);
-    expect(isWalkable(lobbyMap, { x: 100, y: 22 })).toBe(true);
+    expect(isWalkable(lobbyMap, { x: 120, y: 22 })).toBe(true);
+    expect(isWalkable(lobbyMap, { x: 140, y: 22 })).toBe(true);
   });
 
   it("keeps the former center chair area walkable", () => {
     const formerChairTiles = [
-      { x: 23, y: 14 },
-      { x: 28, y: 14 },
-      { x: 31, y: 14 },
-      { x: 34, y: 14 },
-      { x: 23, y: 16 },
-      { x: 28, y: 16 },
-      { x: 31, y: 16 },
-      { x: 34, y: 16 },
-      { x: 23, y: 18 },
-      { x: 28, y: 18 },
-      { x: 31, y: 18 },
-      { x: 34, y: 18 },
+      { x: 63, y: 14 },
+      { x: 68, y: 14 },
+      { x: 71, y: 14 },
+      { x: 74, y: 14 },
+      { x: 63, y: 16 },
+      { x: 68, y: 16 },
+      { x: 71, y: 16 },
+      { x: 74, y: 16 },
+      { x: 63, y: 18 },
+      { x: 68, y: 18 },
+      { x: 71, y: 18 },
+      { x: 74, y: 18 },
     ];
 
     for (const tile of formerChairTiles) {
@@ -72,7 +72,7 @@ describe("lobbyMap", () => {
   });
 
   it("keeps the parking exit open for cars", () => {
-    for (let x = 61; x <= 73; x += 1) {
+    for (let x = 101; x <= 113; x += 1) {
       expect(isWalkable(lobbyMap, { x, y: 22 })).toBe(true);
       expect(lobbyCarCollisionWorld.isBlocked(x * 16 + 8, 22 * 16 + 8)).toBe(false);
     }
@@ -83,8 +83,8 @@ describe("lobbyMap", () => {
   });
 
   it("blocks the stage and the buildings", () => {
-    expect(isWalkable(lobbyMap, { x: 30, y: 4 })).toBe(false);
-    expect(isWalkable(lobbyMap, { x: 2, y: 4 })).toBe(false);
-    expect(isWalkable(lobbyMap, { x: 57, y: 34 })).toBe(false);
+    expect(isWalkable(lobbyMap, { x: 70, y: 4 })).toBe(false);
+    expect(isWalkable(lobbyMap, { x: 42, y: 4 })).toBe(false);
+    expect(isWalkable(lobbyMap, { x: 97, y: 34 })).toBe(false);
   });
 });

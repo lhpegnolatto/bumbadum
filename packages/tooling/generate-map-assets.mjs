@@ -29,6 +29,8 @@ const maps = {
       track: "track",
       parking: "parking",
       startingGrid: "starting-grid",
+      tennisCourt: "quadra_tenis",
+      tennisLine: "fila_hall",
     },
     prefix: "PLAZA_V2",
   },
@@ -121,6 +123,22 @@ function walkabilitySource(map) {
       )} as const;`,
       `// biome-ignore format: generated data is serialized from Tiled.\nexport const ${config.prefix}_STARTING_GRID = ${JSON.stringify(
         startingGrid.objects.map(pointObject),
+        null,
+        2,
+      )} as const;`,
+    );
+  }
+  if (config.layers.tennisCourt && config.layers.tennisLine) {
+    const tennisCourt = layer(map, config.layers.tennisCourt, "objectgroup");
+    const tennisLine = layer(map, config.layers.tennisLine, "objectgroup");
+    generated.push(
+      `// biome-ignore format: generated data is serialized from Tiled.\nexport const ${config.prefix}_TENNIS_COURT = ${JSON.stringify(
+        tennisCourt.objects.map(metadataObject),
+        null,
+        2,
+      )} as const;`,
+      `// biome-ignore format: generated data is serialized from Tiled.\nexport const ${config.prefix}_TENNIS_LINE = ${JSON.stringify(
+        tennisLine.objects.map(pointObject),
         null,
         2,
       )} as const;`,
@@ -373,6 +391,26 @@ function pointObject(object) {
     (object.properties ?? []).map(({ name, value }) => [name, value]),
   );
   return { name: object.name, x: object.x, y: object.y, ...properties };
+}
+
+function metadataObject(object) {
+  const label = `map object ${object.id} (${object.name || "unnamed"})`;
+  if (object.rotation !== 0) throw new Error(`${label} is rotated, which is not supported`);
+  if (!Number.isInteger(object.x) || !Number.isInteger(object.y))
+    throw new Error(`${label} is not on whole pixels: ${object.x},${object.y}`);
+  const properties = Object.fromEntries(
+    (object.properties ?? []).map(({ name, value }) => [name, value]),
+  );
+  return {
+    name: object.name,
+    type: object.type,
+    x: object.x,
+    y: object.y,
+    width: object.width,
+    height: object.height,
+    point: Boolean(object.point),
+    ...properties,
+  };
 }
 
 /** Rejects layer settings the engine would not reproduce: it draws each layer as authored. */
