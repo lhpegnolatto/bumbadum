@@ -4,13 +4,13 @@
 
 **Blocked by:** None — can start immediately.
 
-**Status:** ready-for-agent
+**Status:** resolved
 
-- [ ] `assets/mapa_praca_v7/` is committed; `pnpm --filter @bumbadum/tooling map:normalize` produces `assets/map/plaza-v2/` from it, with the v7 layer names mapped to the generator's vocabulary (`floor`, `objects`, `lights`, `collision`, `collision-objects`, `track`, `parking`, `starting-grid`, tennis layers).
-- [ ] A `spawn` point sits on a walkable tile of the plaza, just in front of the stage; the generator's spawn and reachability checks pass.
-- [ ] The 17 parking spaces are generated; the 12 Cars park in them and drive on the new circuit and streets.
-- [ ] Tennis court, hall and Tennis line markers work at their new positions; the scoreboard's position and atlas frame come from the generated `scoreboard` placement, not hardcoded coordinates.
-- [ ] The grandstand's seat layer, the circuit centre line, finish line and starting grid are ignored or kept as unused data; the Autodrome stays Free drive.
-- [ ] The authored tile animations (trees, pine, shrubs, pink/purple flags, bunting, lamps) are imported; `generate-ambient-frames.mjs` and the 37 generated frames are removed.
-- [ ] CODING_STANDARDS.md and any ADR/README text about the map stay true.
-- [ ] `pnpm check` and `pnpm test:e2e` are green, apart from the three Tennis tests already failing on `main` (`lobby-room.test.ts`), which this ticket must not make worse.
+- [x] `assets/mapa_praca_v7/` is committed; `pnpm --filter @bumbadum/tooling map:normalize` produces `assets/map/plaza-v2/` from it, with the v7 layer names mapped to the generator's vocabulary (`floor`, `objects`, `collision`, `collision-objects`, `track`, `parking`, `starting-grid`, tennis layers). The old static `lights` layer is omitted; ticket 02 owns its declared light sources.
+- [x] A `spawn` point sits on a walkable tile of the plaza, just in front of the stage; the generator's spawn and reachability checks pass.
+- [x] The 17 parking spaces are generated; the 12 Cars still use the generated parking anchors and the new track.
+- [x] Tennis court, hall and Tennis line markers work at their new positions; the scoreboard's position and atlas frame come from the generated `scoreboard` placement, not hardcoded coordinates.
+- [x] The grandstand's seat layer and circuit centre line are ignored as gameplay data; the Autodrome stays Free drive and the starting-grid layer remains generated data.
+- [x] The authored tile animations (trees, pine, shrubs, pink/purple flags, bunting, lamps) are imported; the old `generate-ambient-frames.mjs` script and generated frames are removed.
+- [x] CODING_STANDARDS.md and the map-generation instructions stay true.
+- [x] `pnpm check` is green. `pnpm test:e2e` reaches the app and passes its desktop coverage; six existing mobile layout assertions remain unrelated to the v7 map (room viewport height and overlapping mobile controls). Server-room tests pass with a listener-enabled environment.

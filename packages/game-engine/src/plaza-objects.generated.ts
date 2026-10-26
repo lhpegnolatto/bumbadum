@@ -17,6 +17,8 @@ export const PLAZA_OBJECTS: readonly {
     frame: { x: number; y: number; width: number; height: number };
     duration: number;
   }[];
+  glow?: { kind: "warm" | "stage"; offset: { x: number; y: number } };
+  windows?: string;
 }[] = [
   {"name":"fence","frame":{"x":73,"y":53,"width":48,"height":14},"x":214,"y":0,"base":14},
   {"name":"fence","frame":{"x":73,"y":53,"width":48,"height":14},"x":696,"y":0,"base":14},

@@ -33,6 +33,7 @@ import { cameraOn, TILE_SIZE } from "./camera.ts";
 import { ambientLightMatrix, daylightAt } from "./daylight/daylight.ts";
 import { objectDepth, playerDepth } from "./depth.ts";
 import { listenToDirectionKeys, listenToTennisDirectionKeys } from "./keyboard.ts";
+import { lampIntensity, lightAlpha, lightTarget, lightThresholds } from "./lighting.ts";
 import { type Bump, bumpOffset, Glide, isBumping, type Point } from "./movement/glide.ts";
 import { Steering } from "./movement/steering.ts";
 import { type Pose, StepPredictor } from "./movement/step-predictor.ts";
@@ -45,6 +46,11 @@ import { AvatarSprite, FrameTextures } from "./sprites/avatar-sprite.ts";
 import { CarRenderer } from "./sprites/car-renderer.ts";
 import { ConfettiThrowSprites } from "./sprites/confetti-throw-sprites.ts";
 import { type TennisRenderSnapshot, tennisRenderSnapshot } from "./sprites/tennis-rendering.ts";
+import {
+  visibleWindowRegions,
+  type WindowFacade,
+  type WindowOccluder,
+} from "./window-occlusion.ts";
 
 /** Screen pixels between the top of an avatar's frame and their nickname. */
 const LABEL_GAP = 3;
@@ -65,7 +71,8 @@ const ANIMATION_TIMING = { idleFrameMs: IDLE_FRAME_MS, walkFrameMs: 100, walkGra
 // The Lobby's art, generated from its Tiled project (ADR-0016).
 const PLAZA_FLOOR = "/sprites/plaza-v2/floor.png";
 const PLAZA_OBJECTS_ATLAS = "/sprites/plaza-v2/objects.png";
-const PLAZA_LIGHTS = "/sprites/plaza-v2/lights.png";
+const PLAZA_LAMP_GLOW = "/sprites/plaza-v2/lamp-glow.png";
+const PLAZA_STAGE_GLOW = "/sprites/plaza-v2/stage-glow.png";
 const SOUND_NOTES = "/sprites/effects/fx-notas-4q-arco-iris.png";
 const CONFETTI_HAND = "/sprites/effects/confetti-hand.png";
 const CONFETTI_PROJECTILE = "/sprites/effects/confetti-projectile.png";
@@ -75,7 +82,6 @@ const TENNIS_BALL_SHADOW = "/sprites/effects/ball-shadow-8x4.png";
 const TENNIS_BALL_TRAIL = "/sprites/effects/ball-trail-16.png";
 const TENNIS_IMPACT = "/sprites/effects/impact-16.png";
 const TENNIS_RACKET = "/sprites/effects/racket-sheet.png";
-const TENNIS_SCOREBOARD = { x: 40, y: 38, width: 56, height: 34, base: 72 } as const;
 const TENNIS_SIDE_COLORS = { top: 0xf6c453, bottom: 0x55d68a } as const;
 /** How many recent Confetti throws the engine remembers for end-to-end tests. */
 const DRAWN_THROWS_KEPT = 20;
@@ -135,6 +141,8 @@ export interface GameEngine {
   showBubble(sessionId: string, text: string): void;
   /** Lets the walking keys move the local player, or stops them, as while the wardrobe is open. */
   setWalking(enabled: boolean): void;
+  /** Starts or stops the speakers' Ambient pulse with the Radio's Now playing. */
+  setOnAir(onAir: boolean): void;
   /**
    * Walks the local player towards `direction` like a held walking key, with the same timing, until
    * steered elsewhere or `null`. Ignored while walking is off.
@@ -181,6 +189,7 @@ interface AmbientObjectView {
   textures: Texture[];
   durations: number[];
   startFrame: number;
+  speaker: boolean;
 }
 
 /** Creates the PixiJS canvas inside `container` and returns the API React drives. */
@@ -205,7 +214,8 @@ export async function mountGameEngine(
     textures,
     floor,
     objectsAtlas,
-    lights,
+    lampGlowTexture,
+    stageGlowTexture,
     soundNotes,
     confettiHand,
     confettiProjectile,
@@ -219,7 +229,8 @@ export async function mountGameEngine(
     FrameTextures.load(),
     Assets.load<Texture>(PLAZA_FLOOR),
     Assets.load<Texture>(PLAZA_OBJECTS_ATLAS),
-    Assets.load<Texture>(PLAZA_LIGHTS),
+    Assets.load<Texture>(PLAZA_LAMP_GLOW),
+    Assets.load<Texture>(PLAZA_STAGE_GLOW),
     Assets.load<Texture>(SOUND_NOTES),
     Assets.load<Texture>(CONFETTI_HAND),
     Assets.load<Texture>(CONFETTI_PROJECTILE),
@@ -235,6 +246,17 @@ export async function mountGameEngine(
     Assets.load<Texture>("/sprites/plaza-v2/cars/drift-dust-48.png"),
     Assets.load<Texture>("/sprites/plaza-v2/cars/speed-lines-48.png"),
   ]);
+  const windowTextures = new Map<string, Texture>(
+    await Promise.all(
+      ["building-cafe", "building-brick", "food-truck"].map(
+        async (name) =>
+          [
+            `windows-${name}.png`,
+            await Assets.load<Texture>(`/sprites/plaza-v2/windows-${name}.png`),
+          ] as const,
+      ),
+    ),
+  );
   const carTextures = new Map<string, { background: Texture; front: Texture }>();
   await Promise.all(
     ["kart", "convertible"].flatMap((model) =>
@@ -249,8 +271,43 @@ export async function mountGameEngine(
   );
 
   const world = new Container();
+  const scoreboardObject = PLAZA_V2_OBJECTS.find((object) => object.name === "scoreboard");
+  if (!scoreboardObject) throw new Error("the generated plaza has no scoreboard placement");
   // Players and objects lower on the map are drawn in front of the ones above them.
   const depthSorted = new Container({ sortableChildren: true });
+  const lightLayer = new Container();
+  const lampGlowFrames = Array.from(
+    { length: 8 },
+    (_, index) =>
+      new Texture({
+        source: lampGlowTexture.source,
+        frame: new Rectangle(
+          index * (lampGlowTexture.width / 8),
+          0,
+          lampGlowTexture.width / 8,
+          lampGlowTexture.height,
+        ),
+      }),
+  );
+  const lightStateStart = performance.now();
+  const lightSprites: Array<{
+    sprite: Sprite;
+    level: "lampGlow" | "stageGlow";
+    threshold: number;
+    target: boolean;
+    from: number;
+    changedAt: number;
+    lamp?: { durations: number[]; startFrame: number };
+  }> = [];
+  const windowViews: Array<{
+    facade: WindowFacade;
+    texture: Texture;
+    layer: Container;
+    threshold: number;
+    target: boolean;
+    from: number;
+    changedAt: number;
+  }> = [];
   const ambientObjects: AmbientObjectView[] = [];
   for (const object of PLAZA_V2_OBJECTS) {
     // Dynamic cars occupy these same parking anchors; keeping the decorative Tiled cars would
@@ -262,6 +319,53 @@ export async function mountGameEngine(
     const sprite = new Sprite({ texture: atlasTexture(object.frame), x: object.x, y: object.y });
     sprite.zIndex = objectDepth(object);
     depthSorted.addChild(sprite);
+    if (object.glow) {
+      const texture = object.glow.kind === "warm" ? lampGlowTexture : stageGlowTexture;
+      const glowSprite = new Sprite(texture);
+      if (object.glow.kind === "warm") {
+        glowSprite.texture = lampGlowFrames[0] as Texture;
+      }
+      glowSprite.position.set(object.x + object.glow.offset.x, object.y + object.glow.offset.y);
+      lightLayer.addChild(glowSprite);
+      const startFrame = object.animation
+        ? ambientStartFrame({ x: object.x, y: object.base }, object.animation.length)
+        : 0;
+      lightSprites.push({
+        sprite: glowSprite,
+        level: object.glow.kind === "warm" ? "lampGlow" : "stageGlow",
+        threshold: 0,
+        target: false,
+        from: 0,
+        changedAt: lightStateStart,
+        lamp:
+          object.glow.kind === "warm" && object.animation
+            ? { durations: object.animation.map(({ duration }) => duration), startFrame }
+            : undefined,
+      });
+    }
+    if (object.windows) {
+      const windowTexture = windowTextures.get(object.windows);
+      if (!windowTexture) throw new Error(`missing generated window mask: ${object.windows}`);
+      const windowLayer = new Container();
+      lightLayer.addChild(windowLayer);
+      windowViews.push({
+        facade: {
+          bounds: {
+            x: object.x,
+            y: object.y,
+            width: object.frame.width,
+            height: object.frame.height,
+          },
+          base: object.base,
+        },
+        texture: windowTexture,
+        layer: windowLayer,
+        threshold: 0,
+        target: false,
+        from: 0,
+        changedAt: lightStateStart,
+      });
+    }
     // Every frame is the size of the first, so the object keeps its base and depth order.
     if (object.animation)
       ambientObjects.push({
@@ -269,18 +373,24 @@ export async function mountGameEngine(
         textures: object.animation.map(({ frame }) => atlasTexture(frame)),
         durations: object.animation.map(({ duration }) => duration),
         startFrame: ambientStartFrame({ x: object.x, y: object.base }, object.animation.length),
+        speaker: object.name === "speaker" || object.name === "speaker-low",
       });
   }
   const scoreboard = new Sprite(
     new Texture({
       source: objectsAtlas.source,
-      frame: new Rectangle(214, 359, TENNIS_SCOREBOARD.width, TENNIS_SCOREBOARD.height),
+      frame: new Rectangle(
+        scoreboardObject.frame.x,
+        scoreboardObject.frame.y,
+        scoreboardObject.frame.width,
+        scoreboardObject.frame.height,
+      ),
     }),
   );
-  scoreboard.position.set(TENNIS_SCOREBOARD.x, TENNIS_SCOREBOARD.y);
-  scoreboard.zIndex = TENNIS_SCOREBOARD.base;
+  scoreboard.position.set(scoreboardObject.x, scoreboardObject.y);
+  scoreboard.zIndex = objectDepth(scoreboardObject);
   const scoreboardMarks = new Graphics();
-  scoreboardMarks.zIndex = TENNIS_SCOREBOARD.base + 1;
+  scoreboardMarks.zIndex = objectDepth(scoreboardObject) + 1;
   depthSorted.addChild(scoreboard, scoreboardMarks);
   // Thrown confetti flies above every player and object.
   const confettiLayer = new Container();
@@ -321,6 +431,16 @@ export async function mountGameEngine(
     tennisBallSprite,
     tennisImpactSprite,
   );
+  lightThresholds(lightSprites.map(({ sprite }) => ({ x: sprite.x, y: sprite.y }))).forEach(
+    (threshold, index) => {
+      const light = lightSprites[index];
+      if (light) light.threshold = threshold;
+    },
+  );
+  lightThresholds(windowViews.map(({ facade }) => facade.bounds)).forEach((threshold, index) => {
+    const light = windowViews[index];
+    if (light) light.threshold = threshold;
+  });
   // The Ambient light casts the Time of day over the scene, at the screen's own resolution so
   // pixel art stays sharp. Nicknames and speech bubbles live outside it.
   const ambientLight = new ColorMatrixFilter({ resolution: "inherit" });
@@ -328,8 +448,8 @@ export async function mountGameEngine(
   scene.addChild(new Sprite(floor), depthSorted, tennisLayer, confettiLayer);
   // The lamps' glow brightens whatever lies beneath it, avatars and confetti included, and stays
   // out of the Ambient light so it keeps its colour as the scene darkens.
-  const lampGlow = new Sprite({ texture: lights, blendMode: "add" });
-  world.addChild(scene, lampGlow);
+  for (const light of lightSprites) light.sprite.blendMode = "add";
+  world.addChild(scene, lightLayer);
   const labels = new Container();
   app.stage.addChild(world, labels);
   // Last on the stage, so bubbles stay above every avatar and label.
@@ -370,6 +490,7 @@ export async function mountGameEngine(
   );
   const steering = new Steering(repeater);
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  let onAir = false;
 
   const racketTextures = Array.from(
     { length: 16 },
@@ -392,7 +513,12 @@ export async function mountGameEngine(
 
   const drawTennis = (snapshot: TennisRenderSnapshot | undefined) => {
     if (!snapshot) return;
-    drawTennisScoreboard(scoreboardMarks, snapshot.topScore, snapshot.bottomScore);
+    drawTennisScoreboard(
+      scoreboardMarks,
+      snapshot.topScore,
+      snapshot.bottomScore,
+      scoreboardObject,
+    );
     const participantIds = new Set(
       snapshot.participants.map((participant) => participant.sessionId),
     );
@@ -486,7 +612,10 @@ export async function mountGameEngine(
     const danceNow = serverNow() ?? animationNow;
     walkLocalPlayer(now);
     for (const ambient of ambientObjects) {
-      const frame = ambientFrame(ambient.durations, now, ambient.startFrame, reducedMotion.matches);
+      const frame =
+        ambient.speaker && !onAir
+          ? 0
+          : ambientFrame(ambient.durations, now, ambient.startFrame, reducedMotion.matches);
       ambient.sprite.texture = ambient.textures[frame] ?? ambient.sprite.texture;
     }
     const tennisSnapshot = tennisState
@@ -508,7 +637,39 @@ export async function mountGameEngine(
     world.position.set(camera.x, camera.y);
     const daylight = daylightAt(timeOfDay());
     ambientLight.matrix = ambientLightMatrix(daylight.ambientLight);
-    lampGlow.alpha = daylight.lampGlow;
+    for (const light of lightSprites) {
+      const level = daylight.lampGlow;
+      const target = lightTarget(level, light.threshold);
+      const current = lightAlpha(light.from, light.target ? 1 : 0, now - light.changedAt);
+      if (target !== light.target) {
+        light.from = current;
+        light.target = target;
+        light.changedAt = now;
+      }
+      const alpha = lightAlpha(light.from, target ? 1 : 0, now - light.changedAt);
+      const flickerFrame = light.lamp
+        ? ambientFrame(light.lamp.durations, now, light.lamp.startFrame, reducedMotion.matches)
+        : 0;
+      if (light.lamp) {
+        light.sprite.texture = lampGlowFrames[flickerFrame] ?? (lampGlowFrames[0] as Texture);
+      }
+      light.sprite.alpha =
+        alpha * (light.lamp ? lampIntensity(flickerFrame, reducedMotion.matches) : 1);
+    }
+    for (const light of windowViews) {
+      const target = lightTarget(daylight.litWindows, light.threshold);
+      const current = lightAlpha(light.from, light.target ? 1 : 0, now - light.changedAt);
+      if (target !== light.target) {
+        light.from = current;
+        light.target = target;
+        light.changedAt = now;
+      }
+      light.layer.alpha = lightAlpha(
+        light.from,
+        target ? daylight.litWindows : 0,
+        now - light.changedAt,
+      );
+    }
     for (const [id, avatar] of avatars) {
       const at = avatar.glide.at(now);
       const nudge = avatar.bump ? bumpOffset(avatar.bump, now) : { x: 0, y: 0 };
@@ -567,6 +728,46 @@ export async function mountGameEngine(
         car.avatar.wear(avatarOf(driver.avatar));
         car.avatar.draw(direction, "idle", 0);
         car.avatar.view.position.set(...carAvatarPosition(direction));
+      }
+    }
+    const occluders: WindowOccluder[] = [
+      ...[...avatars.values()]
+        .filter(({ sprite }) => sprite.view.visible)
+        .map(({ sprite }) => ({
+          kind: "player" as const,
+          bounds: {
+            x: sprite.view.x - FRAME_SIZE / 2,
+            y: sprite.view.y - FRAME_SIZE,
+            width: FRAME_SIZE,
+            height: FRAME_SIZE,
+          },
+          feetY: sprite.view.y,
+        })),
+      ...[...cars.values()].map((car) => ({
+        kind: "car" as const,
+        bounds: { x: car.x - 16, y: car.y - 30, width: 32, height: 32 },
+        feetY: car.y,
+      })),
+    ];
+    for (const window of windowViews) {
+      for (const child of window.layer.removeChildren())
+        child.destroy({ texture: false, textureSource: false });
+      for (const region of visibleWindowRegions(window.facade, occluders)) {
+        const sprite = new Sprite({
+          texture: new Texture({
+            source: window.texture.source,
+            frame: new Rectangle(
+              region.texture.x,
+              region.texture.y,
+              region.texture.width,
+              region.texture.height,
+            ),
+          }),
+          x: region.world.x,
+          y: region.world.y,
+        });
+        sprite.alpha = 1;
+        window.layer.addChild(sprite);
       }
     }
     confetti.update(now, reducedMotion.matches, (id) => {
@@ -715,6 +916,9 @@ export async function mountGameEngine(
       walking = enabled;
       if (!enabled) repeater.releaseAll();
     },
+    setOnAir(value) {
+      onAir = value;
+    },
     steer(direction) {
       steering.steer(walking ? direction : null, performance.now());
     },
@@ -798,13 +1002,24 @@ function sameAvatar(a: Avatar, b: AvatarState): boolean {
   return avatarsMatch(a, avatarFromStateOrDefault(b));
 }
 
-function drawTennisScoreboard(graphics: Graphics, topScore: number, bottomScore: number): void {
+function drawTennisScoreboard(
+  graphics: Graphics,
+  topScore: number,
+  bottomScore: number,
+  scoreboard: { x: number; y: number },
+): void {
   graphics.clear();
   // Hide the two decorative dashes baked into the base scoreboard before drawing the live score.
-  graphics.rect(49, 47, 11, 6).fill(0x000000);
-  graphics.rect(75, 47, 11, 6).fill(0x000000);
-  drawScoreDigit(graphics, 53, 47, topScore, TENNIS_SIDE_COLORS.top);
-  drawScoreDigit(graphics, 79, 47, bottomScore, TENNIS_SIDE_COLORS.bottom);
+  graphics.rect(scoreboard.x + 9, scoreboard.y + 9, 11, 6).fill(0x000000);
+  graphics.rect(scoreboard.x + 35, scoreboard.y + 9, 11, 6).fill(0x000000);
+  drawScoreDigit(graphics, scoreboard.x + 13, scoreboard.y + 9, topScore, TENNIS_SIDE_COLORS.top);
+  drawScoreDigit(
+    graphics,
+    scoreboard.x + 39,
+    scoreboard.y + 9,
+    bottomScore,
+    TENNIS_SIDE_COLORS.bottom,
+  );
 }
 
 function drawScoreDigit(

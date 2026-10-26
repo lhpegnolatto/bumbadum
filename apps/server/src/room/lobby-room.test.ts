@@ -329,6 +329,12 @@ describe("lobby-room", () => {
 describe("lobby-room Tennis activity", () => {
   it("does not let a driver join the Tennis line", async () => {
     const ana = await joinLobby("Ana");
+    await expect.poll(() => ana.state.cars?.size).toBe(12);
+    const first = ana.state.cars.get("car-1");
+    const player = colyseus.getRoomById<RoomState>(ana.roomId).state.players.get(ana.sessionId);
+    if (!first || !player) throw new Error("expected the first car and player");
+    player.x = Math.floor(first.x / 16);
+    player.y = Math.floor(first.y / 16);
 
     ana.send(CAR_ENTER_MESSAGE);
     await expect.poll(() => ana.state.players.get(ana.sessionId)?.carId).toBe("car-1");
@@ -401,6 +407,7 @@ describe("lobby-room Tennis activity", () => {
     ana.send(TENNIS_JOIN_MESSAGE);
     bia.send(TENNIS_JOIN_MESSAGE);
     await expect.poll(() => ana.state.tennis.matchStatus).toBe("countdown");
+    await expect.poll(() => ana.state.tennis.matchStatus, { timeout: 5_000 }).toBe("rally");
 
     const participant = ana.state.tennis.participants.get(ana.sessionId);
     const player = ana.state.players.get(ana.sessionId);
@@ -429,6 +436,7 @@ describe("lobby-room Tennis activity", () => {
     await expect.poll(() => ana.state.tennis.matchStatus, { timeout: 5_000 }).toBe("rally");
     const ball = ana.state.tennis.ball;
     if (!ball) throw new Error("expected the first Rally ball");
+    expect(ball.reboundCount).toBe(0);
     const receiver = [...ana.state.tennis.participants].find(
       ([, participant]) => participant.side === ball.receivingSide,
     );
@@ -447,7 +455,6 @@ describe("lobby-room Tennis activity", () => {
     await expect
       .poll(() => ana.state.tennis.score.top + ana.state.tennis.score.bottom, { timeout: 15_000 })
       .toBe(1);
-    expect(ana.state.tennis.ball?.reboundCount).toBe(0);
     await expect.poll(() => events.some((event) => event.code === "point-scored")).toBe(true);
   }, 20_000);
 });

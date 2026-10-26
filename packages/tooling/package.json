@@ -11,8 +11,7 @@
   "scripts": {
     "map:normalize": "node normalize-map-assets.mjs",
     "map:v2:generate": "node generate-map-assets.mjs --map=plaza-v2",
-    "map:v2:check": "node generate-map-assets.mjs --map=plaza-v2 --check",
-    "map:v2:ambient-frames": "node generate-ambient-frames.mjs"
+    "map:v2:check": "node generate-map-assets.mjs --map=plaza-v2 --check"
   },
   "devDependencies": {
     "sharp": "0.35.5"

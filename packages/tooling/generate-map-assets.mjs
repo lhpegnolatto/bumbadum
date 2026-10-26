@@ -11,7 +11,7 @@ const maps = {
     worldModule: "plaza-map.generated.ts",
     objectsModule: "plaza-objects.generated.ts",
     publicDirectory: "plaza",
-    layers: { floor: "floor", objects: "objects", lights: "lights", collision: "collision" },
+    layers: { floor: "floor", objects: "objects", collision: "collision" },
     prefix: "PLAZA",
   },
   "plaza-v2": {
@@ -23,14 +23,13 @@ const maps = {
     layers: {
       floor: "floor",
       objects: "objects",
-      lights: "lights",
       collision: "collision",
       collisionObjects: "collision-objects",
       track: "track",
       parking: "parking",
       startingGrid: "starting-grid",
-      tennisCourt: "quadra_tenis",
-      tennisLine: "fila_hall",
+      tennisCourt: "tennis-court",
+      tennisLine: "tennis-line",
     },
     prefix: "PLAZA_V2",
   },
@@ -60,7 +59,7 @@ const outputs = [
   { target: walkabilityFile, content: walkabilitySource(map) },
   await floorImage(map),
   ...(await objectOutputs(map)),
-  await lightsImage(map),
+  ...(await lightOutputs()),
 ];
 
 for (const output of outputs) {
@@ -278,6 +277,9 @@ async function objectOutputs(map) {
       frame: frames.get(tileid).frame,
       duration,
     }));
+    const properties = tileProperties(tile);
+    if (properties.glow && !["warm", "stage"].includes(properties.glow))
+      throw new Error(`${label} uses unknown glow kind: ${properties.glow}`);
     return {
       name: object.name,
       frame,
@@ -285,6 +287,13 @@ async function objectOutputs(map) {
       y: object.y - frame.height,
       base: object.y,
       ...(animation && { animation }),
+      ...(properties.glow && {
+        glow: {
+          kind: properties.glow,
+          offset: { x: properties.glowOffsetX ?? 0, y: properties.glowOffsetY ?? 0 },
+        },
+      }),
+      ...(properties.windows && { windows: properties.windows }),
     };
   });
 
@@ -306,6 +315,8 @@ async function objectOutputs(map) {
     `    frame: { x: number; y: number; width: number; height: number };\n` +
     `    duration: number;\n` +
     `  }[];\n` +
+    `  glow?: { kind: "warm" | "stage"; offset: { x: number; y: number } };\n` +
+    `  windows?: string;\n` +
     `}[] = [\n` +
     placed.map((object) => `  ${JSON.stringify(object)},\n`).join("") +
     `];\n`;
@@ -350,6 +361,14 @@ async function objectTileset(map) {
     if (tile.x || tile.y || tile.width !== undefined || tile.height !== undefined)
       throw new Error(`objects tile ${tile.id} uses only part of its image`);
     if (tile.animation) expectAnimation(tileset, tile);
+    const windows = Object.fromEntries(
+      (tile.properties ?? []).map(({ name, value }) => [name, value]),
+    ).windows;
+    if (windows) {
+      const { width, height } = await sharp(path.join(sourceRoot, windows)).metadata();
+      if (width !== tile.imagewidth || height !== tile.imageheight)
+        throw new Error(`${windows} is not ${tile.imagewidth}x${tile.imageheight} px`);
+    }
   }
   return tileset;
 }
@@ -373,16 +392,21 @@ function expectAnimation(tileset, tile) {
   }
 }
 
-/** The `lights` image layer's image, copied byte for byte. */
-async function lightsImage(map) {
-  const lights = layer(map, config.layers.lights, "imagelayer");
-  expectPlainLayer(lights);
-  if (lights.repeatx || lights.repeaty) throw new Error("lights layer must not repeat");
-  const content = await readFile(path.join(sourceRoot, lights.image));
-  const { width, height } = await sharp(content).metadata();
-  if (width !== map.width * tileSize || height !== map.height * tileSize)
-    throw new Error(`lights image is not ${map.width * tileSize}x${map.height * tileSize} px`);
-  return { target: path.join(publicRoot, "lights.png"), content };
+/** Runtime light art is generated beside the canonical map, not kept as a static Tiled layer. */
+async function lightOutputs() {
+  if (config.prefix !== "PLAZA_V2") return [];
+  return Promise.all(
+    [
+      "lamp-glow.png",
+      "stage-glow.png",
+      "windows-building-cafe.png",
+      "windows-building-brick.png",
+      "windows-food-truck.png",
+    ].map(async (name) => ({
+      target: path.join(publicRoot, name),
+      content: await readFile(path.join(sourceRoot, name)),
+    })),
+  );
 }
 
 function tileRows(tileLayer, map, label) {
@@ -423,9 +447,7 @@ function pointObject(object) {
   if (object.rotation !== 0) throw new Error(`${label} is rotated, which is not supported`);
   if (!Number.isInteger(object.x) || !Number.isInteger(object.y))
     throw new Error(`${label} is not on whole pixels: ${object.x},${object.y}`);
-  const properties = Object.fromEntries(
-    (object.properties ?? []).map(({ name, value }) => [name, value]),
-  );
+  const properties = tileProperties(object);
   return { name: object.name, x: object.x, y: object.y, ...properties };
 }
 
@@ -434,9 +456,7 @@ function metadataObject(object) {
   if (object.rotation !== 0) throw new Error(`${label} is rotated, which is not supported`);
   if (!Number.isInteger(object.x) || !Number.isInteger(object.y))
     throw new Error(`${label} is not on whole pixels: ${object.x},${object.y}`);
-  const properties = Object.fromEntries(
-    (object.properties ?? []).map(({ name, value }) => [name, value]),
-  );
+  const properties = tileProperties(object);
   return {
     name: object.name,
     type: object.type,
@@ -447,6 +467,12 @@ function metadataObject(object) {
     point: Boolean(object.point),
     ...properties,
   };
+}
+
+function tileProperties(value) {
+  return Object.fromEntries(
+    (value.properties ?? []).map(({ name, value: property }) => [name, property]),
+  );
 }
 
 /** Rejects layer settings the engine would not reproduce: it draws each layer as authored. */

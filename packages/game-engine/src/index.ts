@@ -16,6 +16,7 @@ export {
   type GameEngineOptions,
   mountGameEngine,
 } from "./game-engine.ts";
+export { lampIntensity, lightAlpha, lightTarget, lightThresholds } from "./lighting.ts";
 export {
   type CarAnimationState,
   type CarFrame,
@@ -69,3 +70,9 @@ export {
   type TennisRenderSnapshot,
   tennisRenderSnapshot,
 } from "./sprites/tennis-rendering.ts";
+export {
+  type VisibleWindowRegion,
+  visibleWindowRegions,
+  type WindowFacade,
+  type WindowOccluder,
+} from "./window-occlusion.ts";

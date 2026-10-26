@@ -4,11 +4,11 @@
 
 **Blocked by:** 06, 07
 
-**Status:** ready-for-agent
+**Status:** resolved
 
-- [ ] The `warm` glow strip and the `stage` glow come from the v7 bundle, normalized into `assets/map/plaza-v2/` and served from `public/sprites/plaza-v2/`.
-- [ ] The generator reads the `glow` property and its offset from tile properties, exports the light sources, and fails on an unknown kind. `lights.png` is removed from the generator, the Tiled map and `public/`.
-- [ ] Thresholds are deterministic per position and spread over [0, 1), so the share switched on follows the level. Unit-tested.
-- [ ] A source fades over a short time when crossing its threshold, and a lit lamp's glow follows its lamp's flicker frame and intensity. Under reduced motion the lamp holds its first frame and the glow stays steady. Unit-tested through the timeline functions.
-- [ ] At night the glows sit where the bundle's `camada_3_luzes.png` puts them.
-- [ ] `pnpm check` is green.
+- [x] The `warm` glow strip and the `stage` glow come from the v7 bundle, normalized into `assets/map/plaza-v2/` and served from `public/sprites/plaza-v2/`.
+- [x] The generator reads the `glow` property and its offset from tile properties, exports the light sources, and fails on an unknown kind. `lights.png` is removed from the generator, the Tiled map and `public/`.
+- [x] Thresholds are deterministic per position and spread over [0, 1), so the share switched on follows the level. Unit-tested.
+- [x] A source fades over a short time when crossing its threshold, and a lit lamp's glow follows its lamp's flicker frame and intensity. Under reduced motion the lamp holds its first frame and the glow stays steady. The timing helpers and renderer wiring are unit-tested.
+- [x] At night the glows sit where the bundle's `camada_3_luzes.png` puts them.
+- [x] `pnpm check` is green.

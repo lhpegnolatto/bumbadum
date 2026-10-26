@@ -2,9 +2,9 @@ import type { Direction } from "@bumbadum/game-engine";
 
 export type TennisSteerDirection = Extract<Direction, "left" | "right">;
 
-/** The walkable interior of the Tennis hall in the plaza-v2 map, in tiles. */
+/** The walkable interior of the Tennis hall in the v7 plaza, in tiles. */
 export function isTennisHallPosition(x: number, y: number): boolean {
-  return x >= 22 && x <= 38 && y >= 20 && y <= 37;
+  return x >= 22 && x <= 38 && y >= 26 && y <= 43;
 }
 
 export function tennisDirectionForKey(key: string): TennisSteerDirection | null {

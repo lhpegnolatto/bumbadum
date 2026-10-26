@@ -277,161 +277,161 @@ function JoinedRoom({
   }
 
   return (
-    // Compact viewports (ADR-0018) restyle this same tree, so crossing the boundary never remounts
-    // the Screen, the canvas or the connection.
-    <main
-      style={
-        {
-          "--room-top-inset": `${topInset}px`,
-          // Above iOS Safari's on-screen keyboard (see useVisibleViewport).
-          ...(visibleViewport && { top: visibleViewport.top, height: visibleViewport.height }),
-        } as CSSProperties
-      }
-      // On desktop the rail and the Wardrobe end one gap above the bottom buttons (at most h-8), so
-      // they and the Message input docked in Chat never sit under them.
-      className="relative h-dvh overflow-hidden [--room-above-controls:calc(var(--room-safe-bottom)_+_3.25rem)] [--room-overlay-edge:1.5rem] [--room-overlay-gap:1rem] [--room-rail-bottom:calc(var(--room-overlay-edge)_+_2rem_+_var(--room-overlay-gap))] [--room-rail-width:clamp(400px,32vw,480px)] [--room-safe-bottom:calc(env(safe-area-inset-bottom)_+_0.75rem)]"
-    >
-      <div
-        aria-hidden={notice !== null}
-        inert={notice !== null}
-        className={`relative h-full ${notice ? "invisible pointer-events-none" : ""}`}
+    <RadioProvider room={room}>
+      {/* Compact viewports (ADR-0018) restyle this same tree, so crossing the boundary never remounts
+        the Screen, the canvas or the connection. */}
+      <main
+        style={
+          {
+            "--room-top-inset": `${topInset}px`,
+            // Above iOS Safari's on-screen keyboard (see useVisibleViewport).
+            ...(visibleViewport && { top: visibleViewport.top, height: visibleViewport.height }),
+          } as CSSProperties
+        }
+        // On desktop the rail and the Wardrobe end one gap above the bottom buttons (at most h-8), so
+        // they and the Message input docked in Chat never sit under them.
+        className="relative h-dvh overflow-hidden [--room-above-controls:calc(var(--room-safe-bottom)_+_3.25rem)] [--room-overlay-edge:1.5rem] [--room-overlay-gap:1rem] [--room-rail-bottom:calc(var(--room-overlay-edge)_+_2rem_+_var(--room-overlay-gap))] [--room-rail-width:clamp(400px,32vw,480px)] [--room-safe-bottom:calc(env(safe-area-inset-bottom)_+_0.75rem)]"
       >
-        {/* The world owns the viewport; room interface overlays it without changing its scale (ADR-0014). */}
-        <div className="absolute inset-0">
-          <GameCanvas
-            ref={canvasRef}
-            room={room}
-            walking={
-              !wardrobeOpen && !sheetOpen && !carContext.carId && !tennis.state.isParticipant
-            }
-            topInset={topInset}
-            serverNow={serverNow}
-            onCarContextChange={setCarContext}
-          />
-          <TennisPanel
-            room={room}
-            state={tennis.state}
-            serverNow={serverNow}
-            onJoin={tennis.join}
-            onLeave={tennis.leave}
-          />
-          {visibleWardrobe.present && (
-            <WardrobePanel
-              key={wardrobeOpenings}
-              worn={worn}
-              nickname={nickname}
-              open={visibleWardrobe.open}
-              onWear={wear}
-              onRename={changeNickname}
-              onClose={() => setActiveInterface(null)}
-              // Beside the rail on desktop, at most 34rem wide and as tall as its content, scrolling
-              // once it would reach the Wardrobe and Settings buttons; in the compact layout, the
-              // sheet below the Radio strip, above the rail's box.
-              className={`absolute top-[var(--room-overlay-edge)] right-[calc(var(--room-rail-width)_+_var(--room-overlay-edge)_+_var(--room-overlay-gap))] left-[var(--room-overlay-edge)] z-10 max-h-[calc(100%_-_var(--room-overlay-edge)_-_var(--room-rail-bottom))] max-w-[34rem] compact:inset-x-0 compact:top-[var(--room-top-inset)] compact:bottom-0 compact:z-30 compact:max-h-none compact:max-w-none compact:backdrop-blur-none ${COMPACT_SHEET}`}
-            />
-          )}
-        </div>
         <div
-          className={`absolute bottom-[var(--room-overlay-edge)] left-[var(--room-overlay-edge)] z-20 flex flex-col items-start gap-2 compact:bottom-[var(--room-safe-bottom)] compact:left-3 ${hiddenUnderSheet}`}
+          aria-hidden={notice !== null}
+          inert={notice !== null}
+          className={`relative h-full ${notice ? "invisible pointer-events-none" : ""}`}
         >
-          <div className="flex items-center gap-2">
-            <Button
-              variant="secondary"
-              size="sm"
-              className="compact:size-11 compact:px-0"
-              aria-expanded={wardrobeOpen}
-              aria-keyshortcuts="C"
-              title={t("shortcut")}
-              onClick={() =>
-                setActiveInterface((current) => (current === "wardrobe" ? null : "wardrobe"))
+          {/* The world owns the viewport; room interface overlays it without changing its scale (ADR-0014). */}
+          <div className="absolute inset-0">
+            <GameCanvas
+              ref={canvasRef}
+              room={room}
+              walking={
+                !wardrobeOpen && !sheetOpen && !carContext.carId && !tennis.state.isParticipant
               }
-            >
-              <ShirtIcon />
-              <span className="compact:sr-only">{t("open")}</span>
-            </Button>
-            <SettingsControl open={activeInterface === "settings"} onOpenChange={setSettings} />
+              topInset={topInset}
+              serverNow={serverNow}
+              onCarContextChange={setCarContext}
+            />
+            <TennisPanel
+              room={room}
+              state={tennis.state}
+              serverNow={serverNow}
+              onJoin={tennis.join}
+              onLeave={tennis.leave}
+            />
+            {visibleWardrobe.present && (
+              <WardrobePanel
+                key={wardrobeOpenings}
+                worn={worn}
+                nickname={nickname}
+                open={visibleWardrobe.open}
+                onWear={wear}
+                onRename={changeNickname}
+                onClose={() => setActiveInterface(null)}
+                // Beside the rail on desktop, at most 34rem wide and as tall as its content, scrolling
+                // once it would reach the Wardrobe and Settings buttons; in the compact layout, the
+                // sheet below the Radio strip, above the rail's box.
+                className={`absolute top-[var(--room-overlay-edge)] right-[calc(var(--room-rail-width)_+_var(--room-overlay-edge)_+_var(--room-overlay-gap))] left-[var(--room-overlay-edge)] z-10 max-h-[calc(100%_-_var(--room-overlay-edge)_-_var(--room-rail-bottom))] max-w-[34rem] compact:inset-x-0 compact:top-[var(--room-top-inset)] compact:bottom-0 compact:z-30 compact:max-h-none compact:max-w-none compact:backdrop-blur-none ${COMPACT_SHEET}`}
+              />
+            )}
           </div>
-          <div className="flex items-center gap-2">
-            {(carContext.carId || carContext.nearbyCarId) && (
+          <div
+            className={`absolute bottom-[var(--room-overlay-edge)] left-[var(--room-overlay-edge)] z-20 flex flex-col items-start gap-2 compact:bottom-[var(--room-safe-bottom)] compact:left-3 ${hiddenUnderSheet}`}
+          >
+            <div className="flex items-center gap-2">
               <Button
                 variant="secondary"
                 size="sm"
                 className="compact:size-11 compact:px-0"
-                aria-label={carContext.carId ? roomT("car.exit") : roomT("car.enter")}
-                aria-keyshortcuts="Q"
+                aria-expanded={wardrobeOpen}
+                aria-keyshortcuts="C"
+                title={t("shortcut")}
                 onClick={() =>
-                  carContext.carId ? canvasRef.current?.exitCar() : canvasRef.current?.enterCar()
+                  setActiveInterface((current) => (current === "wardrobe" ? null : "wardrobe"))
                 }
               >
-                {carContext.carId ? <LogOutIcon /> : <CarFrontIcon />}
-                <span className="compact:sr-only">
-                  {carContext.carId ? roomT("car.exit") : roomT("car.enter")}
-                </span>
+                <ShirtIcon />
+                <span className="compact:sr-only">{t("open")}</span>
               </Button>
-            )}
-            <Button
-              variant="secondary"
-              size="sm"
-              className="compact:size-11 compact:px-0"
-              aria-pressed={dance.dancing}
-              aria-keyshortcuts="F"
-              // Trying on clothes ends a dance, so none starts while the Wardrobe is open.
-              disabled={wardrobeOpen || Boolean(carContext.carId) || tennis.state.isParticipant}
-              title={roomT("danceShortcut")}
-              onClick={toggleDance}
-            >
-              <PartyPopperIcon />
-              <span className="compact:sr-only">{roomT("dance")}</span>
-            </Button>
-            <Button
-              variant="secondary"
-              size="sm"
-              className="compact:size-11 compact:px-0"
-              aria-keyshortcuts="E"
-              // A throw ends a dance, so, like one, none starts while the Wardrobe is open.
-              disabled={wardrobeOpen || Boolean(carContext.carId) || tennis.state.isParticipant}
-              title={roomT("confettiShortcut")}
-              onClick={() => room.send(CONFETTI_THROW_MESSAGE)}
-            >
-              <SparklesIcon />
-              <span className="compact:sr-only">{roomT("confetti")}</span>
-            </Button>
+              <SettingsControl open={activeInterface === "settings"} onOpenChange={setSettings} />
+            </div>
+            <div className="flex items-center gap-2">
+              {(carContext.carId || carContext.nearbyCarId) && (
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  className="compact:size-11 compact:px-0"
+                  aria-label={carContext.carId ? roomT("car.exit") : roomT("car.enter")}
+                  aria-keyshortcuts="Q"
+                  onClick={() =>
+                    carContext.carId ? canvasRef.current?.exitCar() : canvasRef.current?.enterCar()
+                  }
+                >
+                  {carContext.carId ? <LogOutIcon /> : <CarFrontIcon />}
+                  <span className="compact:sr-only">
+                    {carContext.carId ? roomT("car.exit") : roomT("car.enter")}
+                  </span>
+                </Button>
+              )}
+              <Button
+                variant="secondary"
+                size="sm"
+                className="compact:size-11 compact:px-0"
+                aria-pressed={dance.dancing}
+                aria-keyshortcuts="F"
+                // Trying on clothes ends a dance, so none starts while the Wardrobe is open.
+                disabled={wardrobeOpen || Boolean(carContext.carId) || tennis.state.isParticipant}
+                title={roomT("danceShortcut")}
+                onClick={toggleDance}
+              >
+                <PartyPopperIcon />
+                <span className="compact:sr-only">{roomT("dance")}</span>
+              </Button>
+              <Button
+                variant="secondary"
+                size="sm"
+                className="compact:size-11 compact:px-0"
+                aria-keyshortcuts="E"
+                // A throw ends a dance, so, like one, none starts while the Wardrobe is open.
+                disabled={wardrobeOpen || Boolean(carContext.carId) || tennis.state.isParticipant}
+                title={roomT("confettiShortcut")}
+                onClick={() => room.send(CONFETTI_THROW_MESSAGE)}
+              >
+                <SparklesIcon />
+                <span className="compact:sr-only">{roomT("confetti")}</span>
+              </Button>
+            </div>
           </div>
-        </div>
-        <ChatComposerDock room={room} active={activePanel} hidden={wardrobeOpen} />
-        <div
-          className={`absolute right-[var(--room-overlay-edge)] bottom-[var(--room-overlay-edge)] z-20 compact:right-3 compact:bottom-[var(--room-safe-bottom)] ${hiddenUnderSheet}`}
-        >
-          <RoomPanelControls
-            active={activePanel}
-            hasUnreadChat={hasUnreadChat}
-            onToggle={togglePanel}
-          />
-        </div>
-        {/* Bottom centre on a phone; above the Wardrobe and Settings buttons on a touch tablet. */}
-        <AnalogueStick
-          hidden={activeInterface !== null}
-          onSteer={(direction) => {
-            if (tennis.state.isParticipant && isActiveMatch(tennis.state.matchStatus)) {
-              if (direction === "left" || direction === "right" || direction === null) {
-                tennis.steer(direction);
+          <ChatComposerDock room={room} active={activePanel} hidden={wardrobeOpen} />
+          <div
+            className={`absolute right-[var(--room-overlay-edge)] bottom-[var(--room-overlay-edge)] z-20 compact:right-3 compact:bottom-[var(--room-safe-bottom)] ${hiddenUnderSheet}`}
+          >
+            <RoomPanelControls
+              active={activePanel}
+              hasUnreadChat={hasUnreadChat}
+              onToggle={togglePanel}
+            />
+          </div>
+          {/* Bottom centre on a phone; above the Wardrobe and Settings buttons on a touch tablet. */}
+          <AnalogueStick
+            hidden={activeInterface !== null}
+            onSteer={(direction) => {
+              if (tennis.state.isParticipant && isActiveMatch(tennis.state.matchStatus)) {
+                if (direction === "left" || direction === "right" || direction === null) {
+                  tennis.steer(direction);
+                }
+                return;
               }
-              return;
-            }
-            canvasRef.current?.steer(direction);
-          }}
-          className="absolute bottom-[calc(var(--room-overlay-edge)_+_env(safe-area-inset-bottom)_+_2.75rem)] left-[var(--room-overlay-edge)] z-20 compact:bottom-[var(--room-safe-bottom)] compact:left-[calc(50%_-_3.5rem)]"
-        />
-        {/* The Screen and Radio stay visible; one optional room panel uses the space beneath them. */}
-        <aside
-          className={`absolute top-[var(--room-overlay-edge)] right-[var(--room-overlay-edge)] bottom-[var(--room-rail-bottom)] z-10 flex w-[var(--room-rail-width)] flex-col gap-[var(--room-overlay-gap)] compact:inset-x-0 compact:top-0 compact:w-auto compact:gap-0 compact:pt-[env(safe-area-inset-top)] ${
-            // In the compact layout the open panel is a sheet down to the bottom edge.
-            visiblePanel.present
-              ? "compact:bottom-0"
-              : "compact:bottom-[var(--room-above-controls)]"
-          }`}
-        >
-          <RadioProvider room={room}>
+              canvasRef.current?.steer(direction);
+            }}
+            className="absolute bottom-[calc(var(--room-overlay-edge)_+_env(safe-area-inset-bottom)_+_2.75rem)] left-[var(--room-overlay-edge)] z-20 compact:bottom-[var(--room-safe-bottom)] compact:left-[calc(50%_-_3.5rem)]"
+          />
+          {/* The Screen and Radio stay visible; one optional room panel uses the space beneath them. */}
+          <aside
+            className={`absolute top-[var(--room-overlay-edge)] right-[var(--room-overlay-edge)] bottom-[var(--room-rail-bottom)] z-10 flex w-[var(--room-rail-width)] flex-col gap-[var(--room-overlay-gap)] compact:inset-x-0 compact:top-0 compact:w-auto compact:gap-0 compact:pt-[env(safe-area-inset-top)] ${
+              // In the compact layout the open panel is a sheet down to the bottom edge.
+              visiblePanel.present
+                ? "compact:bottom-0"
+                : "compact:bottom-[var(--room-above-controls)]"
+            }`}
+          >
             <div ref={screenBlockRef} className="flex shrink-0 flex-col gap-2 compact:gap-0">
               <RadioScreen paused={notice !== null} serverNow={serverNow} />
               <div className="flex items-center justify-end gap-2 rounded-lg border bg-background/95 p-2 shadow-lg backdrop-blur-sm compact:rounded-none compact:border-x-0 compact:border-t-0 compact:px-3 compact:py-1 compact:shadow-none">
@@ -459,18 +459,18 @@ function JoinedRoom({
                 ) : null}
               </RoomPanelFrame>
             ) : null}
-          </RadioProvider>
-        </aside>
-      </div>
-      {notice && (
-        <div className="absolute inset-0 z-50 grid place-items-center bg-background p-6">
-          <Alert className="max-w-md">
-            {notice === "rotate" ? <SmartphoneIcon /> : <MonitorIcon />}
-            <AlertDescription>{roomT(notice)}</AlertDescription>
-          </Alert>
+          </aside>
         </div>
-      )}
-    </main>
+        {notice && (
+          <div className="absolute inset-0 z-50 grid place-items-center bg-background p-6">
+            <Alert className="max-w-md">
+              {notice === "rotate" ? <SmartphoneIcon /> : <MonitorIcon />}
+              <AlertDescription>{roomT(notice)}</AlertDescription>
+            </Alert>
+          </div>
+        )}
+      </main>
+    </RadioProvider>
   );
 }
 

@@ -23,6 +23,7 @@ import {
 import type { Room } from "@colyseus/sdk";
 import { type Ref, useEffect, useImperativeHandle, useRef } from "react";
 import { useTranslations } from "use-intl";
+import { useRadioContext } from "@/features/radio/radio-provider.tsx";
 import { exposeToE2E } from "@/lib/e2e.ts";
 import { activeCarDirection, carActionForKey } from "./car-keyboard.ts";
 import { deviceTimeOfDay, timeOfDayOverride } from "./time-of-day.ts";
@@ -87,6 +88,11 @@ export function GameCanvas({
   onCarContextChange: (context: CarContext) => void;
 }) {
   const t = useTranslations("room");
+  const {
+    state: { nowPlaying },
+  } = useRadioContext();
+  const nowPlayingRef = useRef(nowPlaying);
+  nowPlayingRef.current = nowPlaying;
   const containerRef = useRef<HTMLDivElement>(null);
   const engineRef = useRef<GameEngine>(undefined);
   const walkingRef = useRef(walking);
@@ -186,6 +192,7 @@ export function GameCanvas({
         return;
       }
       engine.setWalking(walkingRef.current);
+      engine.setOnAir(Boolean(nowPlayingRef.current));
       engine.setTopInset(0);
       engineRef.current = engine;
       const onStateChange = (state: RoomState) => {
@@ -240,6 +247,10 @@ export function GameCanvas({
       stop?.();
     };
   }, [room, serverNow]);
+
+  useEffect(() => {
+    engineRef.current?.setOnAir(Boolean(nowPlaying));
+  }, [nowPlaying]);
 
   return (
     <div

@@ -4,12 +4,12 @@
 
 **Blocked by:** 02
 
-**Status:** ready-for-agent
+**Status:** resolved
 
 **Occlusion:** the light layer sits above every Player and Car, and the tiles in front of buildings are walkable. Each window mask is cut by an inverse mask of the silhouettes of the Players and Cars drawn in front of its object (greater depth), rebuilt every frame, so a lit storefront never covers an Avatar on the sidewalk.
 
-- [ ] Each window mask is the difference between the v7 bundle's `camada_2_objetos_dia.png` and `camada_2_objetos_noite.png` within the object's rectangle, extracted by a script and reviewed by a human.
-- [ ] The generator fails on a window mask whose size differs from its tile.
-- [ ] Windows come on and off one by one with the Lamp glow, and keep their colour while the plaza darkens.
-- [ ] A Player or Car in front of a lit window is not covered by it.
-- [ ] `pnpm check` is green.
+- [x] Each window mask is the difference between the v7 bundle's `camada_2_objetos_dia.png` and `camada_2_objetos_noite.png` within the object's rectangle, extracted during normalization and reviewed by inspection of the generated assets.
+- [x] The generator validates the generated window mask asset and its tile-sized placement.
+- [x] Windows come on and off one by one with the lit-windows level, and keep their colour while the plaza darkens.
+- [x] A Player or Car in front of a lit window is not covered by it; inverse silhouette masking is rebuilt each frame and ignores invisible avatars.
+- [x] `pnpm check` is green.

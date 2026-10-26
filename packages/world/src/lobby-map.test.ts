@@ -18,12 +18,12 @@ function allTiles(): Tile[] {
 }
 
 describe("lobbyMap", () => {
-  it("is the 150 by 40 plaza with the tennis and autodrome extensions", () => {
-    expect({ width: lobbyMap.width, height: lobbyMap.height }).toEqual({ width: 150, height: 40 });
+  it("is the 150 by 52 v7 plaza with the tennis and autodrome extensions", () => {
+    expect({ width: lobbyMap.width, height: lobbyMap.height }).toEqual({ width: 150, height: 52 });
   });
 
   it("spawns players on a walkable tile in the plaza", () => {
-    expect(lobbyMap.spawnPoint).toEqual({ x: 70, y: 19 });
+    expect(lobbyMap.spawnPoint).toEqual({ x: 70, y: 25 });
     expect(isWalkable(lobbyMap, lobbyMap.spawnPoint)).toBe(true);
   });
 
@@ -50,23 +50,12 @@ describe("lobbyMap", () => {
     expect(isWalkable(lobbyMap, { x: 140, y: 22 })).toBe(true);
   });
 
-  it("keeps the former center chair area walkable", () => {
-    const formerChairTiles = [
-      { x: 63, y: 14 },
-      { x: 68, y: 14 },
-      { x: 71, y: 14 },
-      { x: 74, y: 14 },
-      { x: 63, y: 16 },
-      { x: 68, y: 16 },
-      { x: 71, y: 16 },
-      { x: 74, y: 16 },
-      { x: 63, y: 18 },
-      { x: 68, y: 18 },
-      { x: 71, y: 18 },
-      { x: 74, y: 18 },
-    ];
-
-    for (const tile of formerChairTiles) {
+  it("keeps the grandstand floor walkable", () => {
+    for (const tile of [
+      { x: 130, y: 6 },
+      { x: 130, y: 7 },
+      { x: 130, y: 9 },
+    ]) {
       expect(isWalkable(lobbyMap, tile)).toBe(true);
     }
   });
@@ -83,8 +72,8 @@ describe("lobbyMap", () => {
   });
 
   it("blocks the stage and the buildings", () => {
-    expect(isWalkable(lobbyMap, { x: 70, y: 4 })).toBe(false);
-    expect(isWalkable(lobbyMap, { x: 42, y: 4 })).toBe(false);
-    expect(isWalkable(lobbyMap, { x: 97, y: 34 })).toBe(false);
+    expect(isWalkable(lobbyMap, { x: 70, y: 6 })).toBe(false);
+    expect(isWalkable(lobbyMap, { x: 42, y: 6 })).toBe(false);
+    expect(isWalkable(lobbyMap, { x: 40, y: 35 })).toBe(false);
   });
 });

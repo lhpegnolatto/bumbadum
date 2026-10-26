@@ -7,14 +7,14 @@
 **Status:** resolved
 
 - [x] Starting timings: trees and shrubs 4 frames over ~2.4 s, flags and bunting 3 frames over ~0.5 s; tuned with a human in the prototype. (Starting timings in place; tuning with a human and a visual review of the frames are still to do.)
-- [x] The generator exports animation frames and durations, and fails on a frame from another tileset.
+- [x] The v7 generator exports authored animation frames and durations, and fails on a frame from another tileset.
 - [x] A pure timeline returns the frame for a time and a phase, derives the phase from position, and holds the first frame under reduced motion. Unit-tested.
 - [x] Depth order is unchanged: every frame keeps its object's base.
 - [x] `pnpm check` is green. (Except three `lobby-room` Tennis tests in `apps/server` that already fail without this change.)
 
 ## Answer
 
-- `packages/tooling/generate-ambient-frames.mjs` (`pnpm --filter @bumbadum/tooling map:v2:ambient-frames`) draws 37 frames next to the still images in `assets/map/plaza-v2/objects/`, each the size of its source, by moving pixels only (no blending):
+- The v7 bundle supplies the authored animation frames in its objects tileset; no script-generated frame files remain in `assets/map/plaza-v2/objects/`.
   - Trees and shrubs (`<name>-1..3.png`): the canopy sways by one pixel, starting at the top: a slight lean right, a fuller lean right, a slight lean left. The trunk rows never move.
   - `flag-pink` and `flag-purple` (`-1..2`): the lower part of the banner swings right, then left. Full-width rows shift their shading inside the outline; the narrower tail moves whole.
   - `flag-checkered` (`-1..2`): a vertical wave runs along the cloth, growing away from the pole.

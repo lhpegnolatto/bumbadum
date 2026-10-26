@@ -31,8 +31,8 @@ const BOUNCE_FRACTION = 0.68;
 const LATERAL_SPEED = 96;
 const TENNIS_LINE_CAPACITY = PLAZA_V2_TENNIS_LINE.length;
 
-const topSpawn = findCourtPoint("top-player");
-const bottomSpawn = findCourtPoint("bottom-player");
+const topSpawn = findCourtPoint("player-top");
+const bottomSpawn = findCourtPoint("player-bottom");
 
 export interface TennisActivityPlayer {
   x: number;
