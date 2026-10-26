@@ -30,7 +30,7 @@ import {
   TextureStyle,
 } from "pixi.js";
 import { cameraOn, TILE_SIZE } from "./camera.ts";
-import { ambientLightMatrix, daylightAt, isNeutralAmbientLight } from "./daylight/daylight.ts";
+import { ambientLightMatrix, daylightAt } from "./daylight/daylight.ts";
 import { objectDepth, playerDepth } from "./depth.ts";
 import { listenToDirectionKeys, listenToTennisDirectionKeys } from "./keyboard.ts";
 import { type Bump, bumpOffset, Glide, isBumping, type Point } from "./movement/glide.ts";
@@ -39,7 +39,7 @@ import { type Pose, StepPredictor } from "./movement/step-predictor.ts";
 import { StepRepeater } from "./movement/step-repeater.ts";
 import { PLAZA_V2_OBJECTS } from "./plaza-v2-objects.generated.ts";
 import { SpeechBubbles } from "./speech-bubbles.ts";
-import { ambientFrame, ambientPhase } from "./sprites/ambient-animation.ts";
+import { ambientFrame, ambientStartFrame } from "./sprites/ambient-animation.ts";
 import { AvatarAnimation } from "./sprites/avatar-animation.ts";
 import { AvatarSprite, FrameTextures } from "./sprites/avatar-sprite.ts";
 import { CarRenderer } from "./sprites/car-renderer.ts";
@@ -180,7 +180,7 @@ interface AmbientObjectView {
   sprite: Sprite;
   textures: Texture[];
   durations: number[];
-  phase: number;
+  startFrame: number;
 }
 
 /** Creates the PixiJS canvas inside `container` and returns the API React drives. */
@@ -268,7 +268,7 @@ export async function mountGameEngine(
         sprite,
         textures: object.animation.map(({ frame }) => atlasTexture(frame)),
         durations: object.animation.map(({ duration }) => duration),
-        phase: ambientPhase(object),
+        startFrame: ambientStartFrame({ x: object.x, y: object.base }, object.animation.length),
       });
   }
   const scoreboard = new Sprite(
@@ -486,7 +486,7 @@ export async function mountGameEngine(
     const danceNow = serverNow() ?? animationNow;
     walkLocalPlayer(now);
     for (const ambient of ambientObjects) {
-      const frame = ambientFrame(ambient.durations, now, ambient.phase, reducedMotion.matches);
+      const frame = ambientFrame(ambient.durations, now, ambient.startFrame, reducedMotion.matches);
       ambient.sprite.texture = ambient.textures[frame] ?? ambient.sprite.texture;
     }
     const tennisSnapshot = tennisState
@@ -507,7 +507,6 @@ export async function mountGameEngine(
     world.scale.set(camera.scale);
     world.position.set(camera.x, camera.y);
     const daylight = daylightAt(timeOfDay());
-    ambientLight.enabled = !isNeutralAmbientLight(daylight.ambientLight);
     ambientLight.matrix = ambientLightMatrix(daylight.ambientLight);
     lampGlow.alpha = daylight.lampGlow;
     for (const [id, avatar] of avatars) {

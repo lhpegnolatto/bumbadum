@@ -1,10 +1,5 @@
 import { describe, expect, it } from "vitest";
-import {
-  type AmbientLight,
-  ambientLightMatrix,
-  daylightAt,
-  isNeutralAmbientLight,
-} from "../index.ts";
+import { type AmbientLight, ambientLightMatrix, type Daylight, daylightAt } from "../index.ts";
 
 /** The Time of day at `hours`:`minutes`. */
 const at = (hours: number, minutes = 0) => hours + minutes / 60;
@@ -19,48 +14,76 @@ function lit(light: AmbientLight, [r, g, b]: [number, number, number]): [number,
 
 const luminance = ([r, g, b]: [number, number, number]) => 0.2126 * r + 0.7152 * g + 0.0722 * b;
 
+/** A keyframe of the v7 bundle's `iluminacao/iluminacao.json`, with its overlay colour in 0–255. */
+function keyframe(
+  saturation: number,
+  multiply: [number, number, number],
+  [r, g, b]: [number, number, number],
+  overlayStrength: number,
+  lampGlow: number,
+  litWindows: number,
+): Daylight {
+  return {
+    ambientLight: { saturation, multiply, overlay: [r / 255, g / 255, b / 255], overlayStrength },
+    lampGlow,
+    litWindows,
+  };
+}
+
+const NIGHT = keyframe(0.85, [0.44, 0.48, 0.74], [24, 26, 70], 0.22, 1, 1);
+
 describe("daylight", () => {
   it.each([
-    ["00:00 Night", at(0), 1],
-    ["04:30 Late night", at(4, 30), 1],
-    ["06:00 Dawn", at(6), 0.45],
-    ["08:00 Morning", at(8), 0],
-    ["12:30 Midday", at(12, 30), 0],
-    ["15:30 Afternoon", at(15, 30), 0],
-    ["17:48 Sunset", at(17, 48), 0.15],
-    ["19:00 Dusk", at(19), 0.6],
-    ["20:30 Night", at(20, 30), 1],
-  ])("gives the table's Lamp glow at %s", (_, time, lampGlow) => {
-    expect(daylightAt(time).lampGlow).toBeCloseTo(lampGlow, 10);
+    ["00:00 Night", at(0), NIGHT],
+    ["04:30 Late night", at(4, 30), keyframe(0.85, [0.5, 0.52, 0.76], [40, 40, 96], 0.2, 1, 1)],
+    ["06:00 Dawn", at(6), keyframe(0.95, [0.88, 0.74, 0.8], [250, 168, 150], 0.16, 0.45, 1)],
+    ["08:00 Morning", at(8), keyframe(1, [1, 0.98, 0.95], [255, 240, 214], 0.06, 0, 0)],
+    ["12:30 Midday", at(12, 30), keyframe(1.05, [1.04, 1.04, 1.02], [255, 255, 255], 0, 0, 0)],
+    ["15:30 Afternoon", at(15, 30), keyframe(1, [1, 0.95, 0.86], [255, 214, 150], 0.08, 0, 0)],
+    // The bundle puts Sunset at 17.8 h, which is 17:48.
+    ["17:48 Sunset", at(17, 48), keyframe(1.08, [0.98, 0.74, 0.6], [250, 130, 80], 0.18, 0.55, 1)],
+    ["19:00 Dusk", at(19), keyframe(0.95, [0.62, 0.58, 0.88], [96, 72, 170], 0.2, 0.85, 1)],
+    ["20:30 Night", at(20, 30), NIGHT],
+  ])("gives the v7 lighting table's values at %s", (_, time, expected) => {
+    const { ambientLight, lampGlow, litWindows } = daylightAt(time);
+    expect(lampGlow).toBeCloseTo(expected.lampGlow, 10);
+    expect(litWindows).toBeCloseTo(expected.litWindows, 10);
+    expect(ambientLight.saturation).toBeCloseTo(expected.ambientLight.saturation, 10);
+    expect(ambientLight.overlayStrength).toBeCloseTo(expected.ambientLight.overlayStrength, 10);
+    expect(ambientLight.multiply).toEqual(
+      expected.ambientLight.multiply.map((c) => expect.closeTo(c, 10)),
+    );
+    expect(ambientLight.overlay).toEqual(
+      expected.ambientLight.overlay.map((c) => expect.closeTo(c, 10)),
+    );
   });
 
-  it("interpolates linearly halfway between two Day periods", () => {
-    // Halfway from Sunset (15%) to Dusk (60%).
+  it("interpolates every value linearly halfway between two Day periods", () => {
     const sunset = daylightAt(at(17, 48));
     const dusk = daylightAt(at(19));
     const between = daylightAt(at(18, 24));
-    expect(between.lampGlow).toBeCloseTo(0.375, 10);
+    const half = (a: number, b: number) => expect.closeTo((a + b) / 2, 10);
+    // Halfway from Sunset (55%) to Dusk (85%).
+    expect(between.lampGlow).toBeCloseTo(0.7, 10);
+    expect(between.litWindows).toBe(1);
     const { ambientLight } = between;
-    expect(ambientLight.saturation).toBeCloseTo(
-      (sunset.ambientLight.saturation + dusk.ambientLight.saturation) / 2,
-      10,
+    expect(ambientLight.saturation).toEqual(
+      half(sunset.ambientLight.saturation, dusk.ambientLight.saturation),
     );
-    expect(ambientLight.overlayStrength).toBeCloseTo(
-      (sunset.ambientLight.overlayStrength + dusk.ambientLight.overlayStrength) / 2,
-      10,
+    expect(ambientLight.overlayStrength).toEqual(
+      half(sunset.ambientLight.overlayStrength, dusk.ambientLight.overlayStrength),
     );
-    ambientLight.multiply.forEach((channel, i) => {
-      expect(channel).toBeCloseTo(
-        ((sunset.ambientLight.multiply[i] ?? 0) + (dusk.ambientLight.multiply[i] ?? 0)) / 2,
-        10,
-      );
-    });
-    ambientLight.overlay.forEach((channel, i) => {
-      expect(channel).toBeCloseTo(
-        ((sunset.ambientLight.overlay[i] ?? 0) + (dusk.ambientLight.overlay[i] ?? 0)) / 2,
-        10,
-      );
-    });
+    expect(ambientLight.multiply).toEqual(
+      sunset.ambientLight.multiply.map((c, i) => half(c, dusk.ambientLight.multiply[i] ?? 0)),
+    );
+    expect(ambientLight.overlay).toEqual(
+      sunset.ambientLight.overlay.map((c, i) => half(c, dusk.ambientLight.overlay[i] ?? 0)),
+    );
+  });
+
+  it("dims the lit windows gradually between Dawn and Morning", () => {
+    expect(daylightAt(at(7)).litWindows).toBeCloseTo(0.5, 10);
+    expect(daylightAt(at(16, 39)).litWindows).toBeCloseTo(0.5, 10);
   });
 
   it("treats minutes as a fraction of the hour", () => {
@@ -81,42 +104,56 @@ describe("daylight", () => {
     expect(daylightAt(at(25, 30))).toEqual(daylightAt(at(1, 30)));
   });
 
-  it("leaves the Map untouched from Morning to Midday", () => {
-    for (const time of [at(8), at(10, 15), at(12, 30)]) {
-      const { ambientLight } = daylightAt(time);
-      expect(isNeutralAmbientLight(ambientLight)).toBe(true);
-      expect(lit(ambientLight, [0.2, 0.5, 0.9])).toEqual(
-        [0.2, 0.5, 0.9].map((c) => expect.closeTo(c, 10)),
-      );
-    }
-  });
-
-  it("tints the Map outside Morning and Midday", () => {
-    for (const time of [at(0), at(6), at(15, 30), at(17, 48), at(19)]) {
-      expect(isNeutralAmbientLight(daylightAt(time).ambientLight)).toBe(false);
-    }
-  });
-
   it("keeps the Night bright enough for Avatars, Cars and the Ball to stay clearly visible", () => {
     const night = daylightAt(at(0)).ambientLight;
-    const white: [number, number, number] = [1, 1, 1];
-    expect(luminance(lit(night, white))).toBeGreaterThanOrEqual(0.55);
-    // Each channel keeps most of a mid-grey pixel's light, so no colour sinks into black.
-    for (const channel of lit(night, [0.5, 0.5, 0.5])) expect(channel).toBeGreaterThanOrEqual(0.25);
+    // White keeps at least 40% of its luminance (the bundle's Night leaves about 41%).
+    expect(luminance(lit(night, [1, 1, 1]))).toBeGreaterThanOrEqual(0.4);
+    // A mid-grey pixel keeps light in every channel, so no colour sinks into black.
+    for (const channel of lit(night, [0.5, 0.5, 0.5])) expect(channel).toBeGreaterThanOrEqual(0.18);
+    // A saturated red, such as a red Car, stays well off black.
+    expect(luminance(lit(night, [0.8, 0.1, 0.1]))).toBeGreaterThanOrEqual(0.1);
   });
 
-  it("casts a cool Night and a warm Dawn, Sunset and Dusk", () => {
+  it("casts a cool Night and a warm Dawn and Sunset", () => {
     const grey: [number, number, number] = [0.6, 0.6, 0.6];
-    const [nightR, , nightB] = lit(daylightAt(at(0)).ambientLight, grey);
+    const [nightR, nightG, nightB] = lit(daylightAt(at(0)).ambientLight, grey);
+    expect(nightB).toBeGreaterThan(nightG);
     expect(nightB).toBeGreaterThan(nightR);
-    for (const time of [at(17, 48), at(19)]) {
-      const [r, g, b] = lit(daylightAt(time).ambientLight, grey);
-      expect(r).toBeGreaterThan(g);
-      expect(g).toBeGreaterThan(b);
-    }
+    const [sunsetR, sunsetG, sunsetB] = lit(daylightAt(at(17, 48)).ambientLight, grey);
+    expect(sunsetR).toBeGreaterThan(sunsetG);
+    expect(sunsetG).toBeGreaterThan(sunsetB);
     const [dawnR, dawnG, dawnB] = lit(daylightAt(at(6)).ambientLight, grey);
     expect(dawnR).toBeGreaterThan(dawnG);
     expect(dawnR).toBeGreaterThan(dawnB);
+  });
+});
+
+describe("ambientLightMatrix", () => {
+  it("follows the bundle's recipe: saturate, multiply by multiplicar × (1 − alfa), add the overlay × alfa", () => {
+    const light: AmbientLight = {
+      saturation: 1,
+      multiply: [0.5, 0.6, 0.8],
+      overlay: [0.2, 0.4, 1],
+      overlayStrength: 0.25,
+    };
+    expect(lit(light, [1, 0.5, 0])).toEqual(
+      [1 * 0.5 * 0.75 + 0.05, 0.5 * 0.6 * 0.75 + 0.1, 0 + 0.25].map((c) => expect.closeTo(c, 10)),
+    );
+  });
+
+  it("saturates around the bundle's grey (Rec. 601 luma) before multiplying", () => {
+    const desaturated: AmbientLight = {
+      saturation: 0,
+      multiply: [1, 1, 1],
+      overlay: [0, 0, 0],
+      overlayStrength: 0,
+    };
+    const luma = 0.299 * 0.9 + 0.587 * 0.3 + 0.114 * 0.1;
+    expect(lit(desaturated, [0.9, 0.3, 0.1])).toEqual(
+      [luma, luma, luma].map((c) => expect.closeTo(c, 10)),
+    );
+    const half = { ...desaturated, saturation: 0.5, multiply: [2, 1, 1] as const };
+    expect(lit(half, [0.9, 0.3, 0.1])[0]).toBeCloseTo(2 * (luma + 0.5 * (0.9 - luma)), 10);
   });
 
   it("never touches transparency", () => {

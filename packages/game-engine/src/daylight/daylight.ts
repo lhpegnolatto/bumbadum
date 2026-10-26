@@ -20,82 +20,117 @@ export interface Daylight {
   ambientLight: AmbientLight;
   /** The Lamp glow level, from 0 (off by day) to 1 (fully on at night). */
   lampGlow: number;
+  /** The lit-windows level, from 0 (dark by day) to 1 (every window lit). */
+  litWindows: number;
 }
 
+/** A keyframe of the v7 bundle's lighting table, in the bundle's own units. */
 interface DayPeriod {
   /** The Day period's name, a label for this table only: never shown to Players. */
   name: string;
-  /** The Time of day it peaks at, in hours since midnight. */
+  /** The Time of day it peaks at, in hours since midnight (`hora`). */
   at: number;
-  lampGlow: number;
+  /** `saturacao`. */
   saturation: number;
+  /** `multiplicar`. */
   multiply: Rgb;
-  /** A 0xRRGGBB colour. */
-  overlay: number;
+  /** `sobreposicao.cor`, each channel in 0–255. */
+  overlay: readonly [number, number, number];
+  /** `sobreposicao.alfa`. */
   overlayStrength: number;
+  /** `luzes`. */
+  lampGlow: number;
+  /** `janelas_acesas`. */
+  litWindows: number;
 }
 
-const NEUTRAL = {
-  saturation: 1,
-  multiply: [1, 1, 1],
-  overlay: 0xffffff,
-  overlayStrength: 0,
-} as const;
-
-/** Night: a cool, desaturated blue that still keeps Avatars, Cars and the Ball clearly visible. */
 const NIGHT = {
-  saturation: 0.7,
-  multiply: [0.62, 0.68, 0.86],
-  overlay: 0x1c2550,
-  overlayStrength: 0.1,
+  saturation: 0.85,
+  multiply: [0.44, 0.48, 0.74],
+  overlay: [24, 26, 70],
+  overlayStrength: 0.22,
+  lampGlow: 1,
+  litWindows: 1,
 } as const;
 
 /**
- * The Day period table, in order through the day. Between neighbours every value moves linearly.
- * The times and Lamp glow levels are fixed; the colours are tuned by eye with `?time=HH:MM`.
+ * The Day period table, copied from `assets/mapa_praca_v7/iluminacao/iluminacao.json`, in order
+ * through the day. Between neighbours every value moves linearly.
  */
 const DAY_PERIODS: readonly DayPeriod[] = [
-  { name: "Night", at: 0, lampGlow: 1, ...NIGHT },
-  { name: "Late night", at: 4.5, lampGlow: 1, ...NIGHT },
+  { name: "Night", at: 0, ...NIGHT },
+  {
+    name: "Late night",
+    at: 4.5,
+    saturation: 0.85,
+    multiply: [0.5, 0.52, 0.76],
+    overlay: [40, 40, 96],
+    overlayStrength: 0.2,
+    lampGlow: 1,
+    litWindows: 1,
+  },
   {
     name: "Dawn",
     at: 6,
+    saturation: 0.95,
+    multiply: [0.88, 0.74, 0.8],
+    overlay: [250, 168, 150],
+    overlayStrength: 0.16,
     lampGlow: 0.45,
-    saturation: 0.85,
-    multiply: [0.94, 0.84, 0.86],
-    overlay: 0xffa08c,
-    overlayStrength: 0.12,
+    litWindows: 1,
   },
-  { name: "Morning", at: 8, lampGlow: 0, ...NEUTRAL },
-  { name: "Midday", at: 12.5, lampGlow: 0, ...NEUTRAL },
+  {
+    name: "Morning",
+    at: 8,
+    saturation: 1,
+    multiply: [1, 0.98, 0.95],
+    overlay: [255, 240, 214],
+    overlayStrength: 0.06,
+    lampGlow: 0,
+    litWindows: 0,
+  },
+  {
+    name: "Midday",
+    at: 12.5,
+    saturation: 1.05,
+    multiply: [1.04, 1.04, 1.02],
+    overlay: [255, 255, 255],
+    overlayStrength: 0,
+    lampGlow: 0,
+    litWindows: 0,
+  },
   {
     name: "Afternoon",
     at: 15.5,
+    saturation: 1,
+    multiply: [1, 0.95, 0.86],
+    overlay: [255, 214, 150],
+    overlayStrength: 0.08,
     lampGlow: 0,
-    saturation: 1.05,
-    multiply: [1, 0.98, 0.94],
-    overlay: 0xffd9a0,
-    overlayStrength: 0.05,
+    litWindows: 0,
   },
   {
+    // The bundle gives 17.8 h (17:48).
     name: "Sunset",
     at: 17.8,
-    lampGlow: 0.15,
-    saturation: 1.1,
-    multiply: [1, 0.86, 0.72],
-    overlay: 0xff9a3c,
-    overlayStrength: 0.16,
+    saturation: 1.08,
+    multiply: [0.98, 0.74, 0.6],
+    overlay: [250, 130, 80],
+    overlayStrength: 0.18,
+    lampGlow: 0.55,
+    litWindows: 1,
   },
   {
     name: "Dusk",
     at: 19,
-    lampGlow: 0.6,
-    saturation: 0.9,
-    multiply: [0.84, 0.72, 0.7],
-    overlay: 0xd9784a,
-    overlayStrength: 0.14,
+    saturation: 0.95,
+    multiply: [0.62, 0.58, 0.88],
+    overlay: [96, 72, 170],
+    overlayStrength: 0.2,
+    lampGlow: 0.85,
+    litWindows: 1,
   },
-  { name: "Night", at: 20.5, lampGlow: 1, ...NIGHT },
+  { name: "Night", at: 20.5, ...NIGHT },
 ];
 
 const HOURS_PER_DAY = 24;
@@ -104,8 +139,11 @@ const KEYFRAMES: readonly DayPeriod[] = [
   ...DAY_PERIODS,
   { ...(DAY_PERIODS[0] as DayPeriod), at: HOURS_PER_DAY },
 ];
-/** Relative luminance of red, green and blue (Rec. 709): what saturation keeps of each pixel. */
-const LUMA: Rgb = [0.2126, 0.7152, 0.0722];
+/**
+ * The grey that saturation moves away from: Rec. 601 luma, which the bundle's previews were
+ * rendered with (they match within 1/255 on every unlit pixel).
+ */
+const LUMA: Rgb = [0.299, 0.587, 0.114];
 
 /**
  * How the Map looks at `timeOfDay`, in hours since midnight with minutes as a fraction of the
@@ -120,21 +158,27 @@ export function daylightAt(timeOfDay: number): Daylight {
   const to = KEYFRAMES[next] as DayPeriod;
   const t = (time - from.at) / (to.at - from.at);
   const mix = (a: number, b: number) => a + (b - a) * t;
-  const mixRgb = (a: Rgb, b: Rgb): Rgb => [mix(a[0], b[0]), mix(a[1], b[1]), mix(a[2], b[2])];
+  const mixRgb = (a: Rgb, b: Rgb, scale = 1): Rgb => [
+    mix(a[0], b[0]) / scale,
+    mix(a[1], b[1]) / scale,
+    mix(a[2], b[2]) / scale,
+  ];
   return {
-    lampGlow: mix(from.lampGlow, to.lampGlow),
     ambientLight: {
       saturation: mix(from.saturation, to.saturation),
       multiply: mixRgb(from.multiply, to.multiply),
-      overlay: mixRgb(rgbOf(from.overlay), rgbOf(to.overlay)),
+      overlay: mixRgb(from.overlay, to.overlay, 255),
       overlayStrength: mix(from.overlayStrength, to.overlayStrength),
     },
+    lampGlow: mix(from.lampGlow, to.lampGlow),
+    litWindows: mix(from.litWindows, to.litWindows),
   };
 }
 
 /**
- * The `ColorMatrixFilter` matrix that casts `light`: each pixel is saturated, multiplied, then
- * mixed with the overlay colour. Alpha passes through untouched.
+ * The `ColorMatrixFilter` matrix that casts `light`, by the bundle's recipe: each pixel is
+ * saturated, multiplied by `multiply × (1 − overlayStrength)`, then the overlay colour ×
+ * `overlayStrength` is added (PixiJS takes the offset column in [0, 1]). Alpha passes through.
  */
 export function ambientLightMatrix({
   saturation,
@@ -150,15 +194,4 @@ export function ambientLightMatrix({
     return [weight(0), weight(1), weight(2), 0, overlayStrength * overlay[channel]] as const;
   };
   return [...row(0), ...row(1), ...row(2), 0, 0, 0, 1, 0];
-}
-
-/** Whether `light` leaves every colour as drawn, so the Ambient light can be skipped. */
-export function isNeutralAmbientLight(light: AmbientLight): boolean {
-  return (
-    light.saturation === 1 && light.overlayStrength === 0 && light.multiply.every((c) => c === 1)
-  );
-}
-
-function rgbOf(hex: number): Rgb {
-  return [((hex >> 16) & 0xff) / 255, ((hex >> 8) & 0xff) / 255, (hex & 0xff) / 255];
 }

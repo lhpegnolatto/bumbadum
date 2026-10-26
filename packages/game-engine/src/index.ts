@@ -6,7 +6,6 @@ export {
   ambientLightMatrix,
   type Daylight,
   daylightAt,
-  isNeutralAmbientLight,
   type Rgb,
 } from "./daylight/daylight.ts";
 export { carDepth, objectDepth, playerDepth } from "./depth.ts";
@@ -34,7 +33,7 @@ export {
   driveCar,
 } from "./movement/car-driving.ts";
 export { type CarControlIntent, CarInput } from "./movement/car-input.ts";
-export { ambientFrame, ambientPhase } from "./sprites/ambient-animation.ts";
+export { ambientFrame, ambientStartFrame } from "./sprites/ambient-animation.ts";
 export {
   type CarFxTextures,
   CarRenderer,
