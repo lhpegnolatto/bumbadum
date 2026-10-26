@@ -8,10 +8,12 @@ export const COACH_QUEUE_WAIT_SECONDS = 15;
 
 export const FRIENDLY_COACH_DIFFICULTY = {
   reachTiles: 1,
+  moveTilesPerSecond: 14,
 } as const;
 
 export interface CoachDifficulty {
   readonly reachTiles: number;
+  readonly moveTilesPerSecond: number;
 }
 
 export function createCoachParticipant(): TennisParticipant {

@@ -60,6 +60,36 @@ describe("TennisActivity lifecycle", () => {
     expect(room.state.participants.get("coach")).toMatchObject({ kind: "coach" });
   });
 
+  it("moves the Coach toward an incoming ball instead of teleporting", () => {
+    room = new FakeTennisRoom(["alice"]);
+    activity = new TennisActivity(room, { now: () => now, random: { next: () => 0 } });
+
+    activity.join("alice", now);
+    activity.update(0, now + 3_000);
+
+    for (let attempt = 0; attempt < 4; attempt += 1) {
+      const ball = room.state.ball;
+      if (!ball) throw new Error("expected an active Rally");
+      const coach = room.state.participants.get("coach");
+      if (!coach) throw new Error("expected the Coach participant");
+      const coachSide = coach.side;
+      if (coachSide === ball.receivingSide && Math.abs(ball.targetX - coach.x) > 4) {
+        const distanceBefore = Math.abs(ball.targetX - coach.x);
+        activity.update(16, ball.contactAt - 16);
+        const distanceAfter = Math.abs(ball.targetX - coach.x);
+        expect(distanceAfter).toBeLessThan(distanceBefore);
+        expect(coach.x).not.toBe(ball.targetX);
+        return;
+      }
+      activity.update(0, ball.contactAt);
+      if (room.state.matchStatus === "countdown") {
+        activity.update(0, ball.contactAt + 2_000);
+      }
+    }
+
+    throw new Error("expected a Rally received by the Coach");
+  });
+
   it("prioritizes a human match when another queued Player joins first", () => {
     room = new FakeTennisRoom(["alice", "bob"]);
     activity = new TennisActivity(room, { now: () => now, random: { next: () => 0 } });

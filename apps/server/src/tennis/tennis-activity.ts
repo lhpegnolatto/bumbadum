@@ -19,7 +19,6 @@ import {
   joinTennisLine,
   leaveTennisLine,
   type RandomSource,
-  shouldCoachRebound,
   shouldPairSoloHumanWithCoach,
   startNextTennisMatch,
   type TennisMatch,
@@ -244,6 +243,12 @@ export class TennisActivity {
       const participant = this.#state.participants.get(sessionId);
       if (!participant) continue;
       if (sessionId === TENNIS_COACH_ID) {
+        const rally = this.#match.rally;
+        if (rally?.receivingSide !== side) continue;
+        const step =
+          this.#coachDifficulty.moveTilesPerSecond * this.#rules.court.tileSize * elapsedSeconds;
+        participant.x = moveToward(participant.x, rally.targetX, step);
+        participant.x = clamp(participant.x, spawnFor(side).xMin, spawnFor(side).xMax);
         continue;
       }
       const direction = this.#steering.get(sessionId);
@@ -261,14 +266,6 @@ export class TennisActivity {
     const receivingPlayerId = this.#match.playerBySide[receivingSide];
     const participant = this.#state.participants.get(receivingPlayerId);
     if (!participant) return;
-
-    if (receivingPlayerId === TENNIS_COACH_ID) {
-      participant.x = this.#coachX(
-        this.#match.rally?.targetX ?? participant.x,
-        participant.x,
-        receivingSide,
-      );
-    }
 
     const result = attemptRebound(
       this.#match,
@@ -460,24 +457,6 @@ export class TennisActivity {
       player.carId = "";
     });
   }
-
-  #coachX(targetX: number, currentX: number, side: TennisSide): number {
-    const bounds = spawnFor(side);
-    const canReach = shouldCoachRebound(targetX, currentX, this.#rules, this.#coachDifficulty);
-    if (canReach && this.#random.next() >= 0.15) return targetX;
-
-    if (canReach) {
-      const awayFromTarget = targetX <= (bounds.xMin + bounds.xMax) / 2 ? 1 : -1;
-      return clamp(
-        targetX + awayFromTarget * this.#rules.court.tileSize * 2,
-        bounds.xMin,
-        bounds.xMax,
-      );
-    }
-
-    const towardTarget = Math.sign(targetX - currentX) || 1;
-    return clamp(currentX + towardTarget * this.#rules.court.tileSize, bounds.xMin, bounds.xMax);
-  }
 }
 
 function findCourtPoint(name: string) {
@@ -494,4 +473,9 @@ function spawnFor(side: TennisSide) {
 
 function clamp(value: number, min: number, max: number): number {
   return Math.min(Math.max(value, min), max);
+}
+
+function moveToward(current: number, target: number, distance: number): number {
+  if (Math.abs(target - current) <= distance) return target;
+  return current + Math.sign(target - current) * distance;
 }

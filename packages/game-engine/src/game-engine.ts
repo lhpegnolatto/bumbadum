@@ -15,6 +15,7 @@ import {
   danceOf,
   type PlayerState,
   type RoomState,
+  TENNIS_COACH_ID,
   type TennisSteerDirection,
 } from "@bumbadum/protocol";
 import { type Direction, isDirection, lobbyMap, STEPS_PER_SECOND } from "@bumbadum/world";
@@ -587,10 +588,10 @@ export async function mountGameEngine(
             : DEFAULT_AVATAR,
       );
       view.avatar.draw(participant.side === "top" ? "down" : "up", "idle", 0);
-      view.avatar.view.position.set(participant.x, participant.y + TILE_SIZE);
+      view.avatar.view.position.set(participant.x, participant.y);
       view.avatar.view.zIndex = 100_000 + participant.y;
       view.racket.tint = TENNIS_SIDE_COLORS[participant.side];
-      view.racket.position.set(participant.x, participant.y + TILE_SIZE);
+      view.racket.position.set(participant.x, participant.y);
       view.racket.zIndex = view.avatar.view.zIndex + (participant.side === "top" ? 1 : -1);
       const racketFrame = snapshot.rackets.find(
         (racket) => racket.sessionId === participant.sessionId,
@@ -762,6 +763,11 @@ export async function mountGameEngine(
     }
     const npcFrame = reducedMotion.matches ? 0 : Math.floor(animationNow / IDLE_FRAME_MS) % 4;
     for (const { npc, sprite, label } of ambientNpcViews) {
+      const isCoachInMatch =
+        npc.id === TENNIS_COACH_NPC.id && (tennisState?.participants.has(TENNIS_COACH_ID) ?? false);
+      sprite.view.visible = !isCoachInMatch;
+      label.visible = !isCoachInMatch;
+      if (isCoachInMatch) continue;
       const position = tileCentre(npc.position);
       const dance = npc.dance
         ? danceFrame(npc.dance, animationNow, reducedMotion.matches)
