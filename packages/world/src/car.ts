@@ -2,6 +2,7 @@ import { type Direction, OFFSETS } from "./step.ts";
 
 export const CAR_COUNT = 12;
 export const CAR_ABANDONMENT_MS = 120_000;
+export const CAR_INTERACTION_RADIUS = 56;
 
 export interface CarParkingSpot {
   x: number;
@@ -110,7 +111,7 @@ export function advanceCar(
 export function enterNearestCar(
   cars: readonly CarMotion[],
   playerPosition: { x: number; y: number },
-  maxDistance = 32,
+  maxDistance = CAR_INTERACTION_RADIUS,
 ): CarMotion | undefined {
   return cars
     .filter((car) => !car.driverId && !car.respawnAt)
@@ -181,7 +182,9 @@ export function createCarFleet(parkingSpots: readonly CarParkingSpot[]): CarMoti
     "black",
   ];
   return Array.from({ length: CAR_COUNT }, (_, index) => {
-    const spot = parkingSpots[index % parkingSpots.length] ?? { x: 0, y: 0 };
+    // Leave one empty space between active cars so a parked car can pull out without spawning
+    // inside its neighbour's collision radius. The remaining spaces are still used by respawns.
+    const spot = parkingSpots[(index * 2) % parkingSpots.length] ?? { x: 0, y: 0 };
     return createCar({
       id: `car-${index + 1}`,
       model: index % 2 === 0 ? "kart" : "convertible",

@@ -123,6 +123,7 @@ describe("lobby-room", () => {
       const first = room.state.cars.get("car-1");
       const player = colyseus.getRoomById<RoomState>(room.roomId).state.players.get(room.sessionId);
       if (!first || !player) throw new Error("expected the first car and player");
+      const initialY = first.y;
       player.x = Math.floor(first.x / 16);
       player.y = Math.floor(first.y / 16);
 
@@ -131,6 +132,9 @@ describe("lobby-room", () => {
 
       room.send(CAR_DRIVE_MESSAGE, "right");
       await expect.poll(() => room.state.cars.get("car-1")?.input).toBe("right");
+
+      room.send(CAR_DRIVE_MESSAGE, "down");
+      await expect.poll(() => room.state.cars.get("car-1")?.y).toBeGreaterThan(initialY);
     });
 
     it("keeps a dismounted car in place with a server expiry lease", async () => {

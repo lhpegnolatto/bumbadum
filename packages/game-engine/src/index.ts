@@ -1,4 +1,5 @@
 export type { Direction } from "@bumbadum/world";
+export { CAR_INTERACTION_RADIUS } from "@bumbadum/world";
 export { type Camera, cameraOn } from "./camera.ts";
 export { carDepth, objectDepth, playerDepth } from "./depth.ts";
 export {

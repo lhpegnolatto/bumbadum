@@ -1,6 +1,12 @@
 "use client";
 
-import type { Direction, DrawnConfettiThrow, DrawnPlayer, GameEngine } from "@bumbadum/game-engine";
+import {
+  CAR_INTERACTION_RADIUS,
+  type Direction,
+  type DrawnConfettiThrow,
+  type DrawnPlayer,
+  type GameEngine,
+} from "@bumbadum/game-engine";
 import {
   CAR_DRIVE_MESSAGE,
   CAR_ENTER_MESSAGE,
@@ -167,7 +173,7 @@ export function GameCanvas({
         const playerX = ((me?.x ?? 0) + 0.5) * 16;
         const playerY = ((me?.y ?? 0) + 0.5) * 16;
         let nearbyCarId: string | null = null;
-        let nearestDistance = 32;
+        let nearestDistance = CAR_INTERACTION_RADIUS;
         state.cars.forEach((car, id) => {
           if (car.driverId || car.respawnAt || carId) return;
           const distance = Math.hypot(car.x - playerX, car.y - playerY);

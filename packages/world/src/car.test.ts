@@ -3,9 +3,12 @@ import {
   advanceCar,
   type CarMotion,
   createCar,
+  createCarFleet,
   DEFAULT_CAR_CONFIG,
   dismountCar,
   enterNearestCar,
+  lobbyCarCollisionWorld,
+  lobbyParkingSpots,
   respawnExpiredCars,
 } from "./index.ts";
 
@@ -98,5 +101,32 @@ describe("car driving", () => {
 
     expect(respawned[0]).toMatchObject({ x: 48, y: 32, respawnAt: undefined });
     expect(respawned[1]).toMatchObject({ x: 32, y: 32 });
+  });
+
+  it("can leave the first parking space when a player is driving", () => {
+    const spot = lobbyParkingSpots[0];
+    if (!spot) throw new Error("expected a parking spot");
+    const moving = advanceCar(
+      car({ x: spot.x, y: spot.y, driverId: "player-1", input: "right" }),
+      250,
+      lobbyCarCollisionWorld,
+      [],
+    );
+
+    expect(moving.x).toBeGreaterThan(spot.x);
+  });
+
+  it("spawns active cars with a free parking space between neighbours", () => {
+    const fleet = createCarFleet([
+      { x: 0, y: 0 },
+      { x: 32, y: 0 },
+      { x: 64, y: 0 },
+      { x: 96, y: 0 },
+    ]);
+
+    expect(fleet.slice(0, 2).map(({ x, y }) => ({ x, y }))).toEqual([
+      { x: 0, y: 0 },
+      { x: 64, y: 0 },
+    ]);
   });
 });

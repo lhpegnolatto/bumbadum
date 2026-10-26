@@ -2,6 +2,7 @@ export {
   advanceCar,
   CAR_ABANDONMENT_MS,
   CAR_COUNT,
+  CAR_INTERACTION_RADIUS,
   type CarCollisionWorld,
   type CarColor,
   type CarConfig,

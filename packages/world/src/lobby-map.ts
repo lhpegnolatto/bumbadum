@@ -15,11 +15,18 @@ export const lobbyCarCollisionWorld = {
   isBlocked(x: number, y: number): boolean {
     const tileX = Math.floor(x / 16);
     const tileY = Math.floor(y / 16);
-    return !isWalkable(lobbyMap, { x: tileX, y: tileY }) || this.isBlockedByObject(x, y);
+    const onParkingSpot = lobbyParkingSpots.some(
+      (spot) => Math.hypot(spot.x - x, spot.y - y) <= 20,
+    );
+    return (
+      (!isWalkable(lobbyMap, { x: tileX, y: tileY }) && !onParkingSpot) ||
+      this.isBlockedByObject(x, y)
+    );
   },
   isBlockedByObject(x: number, y: number): boolean {
     return PLAZA_V2_COLLISION_OBJECTS.some(
       (object) =>
+        !object.name.startsWith("car-") &&
         x >= object.x &&
         x <= object.x + object.width &&
         y >= object.y &&

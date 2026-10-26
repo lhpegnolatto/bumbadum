@@ -306,7 +306,7 @@ function JoinedRoom({
           )}
         </div>
         {(carContext.carId || carContext.nearbyCarId) && (
-          <div className="absolute bottom-[var(--room-overlay-edge)] left-1/2 z-20 -translate-x-1/2 compact:bottom-[calc(var(--room-safe-bottom)_+_5rem)]">
+          <div className="absolute bottom-[var(--room-overlay-edge)] left-1/2 z-30 -translate-x-1/2 compact:bottom-[calc(var(--room-safe-bottom)_+_8rem)]">
             <Button
               variant="secondary"
               size="sm"

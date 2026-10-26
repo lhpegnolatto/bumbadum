@@ -206,6 +206,9 @@ export async function mountGameEngine(
   // Players and objects lower on the map are drawn in front of the ones above them.
   const depthSorted = new Container({ sortableChildren: true });
   for (const object of PLAZA_V2_OBJECTS) {
+    // Dynamic cars occupy these same parking anchors; keeping the decorative Tiled cars would
+    // render a second car underneath every spawned vehicle.
+    if (object.name.startsWith("car-")) continue;
     const { x, y, width, height } = object.frame;
     const texture = new Texture({
       source: objectsAtlas.source,
