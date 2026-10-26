@@ -50,6 +50,27 @@ describe("lobbyMap", () => {
     expect(isWalkable(lobbyMap, { x: 100, y: 22 })).toBe(true);
   });
 
+  it("keeps the former center chair area walkable", () => {
+    const formerChairTiles = [
+      { x: 23, y: 14 },
+      { x: 28, y: 14 },
+      { x: 31, y: 14 },
+      { x: 34, y: 14 },
+      { x: 23, y: 16 },
+      { x: 28, y: 16 },
+      { x: 31, y: 16 },
+      { x: 34, y: 16 },
+      { x: 23, y: 18 },
+      { x: 28, y: 18 },
+      { x: 31, y: 18 },
+      { x: 34, y: 18 },
+    ];
+
+    for (const tile of formerChairTiles) {
+      expect(isWalkable(lobbyMap, tile)).toBe(true);
+    }
+  });
+
   it("keeps the marked autodrome surface free for cars", () => {
     expect(lobbyCarCollisionWorld.isBlocked(80 * 16 + 8, 10 * 16 + 8)).toBe(false);
   });

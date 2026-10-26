@@ -128,6 +128,24 @@ for (const layer of originalTiled.layers) {
 // Keep the canonical Tiled collision layer connected so reachability validation is meaningful.
 const canonicalCollision = originalTiled.layers.find(({ name }) => name === "collision");
 canonicalCollision.data[14 * originalTiled.width + 43] = 674;
+// The center chairs were removed from the object layers; clear their baked tile collision too.
+const removedChairCollisionTiles = [
+  [23, 14],
+  [28, 14],
+  [31, 14],
+  [34, 14],
+  [23, 16],
+  [28, 16],
+  [31, 16],
+  [34, 16],
+  [23, 18],
+  [28, 18],
+  [31, 18],
+  [34, 18],
+];
+for (const [x, y] of removedChairCollisionTiles) {
+  canonicalCollision.data[y * originalTiled.width + x] = 0;
+}
 originalTiled.layers.push({
   id: 9,
   name: "spawn",
