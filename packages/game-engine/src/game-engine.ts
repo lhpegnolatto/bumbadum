@@ -325,6 +325,13 @@ export async function mountGameEngine(
         if (!sameAvatar(avatar.sprite.avatar, player.avatar)) {
           avatar.sprite.wear(avatarOf(player.avatar));
         }
+        if (avatar.nickname !== player.nickname) {
+          // The ticker positions the new label on the next frame, as it does every frame.
+          avatar.label.destroy({ children: true });
+          avatar.label = drawNickname(player.nickname);
+          labels.addChild(avatar.label);
+          avatar.nickname = player.nickname;
+        }
         avatar.dance = danceOf(player);
         if (id === sessionId) {
           if (!predictor) {

@@ -17,6 +17,7 @@ import {
   type ConfettiThrown,
   DANCE_MESSAGE,
   LOBBY_SLUG,
+  NICKNAME_MESSAGE,
   NOTICE,
   type Notice,
   ROOM_TYPE,
@@ -416,6 +417,92 @@ describe("lobby-room avatars", () => {
 
     expect(avatarOf(ana, ana)).toEqual(changed);
     expect(avatarOf(bia, bia)).toEqual(changed);
+  });
+});
+
+describe("lobby-room nicknames", () => {
+  function renames(announcements: Announcement[]) {
+    return announcements.filter(({ code }) => code === "player-renamed");
+  }
+
+  it("renames a player for everyone to see, trimmed, and announces it", async () => {
+    const ana = await joinLobby("Ana");
+    const bia = await joinLobby("Bia");
+    const toBia = received<Announcement>(bia, ANNOUNCEMENT);
+    ana.send(NICKNAME_MESSAGE, "  Lu ");
+
+    await expect.poll(() => nicknames(bia)).toEqual(["Bia", "Lu"]);
+    await expect.poll(() => nicknames(ana)).toEqual(["Bia", "Lu"]);
+    await expect
+      .poll(() => renames(toBia))
+      .toEqual([{ code: "player-renamed", params: { from: "Ana", to: "Lu" } }]);
+  });
+
+  it("ignores an invalid or unchanged nickname, without using up the rename", async () => {
+    const ana = await joinLobby("Ana");
+    const bia = await joinLobby("Bia");
+    const toBia = received<Announcement>(bia, ANNOUNCEMENT);
+    for (const invalid of [
+      "",
+      "   ",
+      "a\nb",
+      "abcdefghijklmnopq",
+      42,
+      { nickname: "Lu" },
+      " Ana ",
+    ]) {
+      ana.send(NICKNAME_MESSAGE, invalid);
+    }
+    ana.send(NICKNAME_MESSAGE, "Lu");
+
+    await expect.poll(() => nicknames(bia)).toEqual(["Bia", "Lu"]);
+    await handled(ana, bia);
+    expect(renames(toBia)).toEqual([{ code: "player-renamed", params: { from: "Ana", to: "Lu" } }]);
+  });
+
+  it("accepts at most one rename every 10 seconds per player", async () => {
+    const ana = await joinLobby("Ana");
+    const bia = await joinLobby("Bia");
+    const toBia = received<Announcement>(bia, ANNOUNCEMENT);
+    ana.send(NICKNAME_MESSAGE, "Lu");
+    ana.send(NICKNAME_MESSAGE, "Lulu");
+    bia.send(NICKNAME_MESSAGE, "Bea");
+    await handled(ana, bia);
+    await handled(bia, ana);
+
+    expect(nicknames(ana)).toEqual(["Bea", "Lu"]);
+    // Two players' messages may reach the room in either order.
+    expect(renames(toBia).map(({ params }) => params)).toEqual(
+      expect.arrayContaining([
+        { from: "Ana", to: "Lu" },
+        { from: "Bia", to: "Bea" },
+      ]),
+    );
+    expect(renames(toBia)).toHaveLength(2);
+  });
+
+  it("names a renamed player by the new nickname, keeping earlier messages as they were sent", async () => {
+    const ana = await joinLobby("Ana");
+    const bia = await joinLobby("Bia");
+    const toBia = received<ChatMessage>(bia, CHAT_MESSAGE);
+    const announcementsToBia = received<Announcement>(bia, ANNOUNCEMENT);
+    say(ana, "before");
+    ana.send(NICKNAME_MESSAGE, "Lu");
+    say(ana, "after");
+    await expect.poll(() => toBia).toHaveLength(2);
+
+    const cia = await joinLobby("Cia");
+    const history = received<ChatHistory>(cia, CHAT_HISTORY);
+    await ana.leave();
+
+    expect(toBia.map(({ nickname, text }) => ({ nickname, text }))).toEqual([
+      { nickname: "Ana", text: "before" },
+      { nickname: "Lu", text: "after" },
+    ]);
+    await expect.poll(() => history[0]?.map(({ nickname }) => nickname)).toEqual(["Ana", "Lu"]);
+    await expect
+      .poll(() => announcementsToBia.at(-1))
+      .toEqual({ code: "player-left", params: { nickname: "Lu" } });
   });
 });
 

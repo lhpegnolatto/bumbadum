@@ -50,6 +50,11 @@ export class ChatChannel {
     this.#announce({ code: "player-left", params: { nickname } });
   }
 
+  /** Tells everyone a player now goes by another Nickname. Earlier messages keep the old one. */
+  renamed(from: string, to: string) {
+    this.#announce({ code: "player-renamed", params: { from, to } });
+  }
+
   /** Handles what a player typed, already schema-validated. */
   receive(client: Client, nickname: string, text: string, nowMs: number) {
     if (!this.#rateLimits.get(client.sessionId)?.take(nowMs)) {
