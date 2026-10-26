@@ -10,6 +10,7 @@ import {
   leaveTennisLine,
   type Rally,
   type RandomSource,
+  shouldCoachMiss,
   shouldCoachRebound,
   shouldPairSoloHumanWithCoach,
   startNextTennisMatch,
@@ -158,9 +159,15 @@ describe("Tennis Coach", () => {
   it("allows a configured difficulty to widen the Coach reach", () => {
     expect(
       shouldCoachRebound(160 + DEFAULT_TENNIS_RULES.court.tileSize * 2, 160, DEFAULT_TENNIS_RULES, {
+        ...FRIENDLY_COACH_DIFFICULTY,
         reachTiles: 2,
       }),
     ).toBe(true);
+  });
+
+  it("uses the configured middle-ground miss chance", () => {
+    expect(shouldCoachMiss({ next: () => 0.19 })).toBe(true);
+    expect(shouldCoachMiss({ next: () => 0.2 })).toBe(false);
   });
 });
 

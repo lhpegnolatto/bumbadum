@@ -597,7 +597,7 @@
       "id": 43,
       "image": "objects/scoreboard.png",
       "imagewidth": 56,
-      "imageheight": 34,
+      "imageheight": 50,
       "type": "scoreboard"
     },
     {

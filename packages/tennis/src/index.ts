@@ -8,12 +8,14 @@ export const COACH_QUEUE_WAIT_SECONDS = 15;
 
 export const FRIENDLY_COACH_DIFFICULTY = {
   reachTiles: 1,
-  moveTilesPerSecond: 14,
+  moveTilesPerSecond: 10,
+  missChance: 0.2,
 } as const;
 
 export interface CoachDifficulty {
   readonly reachTiles: number;
   readonly moveTilesPerSecond: number;
+  readonly missChance: number;
 }
 
 export function createCoachParticipant(): TennisParticipant {
@@ -42,6 +44,13 @@ export type TennisSide = "top" | "bottom";
 
 export interface RandomSource {
   next(): number;
+}
+
+export function shouldCoachMiss(
+  random: RandomSource,
+  difficulty: CoachDifficulty = FRIENDLY_COACH_DIFFICULTY,
+): boolean {
+  return random.next() < difficulty.missChance;
 }
 
 export interface TennisCourtRules {

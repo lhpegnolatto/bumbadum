@@ -19,6 +19,7 @@ import {
   joinTennisLine,
   leaveTennisLine,
   type RandomSource,
+  shouldCoachMiss,
   shouldPairSoloHumanWithCoach,
   startNextTennisMatch,
   type TennisMatch,
@@ -267,13 +268,12 @@ export class TennisActivity {
     const participant = this.#state.participants.get(receivingPlayerId);
     if (!participant) return;
 
-    const result = attemptRebound(
-      this.#match,
-      receivingSide,
-      participant.x,
-      this.#random,
-      this.#rules,
-    );
+    const coachMisses =
+      receivingPlayerId === TENNIS_COACH_ID && shouldCoachMiss(this.#random, this.#coachDifficulty);
+    const attemptX = coachMisses
+      ? participant.x + this.#rules.court.tileSize * (this.#rules.court.contactToleranceTiles + 1)
+      : participant.x;
+    const result = attemptRebound(this.#match, receivingSide, attemptX, this.#random, this.#rules);
     this.#match = result.match;
     this.#syncScore();
 

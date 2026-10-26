@@ -78,7 +78,7 @@ export const PLAZA_V2_OBJECTS: readonly {
   {"name":"tennis-fence-v","frame":{"x":17,"y":0,"width":6,"height":16},"x":302,"y":144,"base":160},
   {"name":"tree-tall","frame":{"x":105,"y":0,"width":30,"height":52},"x":455,"y":108,"base":160,"animation":[{"frame":{"x":324,"y":712,"width":30,"height":52},"duration":180},{"frame":{"x":355,"y":712,"width":30,"height":52},"duration":180},{"frame":{"x":386,"y":712,"width":30,"height":52},"duration":180},{"frame":{"x":417,"y":712,"width":30,"height":52},"duration":180}]},
   {"name":"tires","frame":{"x":271,"y":290,"width":16,"height":20},"x":2352,"y":146,"base":166},
-  {"name":"scoreboard","frame":{"x":214,"y":290,"width":56,"height":34},"x":40,"y":134,"base":168},
+  {"name":"scoreboard","frame":{"x":214,"y":290,"width":56,"height":50},"x":40,"y":118,"base":168},
   {"name":"tires","frame":{"x":271,"y":290,"width":16,"height":20},"x":1932,"y":156,"base":176},
   {"name":"tennis-fence-v","frame":{"x":17,"y":0,"width":6,"height":16},"x":28,"y":160,"base":176},
   {"name":"tennis-fence-v","frame":{"x":17,"y":0,"width":6,"height":16},"x":302,"y":160,"base":176},
