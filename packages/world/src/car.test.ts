@@ -129,6 +129,18 @@ describe("car driving", () => {
     expect(moving.x).toBeGreaterThan(spot.x);
   });
 
+  it("keeps driving down instead of stopping after leaving the parking space", () => {
+    const spot = lobbyParkingSpots[0];
+    if (!spot) throw new Error("expected a parking spot");
+    let moving = car({ x: spot.x, y: spot.y, driverId: "player-1", input: "down" });
+    for (let i = 0; i < 100; i += 1) {
+      moving = advanceCar(moving, 10, lobbyCarCollisionWorld, []);
+    }
+
+    expect(moving.y).toBeGreaterThan(spot.y + 100);
+    expect(moving.velocityY).toBeGreaterThan(0);
+  });
+
   it("spawns active cars with a free parking space between neighbours", () => {
     const fleet = createCarFleet([
       { x: 0, y: 0 },

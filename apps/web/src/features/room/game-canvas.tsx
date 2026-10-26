@@ -23,6 +23,7 @@ import type { Room } from "@colyseus/sdk";
 import { type Ref, useEffect, useImperativeHandle, useRef } from "react";
 import { useTranslations } from "use-intl";
 import { exposeToE2E } from "@/lib/e2e.ts";
+import { activeCarDirection } from "./car-keyboard.ts";
 
 declare global {
   interface BumbadumE2E {
@@ -88,6 +89,7 @@ export function GameCanvas({
   const walkingRef = useRef(walking);
   const topInsetRef = useRef(topInset);
   const carContextRef = useRef<CarContext>({ carId: "", nearbyCarId: null });
+  const pressedCarKeysRef = useRef(new Map<string, Direction>());
   const onCarContextChangeRef = useRef(onCarContextChange);
   onCarContextChangeRef.current = onCarContextChange;
 
@@ -130,19 +132,26 @@ export function GameCanvas({
       const direction = directionByKey[event.key.toLowerCase()];
       if (!direction || !carContextRef.current.carId) return;
       event.preventDefault();
+      const key = event.key.toLowerCase();
+      pressedCarKeysRef.current.delete(key);
+      pressedCarKeysRef.current.set(key, direction);
       room.send(CAR_DRIVE_MESSAGE, direction);
     }
     function stopDrivingOnKey(event: KeyboardEvent) {
       if (event.defaultPrevented || isTextField(event.target)) return;
-      if (!directionByKey[event.key.toLowerCase()] || !carContextRef.current.carId) return;
+      const key = event.key.toLowerCase();
+      if (!directionByKey[key]) return;
+      pressedCarKeysRef.current.delete(key);
+      if (!carContextRef.current.carId) return;
       event.preventDefault();
-      room.send(CAR_DRIVE_MESSAGE, null);
+      room.send(CAR_DRIVE_MESSAGE, activeCarDirection(pressedCarKeysRef.current));
     }
     document.addEventListener("keydown", driveOnKey);
     document.addEventListener("keyup", stopDrivingOnKey);
     return () => {
       document.removeEventListener("keydown", driveOnKey);
       document.removeEventListener("keyup", stopDrivingOnKey);
+      pressedCarKeysRef.current.clear();
     };
   }, [room.send]);
 
@@ -170,6 +179,7 @@ export function GameCanvas({
         engine.applyState(state);
         const me = state.players.get(room.sessionId);
         const carId = me?.carId ?? "";
+        if (!carId) pressedCarKeysRef.current.clear();
         const playerX = ((me?.x ?? 0) + 0.5) * 16;
         const playerY = ((me?.y ?? 0) + 0.5) * 16;
         let nearbyCarId: string | null = null;
