@@ -41,7 +41,6 @@ export class CarRenderer {
   private readonly smokeSheet?: Texture;
   private readonly dustSheet?: Texture;
   private readonly speedLineSheet?: Texture;
-  private readonly avatar?: Container;
 
   constructor({ textures, avatar }: CarRendererOptions) {
     this.backgroundSheet = textures.background;
@@ -52,7 +51,6 @@ export class CarRenderer {
       sprite.anchor.set(0.5, 44 / CELL_SIZE);
     }
     this.background.zIndex = 0;
-    this.avatar = avatar;
     if (avatar) {
       avatar.zIndex = 1;
       this.view.addChild(this.background, avatar, this.front);
@@ -91,7 +89,8 @@ export class CarRenderer {
     this.front.texture = sheetFrame(this.frontSheet, selected.row, selected.column, CELL_SIZE);
     this.background.scale.x = selected.mirrored ? -1 : 1;
     this.front.scale.x = selected.mirrored ? -1 : 1;
-    if (this.avatar) this.avatar.scale.x = selected.mirrored ? -1 : 1;
+    // AvatarSprite already mirrors its own layers for the left-facing direction. Applying the
+    // car's horizontal flip to the avatar as well would cancel that mirror.
 
     if (this.smoke) {
       this.smoke.visible = !reducedMotion && pose.speed > 0.2;

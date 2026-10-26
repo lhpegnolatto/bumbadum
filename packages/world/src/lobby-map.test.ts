@@ -16,7 +16,7 @@ describe("lobbyMap", () => {
   });
 
   it("spawns players on a walkable tile in the plaza", () => {
-    expect(lobbyMap.spawnPoint).toEqual({ x: 55, y: 22 });
+    expect(lobbyMap.spawnPoint).toEqual({ x: 30, y: 22 });
     expect(isWalkable(lobbyMap, lobbyMap.spawnPoint)).toBe(true);
   });
 
