@@ -47,7 +47,7 @@ It is deliberately small, social, and a little bit magical — but the engineeri
   <tr>
     <td width="50%" valign="top">
       <h3>🗺️ A room you can inhabit</h3>
-      <p>Walk through a handcrafted pixel-art plaza with collision, depth sorting, camera following, speech bubbles, and animated avatars.</p>
+      <p>Walk through a handcrafted pixel-art plaza with collision, depth sorting, camera following, speech bubbles, animated avatars, a tennis court, and a race track.</p>
     </td>
     <td width="50%" valign="top">
       <h3>📻 One radio, one timeline</h3>
@@ -60,13 +60,41 @@ It is deliberately small, social, and a little bit magical — but the engineeri
       <p><code>/play</code>, <code>/skip</code>, and <code>/help</code> keep the room conversational. Portuguese command aliases work for everyone too.</p>
     </td>
     <td width="50%" valign="top">
-      <h3>🧢 A personal little character</h3>
-      <p>Compose avatars from generated, palette-aware layers. Nickname, avatar, theme, language, and volume stay local — no account required.</p>
+      <h3>🎤 A plaza with company</h3>
+      <p>Meet a curated cast of musical tributes around the landmarks. Walk close to an NPC to hear a private interaction, or challenge the permanent Tennis Coach.</p>
     </td>
   </tr>
 </table>
 
 <div align="center"><sub>Six dancers. One radio. One shared beat.</sub></div>
+
+## A plaza that changes with time
+
+The plaza is a tile world with streets connecting the tennis hall and autodrome, an expanded grandstand, and animated environmental details. The map does not have just one day and one night version: its appearance follows the local clock continuously, changing through dawn, morning, midday, afternoon, sunset, dusk, and night.
+
+<div align="center">
+
+<img src=".github/timelapse_24h.gif" alt="The bumbadum plaza changing from night to day and back over 24 hours" width="800" />
+
+<sub>Over 24 hours, the same shared map transitions from night to daylight and back again.</sub>
+
+</div>
+
+Ambient light gradually changes the scene's colour and brightness instead of swapping the map. As evening arrives, lamps and windows fade in one by one; during the day, they fade out again. Their glow stays above the ambient filter so warm lights remain visible against the darkened plaza. The Tiled project remains the canonical source for walkability, object placement, NPC positions, and each light source.
+
+<div align="center">
+
+<img src=".github/map_preview.png" alt="Complete top-down preview of the bumbadum Plaza v7 map" width="100%" />
+
+<sub>The complete Plaza v7: streets, landmarks, tennis hall, autodrome, grandstand, and dance floor.</sub>
+
+</div>
+
+## People to meet
+
+Ten static ambient NPCs bring the plaza to life: David Bowie, Aretha Franklin, Bob Marley, Freddie Mercury, Whitney Houston, Prince, Raul Seixas, Michael Jackson, Rita Lee, and Luiz Gonzaga. They have fixed positions, collision, idle animations, visible names, and short localised interactions; they do not consume lobby slots or add dynamic state to the room protocol.
+
+The Tennis Coach is a special NPC in the tennis hall. A solo player is paired with the server-authoritative Coach immediately when appropriate, or after waiting alone in the tennis line. Coach matches use the same ball, rally, point, score, and match-ending rules as human matches, and remain visible to everyone in the lobby.
 
 ## More ways to play
 
@@ -101,7 +129,7 @@ Clients send intents such as `step` and `chat`. The Colyseus room validates and 
 
 ### Art and rules generated from the same source
 
-The Tiled project is the canonical map source. A generator produces the walkability grid, spawn point, floor image, light overlay, object atlas, and typed object placements. Avatar generators do the same for wearable catalogs and sprite atlases. That keeps what the player sees and what the server considers walkable on the same source of truth.
+The Tiled project is the canonical map source. A generator produces the walkability grid, spawn point, floor image, light sources, object atlas, ambient NPC positions, and typed object placements. Avatar generators do the same for wearable catalogs and sprite atlases. That keeps what the player sees and what the server considers walkable on the same source of truth.
 
 ### One responsive room, not two applications
 
