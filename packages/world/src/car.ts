@@ -18,6 +18,7 @@ export interface CarConfig {
   readonly acceleration: number;
   readonly maxSpeed: number;
   readonly braking: number;
+  readonly turnRateRadiansPerSecond: number;
   readonly simulationStepMs: number;
 }
 
@@ -26,6 +27,7 @@ export const DEFAULT_CAR_CONFIG: CarConfig = {
   acceleration: 360,
   maxSpeed: 180,
   braking: 300,
+  turnRateRadiansPerSecond: 7.5,
   simulationStepMs: 10,
 };
 
@@ -77,8 +79,16 @@ export function advanceCar(
       const offset = OFFSETS[direction];
       const currentSpeed = Math.hypot(next.velocityX, next.velocityY);
       const speed = approach(currentSpeed, config.maxSpeed, config.acceleration * dt);
-      next.velocityX = offset.x * speed;
-      next.velocityY = offset.y * speed;
+      const targetVelocity = { x: offset.x * speed, y: offset.y * speed };
+      const steeredVelocity = steerVelocity(
+        next.velocityX,
+        next.velocityY,
+        targetVelocity.x,
+        targetVelocity.y,
+        config.turnRateRadiansPerSecond * dt,
+      );
+      next.velocityX = steeredVelocity.x;
+      next.velocityY = steeredVelocity.y;
     } else {
       next.velocityX = approach(next.velocityX, 0, config.braking * dt);
       next.velocityY = approach(next.velocityY, 0, config.braking * dt);
@@ -192,6 +202,28 @@ export function createCarFleet(parkingSpots: readonly CarParkingSpot[]): CarMoti
 function approach(value: number, target: number, amount: number): number {
   if (value < target) return Math.min(value + amount, target);
   return Math.max(value - amount, target);
+}
+
+function steerVelocity(
+  velocityX: number,
+  velocityY: number,
+  targetX: number,
+  targetY: number,
+  maxTurnRadians: number,
+): { x: number; y: number } {
+  const speed = Math.hypot(targetX, targetY);
+  const currentSpeed = Math.hypot(velocityX, velocityY);
+  if (currentSpeed === 0 || maxTurnRadians <= 0) return { x: targetX, y: targetY };
+
+  const currentAngle = Math.atan2(velocityY, velocityX);
+  const targetAngle = Math.atan2(targetY, targetX);
+  let angleDelta = targetAngle - currentAngle;
+  if (angleDelta > Math.PI) angleDelta -= Math.PI * 2;
+  if (angleDelta < -Math.PI) angleDelta += Math.PI * 2;
+
+  const angle =
+    currentAngle + Math.sign(angleDelta) * Math.min(Math.abs(angleDelta), maxTurnRadians);
+  return { x: Math.cos(angle) * speed, y: Math.sin(angle) * speed };
 }
 
 function isCarPositionBlocked(
