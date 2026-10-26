@@ -36699,12 +36699,12 @@
       "type": "objectgroup",
       "draworder": "topdown",
       "objects": [
-        { "id": 8050, "name": "david-bowie", "type": "ambient-npc", "x": 360, "y": 56, "point": true, "width": 0, "height": 0, "rotation": 0, "visible": true },
-        { "id": 8051, "name": "aretha-franklin", "type": "ambient-npc", "x": 776, "y": 56, "point": true, "width": 0, "height": 0, "rotation": 0, "visible": true },
-        { "id": 8052, "name": "bob-marley", "type": "ambient-npc", "x": 1256, "y": 56, "point": true, "width": 0, "height": 0, "rotation": 0, "visible": true },
-        { "id": 8053, "name": "freddie-mercury", "type": "ambient-npc", "x": 1736, "y": 56, "point": true, "width": 0, "height": 0, "rotation": 0, "visible": true },
-        { "id": 8054, "name": "whitney-houston", "type": "ambient-npc", "x": 520, "y": 744, "point": true, "width": 0, "height": 0, "rotation": 0, "visible": true },
-        { "id": 8055, "name": "prince", "type": "ambient-npc", "x": 1608, "y": 744, "point": true, "width": 0, "height": 0, "rotation": 0, "visible": true },
+        { "id": 8050, "name": "david-bowie", "type": "ambient-npc", "x": 1088, "y": 704, "point": true, "width": 0, "height": 0, "rotation": 0, "visible": true },
+        { "id": 8051, "name": "aretha-franklin", "type": "ambient-npc", "x": 1168, "y": 704, "point": true, "width": 0, "height": 0, "rotation": 0, "visible": true },
+        { "id": 8052, "name": "bob-marley", "type": "ambient-npc", "x": 928, "y": 384, "point": true, "width": 0, "height": 0, "rotation": 0, "visible": true },
+        { "id": 8053, "name": "freddie-mercury", "type": "ambient-npc", "x": 992, "y": 384, "point": true, "width": 0, "height": 0, "rotation": 0, "visible": true },
+        { "id": 8054, "name": "whitney-houston", "type": "ambient-npc", "x": 880, "y": 544, "point": true, "width": 0, "height": 0, "rotation": 0, "visible": true },
+        { "id": 8055, "name": "prince", "type": "ambient-npc", "x": 1264, "y": 544, "point": true, "width": 0, "height": 0, "rotation": 0, "visible": true },
         { "id": 8056, "name": "tennis-coach", "type": "ambient-npc", "x": 472, "y": 648, "point": true, "width": 0, "height": 0, "rotation": 0, "visible": true }
       ]
     },

@@ -3,6 +3,7 @@ import {
   sameAvatar as avatarsMatch,
   type DanceId,
   DEFAULT_AVATAR,
+  danceFrame,
   FRAME_SIZE,
   IDLE_FRAME_MS,
 } from "@bumbadum/avatar";
@@ -762,9 +763,20 @@ export async function mountGameEngine(
     const npcFrame = reducedMotion.matches ? 0 : Math.floor(animationNow / IDLE_FRAME_MS) % 4;
     for (const { npc, sprite, label } of ambientNpcViews) {
       const position = tileCentre(npc.position);
-      sprite.view.position.set(position.x, position.y + TILE_SIZE / 2);
+      const dance = npc.dance
+        ? danceFrame(npc.dance, animationNow, reducedMotion.matches)
+        : undefined;
+      sprite.view.position.set(
+        position.x + (dance?.dx ?? 0),
+        position.y + TILE_SIZE / 2 + (dance?.dy ?? 0),
+      );
       sprite.view.zIndex = playerDepth(npc.position);
-      sprite.draw(npc.direction, "idle", npcFrame);
+      sprite.draw(
+        dance?.direction ?? npc.direction,
+        dance?.cycle ?? "idle",
+        dance?.frame ?? npcFrame,
+        dance?.mirrored ?? false,
+      );
       label.position.set(
         world.x + sprite.view.x * world.scale.x,
         world.y + (sprite.view.y - FRAME_SIZE + AVATAR_TOP_INSET) * world.scale.y - LABEL_GAP,

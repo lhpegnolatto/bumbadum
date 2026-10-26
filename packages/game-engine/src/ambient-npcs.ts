@@ -1,4 +1,4 @@
-import type { Avatar } from "@bumbadum/avatar";
+import type { Avatar, DanceId } from "@bumbadum/avatar";
 import {
   AMBIENT_NPC_POSITIONS,
   type AmbientNpcId,
@@ -16,6 +16,7 @@ export interface AmbientNpc {
   position: Tile;
   avatar: Avatar;
   direction: "up" | "down" | "left" | "right";
+  dance?: DanceId;
 }
 
 const avatar = (
@@ -45,14 +46,14 @@ export const AMBIENT_NPCS: readonly AmbientNpc[] = [
     avatar: avatar(1, "short-blonde", "t-shirt-red", "trousers-black", {
       eyewear: "round-glasses-black",
     }),
-    direction: "down",
+    direction: "up",
   },
   {
     id: "aretha-franklin",
     name: "Aretha Franklin",
     position: npcPosition("aretha-franklin"),
     avatar: avatar(4, "afro-black", "t-shirt-purple", "flared-skirt-purple"),
-    direction: "down",
+    direction: "up",
   },
   {
     id: "bob-marley",
@@ -61,7 +62,7 @@ export const AMBIENT_NPCS: readonly AmbientNpc[] = [
     avatar: avatar(4, "dreads-black", "t-shirt-green", "trousers-red", {
       headwear: "beanie-green",
     }),
-    direction: "down",
+    direction: "right",
   },
   {
     id: "freddie-mercury",
@@ -70,14 +71,15 @@ export const AMBIENT_NPCS: readonly AmbientNpc[] = [
     avatar: avatar(2, "short-black", "tank-top-white", "trousers-black", {
       eyewear: "sunglasses-black",
     }),
-    direction: "down",
+    direction: "left",
   },
   {
     id: "whitney-houston",
     name: "Whitney Houston",
     position: npcPosition("whitney-houston"),
     avatar: avatar(3, "long-pigtails-black", "t-shirt-blue", "flared-skirt-white"),
-    direction: "up",
+    direction: "down",
+    dance: "side-step",
   },
   {
     id: "prince",
@@ -86,7 +88,7 @@ export const AMBIENT_NPCS: readonly AmbientNpc[] = [
     avatar: avatar(3, "long-pigtails-purple", "jacket-purple", "trousers-black", {
       headwear: "top-hat-purple",
     }),
-    direction: "up",
+    direction: "left",
   },
 ];
 

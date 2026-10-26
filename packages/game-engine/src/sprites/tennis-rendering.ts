@@ -1,4 +1,5 @@
 import type { TennisParticipantKind, TennisState } from "@bumbadum/protocol";
+import { PLAZA_V2_TENNIS_COURT } from "@bumbadum/world";
 import {
   type TennisBallPose,
   type TennisRacketFrame,
@@ -7,8 +8,17 @@ import {
   tennisRacketFrame,
 } from "./tennis-animation.ts";
 
-/** The server's pixel anchors for the two Tennis baselines. */
-export const TENNIS_BASELINE_Y = { top: 66, bottom: 582 } as const;
+function courtPoint(name: "player-top" | "player-bottom") {
+  const point = PLAZA_V2_TENNIS_COURT.find((entry) => entry.name === name);
+  if (!point) throw new Error(`Missing Tennis court point: ${name}`);
+  return point;
+}
+
+/** The server's pixel anchors for the two Tennis baselines, sourced from the canonical map. */
+export const TENNIS_BASELINE_Y = {
+  top: courtPoint("player-top").y,
+  bottom: courtPoint("player-bottom").y,
+} as const;
 
 export interface DrawnTennisParticipant {
   sessionId: string;

@@ -16,6 +16,15 @@ describe("Ambient NPC roster", () => {
     expect(ambientNpcTiles()).toHaveLength(6);
   });
 
+  it("keeps tributes in the central plaza with a mix of social poses", () => {
+    expect(AMBIENT_NPCS.every(({ position }) => position.x >= 50 && position.x <= 84)).toBe(true);
+    expect(AMBIENT_NPCS.some(({ dance }) => dance === "side-step")).toBe(true);
+    expect(AMBIENT_NPCS.find(({ id }) => id === "david-bowie")?.direction).toBe("up");
+    expect(AMBIENT_NPCS.find(({ id }) => id === "aretha-franklin")?.direction).toBe("up");
+    expect(AMBIENT_NPCS.find(({ id }) => id === "bob-marley")?.direction).toBe("right");
+    expect(AMBIENT_NPCS.find(({ id }) => id === "freddie-mercury")?.direction).toBe("left");
+  });
+
   it("keeps the permanent Tennis Coach in the Tennis hall", () => {
     expect(TENNIS_COACH_NPC.position.y).toBeGreaterThan(25);
     expect(isWalkable(lobbyMap, TENNIS_COACH_NPC.position)).toBe(true);

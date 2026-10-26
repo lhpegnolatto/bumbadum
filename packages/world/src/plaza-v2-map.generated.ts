@@ -3449,33 +3449,33 @@ export const PLAZA_V2_TENNIS_LINE = [
 export const PLAZA_V2_AMBIENT_NPCS = [
   {
     "name": "david-bowie",
-    "x": 360,
-    "y": 56
+    "x": 1088,
+    "y": 704
   },
   {
     "name": "aretha-franklin",
-    "x": 776,
-    "y": 56
+    "x": 1168,
+    "y": 704
   },
   {
     "name": "bob-marley",
-    "x": 1256,
-    "y": 56
+    "x": 928,
+    "y": 384
   },
   {
     "name": "freddie-mercury",
-    "x": 1736,
-    "y": 56
+    "x": 992,
+    "y": 384
   },
   {
     "name": "whitney-houston",
-    "x": 520,
-    "y": 744
+    "x": 880,
+    "y": 544
   },
   {
     "name": "prince",
-    "x": 1608,
-    "y": 744
+    "x": 1264,
+    "y": 544
   },
   {
     "name": "tennis-coach",

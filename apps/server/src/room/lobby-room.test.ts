@@ -480,8 +480,8 @@ describe("lobby-room Ambient NPCs", () => {
       .state.players.get(ana.sessionId);
     if (!serverPlayer) throw new Error("expected Ana's server player");
 
-    serverPlayer.x = 22;
-    serverPlayer.y = 3;
+    serverPlayer.x = 68;
+    serverPlayer.y = 44;
     ana.send(AMBIENT_NPC_INTERACT_MESSAGE, "david-bowie");
     await expect
       .poll(() => notices)
