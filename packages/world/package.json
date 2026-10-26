@@ -9,7 +9,7 @@
   "scripts": {
     "map:generate": "node ../tooling/generate-map-assets.mjs",
     "typecheck": "tsc",
-    "test": "node ../tooling/generate-map-assets.mjs --check && vitest run"
+    "test": "node ../tooling/generate-map-assets.mjs --check && node ../tooling/generate-map-assets.mjs --map=plaza-v2 --check && vitest run"
   },
   "devDependencies": {
     "@bumbadum/tooling": "workspace:*",

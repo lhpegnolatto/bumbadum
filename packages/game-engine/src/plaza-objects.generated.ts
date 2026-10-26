@@ -2,7 +2,9 @@
 
 /**
  * The plaza's objects: each one's frame in objects.png, the world pixel where its top-left
- * corner is drawn, and its base (bottom edge), which places it in depth order.
+ * corner is drawn, and its base (bottom edge), which places it in depth order. An object
+ * with an Ambient animation also lists every frame it loops through, with its duration in
+ * milliseconds; each frame is the size of the first.
  */
 // biome-ignore format: generated data is serialized from Tiled.
 export const PLAZA_OBJECTS: readonly {
@@ -11,6 +13,10 @@ export const PLAZA_OBJECTS: readonly {
   x: number;
   y: number;
   base: number;
+  animation?: readonly {
+    frame: { x: number; y: number; width: number; height: number };
+    duration: number;
+  }[];
 }[] = [
   {"name":"fence","frame":{"x":73,"y":53,"width":48,"height":14},"x":214,"y":0,"base":14},
   {"name":"fence","frame":{"x":73,"y":53,"width":48,"height":14},"x":696,"y":0,"base":14},

@@ -4,7 +4,7 @@
   "name": "objects",
   "tilewidth": 256,
   "tileheight": 176,
-  "tilecount": 77,
+  "tilecount": 114,
   "columns": 0,
   "grid": {
     "orientation": "orthogonal",
@@ -33,14 +33,50 @@
       "image": "objects/shrub.png",
       "imagewidth": 18,
       "imageheight": 14,
-      "type": "shrub"
+      "type": "shrub",
+      "animation": [
+        {
+          "tileid": 2,
+          "duration": 600
+        },
+        {
+          "tileid": 98,
+          "duration": 600
+        },
+        {
+          "tileid": 99,
+          "duration": 600
+        },
+        {
+          "tileid": 100,
+          "duration": 600
+        }
+      ]
     },
     {
       "id": 3,
       "image": "objects/shrub-flower.png",
       "imagewidth": 18,
       "imageheight": 14,
-      "type": "shrub-flower"
+      "type": "shrub-flower",
+      "animation": [
+        {
+          "tileid": 3,
+          "duration": 600
+        },
+        {
+          "tileid": 101,
+          "duration": 600
+        },
+        {
+          "tileid": 102,
+          "duration": 600
+        },
+        {
+          "tileid": 103,
+          "duration": 600
+        }
+      ]
     },
     {
       "id": 4,
@@ -54,42 +90,150 @@
       "image": "objects/tree-a.png",
       "imagewidth": 42,
       "imageheight": 50,
-      "type": "tree-a"
+      "type": "tree-a",
+      "animation": [
+        {
+          "tileid": 5,
+          "duration": 600
+        },
+        {
+          "tileid": 77,
+          "duration": 600
+        },
+        {
+          "tileid": 78,
+          "duration": 600
+        },
+        {
+          "tileid": 79,
+          "duration": 600
+        }
+      ]
     },
     {
       "id": 6,
       "image": "objects/tree-tall.png",
       "imagewidth": 30,
       "imageheight": 52,
-      "type": "tree-tall"
+      "type": "tree-tall",
+      "animation": [
+        {
+          "tileid": 6,
+          "duration": 600
+        },
+        {
+          "tileid": 89,
+          "duration": 600
+        },
+        {
+          "tileid": 90,
+          "duration": 600
+        },
+        {
+          "tileid": 91,
+          "duration": 600
+        }
+      ]
     },
     {
       "id": 7,
       "image": "objects/tree-b.png",
       "imagewidth": 42,
       "imageheight": 50,
-      "type": "tree-b"
+      "type": "tree-b",
+      "animation": [
+        {
+          "tileid": 7,
+          "duration": 600
+        },
+        {
+          "tileid": 80,
+          "duration": 600
+        },
+        {
+          "tileid": 81,
+          "duration": 600
+        },
+        {
+          "tileid": 82,
+          "duration": 600
+        }
+      ]
     },
     {
       "id": 8,
       "image": "objects/tree-c.png",
       "imagewidth": 42,
       "imageheight": 50,
-      "type": "tree-c"
+      "type": "tree-c",
+      "animation": [
+        {
+          "tileid": 8,
+          "duration": 600
+        },
+        {
+          "tileid": 83,
+          "duration": 600
+        },
+        {
+          "tileid": 84,
+          "duration": 600
+        },
+        {
+          "tileid": 85,
+          "duration": 600
+        }
+      ]
     },
     {
       "id": 9,
       "image": "objects/tree-young.png",
       "imagewidth": 26,
       "imageheight": 36,
-      "type": "tree-young"
+      "type": "tree-young",
+      "animation": [
+        {
+          "tileid": 9,
+          "duration": 600
+        },
+        {
+          "tileid": 92,
+          "duration": 600
+        },
+        {
+          "tileid": 93,
+          "duration": 600
+        },
+        {
+          "tileid": 94,
+          "duration": 600
+        }
+      ]
     },
     {
       "id": 10,
       "image": "objects/tree-pink.png",
       "imagewidth": 42,
       "imageheight": 50,
-      "type": "tree-pink"
+      "type": "tree-pink",
+      "animation": [
+        {
+          "tileid": 10,
+          "duration": 600
+        },
+        {
+          "tileid": 86,
+          "duration": 600
+        },
+        {
+          "tileid": 87,
+          "duration": 600
+        },
+        {
+          "tileid": 88,
+          "duration": 600
+        }
+      ]
     },
     {
       "id": 11,
@@ -117,35 +261,105 @@
       "image": "objects/flag-checkered.png",
       "imagewidth": 18,
       "imageheight": 40,
-      "type": "flag-checkered"
+      "type": "flag-checkered",
+      "animation": [
+        {
+          "tileid": 14,
+          "duration": 170
+        },
+        {
+          "tileid": 108,
+          "duration": 170
+        },
+        {
+          "tileid": 109,
+          "duration": 170
+        }
+      ]
     },
     {
       "id": 15,
       "image": "objects/flag-pink.png",
       "imagewidth": 16,
       "imageheight": 50,
-      "type": "flag-pink"
+      "type": "flag-pink",
+      "animation": [
+        {
+          "tileid": 15,
+          "duration": 170
+        },
+        {
+          "tileid": 104,
+          "duration": 170
+        },
+        {
+          "tileid": 105,
+          "duration": 170
+        }
+      ]
     },
     {
       "id": 16,
       "image": "objects/flag-purple.png",
       "imagewidth": 16,
       "imageheight": 50,
-      "type": "flag-purple"
+      "type": "flag-purple",
+      "animation": [
+        {
+          "tileid": 16,
+          "duration": 170
+        },
+        {
+          "tileid": 106,
+          "duration": 170
+        },
+        {
+          "tileid": 107,
+          "duration": 170
+        }
+      ]
     },
     {
       "id": 17,
       "image": "objects/bunting.png",
       "imagewidth": 100,
       "imageheight": 10,
-      "type": "bunting"
+      "type": "bunting",
+      "animation": [
+        {
+          "tileid": 17,
+          "duration": 170
+        },
+        {
+          "tileid": 110,
+          "duration": 170
+        },
+        {
+          "tileid": 111,
+          "duration": 170
+        }
+      ]
     },
     {
       "id": 18,
       "image": "objects/bunting-short.png",
       "imagewidth": 60,
       "imageheight": 10,
-      "type": "bunting-short"
+      "type": "bunting-short",
+      "animation": [
+        {
+          "tileid": 18,
+          "duration": 170
+        },
+        {
+          "tileid": 112,
+          "duration": 170
+        },
+        {
+          "tileid": 113,
+          "duration": 170
+        }
+      ]
     },
     {
       "id": 19,
@@ -397,7 +611,25 @@
       "image": "objects/pine.png",
       "imagewidth": 26,
       "imageheight": 42,
-      "type": "pine"
+      "type": "pine",
+      "animation": [
+        {
+          "tileid": 54,
+          "duration": 600
+        },
+        {
+          "tileid": 95,
+          "duration": 600
+        },
+        {
+          "tileid": 96,
+          "duration": 600
+        },
+        {
+          "tileid": 97,
+          "duration": 600
+        }
+      ]
     },
     {
       "id": 55,
@@ -552,6 +784,265 @@
       "imagewidth": 50,
       "imageheight": 52,
       "type": "tent-white"
+    },
+    {
+      "id": 77,
+      "image": "objects/tree-a-1.png",
+      "imagewidth": 42,
+      "imageheight": 50,
+      "type": "tree-a"
+    },
+    {
+      "id": 78,
+      "image": "objects/tree-a-2.png",
+      "imagewidth": 42,
+      "imageheight": 50,
+      "type": "tree-a"
+    },
+    {
+      "id": 79,
+      "image": "objects/tree-a-3.png",
+      "imagewidth": 42,
+      "imageheight": 50,
+      "type": "tree-a"
+    },
+    {
+      "id": 80,
+      "image": "objects/tree-b-1.png",
+      "imagewidth": 42,
+      "imageheight": 50,
+      "type": "tree-b"
+    },
+    {
+      "id": 81,
+      "image": "objects/tree-b-2.png",
+      "imagewidth": 42,
+      "imageheight": 50,
+      "type": "tree-b"
+    },
+    {
+      "id": 82,
+      "image": "objects/tree-b-3.png",
+      "imagewidth": 42,
+      "imageheight": 50,
+      "type": "tree-b"
+    },
+    {
+      "id": 83,
+      "image": "objects/tree-c-1.png",
+      "imagewidth": 42,
+      "imageheight": 50,
+      "type": "tree-c"
+    },
+    {
+      "id": 84,
+      "image": "objects/tree-c-2.png",
+      "imagewidth": 42,
+      "imageheight": 50,
+      "type": "tree-c"
+    },
+    {
+      "id": 85,
+      "image": "objects/tree-c-3.png",
+      "imagewidth": 42,
+      "imageheight": 50,
+      "type": "tree-c"
+    },
+    {
+      "id": 86,
+      "image": "objects/tree-pink-1.png",
+      "imagewidth": 42,
+      "imageheight": 50,
+      "type": "tree-pink"
+    },
+    {
+      "id": 87,
+      "image": "objects/tree-pink-2.png",
+      "imagewidth": 42,
+      "imageheight": 50,
+      "type": "tree-pink"
+    },
+    {
+      "id": 88,
+      "image": "objects/tree-pink-3.png",
+      "imagewidth": 42,
+      "imageheight": 50,
+      "type": "tree-pink"
+    },
+    {
+      "id": 89,
+      "image": "objects/tree-tall-1.png",
+      "imagewidth": 30,
+      "imageheight": 52,
+      "type": "tree-tall"
+    },
+    {
+      "id": 90,
+      "image": "objects/tree-tall-2.png",
+      "imagewidth": 30,
+      "imageheight": 52,
+      "type": "tree-tall"
+    },
+    {
+      "id": 91,
+      "image": "objects/tree-tall-3.png",
+      "imagewidth": 30,
+      "imageheight": 52,
+      "type": "tree-tall"
+    },
+    {
+      "id": 92,
+      "image": "objects/tree-young-1.png",
+      "imagewidth": 26,
+      "imageheight": 36,
+      "type": "tree-young"
+    },
+    {
+      "id": 93,
+      "image": "objects/tree-young-2.png",
+      "imagewidth": 26,
+      "imageheight": 36,
+      "type": "tree-young"
+    },
+    {
+      "id": 94,
+      "image": "objects/tree-young-3.png",
+      "imagewidth": 26,
+      "imageheight": 36,
+      "type": "tree-young"
+    },
+    {
+      "id": 95,
+      "image": "objects/pine-1.png",
+      "imagewidth": 26,
+      "imageheight": 42,
+      "type": "pine"
+    },
+    {
+      "id": 96,
+      "image": "objects/pine-2.png",
+      "imagewidth": 26,
+      "imageheight": 42,
+      "type": "pine"
+    },
+    {
+      "id": 97,
+      "image": "objects/pine-3.png",
+      "imagewidth": 26,
+      "imageheight": 42,
+      "type": "pine"
+    },
+    {
+      "id": 98,
+      "image": "objects/shrub-1.png",
+      "imagewidth": 18,
+      "imageheight": 14,
+      "type": "shrub"
+    },
+    {
+      "id": 99,
+      "image": "objects/shrub-2.png",
+      "imagewidth": 18,
+      "imageheight": 14,
+      "type": "shrub"
+    },
+    {
+      "id": 100,
+      "image": "objects/shrub-3.png",
+      "imagewidth": 18,
+      "imageheight": 14,
+      "type": "shrub"
+    },
+    {
+      "id": 101,
+      "image": "objects/shrub-flower-1.png",
+      "imagewidth": 18,
+      "imageheight": 14,
+      "type": "shrub-flower"
+    },
+    {
+      "id": 102,
+      "image": "objects/shrub-flower-2.png",
+      "imagewidth": 18,
+      "imageheight": 14,
+      "type": "shrub-flower"
+    },
+    {
+      "id": 103,
+      "image": "objects/shrub-flower-3.png",
+      "imagewidth": 18,
+      "imageheight": 14,
+      "type": "shrub-flower"
+    },
+    {
+      "id": 104,
+      "image": "objects/flag-pink-1.png",
+      "imagewidth": 16,
+      "imageheight": 50,
+      "type": "flag-pink"
+    },
+    {
+      "id": 105,
+      "image": "objects/flag-pink-2.png",
+      "imagewidth": 16,
+      "imageheight": 50,
+      "type": "flag-pink"
+    },
+    {
+      "id": 106,
+      "image": "objects/flag-purple-1.png",
+      "imagewidth": 16,
+      "imageheight": 50,
+      "type": "flag-purple"
+    },
+    {
+      "id": 107,
+      "image": "objects/flag-purple-2.png",
+      "imagewidth": 16,
+      "imageheight": 50,
+      "type": "flag-purple"
+    },
+    {
+      "id": 108,
+      "image": "objects/flag-checkered-1.png",
+      "imagewidth": 18,
+      "imageheight": 40,
+      "type": "flag-checkered"
+    },
+    {
+      "id": 109,
+      "image": "objects/flag-checkered-2.png",
+      "imagewidth": 18,
+      "imageheight": 40,
+      "type": "flag-checkered"
+    },
+    {
+      "id": 110,
+      "image": "objects/bunting-1.png",
+      "imagewidth": 100,
+      "imageheight": 10,
+      "type": "bunting"
+    },
+    {
+      "id": 111,
+      "image": "objects/bunting-2.png",
+      "imagewidth": 100,
+      "imageheight": 10,
+      "type": "bunting"
+    },
+    {
+      "id": 112,
+      "image": "objects/bunting-short-1.png",
+      "imagewidth": 60,
+      "imageheight": 10,
+      "type": "bunting-short"
+    },
+    {
+      "id": 113,
+      "image": "objects/bunting-short-2.png",
+      "imagewidth": 60,
+      "imageheight": 10,
+      "type": "bunting-short"
     }
   ]
 }

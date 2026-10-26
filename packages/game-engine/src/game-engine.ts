@@ -39,6 +39,7 @@ import { type Pose, StepPredictor } from "./movement/step-predictor.ts";
 import { StepRepeater } from "./movement/step-repeater.ts";
 import { PLAZA_V2_OBJECTS } from "./plaza-v2-objects.generated.ts";
 import { SpeechBubbles } from "./speech-bubbles.ts";
+import { ambientFrame, ambientPhase } from "./sprites/ambient-animation.ts";
 import { AvatarAnimation } from "./sprites/avatar-animation.ts";
 import { AvatarSprite, FrameTextures } from "./sprites/avatar-sprite.ts";
 import { CarRenderer } from "./sprites/car-renderer.ts";
@@ -174,6 +175,14 @@ interface TennisParticipantView {
   racket: Sprite;
 }
 
+/** A Map object looping through its Ambient animation's frames. */
+interface AmbientObjectView {
+  sprite: Sprite;
+  textures: Texture[];
+  durations: number[];
+  phase: number;
+}
+
 /** Creates the PixiJS canvas inside `container` and returns the API React drives. */
 export async function mountGameEngine(
   container: HTMLElement,
@@ -242,19 +251,25 @@ export async function mountGameEngine(
   const world = new Container();
   // Players and objects lower on the map are drawn in front of the ones above them.
   const depthSorted = new Container({ sortableChildren: true });
+  const ambientObjects: AmbientObjectView[] = [];
   for (const object of PLAZA_V2_OBJECTS) {
     // Dynamic cars occupy these same parking anchors; keeping the decorative Tiled cars would
     // render a second car underneath every spawned vehicle.
     if (object.name.startsWith("car-")) continue;
     if (object.name === "scoreboard") continue;
-    const { x, y, width, height } = object.frame;
-    const texture = new Texture({
-      source: objectsAtlas.source,
-      frame: new Rectangle(x, y, width, height),
-    });
-    const sprite = new Sprite({ texture, x: object.x, y: object.y });
+    const atlasTexture = ({ x, y, width, height }: typeof object.frame) =>
+      new Texture({ source: objectsAtlas.source, frame: new Rectangle(x, y, width, height) });
+    const sprite = new Sprite({ texture: atlasTexture(object.frame), x: object.x, y: object.y });
     sprite.zIndex = objectDepth(object);
     depthSorted.addChild(sprite);
+    // Every frame is the size of the first, so the object keeps its base and depth order.
+    if (object.animation)
+      ambientObjects.push({
+        sprite,
+        textures: object.animation.map(({ frame }) => atlasTexture(frame)),
+        durations: object.animation.map(({ duration }) => duration),
+        phase: ambientPhase(object),
+      });
   }
   const scoreboard = new Sprite(
     new Texture({
@@ -470,6 +485,10 @@ export async function mountGameEngine(
     // Before the first clock sync, the local clock keeps a dancer moving, if not yet in unison.
     const danceNow = serverNow() ?? animationNow;
     walkLocalPlayer(now);
+    for (const ambient of ambientObjects) {
+      const frame = ambientFrame(ambient.durations, now, ambient.phase, reducedMotion.matches);
+      ambient.sprite.texture = ambient.textures[frame] ?? ambient.sprite.texture;
+    }
     const tennisSnapshot = tennisState
       ? tennisRenderSnapshot(tennisState, serverNow() ?? Date.now())
       : undefined;
