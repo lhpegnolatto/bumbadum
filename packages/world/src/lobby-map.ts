@@ -11,8 +11,14 @@ export {
   PLAZA_V2_TENNIS_LINE,
 } from "./plaza-v2-map.generated.ts";
 
+// The lamp beside the CORRIDA sign sits just outside the sharp bend. Its
+// decorative collision tile is one cell too far into the driveable surface.
+const PLAZA_V2_ROWS_WITH_LAMP_CLEARANCE = PLAZA_V2_ROWS.map((row, y) =>
+  y === 26 ? `${row.slice(0, 131)}.${row.slice(132)}` : row,
+);
+
 /** The lobby's map: the tennis/autodrome plaza, generated from its Tiled project (ADR-0016). */
-export const lobbyMap = createMap(PLAZA_V2_ROWS);
+export const lobbyMap = createMap(PLAZA_V2_ROWS_WITH_LAMP_CLEARANCE);
 
 export const lobbyParkingSpots = PLAZA_V2_PARKING_SPOTS;
 
