@@ -21089,17 +21089,6 @@
           "visible": true
         },
         {
-          "id": 1080,
-          "name": "flag-checkered",
-          "type": "collision",
-          "x": 2272,
-          "y": 185,
-          "width": 6,
-          "height": 5,
-          "rotation": 0,
-          "visible": true
-        },
-        {
           "id": 1081,
           "name": "flag-purple",
           "type": "collision",
@@ -22115,7 +22104,7 @@
           "id": 1173,
           "name": "lamp",
           "type": "collision",
-          "x": 2107,
+          "x": 2088,
           "y": 420,
           "width": 6,
           "height": 5,
