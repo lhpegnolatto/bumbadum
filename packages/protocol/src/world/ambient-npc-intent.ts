@@ -10,6 +10,10 @@ const ambientNpcIdSchema = z.enum([
   "freddie-mercury",
   "whitney-houston",
   "prince",
+  "elis-regina",
+  "tim-maia",
+  "rita-lee",
+  "gilberto-gil",
 ]);
 
 export type AmbientNpcId = z.infer<typeof ambientNpcIdSchema>;

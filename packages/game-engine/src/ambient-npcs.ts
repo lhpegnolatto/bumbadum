@@ -90,6 +90,39 @@ export const AMBIENT_NPCS: readonly AmbientNpc[] = [
     }),
     direction: "left",
   },
+  {
+    id: "elis-regina",
+    name: "Elis Regina",
+    position: npcPosition("elis-regina"),
+    avatar: avatar(3, "short-ginger", "jacket-red", "flared-skirt-white"),
+    direction: "right",
+  },
+  {
+    id: "tim-maia",
+    name: "Tim Maia",
+    position: npcPosition("tim-maia"),
+    avatar: avatar(4, "afro-black", "t-shirt-purple", "trousers-black", {
+      eyewear: "sunglasses-black",
+    }),
+    direction: "left",
+  },
+  {
+    id: "rita-lee",
+    name: "Rita Lee",
+    position: npcPosition("rita-lee"),
+    avatar: avatar(2, "short-ginger", "t-shirt-red", "flared-skirt-white", {
+      eyewear: "round-glasses-black",
+    }),
+    direction: "right",
+    dance: "side-step",
+  },
+  {
+    id: "gilberto-gil",
+    name: "Gilberto Gil",
+    position: npcPosition("gilberto-gil"),
+    avatar: avatar(4, "afro-gray", "t-shirt-yellow", "trousers-green"),
+    direction: "left",
+  },
 ];
 
 /** The permanent Tennis Coach is rendered in the hall but is not a music tribute. */

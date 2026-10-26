@@ -3459,12 +3459,12 @@ export const PLAZA_V2_AMBIENT_NPCS = [
   },
   {
     "name": "bob-marley",
-    "x": 928,
+    "x": 752,
     "y": 384
   },
   {
     "name": "freddie-mercury",
-    "x": 992,
+    "x": 1456,
     "y": 384
   },
   {
@@ -3476,6 +3476,26 @@ export const PLAZA_V2_AMBIENT_NPCS = [
     "name": "prince",
     "x": 1264,
     "y": 544
+  },
+  {
+    "name": "elis-regina",
+    "x": 784,
+    "y": 560
+  },
+  {
+    "name": "tim-maia",
+    "x": 1392,
+    "y": 560
+  },
+  {
+    "name": "rita-lee",
+    "x": 784,
+    "y": 720
+  },
+  {
+    "name": "gilberto-gil",
+    "x": 1392,
+    "y": 720
   },
   {
     "name": "tennis-coach",

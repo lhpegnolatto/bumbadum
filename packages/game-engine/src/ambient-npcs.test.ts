@@ -10,19 +10,30 @@ import {
 } from "./ambient-npcs.ts";
 
 describe("Ambient NPC roster", () => {
-  it("contains six named tributes on valid walkable tiles", () => {
-    expect(AMBIENT_NPCS).toHaveLength(6);
+  it("contains ten named tributes on valid walkable tiles", () => {
+    expect(AMBIENT_NPCS).toHaveLength(10);
     expect(isAmbientNpcRosterValid()).toBe(true);
-    expect(ambientNpcTiles()).toHaveLength(6);
+    expect(ambientNpcTiles()).toHaveLength(10);
   });
 
-  it("keeps tributes in the central plaza with a mix of social poses", () => {
-    expect(AMBIENT_NPCS.every(({ position }) => position.x >= 50 && position.x <= 84)).toBe(true);
+  it("keeps the plaza center open while placing tributes around its edges", () => {
+    const edgeTributes = AMBIENT_NPCS.filter(({ id }) =>
+      [
+        "bob-marley",
+        "freddie-mercury",
+        "elis-regina",
+        "tim-maia",
+        "rita-lee",
+        "gilberto-gil",
+      ].includes(id),
+    );
+    expect(edgeTributes.every(({ position }) => position.x < 50 || position.x > 84)).toBe(true);
     expect(AMBIENT_NPCS.some(({ dance }) => dance === "side-step")).toBe(true);
     expect(AMBIENT_NPCS.find(({ id }) => id === "david-bowie")?.direction).toBe("up");
     expect(AMBIENT_NPCS.find(({ id }) => id === "aretha-franklin")?.direction).toBe("up");
     expect(AMBIENT_NPCS.find(({ id }) => id === "bob-marley")?.direction).toBe("right");
     expect(AMBIENT_NPCS.find(({ id }) => id === "freddie-mercury")?.direction).toBe("left");
+    expect(AMBIENT_NPCS.find(({ id }) => id === "rita-lee")?.dance).toBe("side-step");
   });
 
   it("keeps the permanent Tennis Coach in the Tennis hall", () => {

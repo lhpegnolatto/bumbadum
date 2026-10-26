@@ -25,5 +25,5 @@ Coach matches are visible to every Player in the Lobby and use the existing Tenn
 - NPC interaction content needs validation and localisation without turning the NPC into a chat participant.
 - The protocol and Tennis activity need to represent a non-Player participant while preserving the existing two-sided match rules.
 - The server needs an injected clock and random source for the solo-line timer and Coach policy so the behaviour remains deterministic in tests.
-- The initial artist roster is deliberately small, six to eight curated NPCs, and can grow by adding Map/content data rather than changing the model.
+- The artist roster is deliberately curated and can grow by adding Map/content data rather than changing the model.
 - First-party art remains the default; any third-party likeness or asset requires a separate decision under ADR-0012.
