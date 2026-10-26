@@ -89,10 +89,12 @@ export class CarRenderer {
     this.front.texture = sheetFrame(this.frontSheet, selected.row, selected.column, CELL_SIZE);
     this.background.scale.x = selected.mirrored ? -1 : 1;
     this.front.scale.x = selected.mirrored ? -1 : 1;
+    const effectZIndex = effectPose.layer === "behind" ? -1 : 3;
     // AvatarSprite already mirrors its own layers for the left-facing direction. Applying the
     // car's horizontal flip to the avatar as well would cancel that mirror.
 
     if (this.smoke) {
+      this.smoke.zIndex = effectZIndex;
       this.smoke.position.set(effectPose.smoke.x, effectPose.smoke.y);
       this.smoke.rotation = effectPose.rotation;
       this.smoke.visible = !reducedMotion && pose.speed > 0.2;
@@ -105,6 +107,7 @@ export class CarRenderer {
         );
     }
     if (this.dust) {
+      this.dust.zIndex = effectZIndex;
       this.dust.position.set(effectPose.dust.x, effectPose.dust.y);
       this.dust.rotation = effectPose.rotation;
       this.dust.visible = !reducedMotion && pose.drifting;
@@ -117,6 +120,7 @@ export class CarRenderer {
         );
     }
     if (this.speedLines) {
+      this.speedLines.zIndex = effectZIndex;
       this.speedLines.position.set(effectPose.speedLines.x, effectPose.speedLines.y);
       this.speedLines.rotation = effectPose.rotation;
       this.speedLines.visible = !reducedMotion && pose.speed > 5;

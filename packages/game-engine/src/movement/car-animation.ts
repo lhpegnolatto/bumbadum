@@ -10,6 +10,7 @@ export interface CarFrame {
 
 export interface CarEffectPose {
   row: 0 | 1 | 2 | 3;
+  layer: "behind" | "front";
   smoke: { x: number; y: number };
   dust: { x: number; y: number };
   speedLines: { x: number; y: number };
@@ -37,25 +38,16 @@ export function fxFrame(now: number, frameCount: number, frameMs: number): numbe
   return Math.floor(Math.max(0, now) / frameMs) % frameCount;
 }
 
-/** Positions and rotates the effects behind the car's current travel direction. */
+/** Aligns the 48×48 FX cell around the 32×32 car cell from the asset specification. */
 export function carEffectPose(direction: Direction): CarEffectPose {
-  const vector =
-    direction === "left"
-      ? { x: -1, y: 0 }
-      : direction === "right"
-        ? { x: 1, y: 0 }
-        : direction === "up"
-          ? { x: 0, y: -1 }
-          : { x: 0, y: 1 };
-  const rear = {
-    x: vector.x === 0 ? 0 : -vector.x * 19,
-    y: vector.y === 0 ? 0 : -vector.y * 19,
-  };
+  const cellCentre = { x: 0, y: -14 };
+  const row = direction === "down" ? 0 : direction === "right" ? 1 : direction === "up" ? 2 : 3;
   return {
-    row: direction === "down" ? 0 : direction === "right" ? 1 : direction === "up" ? 2 : 3,
-    smoke: rear,
-    dust: { x: rear.x * 0.6, y: rear.y * 0.6 },
-    speedLines: { x: rear.x * 0.75, y: rear.y * 0.75 },
+    row,
+    layer: direction === "up" ? "front" : "behind",
+    smoke: cellCentre,
+    dust: cellCentre,
+    speedLines: cellCentre,
     rotation: 0,
   };
 }
