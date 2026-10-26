@@ -20,6 +20,7 @@ import { type Direction, isDirection, lobbyMap, STEPS_PER_SECOND } from "@bumbad
 import {
   Application,
   Assets,
+  ColorMatrixFilter,
   Container,
   Graphics,
   Rectangle,
@@ -29,6 +30,7 @@ import {
   TextureStyle,
 } from "pixi.js";
 import { cameraOn, TILE_SIZE } from "./camera.ts";
+import { ambientLightMatrix, daylightAt, isNeutralAmbientLight } from "./daylight/daylight.ts";
 import { objectDepth, playerDepth } from "./depth.ts";
 import { listenToDirectionKeys, listenToTennisDirectionKeys } from "./keyboard.ts";
 import { type Bump, bumpOffset, Glide, isBumping, type Point } from "./movement/glide.ts";
@@ -94,6 +96,11 @@ export interface GameEngineOptions {
   sendTennisSteer?(direction: TennisSteerDirection | null): void;
   /** The server's time now, or `undefined` until it is known: dancers keep in step with it. */
   serverNow(): number | undefined;
+  /**
+   * The local Player's Time of day now, in hours since midnight with minutes as a fraction of the
+   * hour (18.5 is 18:30): the Ambient light and the Lamp glow follow it.
+   */
+  timeOfDay(): number;
 }
 
 /** A player as the engine draws them: the tile they stand on or glide towards. */
@@ -170,7 +177,7 @@ interface TennisParticipantView {
 /** Creates the PixiJS canvas inside `container` and returns the API React drives. */
 export async function mountGameEngine(
   container: HTMLElement,
-  { sessionId, sendStep, sendCarDrive, sendTennisSteer, serverNow }: GameEngineOptions,
+  { sessionId, sendStep, sendCarDrive, sendTennisSteer, serverNow, timeOfDay }: GameEngineOptions,
 ): Promise<GameEngine> {
   const map = lobbyMap;
   TextureStyle.defaultOptions.scaleMode = "nearest";
@@ -299,14 +306,15 @@ export async function mountGameEngine(
     tennisBallSprite,
     tennisImpactSprite,
   );
-  // The evening glow brightens whatever lies beneath it, avatars and confetti included.
-  world.addChild(
-    new Sprite(floor),
-    depthSorted,
-    tennisLayer,
-    confettiLayer,
-    new Sprite({ texture: lights, blendMode: "add" }),
-  );
+  // The Ambient light casts the Time of day over the scene, at the screen's own resolution so
+  // pixel art stays sharp. Nicknames and speech bubbles live outside it.
+  const ambientLight = new ColorMatrixFilter({ resolution: "inherit" });
+  const scene = new Container({ filters: [ambientLight] });
+  scene.addChild(new Sprite(floor), depthSorted, tennisLayer, confettiLayer);
+  // The lamps' glow brightens whatever lies beneath it, avatars and confetti included, and stays
+  // out of the Ambient light so it keeps its colour as the scene darkens.
+  const lampGlow = new Sprite({ texture: lights, blendMode: "add" });
+  world.addChild(scene, lampGlow);
   const labels = new Container();
   app.stage.addChild(world, labels);
   // Last on the stage, so bubbles stay above every avatar and label.
@@ -479,6 +487,10 @@ export async function mountGameEngine(
     const camera = cameraOn(map, app.screen, tileCentre(focus), app.renderer.resolution, topInset);
     world.scale.set(camera.scale);
     world.position.set(camera.x, camera.y);
+    const daylight = daylightAt(timeOfDay());
+    ambientLight.enabled = !isNeutralAmbientLight(daylight.ambientLight);
+    ambientLight.matrix = ambientLightMatrix(daylight.ambientLight);
+    lampGlow.alpha = daylight.lampGlow;
     for (const [id, avatar] of avatars) {
       const at = avatar.glide.at(now);
       const nudge = avatar.bump ? bumpOffset(avatar.bump, now) : { x: 0, y: 0 };

@@ -25,6 +25,7 @@ import { type Ref, useEffect, useImperativeHandle, useRef } from "react";
 import { useTranslations } from "use-intl";
 import { exposeToE2E } from "@/lib/e2e.ts";
 import { activeCarDirection, carActionForKey } from "./car-keyboard.ts";
+import { deviceTimeOfDay, timeOfDayOverride } from "./time-of-day.ts";
 
 declare global {
   interface BumbadumE2E {
@@ -165,6 +166,12 @@ export function GameCanvas({
     let cancelled = false;
     let stop: (() => void) | undefined;
 
+    // Outside production, `?time=HH:MM` fixes the Time of day to preview a Day period.
+    const fixedTimeOfDay = timeOfDayOverride(
+      window.location.search,
+      process.env.NODE_ENV === "production",
+    );
+
     // Loaded on demand: PixiJS only runs in the browser.
     import("@bumbadum/game-engine").then(async ({ mountGameEngine }) => {
       const engine = await mountGameEngine(container, {
@@ -172,6 +179,7 @@ export function GameCanvas({
         sendStep: (direction) => room.send(STEP_MESSAGE, direction),
         sendTennisSteer: (direction) => room.send(TENNIS_STEER_MESSAGE, direction),
         serverNow,
+        timeOfDay: () => fixedTimeOfDay ?? deviceTimeOfDay(new Date()),
       });
       if (cancelled) {
         engine.destroy();

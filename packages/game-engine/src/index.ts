@@ -1,6 +1,14 @@
 export type { Direction } from "@bumbadum/world";
 export { CAR_INTERACTION_RADIUS } from "@bumbadum/world";
 export { type Camera, cameraOn } from "./camera.ts";
+export {
+  type AmbientLight,
+  ambientLightMatrix,
+  type Daylight,
+  daylightAt,
+  isNeutralAmbientLight,
+  type Rgb,
+} from "./daylight/daylight.ts";
 export { carDepth, objectDepth, playerDepth } from "./depth.ts";
 export {
   type DrawnConfettiThrow,
