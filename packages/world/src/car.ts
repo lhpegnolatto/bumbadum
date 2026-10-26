@@ -120,7 +120,7 @@ export function enterNearestCar(
   maxDistance = CAR_INTERACTION_RADIUS,
 ): CarMotion | undefined {
   return cars
-    .filter((car) => !car.driverId && !car.respawnAt)
+    .filter((car) => !car.driverId)
     .map((car) => ({
       car,
       distance: Math.hypot(car.x - playerPosition.x, car.y - playerPosition.y),

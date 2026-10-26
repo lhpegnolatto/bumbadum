@@ -186,7 +186,7 @@ export function GameCanvas({
         let nearbyCarId: string | null = null;
         let nearestDistance = CAR_INTERACTION_RADIUS;
         state.cars.forEach((car, id) => {
-          if (car.driverId || car.respawnAt || carId) return;
+          if (car.driverId || carId) return;
           const distance = Math.hypot(car.x - playerX, car.y - playerY);
           if (distance <= nearestDistance) {
             nearestDistance = distance;

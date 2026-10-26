@@ -105,6 +105,12 @@ describe("car driving", () => {
     expect(result?.id).toBe("car-1");
   });
 
+  it("lets a nearby player re-enter a dismounted car before it returns to parking", () => {
+    const result = enterNearestCar([car({ x: 80, y: 80, respawnAt: 120_000 })], { x: 82, y: 80 });
+
+    expect(result?.id).toBe("car-1");
+  });
+
   it("leaves a dismounted car in place until its expiry", () => {
     const parked = dismountCar(car({ driverId: "player-1" }), 10_000);
 

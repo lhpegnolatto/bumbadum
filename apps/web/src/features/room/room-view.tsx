@@ -305,26 +305,25 @@ function JoinedRoom({
             />
           )}
         </div>
-        {(carContext.carId || carContext.nearbyCarId) && (
-          <div
-            className={`absolute bottom-[calc(var(--room-overlay-edge)_+_4.5rem)] left-1/2 z-30 -translate-x-1/2 compact:bottom-[calc(var(--room-safe-bottom)_+_9rem)] ${hiddenUnderSheet}`}
-          >
+        <div
+          className={`absolute bottom-[var(--room-overlay-edge)] left-[var(--room-overlay-edge)] z-20 flex items-center gap-2 compact:bottom-[var(--room-safe-bottom)] compact:left-3 compact:flex-col ${hiddenUnderSheet}`}
+        >
+          {(carContext.carId || carContext.nearbyCarId) && (
             <Button
               variant="secondary"
               size="sm"
+              className="compact:size-11 compact:px-0"
               aria-label={carContext.carId ? roomT("car.exit") : roomT("car.enter")}
               onClick={() =>
                 carContext.carId ? canvasRef.current?.exitCar() : canvasRef.current?.enterCar()
               }
             >
               {carContext.carId ? <LogOutIcon /> : <CarFrontIcon />}
-              {carContext.carId ? roomT("car.exit") : roomT("car.enter")}
+              <span className="compact:sr-only">
+                {carContext.carId ? roomT("car.exit") : roomT("car.enter")}
+              </span>
             </Button>
-          </div>
-        )}
-        <div
-          className={`absolute bottom-[var(--room-overlay-edge)] left-[var(--room-overlay-edge)] z-20 flex items-center gap-2 compact:bottom-[var(--room-safe-bottom)] compact:left-3 compact:flex-col ${hiddenUnderSheet}`}
-        >
+          )}
           <Button
             variant="secondary"
             size="sm"
