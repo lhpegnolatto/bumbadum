@@ -1,4 +1,6 @@
 import {
+  CONFETTI_THROWN,
+  type ConfettiThrown,
   TENNIS_EVENT,
   TENNIS_NOTICE,
   TennisBallState,
@@ -351,6 +353,13 @@ export class TennisActivity {
   }
 
   #completeMatch(winnerId: string, reason: "points" | "abandonment", now: number) {
+    const finishedPlayers = this.#match?.players ?? [];
+    this.#match = null;
+    this.#steering.clear();
+    this.#reconnectionDeadlines.clear();
+    for (const sessionId of finishedPlayers) this.#enrolled.delete(sessionId);
+    this.#state.participants.clear();
+    this.#sendPlayersToHall(finishedPlayers);
     this.#state.matchStatus = "complete";
     this.#state.winnerId = winnerId;
     this.#state.countdownEndsAt = 0;
@@ -360,12 +369,19 @@ export class TennisActivity {
       code: "match-complete",
       params: { winnerId, reason },
     });
+    const winner = this.#room.player(winnerId);
+    if (winner) {
+      const celebration: ConfettiThrown = {
+        throwerId: winnerId,
+        direction: "down",
+        target: { at: { x: winner.x, y: winner.y }, onPlayer: true },
+      };
+      this.#room.broadcast(CONFETTI_THROWN, celebration);
+    }
   }
 
   #finishCelebration(now: number) {
-    if (this.#match === null) return;
-    const finishedPlayers = this.#match.players;
-    this.#match = null;
+    if (this.#state.matchStatus !== "complete") return;
     this.#state.matchStatus = "idle";
     this.#state.countdownEndsAt = 0;
     this.#state.winnerId = "";
@@ -375,21 +391,20 @@ export class TennisActivity {
     this.#state.score.bottom = 0;
     this.#state.servingSide = "top";
     this.#celebrationEndsAt = 0;
-    this.#steering.clear();
-    this.#reconnectionDeadlines.clear();
-
-    for (const sessionId of finishedPlayers) {
-      if (!this.#enrolled.has(sessionId)) continue;
-      if (!this.#room.player(sessionId)) {
-        this.#enrolled.delete(sessionId);
-        continue;
-      }
-      const result = joinTennisLine(this.#line, sessionId);
-      if (result.status === "joined") this.#line = result.line;
-    }
-    this.#syncQueue();
-    this.#positionQueuedPlayers();
     this.#startIfReady(now);
+  }
+
+  #sendPlayersToHall(sessionIds: readonly string[]) {
+    sessionIds.forEach((sessionId, index) => {
+      const marker = PLAZA_V2_TENNIS_LINE[index];
+      const player = this.#room.player(sessionId);
+      if (!marker || !player) return;
+      player.x = Math.floor(marker.x / 16);
+      player.y = Math.floor(marker.y / 16);
+      player.direction = "up";
+      player.dance = "";
+      player.carId = "";
+    });
   }
 }
 

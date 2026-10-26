@@ -43,19 +43,24 @@ export function TennisPanel({
 
   if (!visible) return null;
 
-  const status = state.isParticipant
-    ? state.matchStatus === "countdown"
-      ? t("countdown", { seconds: countdown })
-      : state.matchStatus === "complete"
-        ? state.winnerId === room.sessionId
-          ? t("youWin")
-          : t("youLose")
-        : t("playing")
-    : state.queuePosition === 0
-      ? t("next")
-      : state.queuePosition !== null
-        ? t("inLine", { position: state.queuePosition + 1 })
-        : t("ready");
+  const status =
+    state.matchStatus === "complete" && state.winnerId
+      ? state.winnerId === room.sessionId
+        ? t("youWin")
+        : t("youLose")
+      : state.isParticipant
+        ? state.matchStatus === "countdown"
+          ? t("countdown", { seconds: countdown })
+          : state.matchStatus === "complete"
+            ? state.winnerId === room.sessionId
+              ? t("youWin")
+              : t("youLose")
+            : t("playing")
+        : state.queuePosition === 0
+          ? t("next")
+          : state.queuePosition !== null
+            ? t("inLine", { position: state.queuePosition + 1 })
+            : t("ready");
 
   return (
     <section

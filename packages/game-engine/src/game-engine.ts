@@ -353,9 +353,8 @@ export async function mountGameEngine(
     return view;
   };
 
-  const drawTennis = () => {
-    if (!tennisState) return;
-    const snapshot = tennisRenderSnapshot(tennisState, serverNow() ?? Date.now());
+  const drawTennis = (snapshot: TennisRenderSnapshot | undefined) => {
+    if (!snapshot) return;
     const participantIds = new Set(
       snapshot.participants.map((participant) => participant.sessionId),
     );
@@ -450,12 +449,20 @@ export async function mountGameEngine(
     // Before the first clock sync, the local clock keeps a dancer moving, if not yet in unison.
     const danceNow = serverNow() ?? animationNow;
     walkLocalPlayer(now);
-    drawTennis();
+    const tennisSnapshot = tennisState
+      ? tennisRenderSnapshot(tennisState, serverNow() ?? Date.now())
+      : undefined;
+    drawTennis(tennisSnapshot);
     // Follows the glide, not the bump, so a blocked step does not shake the view.
     const localCar = localCarId ? carSnapshots.get(localCarId) : undefined;
-    const focus = localCar
-      ? { x: localCar.x / TILE_SIZE - 0.5, y: localCar.y / TILE_SIZE - 1 }
-      : (avatars.get(sessionId)?.glide.at(now) ?? map.spawnPoint);
+    const tennisFocus = tennisState?.participants.has(sessionId)
+      ? tennisSnapshot?.ball?.pose.position
+      : undefined;
+    const focus = tennisFocus
+      ? { x: tennisFocus.x / TILE_SIZE - 0.5, y: tennisFocus.y / TILE_SIZE - 1 }
+      : localCar
+        ? { x: localCar.x / TILE_SIZE - 0.5, y: localCar.y / TILE_SIZE - 1 }
+        : (avatars.get(sessionId)?.glide.at(now) ?? map.spawnPoint);
     const camera = cameraOn(map, app.screen, tileCentre(focus), app.renderer.resolution, topInset);
     world.scale.set(camera.scale);
     world.position.set(camera.x, camera.y);
@@ -569,8 +576,9 @@ export async function mountGameEngine(
           avatar.nickname = player.nickname;
         }
         avatar.dance = danceOf(player);
-        avatar.sprite.view.visible = !player.carId;
-        avatar.label.visible = !player.carId;
+        const inTennisMatch = tennisParticipantIds.has(id);
+        avatar.sprite.view.visible = !player.carId && !inTennisMatch;
+        avatar.label.visible = !player.carId && !inTennisMatch;
         if (id === sessionId) {
           if (!predictor) {
             predictor = new StepPredictor(map, player, player.stepIntents);

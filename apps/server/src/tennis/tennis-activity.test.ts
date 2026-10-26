@@ -1,6 +1,6 @@
 import { type TennisEvent, TennisState } from "@bumbadum/protocol";
+import { PLAZA_V2_TENNIS_LINE } from "@bumbadum/world";
 import { beforeEach, describe, expect, it } from "vitest";
-import { PLAZA_V2_TENNIS_LINE } from "../../../../packages/world/src/plaza-v2-map.generated.ts";
 import {
   TennisActivity,
   type TennisActivityPlayer,
@@ -69,14 +69,19 @@ describe("TennisActivity lifecycle", () => {
 
     expect(room.state.matchStatus).toBe("complete");
     expect(room.state.winnerId).toBe("bob");
-    expect(activity.isInMatch("alice")).toBe(true);
-    expect(room.events.at(-1)).toEqual({
+    expect(activity.isInMatch("alice")).toBe(false);
+    expect(room.events).toContainEqual({
       code: "match-complete",
       params: { winnerId: "bob", reason: "abandonment" },
     });
+    expect(room.events).toContainEqual({
+      throwerId: "bob",
+      direction: "down",
+      target: { at: { x: room.player("bob")?.x, y: room.player("bob")?.y }, onPlayer: true },
+    });
   });
 
-  it("returns present enrolled players to the line after celebration and starts the next match", () => {
+  it("sends finished players to the hall and starts the next queued match", () => {
     activity.join("alice", now);
     activity.join("bob", now);
     activity.join("carol", now);
@@ -100,14 +105,14 @@ describe("TennisActivity lifecycle", () => {
     }
 
     expect(room.state.matchStatus).toBe("complete");
-    expect([...room.state.participants]).toHaveLength(2);
+    expect([...room.state.participants]).toHaveLength(0);
+    expect(room.player("alice")?.x).toBe(Math.floor((PLAZA_V2_TENNIS_LINE[0]?.x ?? 0) / 16));
+    expect(room.player("bob")?.x).toBe(Math.floor((PLAZA_V2_TENNIS_LINE[1]?.x ?? 0) / 16));
 
     activity.update(0, 100_000);
 
-    expect(room.state.matchStatus).toBe("countdown");
-    expect([...room.state.queue]).toEqual(["bob"]);
-    expect([...room.state.participants]).toHaveLength(2);
-    expect(room.state.countdownEndsAt).toBeGreaterThan(100_000);
+    expect(room.state.matchStatus).toBe("idle");
+    expect([...room.state.queue]).toEqual(["carol"]);
   });
 });
 

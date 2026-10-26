@@ -28,7 +28,7 @@ export const DEFAULT_TENNIS_RULES: TennisRules = {
     tileSize: 16,
     targetMarginTiles: 1,
   },
-  initialBallSpeed: 96,
+  initialBallSpeed: 128,
   speedIncreasePerRebound: 0.1,
   maxSpeedMultiplier: 2,
   contactToleranceTiles: 1,

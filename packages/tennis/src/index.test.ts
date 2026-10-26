@@ -65,6 +65,12 @@ function activeRally(match: TennisMatch): Rally {
 }
 
 describe("Tennis line", () => {
+  it("starts new points at the tuned faster default ball speed", () => {
+    const result = startNextTennisMatch(lineWithPlayers("alice", "bob"), sequenceRandom(0, 0, 0));
+
+    expect(result.match?.rally?.speed).toBe(128);
+  });
+
   it("keeps FIFO order, makes joining idempotent, and respects its capacity", () => {
     let line = createTennisLine(2);
 
