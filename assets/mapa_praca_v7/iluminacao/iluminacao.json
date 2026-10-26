@@ -1,0 +1,190 @@
+{
+ "como_usar": "interpole entre os keyframes pela hora local do usuario (0-24). Aplique na ordem: 1) saturacao, 2) multiplicar RGB por 'multiplicar', 3) misturar com 'sobreposicao' (cor, alfa), 4) desenhar as luzes (brilho dos postes/palco) com alfa x 'luzes'. Use camada_2_objetos_noite quando janelas_acesas=1 e a de dia quando 0 (ou troque por limiar de 0.5 na interpolacao).",
+ "pixi": "ColorMatrixFilter: matrix diagonal = multiplicar*(1-alfa); offset = cor_sobreposicao/255*alfa; saturate(saturacao)",
+ "keyframes": [
+  {
+   "hora": 0.0,
+   "nome": "noite",
+   "multiplicar": [
+    0.44,
+    0.48,
+    0.74
+   ],
+   "sobreposicao": {
+    "cor": [
+     24,
+     26,
+     70
+    ],
+    "alfa": 0.22
+   },
+   "luzes": 1.0,
+   "janelas_acesas": 1,
+   "saturacao": 0.85
+  },
+  {
+   "hora": 4.5,
+   "nome": "madrugada",
+   "multiplicar": [
+    0.5,
+    0.52,
+    0.76
+   ],
+   "sobreposicao": {
+    "cor": [
+     40,
+     40,
+     96
+    ],
+    "alfa": 0.2
+   },
+   "luzes": 1.0,
+   "janelas_acesas": 1,
+   "saturacao": 0.85
+  },
+  {
+   "hora": 6.0,
+   "nome": "amanhecer",
+   "multiplicar": [
+    0.88,
+    0.74,
+    0.8
+   ],
+   "sobreposicao": {
+    "cor": [
+     250,
+     168,
+     150
+    ],
+    "alfa": 0.16
+   },
+   "luzes": 0.45,
+   "janelas_acesas": 1,
+   "saturacao": 0.95
+  },
+  {
+   "hora": 8.0,
+   "nome": "manha",
+   "multiplicar": [
+    1.0,
+    0.98,
+    0.95
+   ],
+   "sobreposicao": {
+    "cor": [
+     255,
+     240,
+     214
+    ],
+    "alfa": 0.06
+   },
+   "luzes": 0.0,
+   "janelas_acesas": 0,
+   "saturacao": 1.0
+  },
+  {
+   "hora": 12.5,
+   "nome": "meio_dia",
+   "multiplicar": [
+    1.04,
+    1.04,
+    1.02
+   ],
+   "sobreposicao": {
+    "cor": [
+     255,
+     255,
+     255
+    ],
+    "alfa": 0.0
+   },
+   "luzes": 0.0,
+   "janelas_acesas": 0,
+   "saturacao": 1.05
+  },
+  {
+   "hora": 15.5,
+   "nome": "tarde",
+   "multiplicar": [
+    1.0,
+    0.95,
+    0.86
+   ],
+   "sobreposicao": {
+    "cor": [
+     255,
+     214,
+     150
+    ],
+    "alfa": 0.08
+   },
+   "luzes": 0.0,
+   "janelas_acesas": 0,
+   "saturacao": 1.0
+  },
+  {
+   "hora": 17.8,
+   "nome": "por_do_sol",
+   "multiplicar": [
+    0.98,
+    0.74,
+    0.6
+   ],
+   "sobreposicao": {
+    "cor": [
+     250,
+     130,
+     80
+    ],
+    "alfa": 0.18
+   },
+   "luzes": 0.55,
+   "janelas_acesas": 1,
+   "saturacao": 1.08
+  },
+  {
+   "hora": 19.0,
+   "nome": "anoitecer",
+   "multiplicar": [
+    0.62,
+    0.58,
+    0.88
+   ],
+   "sobreposicao": {
+    "cor": [
+     96,
+     72,
+     170
+    ],
+    "alfa": 0.2
+   },
+   "luzes": 0.85,
+   "janelas_acesas": 1,
+   "saturacao": 0.95
+  },
+  {
+   "hora": 20.5,
+   "nome": "noite",
+   "multiplicar": [
+    0.44,
+    0.48,
+    0.74
+   ],
+   "sobreposicao": {
+    "cor": [
+     24,
+     26,
+     70
+    ],
+    "alfa": 0.22
+   },
+   "luzes": 1.0,
+   "janelas_acesas": 1,
+   "saturacao": 0.85
+  }
+ ],
+ "exemplos": {
+  "07:00": "entre amanhecer e manha",
+  "18:30": "entre por_do_sol e anoitecer"
+ }
+}

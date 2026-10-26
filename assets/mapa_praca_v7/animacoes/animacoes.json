@@ -1,0 +1,180 @@
+{
+ "animacoes": {
+  "bandeira_roxa": {
+   "quadros": 4,
+   "ms": [
+    160,
+    160,
+    160,
+    160
+   ],
+   "tipo": "vento",
+   "folha": "animacoes/bandeira_roxa_anim.png"
+  },
+  "bandeira_rosa": {
+   "quadros": 4,
+   "ms": [
+    160,
+    160,
+    160,
+    160
+   ],
+   "tipo": "vento",
+   "folha": "animacoes/bandeira_rosa_anim.png"
+  },
+  "poste": {
+   "quadros": 8,
+   "ms": [
+    120,
+    120,
+    120,
+    120,
+    120,
+    120,
+    120,
+    120
+   ],
+   "tipo": "pisca",
+   "folha": "animacoes/poste_anim.png"
+  },
+  "arvore_b": {
+   "quadros": 4,
+   "ms": [
+    180,
+    180,
+    180,
+    180
+   ],
+   "tipo": "vento",
+   "folha": "animacoes/arvore_b_anim.png"
+  },
+  "arvore_a": {
+   "quadros": 4,
+   "ms": [
+    180,
+    180,
+    180,
+    180
+   ],
+   "tipo": "vento",
+   "folha": "animacoes/arvore_a_anim.png"
+  },
+  "pinheiro": {
+   "quadros": 4,
+   "ms": [
+    180,
+    180,
+    180,
+    180
+   ],
+   "tipo": "vento",
+   "folha": "animacoes/pinheiro_anim.png"
+  },
+  "arvore_c": {
+   "quadros": 4,
+   "ms": [
+    180,
+    180,
+    180,
+    180
+   ],
+   "tipo": "vento",
+   "folha": "animacoes/arvore_c_anim.png"
+  },
+  "arvore_rosa": {
+   "quadros": 4,
+   "ms": [
+    180,
+    180,
+    180,
+    180
+   ],
+   "tipo": "vento",
+   "folha": "animacoes/arvore_rosa_anim.png"
+  },
+  "arbusto": {
+   "quadros": 4,
+   "ms": [
+    180,
+    180,
+    180,
+    180
+   ],
+   "tipo": "vento",
+   "folha": "animacoes/arbusto_anim.png"
+  },
+  "arbusto_flor": {
+   "quadros": 4,
+   "ms": [
+    180,
+    180,
+    180,
+    180
+   ],
+   "tipo": "vento",
+   "folha": "animacoes/arbusto_flor_anim.png"
+  },
+  "arvore_alta": {
+   "quadros": 4,
+   "ms": [
+    180,
+    180,
+    180,
+    180
+   ],
+   "tipo": "vento",
+   "folha": "animacoes/arvore_alta_anim.png"
+  },
+  "arvore_jovem": {
+   "quadros": 4,
+   "ms": [
+    180,
+    180,
+    180,
+    180
+   ],
+   "tipo": "vento",
+   "folha": "animacoes/arvore_jovem_anim.png"
+  },
+  "bandeirinhas": {
+   "quadros": 4,
+   "ms": [
+    160,
+    160,
+    160,
+    160
+   ],
+   "tipo": "vento",
+   "folha": "animacoes/bandeirinhas_anim.png"
+  },
+  "bandeirinhas_curta": {
+   "quadros": 4,
+   "ms": [
+    160,
+    160,
+    160,
+    160
+   ],
+   "tipo": "vento",
+   "folha": "animacoes/bandeirinhas_curta_anim.png"
+  }
+ },
+ "brilho_poste": {
+  "folha": "animacoes/brilho_poste_anim.png",
+  "quadros": 8,
+  "ms": 120,
+  "intensidade": [
+   1,
+   1,
+   1,
+   0.85,
+   1,
+   1,
+   0.35,
+   1
+  ],
+  "ancora": "centro do brilho = (poste.base_x, poste.base_y - 32); desenhe com o alfa x luzes do horario"
+ },
+ "fase": "desencontre as instancias: quadro_inicial = (x*7 + y*13) % numero_de_quadros (assim nao balancam todas juntas)",
+ "tiled": "objetos.tsj ja tem 'animation' nos tiles animados (arvores, postes, bandeirinhas, banners)"
+}
