@@ -136,6 +136,28 @@ _Avoid_: hit, swing
 The forgiving horizontal range around the Ball's landing Tile in which a Tennis player can make a Rebound. The initial rule allows about one Tile of tolerance on each side and can later be tightened if the activity is too easy.
 _Avoid_: hitbox, collision box
 
+### Time of day
+
+**Time of day**:
+The hour a Player sees the Room at, taken from their own clock. Players in different time zones see different times of day; it is not shared like the Radio.
+_Avoid_: room time, server time, clock
+
+**Day period**:
+A named span of the Time of day with its own look, such as Dawn, Midday, Sunset or Night. The look changes gradually from one Day period to the next.
+_Avoid_: phase, cycle, shift
+
+**Ambient light**:
+The colour cast over the whole Map at the current Time of day, from bright daylight to deep night.
+_Avoid_: tint, filter, darkness
+
+**Lamp glow**:
+The light shed by the Map's lamps and other light sources, from off by day to fully on at night.
+_Avoid_: lights, light overlay, emission
+
+**Ambient animation**:
+A looping decorative movement of a Map object, such as a tree swaying or a flag waving. Each Player sees it on their own; unlike a Dance, it is not shared.
+_Avoid_: idle animation, object animation
+
 ### Radio
 
 **Radio**:
