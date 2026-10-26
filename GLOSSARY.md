@@ -210,6 +210,20 @@ _Avoid_: error, alert, toast
 A room event shown to every player in the chat history, such as a player joining, a track being queued or a new track on air.
 _Avoid_: system message, log
 
+### Non-player characters
+
+**Ambient NPC**:
+A static world character that is not a Player and exists to make the Map feel inhabited. An Ambient NPC does not occupy a Lobby place and has an original, stylised appearance even when it honours a real artist.
+_Avoid_: bot, artificial player, playable character
+
+**Tennis Coach**:
+A permanent NPC associated with the Tennis hall that can take the place of a human opponent when a Player has no eligible human opponent.
+_Avoid_: tennis bot, fake player, automatic opponent
+
+**NPC interaction**:
+A private short response shown to a Player who explicitly interacts with an Ambient NPC, such as a line or musical fact. It is not a Message or an Announcement.
+_Avoid_: NPC chat, system message, quest
+
 ### Avatar
 
 **Avatar**:
