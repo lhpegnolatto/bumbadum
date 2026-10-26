@@ -75,11 +75,9 @@ The plaza is growing beyond the dance floor. Challenge friends to a rally on the
 <table>
   <tr>
     <td width="50%" align="center" valign="top">
-      <h3>🎾 Tennis court</h3>
       <img src=".github/tennis_demo.gif" alt="Two players rallying on the bumbadum tennis court" width="360" />
     </td>
     <td width="50%" align="center" valign="top">
-      <h3>🏁 Race track</h3>
       <img src=".github/race_demo.gif" alt="Cars racing around the bumbadum race track" width="360" />
     </td>
   </tr>
