@@ -181,6 +181,7 @@ function JoinedRoom({
   const { stop: stopDancing, toggle: toggleDance } = dance;
   const canvasRef = useRef<GameCanvasHandle>(null);
   const wardrobeOpenRef = useRef(wardrobeOpen);
+  const carContextRef = useRef(carContext);
 
   useEffect(() => {
     wardrobeOpenRef.current = wardrobeOpen;
@@ -192,10 +193,15 @@ function JoinedRoom({
   }, [wardrobeOpen, stopDancing]);
 
   useEffect(() => {
+    carContextRef.current = carContext;
+  }, [carContext]);
+
+  useEffect(() => {
     function danceOnF(event: KeyboardEvent) {
       if (event.key.toLowerCase() !== "f" || event.repeat || event.defaultPrevented) return;
       if (event.ctrlKey || event.metaKey || event.altKey || isTextField(event.target)) return;
       if (wardrobeOpenRef.current) return;
+      if (carContextRef.current.carId) return;
       toggleDance();
     }
     document.addEventListener("keydown", danceOnF);
@@ -207,6 +213,7 @@ function JoinedRoom({
       if (event.key.toLowerCase() !== "e" || event.repeat || event.defaultPrevented) return;
       if (event.ctrlKey || event.metaKey || event.altKey || isTextField(event.target)) return;
       if (wardrobeOpenRef.current) return;
+      if (carContextRef.current.carId) return;
       room.send(CONFETTI_THROW_MESSAGE);
     }
     document.addEventListener("keydown", throwConfettiOnE);
@@ -350,7 +357,7 @@ function JoinedRoom({
               aria-pressed={dance.dancing}
               aria-keyshortcuts="F"
               // Trying on clothes ends a dance, so none starts while the Wardrobe is open.
-              disabled={wardrobeOpen}
+              disabled={wardrobeOpen || Boolean(carContext.carId)}
               title={roomT("danceShortcut")}
               onClick={toggleDance}
             >
@@ -363,7 +370,7 @@ function JoinedRoom({
               className="compact:size-11 compact:px-0"
               aria-keyshortcuts="E"
               // A throw ends a dance, so, like one, none starts while the Wardrobe is open.
-              disabled={wardrobeOpen}
+              disabled={wardrobeOpen || Boolean(carContext.carId)}
               title={roomT("confettiShortcut")}
               onClick={() => room.send(CONFETTI_THROW_MESSAGE)}
             >

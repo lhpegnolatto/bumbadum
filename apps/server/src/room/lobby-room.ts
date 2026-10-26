@@ -148,6 +148,7 @@ export class LobbyRoom extends Room<{ state: RoomState; client: LobbyClient }> {
       this.carMotions.set(mounted.id, mounted);
       this.#syncCar(mounted);
       player.carId = mounted.id;
+      player.dance = NOT_DANCING;
     },
     [CAR_DRIVE_MESSAGE]: (client: LobbyClient, payload: unknown) => {
       const direction = parseCarDriveIntent(payload);
@@ -293,7 +294,13 @@ export class LobbyRoom extends Room<{ state: RoomState; client: LobbyClient }> {
   /** Starts `dance`, or stops dancing on `null`, within the player's dance change rate. */
   #changeDance(client: LobbyClient, dance: DanceId | null) {
     const player = this.state.players.get(client.sessionId);
-    if (!player || !this.danceChangeLimits.get(client.sessionId)?.take(performance.now())) return;
+    if (
+      !player ||
+      player.carId ||
+      !this.danceChangeLimits.get(client.sessionId)?.take(performance.now())
+    ) {
+      return;
+    }
     player.dance = dance ?? NOT_DANCING;
   }
 
@@ -303,7 +310,13 @@ export class LobbyRoom extends Room<{ state: RoomState; client: LobbyClient }> {
    */
   #throwConfetti(client: LobbyClient) {
     const player = this.state.players.get(client.sessionId);
-    if (!player || !this.confettiThrowLimits.get(client.sessionId)?.take(performance.now())) return;
+    if (
+      !player ||
+      player.carId ||
+      !this.confettiThrowLimits.get(client.sessionId)?.take(performance.now())
+    ) {
+      return;
+    }
     player.dance = NOT_DANCING;
     const isOccupied = (tile: { x: number; y: number }) =>
       [...this.state.players].some(

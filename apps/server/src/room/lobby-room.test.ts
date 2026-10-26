@@ -137,6 +137,30 @@ describe("lobby-room", () => {
       await expect.poll(() => room.state.cars.get("car-1")?.y).toBeGreaterThan(initialY);
     });
 
+    it("blocks dancing and confetti while driving", async () => {
+      const ana = await joinLobby("Ana");
+      const bia = await joinLobby("Bia");
+      const first = ana.state.cars.get("car-1");
+      const player = colyseus.getRoomById<RoomState>(ana.roomId).state.players.get(ana.sessionId);
+      if (!first || !player) throw new Error("expected the first car and player");
+      player.x = Math.floor(first.x / 16);
+      player.y = Math.floor(first.y / 16);
+
+      ana.send(DANCE_MESSAGE, "side-step");
+      await expect.poll(() => ana.state.players.get(ana.sessionId)?.dance).toBe("side-step");
+      ana.send(CAR_ENTER_MESSAGE);
+      await expect.poll(() => ana.state.players.get(ana.sessionId)?.carId).toBe("car-1");
+      expect(ana.state.players.get(ana.sessionId)?.dance).toBe("");
+
+      const throwsToBia = received<ConfettiThrown>(bia, CONFETTI_THROWN);
+      ana.send(DANCE_MESSAGE, "side-step");
+      ana.send(CONFETTI_THROW_MESSAGE);
+      await new Promise((resolve) => setTimeout(resolve, 50));
+
+      expect(ana.state.players.get(ana.sessionId)?.dance).toBe("");
+      expect(throwsToBia).toEqual([]);
+    });
+
     it("keeps a dismounted car in place with a server expiry lease", async () => {
       const room = await joinLobby("Ana");
       await expect.poll(() => room.state.cars?.size).toBe(12);
