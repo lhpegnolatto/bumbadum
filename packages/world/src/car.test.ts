@@ -152,6 +152,12 @@ describe("car driving", () => {
     expect(moving.velocityY).toBeGreaterThan(0);
   });
 
+  it("keeps the parking manoeuvre area clear of static map contacts", () => {
+    expect(lobbyCarCollisionWorld.isBlocked(1048, 472)).toBe(false);
+    expect(lobbyCarCollisionWorld.isBlocked(1084, 432)).toBe(false);
+    expect(lobbyCarCollisionWorld.isBlocked(1064, 304)).toBe(false);
+  });
+
   it("spawns active cars with a free parking space between neighbours", () => {
     const fleet = createCarFleet([
       { x: 0, y: 0 },

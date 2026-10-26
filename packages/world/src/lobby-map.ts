@@ -11,6 +11,15 @@ export const lobbyMap = createMap(PLAZA_V2_ROWS);
 
 export const lobbyParkingSpots = PLAZA_V2_PARKING_SPOTS;
 
+// Cars need a forgiving apron around the parking lot to pull out without catching
+// on decorative lamps, signs, or the baked parking barriers with their collision radius.
+const PARKING_DRIVE_ZONE = {
+  left: 944,
+  right: 1216,
+  top: 272,
+  bottom: 640,
+};
+
 /** Pixel-space collision geometry for Cars, including blocked map objects. */
 export const lobbyCarCollisionWorld = {
   isBlocked(x: number, y: number): boolean {
@@ -19,8 +28,13 @@ export const lobbyCarCollisionWorld = {
     const onParkingSpot = lobbyParkingSpots.some(
       (spot) => Math.hypot(spot.x - x, spot.y - y) <= 20,
     );
+    const inParkingDriveZone =
+      x >= PARKING_DRIVE_ZONE.left &&
+      x <= PARKING_DRIVE_ZONE.right &&
+      y >= PARKING_DRIVE_ZONE.top &&
+      y <= PARKING_DRIVE_ZONE.bottom;
     const onAutodromeTrack = PLAZA_V2_TRACK_ROWS[tileY]?.[tileX] === "#";
-    if (onAutodromeTrack) return false;
+    if (onAutodromeTrack || inParkingDriveZone) return false;
     return (
       (!isWalkable(lobbyMap, { x: tileX, y: tileY }) && !onParkingSpot) ||
       this.isBlockedByObject(x, y)
