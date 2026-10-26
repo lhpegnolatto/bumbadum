@@ -3484,13 +3484,13 @@ export const PLAZA_V2_AMBIENT_NPCS = [
   },
   {
     "name": "michael-jackson",
-    "x": 1392,
-    "y": 560
+    "x": 1280,
+    "y": 384
   },
   {
     "name": "rita-lee",
-    "x": 1280,
-    "y": 384
+    "x": 1392,
+    "y": 560
   },
   {
     "name": "luiz-gonzaga",

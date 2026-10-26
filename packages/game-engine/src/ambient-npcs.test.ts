@@ -18,7 +18,7 @@ describe("Ambient NPC roster", () => {
 
   it("keeps the plaza center open while placing tributes around its edges", () => {
     const edgeTributes = AMBIENT_NPCS.filter(({ id }) =>
-      ["bob-marley", "michael-jackson", "luiz-gonzaga"].includes(id),
+      ["bob-marley", "luiz-gonzaga"].includes(id),
     );
     expect(edgeTributes.every(({ position }) => position.x < 50 || position.x > 84)).toBe(true);
     expect(AMBIENT_NPCS.some(({ dance }) => dance === "side-step")).toBe(true);
@@ -36,7 +36,11 @@ describe("Ambient NPC roster", () => {
       y: 38,
     });
     expect(AMBIENT_NPCS.find(({ id }) => id === "raul-seixas")?.position).toEqual({ x: 52, y: 30 });
-    expect(AMBIENT_NPCS.find(({ id }) => id === "rita-lee")?.position).toEqual({ x: 80, y: 24 });
+    expect(AMBIENT_NPCS.find(({ id }) => id === "michael-jackson")?.position).toEqual({
+      x: 80,
+      y: 24,
+    });
+    expect(AMBIENT_NPCS.find(({ id }) => id === "rita-lee")?.position).toEqual({ x: 87, y: 35 });
   });
 
   it("keeps the permanent Tennis Coach in the Tennis hall", () => {
