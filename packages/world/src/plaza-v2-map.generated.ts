@@ -3478,12 +3478,12 @@ export const PLAZA_V2_AMBIENT_NPCS = [
     "y": 544
   },
   {
-    "name": "elis-regina",
+    "name": "raul-seixas",
     "x": 784,
     "y": 560
   },
   {
-    "name": "tim-maia",
+    "name": "detonator",
     "x": 1392,
     "y": 560
   },
@@ -3493,7 +3493,7 @@ export const PLAZA_V2_AMBIENT_NPCS = [
     "y": 720
   },
   {
-    "name": "gilberto-gil",
+    "name": "luiz-gonzaga",
     "x": 1392,
     "y": 720
   },

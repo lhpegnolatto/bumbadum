@@ -91,17 +91,19 @@ export const AMBIENT_NPCS: readonly AmbientNpc[] = [
     direction: "left",
   },
   {
-    id: "elis-regina",
-    name: "Elis Regina",
-    position: npcPosition("elis-regina"),
-    avatar: avatar(3, "short-ginger", "jacket-red", "flared-skirt-white"),
+    id: "raul-seixas",
+    name: "Raul Seixas",
+    position: npcPosition("raul-seixas"),
+    avatar: avatar(2, "short-black", "jacket-black", "trousers-black", {
+      eyewear: "round-glasses-black",
+    }),
     direction: "right",
   },
   {
-    id: "tim-maia",
-    name: "Tim Maia",
-    position: npcPosition("tim-maia"),
-    avatar: avatar(4, "afro-black", "t-shirt-purple", "trousers-black", {
+    id: "detonator",
+    name: "Detonator",
+    position: npcPosition("detonator"),
+    avatar: avatar(2, "short-black", "tank-top-black", "trousers-black", {
       eyewear: "sunglasses-black",
     }),
     direction: "left",
@@ -117,10 +119,12 @@ export const AMBIENT_NPCS: readonly AmbientNpc[] = [
     dance: "side-step",
   },
   {
-    id: "gilberto-gil",
-    name: "Gilberto Gil",
-    position: npcPosition("gilberto-gil"),
-    avatar: avatar(4, "afro-gray", "t-shirt-yellow", "trousers-green"),
+    id: "luiz-gonzaga",
+    name: "Luiz Gonzaga",
+    position: npcPosition("luiz-gonzaga"),
+    avatar: avatar(4, "short-black", "t-shirt-white", "trousers-brown", {
+      headwear: "straw-hat-brown",
+    }),
     direction: "left",
   },
 ];

@@ -21,10 +21,10 @@ describe("Ambient NPC roster", () => {
       [
         "bob-marley",
         "freddie-mercury",
-        "elis-regina",
-        "tim-maia",
+        "raul-seixas",
+        "detonator",
         "rita-lee",
-        "gilberto-gil",
+        "luiz-gonzaga",
       ].includes(id),
     );
     expect(edgeTributes.every(({ position }) => position.x < 50 || position.x > 84)).toBe(true);

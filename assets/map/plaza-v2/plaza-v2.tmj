@@ -36705,10 +36705,10 @@
         { "id": 8053, "name": "freddie-mercury", "type": "ambient-npc", "x": 1456, "y": 384, "point": true, "width": 0, "height": 0, "rotation": 0, "visible": true },
         { "id": 8054, "name": "whitney-houston", "type": "ambient-npc", "x": 880, "y": 544, "point": true, "width": 0, "height": 0, "rotation": 0, "visible": true },
         { "id": 8055, "name": "prince", "type": "ambient-npc", "x": 1264, "y": 544, "point": true, "width": 0, "height": 0, "rotation": 0, "visible": true },
-        { "id": 8057, "name": "elis-regina", "type": "ambient-npc", "x": 784, "y": 560, "point": true, "width": 0, "height": 0, "rotation": 0, "visible": true },
-        { "id": 8058, "name": "tim-maia", "type": "ambient-npc", "x": 1392, "y": 560, "point": true, "width": 0, "height": 0, "rotation": 0, "visible": true },
+        { "id": 8057, "name": "raul-seixas", "type": "ambient-npc", "x": 784, "y": 560, "point": true, "width": 0, "height": 0, "rotation": 0, "visible": true },
+        { "id": 8058, "name": "detonator", "type": "ambient-npc", "x": 1392, "y": 560, "point": true, "width": 0, "height": 0, "rotation": 0, "visible": true },
         { "id": 8059, "name": "rita-lee", "type": "ambient-npc", "x": 784, "y": 720, "point": true, "width": 0, "height": 0, "rotation": 0, "visible": true },
-        { "id": 8060, "name": "gilberto-gil", "type": "ambient-npc", "x": 1392, "y": 720, "point": true, "width": 0, "height": 0, "rotation": 0, "visible": true },
+        { "id": 8060, "name": "luiz-gonzaga", "type": "ambient-npc", "x": 1392, "y": 720, "point": true, "width": 0, "height": 0, "rotation": 0, "visible": true },
         { "id": 8056, "name": "tennis-coach", "type": "ambient-npc", "x": 472, "y": 648, "point": true, "width": 0, "height": 0, "rotation": 0, "visible": true }
       ]
     },
