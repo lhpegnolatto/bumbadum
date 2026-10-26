@@ -43,11 +43,14 @@ export function useRoom(slug: string, nickname: string, avatar: Avatar) {
   const [status, setStatus] = useState<RoomStatus | undefined>();
   const [players, setPlayers] = useState<PresentPlayer[]>([]);
   const connection = useRef<RoomConnection>(undefined);
-  // Read at each join, so a rejoin wears the latest avatar without the avatar itself reconnecting.
+  // Read at each join, so a rejoin wears the latest avatar and Nickname without a change to
+  // either one reconnecting: the room already has it.
   const worn = useRef(avatar);
+  const named = useRef(nickname);
   useEffect(() => {
     worn.current = avatar;
-  }, [avatar]);
+    named.current = nickname;
+  }, [avatar, nickname]);
 
   useEffect(() => {
     const client = new Client(SERVER_URL);
@@ -56,7 +59,11 @@ export function useRoom(slug: string, nickname: string, avatar: Avatar) {
     async function join(): Promise<JoinOutcome<LobbyRoom>> {
       let room: LobbyRoom;
       try {
-        room = await client.join<RoomState>(ROOM_TYPE, { slug, nickname, avatar: worn.current });
+        room = await client.join<RoomState>(ROOM_TYPE, {
+          slug,
+          nickname: named.current,
+          avatar: worn.current,
+        });
       } catch (error) {
         if (error instanceof MatchMakeError && isJoinRejection(error.message)) {
           return { kind: "rejected", rejection: error.message };
@@ -69,6 +76,11 @@ export function useRoom(slug: string, nickname: string, avatar: Avatar) {
       const callbacks = Callbacks.get(room);
       callbacks.onAdd("players", (player, sessionId) => {
         setPlayers((list) => [...list, { sessionId, nickname: player.nickname }]);
+        callbacks.listen(player, "nickname", (nickname) => {
+          setPlayers((list) =>
+            list.map((p) => (p.sessionId === sessionId ? { ...p, nickname } : p)),
+          );
+        });
       });
       callbacks.onRemove("players", (_player, sessionId) => {
         setPlayers((list) => list.filter((p) => p.sessionId !== sessionId));
@@ -77,7 +89,6 @@ export function useRoom(slug: string, nickname: string, avatar: Avatar) {
       return { kind: "joined", room };
     }
 
-    // Every attempt, including a rejoin after a lost room, uses the same nickname.
     function connect() {
       return connectToRoom({ clock: browserClock, isServerAwake, join, onChange: setStatus });
     }
@@ -110,7 +121,7 @@ export function useRoom(slug: string, nickname: string, avatar: Avatar) {
       window.removeEventListener("pageshow", rejoinOnShow);
       current.close();
     };
-  }, [slug, nickname]);
+  }, [slug]);
 
   return { status, players, retry: () => connection.current?.retry() };
 }

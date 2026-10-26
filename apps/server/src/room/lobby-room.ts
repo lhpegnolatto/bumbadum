@@ -14,11 +14,13 @@ import {
   type JoinOptions,
   type JoinRejection,
   LOBBY_SLUG,
+  NICKNAME_MESSAGE,
   NOT_DANCING,
   PlayerState,
   parseAvatarChange,
   parseDanceIntent,
   parseJoinOptions,
+  parseNickname,
   parseStepIntent,
   ROOM_TYPE,
   RoomState,
@@ -37,6 +39,9 @@ const STEP_RATE = { capacity: STEPS_PER_SECOND, perSecond: STEPS_PER_SECOND };
 
 /** At most one avatar change every 2 seconds. */
 const AVATAR_CHANGE_RATE = { capacity: 1, perSecond: 0.5 };
+
+/** At most one Nickname change every 10 seconds: each one is announced to the room. */
+const NICKNAME_CHANGE_RATE = { capacity: 1, perSecond: 0.1 };
 
 /** At most two dance changes a second: starting and stopping again. */
 const DANCE_CHANGE_RATE = { capacity: 2, perSecond: 1 };
@@ -66,12 +71,14 @@ export class LobbyRoom extends Room<{ state: RoomState; client: LobbyClient }> {
 
   private readonly stepLimits = new Map<string, TokenBucket>();
   private readonly avatarChangeLimits = new Map<string, TokenBucket>();
+  private readonly nicknameChangeLimits = new Map<string, TokenBucket>();
   private readonly danceChangeLimits = new Map<string, TokenBucket>();
   private readonly confettiThrowLimits = new Map<string, TokenBucket>();
 
   override messages = {
     [CHAT_INPUT]: validate(chatInputSchema, (client: LobbyClient, { text }) => {
-      this.#chat.receive(client, nicknameOf(client), text, performance.now());
+      const player = this.state.players.get(client.sessionId);
+      if (player) this.#chat.receive(client, player.nickname, text, performance.now());
     }),
     [CLOCK_PING]: validate(clockPingSchema, (client: LobbyClient, { sentAt }) => {
       this.#radio.answerPing(client, sentAt);
@@ -97,6 +104,16 @@ export class LobbyRoom extends Room<{ state: RoomState; client: LobbyClient }> {
       if (!avatar || !player) return;
       if (!this.avatarChangeLimits.get(client.sessionId)?.take(performance.now())) return;
       player.avatar.assign(avatarStateValue(avatar));
+    },
+    [NICKNAME_MESSAGE]: (client: LobbyClient, payload: unknown) => {
+      const nickname = parseNickname(payload);
+      const player = this.state.players.get(client.sessionId);
+      // An unchanged Nickname is not a change, so it neither spends the rate nor announces.
+      if (!nickname || !player || nickname === player.nickname) return;
+      if (!this.nicknameChangeLimits.get(client.sessionId)?.take(performance.now())) return;
+      const from = player.nickname;
+      player.nickname = nickname;
+      this.#chat.renamed(from, nickname);
     },
     [DANCE_MESSAGE]: (client: LobbyClient, payload: unknown) => {
       const intent = parseDanceIntent(payload);
@@ -159,6 +176,10 @@ export class LobbyRoom extends Room<{ state: RoomState; client: LobbyClient }> {
       client.sessionId,
       new TokenBucket(AVATAR_CHANGE_RATE, performance.now()),
     );
+    this.nicknameChangeLimits.set(
+      client.sessionId,
+      new TokenBucket(NICKNAME_CHANGE_RATE, performance.now()),
+    );
     this.danceChangeLimits.set(
       client.sessionId,
       new TokenBucket(DANCE_CHANGE_RATE, performance.now()),
@@ -216,12 +237,16 @@ export class LobbyRoom extends Room<{ state: RoomState; client: LobbyClient }> {
   }
 
   override onLeave(client: LobbyClient) {
+    // The Nickname they leave with, which a rename may have changed since they joined.
+    const nickname =
+      this.state.players.get(client.sessionId)?.nickname ?? joinOptionsOf(client).nickname;
     this.state.players.delete(client.sessionId);
     this.stepLimits.delete(client.sessionId);
     this.avatarChangeLimits.delete(client.sessionId);
+    this.nicknameChangeLimits.delete(client.sessionId);
     this.danceChangeLimits.delete(client.sessionId);
     this.confettiThrowLimits.delete(client.sessionId);
-    this.#chat.farewell(client, nicknameOf(client));
+    this.#chat.farewell(client, nickname);
     this.#radio.farewell(client);
   }
 }
@@ -229,10 +254,6 @@ export class LobbyRoom extends Room<{ state: RoomState; client: LobbyClient }> {
 function joinOptionsOf(client: LobbyClient): JoinOptions {
   // Colyseus types auth as optional, but onAuth resolves it before every join.
   return client.auth as JoinOptions;
-}
-
-function nicknameOf(client: LobbyClient): string {
-  return joinOptionsOf(client).nickname;
 }
 
 /** The lobby always exists (ADR-0008), so a full lobby never spawns a second one. */

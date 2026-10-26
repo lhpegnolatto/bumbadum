@@ -101,6 +101,7 @@
     "announcement": {
       "player-joined": "{nickname} joined the room.",
       "player-left": "{nickname} left the room.",
+      "player-renamed": "{from} is now {to}.",
       "track-queued": "{nickname} queued “{title}”.",
       "now-playing": "Now playing: “{title}”, from {nickname}.",
       "skip-vote-cast": "{nickname} voted to skip ({votes} of {needed}).",

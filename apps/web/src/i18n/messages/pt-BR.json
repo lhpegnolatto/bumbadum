@@ -101,6 +101,7 @@
     "announcement": {
       "player-joined": "{nickname} entrou na sala.",
       "player-left": "{nickname} saiu da sala.",
+      "player-renamed": "{from} agora é {to}.",
       "track-queued": "{nickname} colocou “{title}” na fila.",
       "now-playing": "Tocando agora: “{title}”, de {nickname}.",
       "skip-vote-cast": "{nickname} votou para pular ({votes} de {needed}).",

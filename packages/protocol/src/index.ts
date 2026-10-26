@@ -42,6 +42,7 @@ export {
   type JoinRejection,
   joinRejections,
 } from "./room/join-rejection.ts";
+export { NICKNAME_MESSAGE } from "./room/nickname-change.ts";
 export { PlayerState, RoomState } from "./room/room-state.ts";
 export { LOBBY_SLUG, ROOM_TYPE } from "./room/room-type.ts";
 export {
