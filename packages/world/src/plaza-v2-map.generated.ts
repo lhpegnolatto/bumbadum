@@ -199,13 +199,6 @@ export const PLAZA_V2_COLLISION_OBJECTS = [
     "height": 6
   },
   {
-    "name": "tires",
-    "x": 1255,
-    "y": 102,
-    "width": 14,
-    "height": 8
-  },
-  {
     "name": "speaker-speaker",
     "x": 316,
     "y": 100,
@@ -402,48 +395,6 @@ export const PLAZA_V2_COLLISION_OBJECTS = [
     "height": 6
   },
   {
-    "name": "chair",
-    "x": 367,
-    "y": 189,
-    "width": 12,
-    "height": 8
-  },
-  {
-    "name": "chair",
-    "x": 409,
-    "y": 189,
-    "width": 12,
-    "height": 8
-  },
-  {
-    "name": "chair",
-    "x": 451,
-    "y": 189,
-    "width": 12,
-    "height": 8
-  },
-  {
-    "name": "chair",
-    "x": 501,
-    "y": 189,
-    "width": 12,
-    "height": 8
-  },
-  {
-    "name": "chair",
-    "x": 543,
-    "y": 189,
-    "width": 12,
-    "height": 8
-  },
-  {
-    "name": "chair",
-    "x": 585,
-    "y": 189,
-    "width": 12,
-    "height": 8
-  },
-  {
     "name": "tires",
     "x": 1723,
     "y": 190,
@@ -514,48 +465,6 @@ export const PLAZA_V2_COLLISION_OBJECTS = [
     "height": 6
   },
   {
-    "name": "chair",
-    "x": 367,
-    "y": 225,
-    "width": 12,
-    "height": 8
-  },
-  {
-    "name": "chair",
-    "x": 409,
-    "y": 225,
-    "width": 12,
-    "height": 8
-  },
-  {
-    "name": "chair",
-    "x": 451,
-    "y": 225,
-    "width": 12,
-    "height": 8
-  },
-  {
-    "name": "chair",
-    "x": 501,
-    "y": 225,
-    "width": 12,
-    "height": 8
-  },
-  {
-    "name": "chair",
-    "x": 543,
-    "y": 225,
-    "width": 12,
-    "height": 8
-  },
-  {
-    "name": "chair",
-    "x": 585,
-    "y": 225,
-    "width": 12,
-    "height": 8
-  },
-  {
     "name": "tires",
     "x": 1723,
     "y": 238,
@@ -612,48 +521,6 @@ export const PLAZA_V2_COLLISION_OBJECTS = [
     "height": 4
   },
   {
-    "name": "chair",
-    "x": 367,
-    "y": 261,
-    "width": 12,
-    "height": 8
-  },
-  {
-    "name": "chair",
-    "x": 409,
-    "y": 261,
-    "width": 12,
-    "height": 8
-  },
-  {
-    "name": "chair",
-    "x": 451,
-    "y": 261,
-    "width": 12,
-    "height": 8
-  },
-  {
-    "name": "chair",
-    "x": 501,
-    "y": 261,
-    "width": 12,
-    "height": 8
-  },
-  {
-    "name": "chair",
-    "x": 543,
-    "y": 261,
-    "width": 12,
-    "height": 8
-  },
-  {
-    "name": "chair",
-    "x": 585,
-    "y": 261,
-    "width": 12,
-    "height": 8
-  },
-  {
     "name": "tires",
     "x": 1723,
     "y": 286,
@@ -687,48 +554,6 @@ export const PLAZA_V2_COLLISION_OBJECTS = [
     "y": 296,
     "width": 8,
     "height": 6
-  },
-  {
-    "name": "chair",
-    "x": 367,
-    "y": 297,
-    "width": 12,
-    "height": 8
-  },
-  {
-    "name": "chair",
-    "x": 409,
-    "y": 297,
-    "width": 12,
-    "height": 8
-  },
-  {
-    "name": "chair",
-    "x": 451,
-    "y": 297,
-    "width": 12,
-    "height": 8
-  },
-  {
-    "name": "chair",
-    "x": 501,
-    "y": 297,
-    "width": 12,
-    "height": 8
-  },
-  {
-    "name": "chair",
-    "x": 543,
-    "y": 297,
-    "width": 12,
-    "height": 8
-  },
-  {
-    "name": "chair",
-    "x": 585,
-    "y": 297,
-    "width": 12,
-    "height": 8
   },
   {
     "name": "sign-parking",

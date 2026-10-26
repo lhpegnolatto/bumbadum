@@ -1,28 +1,15 @@
 {
-  "celula_carro": [48, 48],
+  "celula_carro": [32, 32],
   "linhas": ["baixo", "direita (esquerda = espelhar)", "cima"],
-  "colunas": [
-    "0 parado (sem motorista)",
-    "1 andando A",
-    "2 andando B (carro sobe 1 px e roda gira)"
-  ],
-  "camadas": "desenhe: carro_fundo -> avatar -> carro_frente",
+  "colunas": ["0 parado", "1 andando A", "2 andando B (sobe 1 px, roda gira)"],
+  "ordem_de_desenho": ["fx 'atras'", "carro_fundo", "avatar", "carro_frente", "fx 'frente'"],
   "avatar_no_carro": {
-    "baixo": [12, 12],
-    "direita": [10, 11],
-    "cima": [12, 12],
-    "obs": "posicao (x,y) do canto da celula 24x24 do avatar dentro da celula 48x48 do carro; no quadro 2 suba o avatar 1 px junto com o carro. Use o quadro idle 0 do avatar na direcao do carro (esquerda = direita espelhada)."
+    "baixo": [4, 1],
+    "direita": [2, 3],
+    "cima": [4, 2],
+    "obs": "canto da celula 24x24 do avatar dentro da celula 32x32 do carro; use o idle quadro 0 na direcao do carro; no quadro 2 suba o avatar 1 px; esquerda = espelhe o carro E o avatar juntos"
   },
-  "ancora_carro": "centro da base do carro em (24,44) na celula",
-  "fps_sugerido": "andando: alterne quadros 1 e 2 a cada 100 ms (mais rapido = 60 ms em alta velocidade)",
-  "fx": {
-    "fumaca_escapamento_16.png": "4 quadros, nasce no escapamento (traseira) e sobe; 90 ms",
-    "poeira_derrapagem_24x16.png": "4 quadros, nas rodas traseiras ao fazer curva/frear",
-    "linhas_velocidade_16.png": "2 quadros alternados atras do carro em alta velocidade"
-  },
-  "escapamento": {
-    "baixo": [24, 26],
-    "direita": [4, 40],
-    "cima": [31, 44]
-  }
+  "ancora_carro": "centro da base em (16,30)",
+  "colisao_sugerida": [5, 18, 27, 31],
+  "andando": "alterne colunas 1 e 2 a cada ~100 ms (60 ms rapido)"
 }

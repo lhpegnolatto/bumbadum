@@ -25,12 +25,14 @@ describe("fxFrame", () => {
 
   it("turns exhaust and motion effects with the car", () => {
     expect(carEffectPose("right")).toMatchObject({
+      row: 1,
       smoke: { x: -19, y: 0 },
       rotation: 0,
     });
     expect(carEffectPose("up")).toMatchObject({
+      row: 2,
       smoke: { x: 0, y: 19 },
-      rotation: -Math.PI / 2,
+      rotation: 0,
     });
   });
 });

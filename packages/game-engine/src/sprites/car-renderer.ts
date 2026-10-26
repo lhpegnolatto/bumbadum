@@ -4,10 +4,9 @@ import { carDepth } from "../depth.ts";
 import { carEffectPose, carFrame, fxFrame } from "../movement/car-animation.ts";
 import type { CarPoint, CarPose } from "../movement/car-driving.ts";
 
-const CELL_SIZE = 48;
-const SMOKE_CELL_SIZE = 16;
-const DUST_CELL_SIZE = 24;
-const SPEED_LINE_CELL_SIZE = 16;
+const CELL_SIZE = 32;
+const CAR_ANCHOR_Y = 30;
+const FX_CELL_SIZE = 48;
 
 export interface CarFxTextures {
   smoke?: Texture;
@@ -48,7 +47,7 @@ export class CarRenderer {
     this.background = new Sprite({ texture: sheetFrame(this.backgroundSheet, 0, 0, CELL_SIZE) });
     this.front = new Sprite({ texture: sheetFrame(this.frontSheet, 0, 0, CELL_SIZE) });
     for (const sprite of [this.background, this.front]) {
-      sprite.anchor.set(0.5, 44 / CELL_SIZE);
+      sprite.anchor.set(0.5, CAR_ANCHOR_Y / CELL_SIZE);
     }
     this.background.zIndex = 0;
     if (avatar) {
@@ -62,9 +61,9 @@ export class CarRenderer {
     this.smokeSheet = textures.fx?.smoke;
     this.dustSheet = textures.fx?.dust;
     this.speedLineSheet = textures.fx?.speedLines;
-    this.smoke = effectSprite(this.smokeSheet, SMOKE_CELL_SIZE);
-    this.dust = effectSprite(this.dustSheet, DUST_CELL_SIZE);
-    this.speedLines = effectSprite(this.speedLineSheet, SPEED_LINE_CELL_SIZE);
+    this.smoke = effectSprite(this.smokeSheet, FX_CELL_SIZE);
+    this.dust = effectSprite(this.dustSheet, FX_CELL_SIZE);
+    this.speedLines = effectSprite(this.speedLineSheet, FX_CELL_SIZE);
     for (const sprite of [this.smoke, this.dust, this.speedLines]) {
       if (sprite) {
         sprite.zIndex = 3;
@@ -98,14 +97,24 @@ export class CarRenderer {
       this.smoke.rotation = effectPose.rotation;
       this.smoke.visible = !reducedMotion && pose.speed > 0.2;
       if (this.smokeSheet)
-        this.smoke.texture = sheetFrame(this.smokeSheet, 0, fxFrame(now, 4, 90), SMOKE_CELL_SIZE);
+        this.smoke.texture = sheetFrame(
+          this.smokeSheet,
+          effectPose.row,
+          fxFrame(now, 4, 90),
+          FX_CELL_SIZE,
+        );
     }
     if (this.dust) {
       this.dust.position.set(effectPose.dust.x, effectPose.dust.y);
       this.dust.rotation = effectPose.rotation;
       this.dust.visible = !reducedMotion && pose.drifting;
       if (this.dustSheet)
-        this.dust.texture = sheetFrame(this.dustSheet, 0, fxFrame(now, 4, 90), DUST_CELL_SIZE);
+        this.dust.texture = sheetFrame(
+          this.dustSheet,
+          effectPose.row,
+          fxFrame(now, 4, 90),
+          FX_CELL_SIZE,
+        );
     }
     if (this.speedLines) {
       this.speedLines.position.set(effectPose.speedLines.x, effectPose.speedLines.y);
@@ -114,9 +123,9 @@ export class CarRenderer {
       if (this.speedLineSheet)
         this.speedLines.texture = sheetFrame(
           this.speedLineSheet,
-          0,
+          effectPose.row,
           fxFrame(now, 2, 90),
-          SPEED_LINE_CELL_SIZE,
+          FX_CELL_SIZE,
         );
     }
   }

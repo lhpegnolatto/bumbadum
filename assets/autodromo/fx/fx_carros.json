@@ -1,0 +1,31 @@
+{
+  "celula_fx": [48, 48],
+  "carro_na_celula_fx": [8, 8],
+  "como_usar": "desenhe a celula do FX em (carro.x-8, carro.y-8), onde carro.x/y e o canto da celula 32x32 do carro",
+  "linhas": ["baixo", "direita", "cima", "esquerda"],
+  "camada": {
+    "baixo": "atras",
+    "direita": "atras",
+    "cima": "frente",
+    "esquerda": "atras"
+  },
+  "obs_camada": "atras = desenhar antes do carro_fundo; frente = desenhar depois do carro_frente",
+  "escapamento_na_celula_fx": {
+    "baixo": [28, 21],
+    "direita": [10, 32],
+    "cima": [28, 37],
+    "esquerda": [37, 32]
+  },
+  "rodas_traseiras_na_celula_fx": {
+    "baixo": [[15, 22], [33, 22]],
+    "direita": [[16, 36]],
+    "cima": [[14, 37], [34, 37]],
+    "esquerda": [[31, 36]]
+  },
+  "efeitos": {
+    "fx_fumaca.png": "4 quadros, 90 ms, sempre que o carro anda (sai do escapamento e sobe)",
+    "fx_poeira.png": "4 quadros, 80 ms, ao fazer curva/trocar de direcao ou frear",
+    "fx_velocidade.png": "2 quadros alternados, 60 ms, acima de uma velocidade limite",
+    "fx_turbo.png": "3 quadros, 60 ms, ao acelerar forte / boost"
+  }
+}

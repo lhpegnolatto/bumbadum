@@ -185,9 +185,9 @@ export async function mountGameEngine(
     Assets.load<Texture>(CONFETTI_IMPACT),
   ]);
   const carFx = await Promise.all([
-    Assets.load<Texture>("/sprites/plaza-v2/cars/exhaust-smoke-16.png"),
-    Assets.load<Texture>("/sprites/plaza-v2/cars/drift-dust-24x16.png"),
-    Assets.load<Texture>("/sprites/plaza-v2/cars/speed-lines-16.png"),
+    Assets.load<Texture>("/sprites/plaza-v2/cars/exhaust-smoke-48.png"),
+    Assets.load<Texture>("/sprites/plaza-v2/cars/drift-dust-48.png"),
+    Assets.load<Texture>("/sprites/plaza-v2/cars/speed-lines-48.png"),
   ]);
   const carTextures = new Map<string, { background: Texture; front: Texture }>();
   await Promise.all(
@@ -366,7 +366,7 @@ export async function mountGameEngine(
       if (driver) {
         car.avatar.wear(avatarOf(driver.avatar));
         car.avatar.draw(direction, "idle", 0);
-        car.avatar.view.position.set(0, -4);
+        car.avatar.view.position.set(...carAvatarPosition(direction));
       }
     }
     confetti.update(now, reducedMotion.matches, (id) => {
@@ -571,6 +571,14 @@ function avatarOf(state: AvatarState): Avatar {
 function directionFromVelocity(x: number, y: number): Direction {
   if (Math.abs(x) >= Math.abs(y)) return x < 0 ? "left" : "right";
   return y < 0 ? "up" : "down";
+}
+
+/** The 24×24 avatar's feet aligned to the 32×32 car sheet's direction-specific offsets. */
+function carAvatarPosition(direction: Direction): [number, number] {
+  if (direction === "right") return [-2, -3];
+  if (direction === "left") return [2, -3];
+  if (direction === "up") return [0, -4];
+  return [0, -5];
 }
 
 function sameAvatar(a: Avatar, b: AvatarState): boolean {

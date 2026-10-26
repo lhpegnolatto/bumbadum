@@ -6,6 +6,7 @@ const originalMap = path.join(repositoryRoot, "assets/mapa_praca_v2");
 const canonicalMap = path.join(repositoryRoot, "assets/map/plaza-v2");
 const originalCars = path.join(repositoryRoot, "assets/autodromo/carros");
 const canonicalCars = path.join(repositoryRoot, "assets/autodromo/cars");
+const publicCars = path.join(repositoryRoot, "apps/web/public/sprites/plaza-v2/cars");
 
 const words = {
   arbusto: "shrub",
@@ -115,6 +116,12 @@ for (const layer of originalTiled.layers) {
         if (property.value === "baixo") property.value = "down";
       }
     }
+    // These objects were intentionally removed from the v2 playable layout.
+    layer.objects = layer.objects.filter(
+      (object) =>
+        object.name !== "chair" &&
+        !(object.name === "tires" && object.x >= 1250 && object.x <= 1256 && object.y <= 110),
+    );
   }
 }
 // The source preview contains one isolated walkable pixel inside the north wall.
@@ -131,7 +138,8 @@ originalTiled.layers.push({
       id: 7000,
       name: "spawn",
       type: "spawn",
-      x: 888,
+      // Keep the shared Lobby spawn in the plaza at tile (30, 22).
+      x: 488,
       y: 360,
       point: true,
       width: 0,
@@ -189,8 +197,11 @@ for (const tile of JSON.parse(await readFile(path.join(originalMap, "objetos.tsj
 const originalCarsMetadata = JSON.parse(
   await readFile(path.join(repositoryRoot, "assets/autodromo/carros.json"), "utf8"),
 );
+const [carCellWidth, carCellHeight] = originalCarsMetadata.celula_carro;
+const anchorMatch = originalCarsMetadata.ancora_carro.match(/\((\d+),(\d+)\)/);
+if (!anchorMatch) throw new Error("carros.json must define ancora_carro as (x,y)");
 const carsMetadata = {
-  cellSize: [48, 48],
+  cellSize: [carCellWidth, carCellHeight],
   directions: ["down", "right", "up", "left"],
   frames: { idle: 0, driveA: 1, driveB: 2 },
   layers: ["car-back", "avatar", "car-front"],
@@ -199,7 +210,7 @@ const carsMetadata = {
     right: originalCarsMetadata.avatar_no_carro.direita,
     up: originalCarsMetadata.avatar_no_carro.cima,
   },
-  anchor: [24, 44],
+  anchor: [Number(anchorMatch[1]), Number(anchorMatch[2])],
   animation: { normalMilliseconds: 100, highSpeedMilliseconds: 60 },
   models: ["kart", "convertible"],
 };
@@ -209,6 +220,8 @@ const carsJson = JSON.stringify(carsMetadata, null, 2).replace(
     contents.includes("{") ? match : `[${contents.replace(/\s*,\s*\n\s*/g, ", ").trim()}]`,
 );
 await writeFile(path.join(repositoryRoot, "assets/autodromo/cars.json"), `${carsJson}\n`);
+await rm(publicCars, { recursive: true, force: true });
+await mkdir(publicCars, { recursive: true });
 for (const model of ["kart", "conversivel"]) {
   const destinationModel = model === "conversivel" ? "convertible" : model;
   await mkdir(path.join(canonicalCars, destinationModel), { recursive: true });
@@ -229,12 +242,32 @@ for (const model of ["kart", "conversivel"]) {
       .replaceAll("_", "-")
       .replace("-frente", "-front")
       .replace("-fundo", "-back")
+      .replace("-completo", "-idle-complete")
       .replace("-parado-completo", "-idle-complete");
     await cp(
       path.join(originalCars, model, file),
       path.join(canonicalCars, destinationModel, destination),
     );
+    await cp(
+      path.join(originalCars, model, file),
+      path.join(publicCars, destinationModel, destination),
+    );
   }
 }
 
 console.log("normalized plaza-v2 map and autodrome car assets into canonical paths");
+const effects = [
+  ["fx_fumaca.png", "exhaust-smoke-48.png"],
+  ["fx_poeira.png", "drift-dust-48.png"],
+  ["fx_velocidade.png", "speed-lines-48.png"],
+];
+for (const [source, destination] of effects) {
+  await cp(
+    path.join(repositoryRoot, "assets/autodromo/fx", source),
+    path.join(canonicalCars, destination),
+  );
+  await cp(
+    path.join(repositoryRoot, "assets/autodromo/fx", source),
+    path.join(publicCars, destination),
+  );
+}

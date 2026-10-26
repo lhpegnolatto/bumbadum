@@ -9,6 +9,7 @@ export interface CarFrame {
 }
 
 export interface CarEffectPose {
+  row: 0 | 1 | 2 | 3;
   smoke: { x: number; y: number };
   dust: { x: number; y: number };
   speedLines: { x: number; y: number };
@@ -51,9 +52,10 @@ export function carEffectPose(direction: Direction): CarEffectPose {
     y: vector.y === 0 ? 0 : -vector.y * 19,
   };
   return {
+    row: direction === "down" ? 0 : direction === "right" ? 1 : direction === "up" ? 2 : 3,
     smoke: rear,
     dust: { x: rear.x * 0.6, y: rear.y * 0.6 },
     speedLines: { x: rear.x * 0.75, y: rear.y * 0.75 },
-    rotation: Math.atan2(vector.y, vector.x),
+    rotation: 0,
   };
 }

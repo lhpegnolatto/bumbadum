@@ -4709,17 +4709,6 @@
           "visible": true
         },
         {
-          "id": 23,
-          "gid": 663,
-          "name": "tires",
-          "x": 1254,
-          "y": 110,
-          "width": 16,
-          "height": 20,
-          "rotation": 0,
-          "visible": true
-        },
-        {
           "id": 24,
           "gid": 630,
           "name": "speaker-speaker",
@@ -5028,72 +5017,6 @@
           "visible": true
         },
         {
-          "id": 52,
-          "gid": 629,
-          "name": "chair",
-          "x": 366,
-          "y": 198,
-          "width": 14,
-          "height": 16,
-          "rotation": 0,
-          "visible": true
-        },
-        {
-          "id": 53,
-          "gid": 629,
-          "name": "chair",
-          "x": 408,
-          "y": 198,
-          "width": 14,
-          "height": 16,
-          "rotation": 0,
-          "visible": true
-        },
-        {
-          "id": 54,
-          "gid": 629,
-          "name": "chair",
-          "x": 450,
-          "y": 198,
-          "width": 14,
-          "height": 16,
-          "rotation": 0,
-          "visible": true
-        },
-        {
-          "id": 55,
-          "gid": 629,
-          "name": "chair",
-          "x": 500,
-          "y": 198,
-          "width": 14,
-          "height": 16,
-          "rotation": 0,
-          "visible": true
-        },
-        {
-          "id": 56,
-          "gid": 629,
-          "name": "chair",
-          "x": 542,
-          "y": 198,
-          "width": 14,
-          "height": 16,
-          "rotation": 0,
-          "visible": true
-        },
-        {
-          "id": 57,
-          "gid": 629,
-          "name": "chair",
-          "x": 584,
-          "y": 198,
-          "width": 14,
-          "height": 16,
-          "rotation": 0,
-          "visible": true
-        },
-        {
           "id": 58,
           "gid": 663,
           "name": "tires",
@@ -5204,72 +5127,6 @@
           "visible": true
         },
         {
-          "id": 68,
-          "gid": 629,
-          "name": "chair",
-          "x": 366,
-          "y": 234,
-          "width": 14,
-          "height": 16,
-          "rotation": 0,
-          "visible": true
-        },
-        {
-          "id": 69,
-          "gid": 629,
-          "name": "chair",
-          "x": 408,
-          "y": 234,
-          "width": 14,
-          "height": 16,
-          "rotation": 0,
-          "visible": true
-        },
-        {
-          "id": 70,
-          "gid": 629,
-          "name": "chair",
-          "x": 450,
-          "y": 234,
-          "width": 14,
-          "height": 16,
-          "rotation": 0,
-          "visible": true
-        },
-        {
-          "id": 71,
-          "gid": 629,
-          "name": "chair",
-          "x": 500,
-          "y": 234,
-          "width": 14,
-          "height": 16,
-          "rotation": 0,
-          "visible": true
-        },
-        {
-          "id": 72,
-          "gid": 629,
-          "name": "chair",
-          "x": 542,
-          "y": 234,
-          "width": 14,
-          "height": 16,
-          "rotation": 0,
-          "visible": true
-        },
-        {
-          "id": 73,
-          "gid": 629,
-          "name": "chair",
-          "x": 584,
-          "y": 234,
-          "width": 14,
-          "height": 16,
-          "rotation": 0,
-          "visible": true
-        },
-        {
           "id": 74,
           "gid": 663,
           "name": "tires",
@@ -5347,72 +5204,6 @@
           "visible": true
         },
         {
-          "id": 81,
-          "gid": 629,
-          "name": "chair",
-          "x": 366,
-          "y": 270,
-          "width": 14,
-          "height": 16,
-          "rotation": 0,
-          "visible": true
-        },
-        {
-          "id": 82,
-          "gid": 629,
-          "name": "chair",
-          "x": 408,
-          "y": 270,
-          "width": 14,
-          "height": 16,
-          "rotation": 0,
-          "visible": true
-        },
-        {
-          "id": 83,
-          "gid": 629,
-          "name": "chair",
-          "x": 450,
-          "y": 270,
-          "width": 14,
-          "height": 16,
-          "rotation": 0,
-          "visible": true
-        },
-        {
-          "id": 84,
-          "gid": 629,
-          "name": "chair",
-          "x": 500,
-          "y": 270,
-          "width": 14,
-          "height": 16,
-          "rotation": 0,
-          "visible": true
-        },
-        {
-          "id": 85,
-          "gid": 629,
-          "name": "chair",
-          "x": 542,
-          "y": 270,
-          "width": 14,
-          "height": 16,
-          "rotation": 0,
-          "visible": true
-        },
-        {
-          "id": 86,
-          "gid": 629,
-          "name": "chair",
-          "x": 584,
-          "y": 270,
-          "width": 14,
-          "height": 16,
-          "rotation": 0,
-          "visible": true
-        },
-        {
           "id": 87,
           "gid": 663,
           "name": "tires",
@@ -5464,72 +5255,6 @@
           "y": 302,
           "width": 10,
           "height": 12,
-          "rotation": 0,
-          "visible": true
-        },
-        {
-          "id": 92,
-          "gid": 629,
-          "name": "chair",
-          "x": 366,
-          "y": 306,
-          "width": 14,
-          "height": 16,
-          "rotation": 0,
-          "visible": true
-        },
-        {
-          "id": 93,
-          "gid": 629,
-          "name": "chair",
-          "x": 408,
-          "y": 306,
-          "width": 14,
-          "height": 16,
-          "rotation": 0,
-          "visible": true
-        },
-        {
-          "id": 94,
-          "gid": 629,
-          "name": "chair",
-          "x": 450,
-          "y": 306,
-          "width": 14,
-          "height": 16,
-          "rotation": 0,
-          "visible": true
-        },
-        {
-          "id": 95,
-          "gid": 629,
-          "name": "chair",
-          "x": 500,
-          "y": 306,
-          "width": 14,
-          "height": 16,
-          "rotation": 0,
-          "visible": true
-        },
-        {
-          "id": 96,
-          "gid": 629,
-          "name": "chair",
-          "x": 542,
-          "y": 306,
-          "width": 14,
-          "height": 16,
-          "rotation": 0,
-          "visible": true
-        },
-        {
-          "id": 97,
-          "gid": 629,
-          "name": "chair",
-          "x": 584,
-          "y": 306,
-          "width": 14,
-          "height": 16,
           "rotation": 0,
           "visible": true
         },
@@ -11560,17 +11285,6 @@
           "visible": true
         },
         {
-          "id": 1022,
-          "name": "tires",
-          "type": "collision",
-          "x": 1255,
-          "y": 102,
-          "width": 14,
-          "height": 8,
-          "rotation": 0,
-          "visible": true
-        },
-        {
           "id": 1023,
           "name": "speaker-speaker",
           "type": "collision",
@@ -11879,72 +11593,6 @@
           "visible": true
         },
         {
-          "id": 1051,
-          "name": "chair",
-          "type": "collision",
-          "x": 367,
-          "y": 189,
-          "width": 12,
-          "height": 8,
-          "rotation": 0,
-          "visible": true
-        },
-        {
-          "id": 1052,
-          "name": "chair",
-          "type": "collision",
-          "x": 409,
-          "y": 189,
-          "width": 12,
-          "height": 8,
-          "rotation": 0,
-          "visible": true
-        },
-        {
-          "id": 1053,
-          "name": "chair",
-          "type": "collision",
-          "x": 451,
-          "y": 189,
-          "width": 12,
-          "height": 8,
-          "rotation": 0,
-          "visible": true
-        },
-        {
-          "id": 1054,
-          "name": "chair",
-          "type": "collision",
-          "x": 501,
-          "y": 189,
-          "width": 12,
-          "height": 8,
-          "rotation": 0,
-          "visible": true
-        },
-        {
-          "id": 1055,
-          "name": "chair",
-          "type": "collision",
-          "x": 543,
-          "y": 189,
-          "width": 12,
-          "height": 8,
-          "rotation": 0,
-          "visible": true
-        },
-        {
-          "id": 1056,
-          "name": "chair",
-          "type": "collision",
-          "x": 585,
-          "y": 189,
-          "width": 12,
-          "height": 8,
-          "rotation": 0,
-          "visible": true
-        },
-        {
           "id": 1057,
           "name": "tires",
           "type": "collision",
@@ -12055,72 +11703,6 @@
           "visible": true
         },
         {
-          "id": 1067,
-          "name": "chair",
-          "type": "collision",
-          "x": 367,
-          "y": 225,
-          "width": 12,
-          "height": 8,
-          "rotation": 0,
-          "visible": true
-        },
-        {
-          "id": 1068,
-          "name": "chair",
-          "type": "collision",
-          "x": 409,
-          "y": 225,
-          "width": 12,
-          "height": 8,
-          "rotation": 0,
-          "visible": true
-        },
-        {
-          "id": 1069,
-          "name": "chair",
-          "type": "collision",
-          "x": 451,
-          "y": 225,
-          "width": 12,
-          "height": 8,
-          "rotation": 0,
-          "visible": true
-        },
-        {
-          "id": 1070,
-          "name": "chair",
-          "type": "collision",
-          "x": 501,
-          "y": 225,
-          "width": 12,
-          "height": 8,
-          "rotation": 0,
-          "visible": true
-        },
-        {
-          "id": 1071,
-          "name": "chair",
-          "type": "collision",
-          "x": 543,
-          "y": 225,
-          "width": 12,
-          "height": 8,
-          "rotation": 0,
-          "visible": true
-        },
-        {
-          "id": 1072,
-          "name": "chair",
-          "type": "collision",
-          "x": 585,
-          "y": 225,
-          "width": 12,
-          "height": 8,
-          "rotation": 0,
-          "visible": true
-        },
-        {
           "id": 1073,
           "name": "tires",
           "type": "collision",
@@ -12209,72 +11791,6 @@
           "visible": true
         },
         {
-          "id": 1081,
-          "name": "chair",
-          "type": "collision",
-          "x": 367,
-          "y": 261,
-          "width": 12,
-          "height": 8,
-          "rotation": 0,
-          "visible": true
-        },
-        {
-          "id": 1082,
-          "name": "chair",
-          "type": "collision",
-          "x": 409,
-          "y": 261,
-          "width": 12,
-          "height": 8,
-          "rotation": 0,
-          "visible": true
-        },
-        {
-          "id": 1083,
-          "name": "chair",
-          "type": "collision",
-          "x": 451,
-          "y": 261,
-          "width": 12,
-          "height": 8,
-          "rotation": 0,
-          "visible": true
-        },
-        {
-          "id": 1084,
-          "name": "chair",
-          "type": "collision",
-          "x": 501,
-          "y": 261,
-          "width": 12,
-          "height": 8,
-          "rotation": 0,
-          "visible": true
-        },
-        {
-          "id": 1085,
-          "name": "chair",
-          "type": "collision",
-          "x": 543,
-          "y": 261,
-          "width": 12,
-          "height": 8,
-          "rotation": 0,
-          "visible": true
-        },
-        {
-          "id": 1086,
-          "name": "chair",
-          "type": "collision",
-          "x": 585,
-          "y": 261,
-          "width": 12,
-          "height": 8,
-          "rotation": 0,
-          "visible": true
-        },
-        {
           "id": 1087,
           "name": "tires",
           "type": "collision",
@@ -12326,72 +11842,6 @@
           "y": 296,
           "width": 8,
           "height": 6,
-          "rotation": 0,
-          "visible": true
-        },
-        {
-          "id": 1092,
-          "name": "chair",
-          "type": "collision",
-          "x": 367,
-          "y": 297,
-          "width": 12,
-          "height": 8,
-          "rotation": 0,
-          "visible": true
-        },
-        {
-          "id": 1093,
-          "name": "chair",
-          "type": "collision",
-          "x": 409,
-          "y": 297,
-          "width": 12,
-          "height": 8,
-          "rotation": 0,
-          "visible": true
-        },
-        {
-          "id": 1094,
-          "name": "chair",
-          "type": "collision",
-          "x": 451,
-          "y": 297,
-          "width": 12,
-          "height": 8,
-          "rotation": 0,
-          "visible": true
-        },
-        {
-          "id": 1095,
-          "name": "chair",
-          "type": "collision",
-          "x": 501,
-          "y": 297,
-          "width": 12,
-          "height": 8,
-          "rotation": 0,
-          "visible": true
-        },
-        {
-          "id": 1096,
-          "name": "chair",
-          "type": "collision",
-          "x": 543,
-          "y": 297,
-          "width": 12,
-          "height": 8,
-          "rotation": 0,
-          "visible": true
-        },
-        {
-          "id": 1097,
-          "name": "chair",
-          "type": "collision",
-          "x": 585,
-          "y": 297,
-          "width": 12,
-          "height": 8,
           "rotation": 0,
           "visible": true
         },
@@ -18812,8 +18262,8 @@
           "id": 7000,
           "name": "spawn",
           "type": "spawn",
-          "x": 480,
-          "y": 352,
+          "x": 488,
+          "y": 360,
           "point": true,
           "width": 0,
           "height": 0,
