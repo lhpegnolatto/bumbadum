@@ -46,6 +46,31 @@ export { NICKNAME_MESSAGE } from "./room/nickname-change.ts";
 export { CarState, PlayerState, RoomState } from "./room/room-state.ts";
 export { LOBBY_SLUG, ROOM_TYPE } from "./room/room-type.ts";
 export {
+  parseTennisEvent,
+  parseTennisNotice,
+  TENNIS_EVENT,
+  TENNIS_NOTICE,
+  type TennisEvent,
+  type TennisNotice,
+} from "./tennis/tennis-events.ts";
+export {
+  parseTennisJoinIntent,
+  parseTennisLeaveIntent,
+  parseTennisSteerIntent,
+  TENNIS_JOIN_MESSAGE,
+  TENNIS_LEAVE_MESSAGE,
+  TENNIS_STEER_MESSAGE,
+  type TennisSteerDirection,
+} from "./tennis/tennis-intent.ts";
+export {
+  TennisBallState,
+  type TennisMatchStatus,
+  TennisParticipantState,
+  TennisScoreState,
+  type TennisSide,
+  TennisState,
+} from "./tennis/tennis-state.ts";
+export {
   CAR_DRIVE_MESSAGE,
   CAR_ENTER_MESSAGE,
   CAR_EXIT_MESSAGE,

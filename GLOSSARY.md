@@ -92,6 +92,50 @@ _Avoid_: track (when referring to the whole area), circuit (when referring to th
 The shared activity in which Players drive Cars around the Map without a race countdown, lap ranking or finish condition.
 _Avoid_: race, match
 
+**Tennis court**:
+The marked court on the left side of the Map where a Tennis match takes place. It has a top and bottom side, a net and a lateral movement range for each Tennis player.
+_Avoid_: tennis track, arena
+
+**Tennis hall**:
+The building beside the Tennis court where Players join the Tennis line and wait for a match.
+_Avoid_: tennis lobby, waiting room
+
+**Tennis line**:
+The ordered list of Players waiting in the Tennis hall for a Tennis match. Joining the line reserves a position and keeps the Player at its visible marker until their turn or until they leave.
+_Avoid_: Queue, matchmaking queue
+
+**Tennis match**:
+A short two-player activity on the Tennis court. It ends when one side reaches five Points, after which both Players leave the court and may return to the end of the Tennis line.
+_Avoid_: game, round
+
+**Rally**:
+The live exchange in a Tennis match between one successful rebound and the next. A Rally ends when the receiving Player misses the Ball.
+_Avoid_: volley, turn
+
+**Point**:
+The unit of score awarded to the Player whose opponent misses the Ball. A Tennis match is won by the first Player to five Points.
+_Avoid_: goal, score event
+
+**Tennis side**:
+One of the two fixed positions on the Tennis court, top or bottom, occupied by a Player during a Tennis match. Sides are assigned randomly when the match starts.
+_Avoid_: lane, spawn side
+
+**Ball**:
+The shared Tennis object that travels across the Tennis court, bounces once on the receiving side and must meet the receiving Player's Racket contact zone.
+_Avoid_: projectile, shot
+
+**Racket**:
+The visual equipment used by a Tennis player. Its contact point determines where the Ball must meet the Racket contact zone; the Rebound is automatic.
+_Avoid_: bat, paddle
+
+**Rebound**:
+The automatic return of the Ball after a Player reaches its contact zone. A Rebound chooses a random valid horizontal target on the opponent's side and increases the Ball's speed.
+_Avoid_: hit, swing
+
+**Racket contact zone**:
+The forgiving horizontal range around the Ball's landing Tile in which a Tennis player can make a Rebound. The initial rule allows about one Tile of tolerance on each side and can later be tightened if the activity is too easy.
+_Avoid_: hitbox, collision box
+
 ### Radio
 
 **Radio**:

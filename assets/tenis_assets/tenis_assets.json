@@ -1,0 +1,28 @@
+{
+  "raquete_sheet.png": {
+    "celula": [48, 48],
+    "avatar_na_celula": "x 12..35, y 24..47 (mesmo encaixe da espada)",
+    "linhas": [
+      "baixo + forehand (bola do lado direito do personagem = esquerda da tela)",
+      "baixo + backhand",
+      "cima + forehand (bola a direita da tela)",
+      "cima + backhand"
+    ],
+    "colunas": ["0 pronto", "1 preparacao", "2 batida (contato, com rastro)", "3 terminacao"],
+    "mao": {
+      "baixo": [18, 45],
+      "cima": [29, 45]
+    },
+    "cabeca_da_raquete_na_batida": {
+      "baixo_direita": [8.5, 44.2],
+      "baixo_esquerda": [27.5, 44.1],
+      "cima_direita": [31.8, 33.8],
+      "cima_esquerda": [21.8, 36.0]
+    },
+    "obs": "jogador olhando para cima: a raquete fica na frente dele (longe da camera), entao o que cruza o corpo ja vem recortado"
+  },
+  "bola_8.png": "3 quadros de 8x8: 0 e 1 girando (alterne no voo), 2 achatada (use 1 quadro no quique). Centro em (4,4)",
+  "bola_sombra_8x4.png": "desenhe no chao, sob a bola; a bola sobe 'altura' px acima da sombra",
+  "impacto_16.png": "3 quadros, centro (8,8), no ponto de contato raquete-bola",
+  "rastro_bola_16.png": "2 quadros, aponta para baixo-esquerda; espelhe/gire na direcao oposta ao voo"
+}

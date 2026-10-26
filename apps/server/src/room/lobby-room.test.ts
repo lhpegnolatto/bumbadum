@@ -26,6 +26,11 @@ import {
   ROOM_TYPE,
   type RoomState,
   STEP_MESSAGE,
+  TENNIS_EVENT,
+  TENNIS_JOIN_MESSAGE,
+  TENNIS_LEAVE_MESSAGE,
+  TENNIS_STEER_MESSAGE,
+  type TennisEvent,
 } from "@bumbadum/protocol";
 import type { MusicSearch } from "@bumbadum/radio";
 import { type Direction, isWalkable, lobbyMap } from "@bumbadum/world";
@@ -319,6 +324,100 @@ describe("lobby-room", () => {
       expect(me(ana)).toEqual({ x: spawn.x - 6, y: spawn.y, direction: "left" });
     });
   });
+});
+
+describe("lobby-room Tennis activity", () => {
+  it("keeps waiting players FIFO and lets them leave the line", async () => {
+    const ana = await joinLobby("Ana");
+    const bia = await joinLobby("Bia");
+    const carol = await joinLobby("Carol");
+    const dora = await joinLobby("Dora");
+
+    ana.send(TENNIS_JOIN_MESSAGE);
+    bia.send(TENNIS_JOIN_MESSAGE);
+    await expect.poll(() => ana.state.tennis.matchStatus).toBe("countdown");
+
+    carol.send(TENNIS_JOIN_MESSAGE);
+    dora.send(TENNIS_JOIN_MESSAGE);
+    await expect.poll(() => [...ana.state.tennis.queue]).toEqual([carol.sessionId, dora.sessionId]);
+
+    dora.send(TENNIS_LEAVE_MESSAGE);
+    await expect.poll(() => [...ana.state.tennis.queue]).toEqual([carol.sessionId]);
+    carol.send(TENNIS_LEAVE_MESSAGE);
+    await expect.poll(() => [...ana.state.tennis.queue]).toEqual([]);
+  });
+
+  it("starts a countdown with two participants", async () => {
+    const ana = await joinLobby("Ana");
+    const bia = await joinLobby("Bia");
+    const events = received<TennisEvent>(ana, TENNIS_EVENT);
+
+    ana.send(TENNIS_JOIN_MESSAGE);
+    bia.send(TENNIS_JOIN_MESSAGE);
+
+    await expect.poll(() => ana.state.tennis.matchStatus).toBe("countdown");
+    expect(ana.state.tennis.countdownEndsAt).toBeGreaterThan(Date.now());
+    expect([...ana.state.tennis.participants]).toHaveLength(2);
+    expect([...ana.state.tennis.queue]).toEqual([]);
+    await expect.poll(() => events).toHaveLength(1);
+    expect(events[0]?.code).toBe("match-started");
+  });
+
+  it("accepts only horizontal steering during a match", async () => {
+    const ana = await joinLobby("Ana");
+    const bia = await joinLobby("Bia");
+    ana.send(TENNIS_JOIN_MESSAGE);
+    bia.send(TENNIS_JOIN_MESSAGE);
+    await expect.poll(() => ana.state.tennis.matchStatus).toBe("countdown");
+
+    const participant = ana.state.tennis.participants.get(ana.sessionId);
+    const player = ana.state.players.get(ana.sessionId);
+    if (!participant || !player) throw new Error("expected Ana to be a Tennis participant");
+    const initialX = participant.x;
+    const initialY = player.y;
+
+    ana.send(TENNIS_STEER_MESSAGE, "left");
+    await expect
+      .poll(() => ana.state.tennis.participants.get(ana.sessionId)?.x)
+      .toBeLessThan(initialX);
+    ana.send(TENNIS_STEER_MESSAGE, "up");
+    await new Promise((resolve) => setTimeout(resolve, 50));
+
+    expect(ana.state.players.get(ana.sessionId)?.y).toBe(initialY);
+    expect(ana.state.tennis.participants.get(ana.sessionId)?.x).toBeLessThan(initialX);
+  });
+
+  it("awards a point when the receiving player misses the first Rally", async () => {
+    const ana = await joinLobby("Ana");
+    const bia = await joinLobby("Bia");
+    const events = received<TennisEvent>(ana, TENNIS_EVENT);
+    ana.send(TENNIS_JOIN_MESSAGE);
+    bia.send(TENNIS_JOIN_MESSAGE);
+
+    await expect.poll(() => ana.state.tennis.matchStatus, { timeout: 5_000 }).toBe("rally");
+    const ball = ana.state.tennis.ball;
+    if (!ball) throw new Error("expected the first Rally ball");
+    const receiver = [...ana.state.tennis.participants].find(
+      ([, participant]) => participant.side === ball.receivingSide,
+    );
+    if (!receiver) throw new Error("expected the receiving participant");
+
+    const receivingRoom = receiver[0] === ana.sessionId ? ana : bia;
+    const missDirection = ball.targetX <= 168 ? "right" : "left";
+    receivingRoom.send(TENNIS_STEER_MESSAGE, missDirection);
+    await expect
+      .poll(
+        () => Math.abs((ana.state.tennis.participants.get(receiver[0])?.x ?? 0) - ball.targetX),
+        { timeout: 3_000 },
+      )
+      .toBeGreaterThan(16);
+
+    await expect
+      .poll(() => ana.state.tennis.score.top + ana.state.tennis.score.bottom, { timeout: 15_000 })
+      .toBe(1);
+    expect(ana.state.tennis.ball?.reboundCount).toBe(0);
+    await expect.poll(() => events.some((event) => event.code === "point-scored")).toBe(true);
+  }, 20_000);
 });
 
 /** Everything `room` receives of one message type, in arrival order. */

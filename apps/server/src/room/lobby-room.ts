@@ -29,9 +29,15 @@ import {
   parseJoinOptions,
   parseNickname,
   parseStepIntent,
+  parseTennisJoinIntent,
+  parseTennisLeaveIntent,
+  parseTennisSteerIntent,
   ROOM_TYPE,
   RoomState,
   STEP_MESSAGE,
+  TENNIS_JOIN_MESSAGE,
+  TENNIS_LEAVE_MESSAGE,
+  TENNIS_STEER_MESSAGE,
 } from "@bumbadum/protocol";
 import {
   advanceCar,
@@ -54,6 +60,7 @@ import { type Client, matchMaker, Room, ServerError, validate } from "@colyseus/
 import { ChatChannel } from "../chat/chat-channel.ts";
 import { RadioStation, type TrackSources } from "../radio/radio-station.ts";
 import { TokenBucket } from "../rate-limit/token-bucket.ts";
+import { TennisActivity } from "../tennis/tennis-activity.ts";
 
 const MAX_PLAYERS = 16;
 
@@ -75,6 +82,8 @@ const CONFETTI_THROW_RATE = { capacity: 3, perSecond: 1 };
 /** Car input is persistent, so a player can steer at a comfortable network rate. */
 const CAR_DRIVE_RATE = { capacity: 3, perSecond: 12 };
 const CAR_INTERACTION_RATE = { capacity: 2, perSecond: 2 };
+const TENNIS_LINE_ACTION_RATE = { capacity: 2, perSecond: 2 };
+const TENNIS_STEER_RATE = { capacity: 3, perSecond: 12 };
 const TILE_SIZE = 16;
 
 /** Seconds a dropped player keeps their seat while the client reconnects. */
@@ -104,11 +113,14 @@ export class LobbyRoom extends Room<{ state: RoomState; client: LobbyClient }> {
   private readonly confettiThrowLimits = new Map<string, TokenBucket>();
   private readonly carDriveLimits = new Map<string, TokenBucket>();
   private readonly carInteractionLimits = new Map<string, TokenBucket>();
+  private readonly tennisLineActionLimits = new Map<string, TokenBucket>();
+  private readonly tennisSteerLimits = new Map<string, TokenBucket>();
   private readonly carMotions = new Map<string, CarMotion>();
   private readonly parkingSpots: readonly CarParkingSpot[] = lobbyParkingSpots.map(({ x, y }) => ({
     x,
     y,
   }));
+  #tennis!: TennisActivity;
 
   override messages = {
     [CHAT_INPUT]: validate(chatInputSchema, (client: LobbyClient, { text }) => {
@@ -125,6 +137,7 @@ export class LobbyRoom extends Room<{ state: RoomState; client: LobbyClient }> {
 
       // Counted even when refused, so the client knows which of its steps the room has judged.
       player.stepIntents += 1;
+      if (this.#tennis.isInMatch(client.sessionId)) return;
       if (player.carId) return;
       // Any step intent ends a dance, even one the rate refuses or that only turns the player.
       player.dance = NOT_DANCING;
@@ -137,7 +150,7 @@ export class LobbyRoom extends Room<{ state: RoomState; client: LobbyClient }> {
     [CAR_ENTER_MESSAGE]: (client: LobbyClient, payload: unknown) => {
       if (!parseCarEnterIntent(payload)) return;
       const player = this.state.players.get(client.sessionId);
-      if (!player || player.carId) return;
+      if (!player || player.carId || this.#tennis.isInMatch(client.sessionId)) return;
       if (!this.carInteractionLimits.get(client.sessionId)?.take(performance.now())) return;
       const candidate = enterNearestCar([...this.carMotions.values()], {
         x: player.x * TILE_SIZE + TILE_SIZE / 2,
@@ -153,7 +166,8 @@ export class LobbyRoom extends Room<{ state: RoomState; client: LobbyClient }> {
     [CAR_DRIVE_MESSAGE]: (client: LobbyClient, payload: unknown) => {
       const direction = parseCarDriveIntent(payload);
       const player = this.state.players.get(client.sessionId);
-      if (direction === undefined || !player?.carId) return;
+      if (direction === undefined || !player?.carId || this.#tennis.isInMatch(client.sessionId))
+        return;
       if (!this.carDriveLimits.get(client.sessionId)?.take(performance.now())) return;
       const car = this.carMotions.get(player.carId);
       if (!car || car.driverId !== client.sessionId) return;
@@ -163,7 +177,7 @@ export class LobbyRoom extends Room<{ state: RoomState; client: LobbyClient }> {
     [CAR_EXIT_MESSAGE]: (client: LobbyClient, payload: unknown) => {
       if (!parseCarExitIntent(payload)) return;
       const player = this.state.players.get(client.sessionId);
-      if (!player?.carId) return;
+      if (!player?.carId || this.#tennis.isInMatch(client.sessionId)) return;
       if (!this.carInteractionLimits.get(client.sessionId)?.take(performance.now())) return;
       this.#dismount(client.sessionId, performance.now(), false);
     },
@@ -190,6 +204,25 @@ export class LobbyRoom extends Room<{ state: RoomState; client: LobbyClient }> {
     },
     [CONFETTI_THROW_MESSAGE]: (client: LobbyClient, payload: unknown) => {
       if (isConfettiThrowIntent(payload)) this.#throwConfetti(client);
+    },
+    [TENNIS_JOIN_MESSAGE]: (client: LobbyClient, payload: unknown) => {
+      if (!parseTennisJoinIntent(payload)) return;
+      const now = Date.now();
+      if (!this.tennisLineActionLimits.get(client.sessionId)?.take(now)) return;
+      this.#tennis.join(client.sessionId, now);
+    },
+    [TENNIS_LEAVE_MESSAGE]: (client: LobbyClient, payload: unknown) => {
+      if (!parseTennisLeaveIntent(payload)) return;
+      const now = Date.now();
+      if (!this.tennisLineActionLimits.get(client.sessionId)?.take(now)) return;
+      this.#tennis.leave(client.sessionId, now);
+    },
+    [TENNIS_STEER_MESSAGE]: (client: LobbyClient, payload: unknown) => {
+      const direction = parseTennisSteerIntent(payload);
+      if (direction === undefined) return;
+      const now = Date.now();
+      if (!this.tennisSteerLimits.get(client.sessionId)?.take(now)) return;
+      this.#tennis.steer(client.sessionId, direction);
     },
   };
 
@@ -219,7 +252,16 @@ export class LobbyRoom extends Room<{ state: RoomState; client: LobbyClient }> {
       this.carMotions.set(car.id, car);
       this.#syncCar(car);
     }
-    this.setTimestep((deltaTime) => this.#updateCars(deltaTime));
+    this.#tennis = new TennisActivity({
+      state: this.state.tennis,
+      player: (sessionId) => this.state.players.get(sessionId),
+      client: (sessionId) => this.clients.find((client) => client.sessionId === sessionId),
+      broadcast: (type, message) => this.broadcast(type, message),
+    });
+    this.setTimestep((deltaTime) => {
+      this.#updateCars(deltaTime);
+      this.#tennis.update(deltaTime);
+    });
   }
 
   /** Runs during matchmaking, before a seat is reserved. */
@@ -268,6 +310,11 @@ export class LobbyRoom extends Room<{ state: RoomState; client: LobbyClient }> {
       client.sessionId,
       new TokenBucket(CAR_INTERACTION_RATE, performance.now()),
     );
+    this.tennisLineActionLimits.set(
+      client.sessionId,
+      new TokenBucket(TENNIS_LINE_ACTION_RATE, Date.now()),
+    );
+    this.tennisSteerLimits.set(client.sessionId, new TokenBucket(TENNIS_STEER_RATE, Date.now()));
     this.#chat.welcome(client, nickname, performance.now());
     this.#radio.welcome(client);
   }
@@ -283,6 +330,7 @@ export class LobbyRoom extends Room<{ state: RoomState; client: LobbyClient }> {
     this.#radio.reconnect(client);
     const player = this.state.players.get(client.sessionId);
     if (!player) return;
+    if (this.#tennis.isInMatch(client.sessionId)) return;
     this.#dismount(client.sessionId, performance.now(), true);
     player.x = lobbyMap.spawnPoint.x;
     player.y = lobbyMap.spawnPoint.y;
@@ -296,6 +344,7 @@ export class LobbyRoom extends Room<{ state: RoomState; client: LobbyClient }> {
     const player = this.state.players.get(client.sessionId);
     if (
       !player ||
+      this.#tennis.isInMatch(client.sessionId) ||
       player.carId ||
       !this.danceChangeLimits.get(client.sessionId)?.take(performance.now())
     ) {
@@ -312,6 +361,7 @@ export class LobbyRoom extends Room<{ state: RoomState; client: LobbyClient }> {
     const player = this.state.players.get(client.sessionId);
     if (
       !player ||
+      this.#tennis.isInMatch(client.sessionId) ||
       player.carId ||
       !this.confettiThrowLimits.get(client.sessionId)?.take(performance.now())
     ) {
@@ -334,6 +384,7 @@ export class LobbyRoom extends Room<{ state: RoomState; client: LobbyClient }> {
     // The Nickname they leave with, which a rename may have changed since they joined.
     const nickname =
       this.state.players.get(client.sessionId)?.nickname ?? joinOptionsOf(client).nickname;
+    this.#tennis.removePlayer(client.sessionId);
     this.#dismount(client.sessionId, performance.now(), true);
     this.state.players.delete(client.sessionId);
     this.stepLimits.delete(client.sessionId);
@@ -343,6 +394,8 @@ export class LobbyRoom extends Room<{ state: RoomState; client: LobbyClient }> {
     this.confettiThrowLimits.delete(client.sessionId);
     this.carDriveLimits.delete(client.sessionId);
     this.carInteractionLimits.delete(client.sessionId);
+    this.tennisLineActionLimits.delete(client.sessionId);
+    this.tennisSteerLimits.delete(client.sessionId);
     this.#chat.farewell(client, nickname);
     this.#radio.farewell(client);
   }

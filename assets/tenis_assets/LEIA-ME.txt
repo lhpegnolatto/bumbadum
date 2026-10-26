@@ -1,0 +1,25 @@
+TENIS + HALL DE PARTIDAS
+
+MAPA (pasta mapa_praca_v4): agora 150x40 tiles (2400x640 px). Tudo o que existia andou 40 tiles (640 px) para a direita;
+o lado esquerdo novo tem a quadra de tenis e o hall "procurar partida". Coordenadas antigas: some 640 em x.
+- Quadra: piso azul com linhas oficiais (duplas/simples, saque, centro), rede, cadeira do juiz, placar, cestos de bolinhas.
+  Cercada por alambrado com portao trancado ("so no evento"). Colisao bloqueia a cerca e o portao.
+- Hall: piso de madeira, paredes com colisao, porta para a rua (em cima) e PORTAL verde na parede esquerda, que leva ao
+  portao da quadra. Dentro: fila em zigue-zague com postes e cordas, telao "PROCURAR PARTIDA", balcao FILA, bancos.
+- Tiled: camada "quadra_tenis" (zona_quadra, jogador_cima, jogador_baixo, portal_partida) e "fila_hall" (46 pontos
+  ordenados; fila_0 = primeiro da fila, perto do balcao). Tudo tambem em tenis_hall.json.
+
+ANIMACAO DE TENIS (pasta tenis_assets)
+- raquete_sheet.png 192x192: celulas 48x48, avatar em x 12..35, y 24..47 (mesmo encaixe da espada).
+  Linhas: baixo+forehand, baixo+backhand, cima+forehand, cima+backhand. Colunas: pronto, preparacao, batida (com rastro), terminacao.
+  Jogador de cima olha para BAIXO; jogador de baixo olha para CIMA (raquete ja recortada atras do corpo).
+- Movendo de lado: use o walk da direcao em que o avatar olha (frente ou costas) e desloque x; parado, use o idle.
+- bola_8.png (2 quadros girando + 1 achatada no quique), bola_sombra_8x4.png, impacto_16.png (3 quadros), rastro_bola_16.png.
+
+LOGICA SUGERIDA (a do GIF)
+- A bola sai da cabeca da raquete de quem bateu e vai ate um x aleatorio no fundo do outro lado.
+  altura = 30*4*s*(1-s) ate s=0.68 (quique), depois 9*4*u*(1-u). A sombra fica no chao, a bola sobe 'altura' px.
+- Quem recebe anda de lado ate o x em que a cabeca da raquete encontra a bola (max ~4.5 px por quadro de 50 ms).
+- Forehand ou backhand pelo lado da bola: jogador de baixo -> bola a direita da tela = forehand;
+  jogador de cima -> bola a esquerda da tela = forehand. Preparacao 5 quadros antes, batida no quadro do contato.
+- Ponto de contato = cabeca da raquete no quadro de batida (tenis_assets.json).

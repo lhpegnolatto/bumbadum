@@ -1,0 +1,177 @@
+{
+  "vagas": [
+    {
+      "x": 1640,
+      "y": 366,
+      "direcao": "baixo",
+      "ocupada": true
+    },
+    {
+      "x": 1672,
+      "y": 366,
+      "direcao": "baixo",
+      "ocupada": true
+    },
+    {
+      "x": 1704,
+      "y": 366,
+      "direcao": "baixo",
+      "ocupada": false
+    },
+    {
+      "x": 1736,
+      "y": 366,
+      "direcao": "baixo",
+      "ocupada": true
+    },
+    {
+      "x": 1768,
+      "y": 366,
+      "direcao": "baixo",
+      "ocupada": true
+    },
+    {
+      "x": 1800,
+      "y": 366,
+      "direcao": "baixo",
+      "ocupada": true
+    },
+    {
+      "x": 1640,
+      "y": 478,
+      "direcao": "cima",
+      "ocupada": true
+    },
+    {
+      "x": 1672,
+      "y": 478,
+      "direcao": "cima",
+      "ocupada": false
+    },
+    {
+      "x": 1704,
+      "y": 478,
+      "direcao": "cima",
+      "ocupada": true
+    },
+    {
+      "x": 1736,
+      "y": 478,
+      "direcao": "cima",
+      "ocupada": true
+    },
+    {
+      "x": 1768,
+      "y": 478,
+      "direcao": "cima",
+      "ocupada": false
+    },
+    {
+      "x": 1800,
+      "y": 478,
+      "direcao": "cima",
+      "ocupada": true
+    },
+    {
+      "x": 1640,
+      "y": 526,
+      "direcao": "baixo",
+      "ocupada": false
+    },
+    {
+      "x": 1672,
+      "y": 526,
+      "direcao": "baixo",
+      "ocupada": true
+    },
+    {
+      "x": 1704,
+      "y": 526,
+      "direcao": "baixo",
+      "ocupada": true
+    },
+    {
+      "x": 1736,
+      "y": 526,
+      "direcao": "baixo",
+      "ocupada": false
+    },
+    {
+      "x": 1768,
+      "y": 526,
+      "direcao": "baixo",
+      "ocupada": true
+    },
+    {
+      "x": 1800,
+      "y": 526,
+      "direcao": "baixo",
+      "ocupada": true
+    },
+    {
+      "x": 1640,
+      "y": 622,
+      "direcao": "cima",
+      "ocupada": true
+    },
+    {
+      "x": 1672,
+      "y": 622,
+      "direcao": "cima",
+      "ocupada": true
+    },
+    {
+      "x": 1704,
+      "y": 622,
+      "direcao": "cima",
+      "ocupada": true
+    },
+    {
+      "x": 1736,
+      "y": 622,
+      "direcao": "cima",
+      "ocupada": false
+    },
+    {
+      "x": 1768,
+      "y": 622,
+      "direcao": "cima",
+      "ocupada": true
+    },
+    {
+      "x": 1800,
+      "y": 622,
+      "direcao": "cima",
+      "ocupada": false
+    }
+  ],
+  "largada": [
+    {
+      "x": 1296,
+      "y": 352,
+      "direcao": "cima"
+    },
+    {
+      "x": 1328,
+      "y": 380,
+      "direcao": "cima"
+    },
+    {
+      "x": 1296,
+      "y": 408,
+      "direcao": "cima"
+    },
+    {
+      "x": 1328,
+      "y": 436,
+      "direcao": "cima"
+    }
+  ],
+  "pista": {
+    "retangulo_externo_px": [1920, 96, 2352, 592],
+    "largura_px": 64,
+    "raio_externo_px": 96,
+    "sentido": "horario (reta da esquerda sobe, reta de cima vai para a direita)",
+    "linha_de_chegada_y": 304
+  }
+}

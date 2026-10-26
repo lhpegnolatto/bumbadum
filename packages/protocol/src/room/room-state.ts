@@ -2,6 +2,7 @@ import type { Direction } from "@bumbadum/world";
 import { type SchemaType, schema, t } from "@colyseus/schema";
 import { AvatarState } from "../avatar/avatar-state.ts";
 import { RadioState } from "../radio/radio-state.ts";
+import { TennisState } from "../tennis/tennis-state.ts";
 
 /** A server-authoritative car motion snapshot, in pixel coordinates. */
 export const CarState = schema(
@@ -51,6 +52,7 @@ export const RoomState = schema(
     /** Keyed by the deterministic car id. */
     cars: t.map(CarState),
     radio: t.ref(RadioState),
+    tennis: t.ref(TennisState).default(() => new TennisState()),
   },
   "RoomState",
 );
