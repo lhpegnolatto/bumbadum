@@ -30,7 +30,7 @@ export function lightAlpha(from: number, to: number, elapsedMs: number, fadeMs =
 /** The v7 lamp animation's per-frame brightness curve. */
 export function lampIntensity(frame: number, reducedMotion: boolean): number {
   if (reducedMotion) return 1;
-  return [1, 1, 1, 0.85, 1, 1, 0.35, 1][frame % 8] ?? 1;
+  return [1, 1, 1, 1, 1, 0.92, 1, 0.72][frame % 8] ?? 1;
 }
 
 function hashPosition({ x, y }: LightPosition): number {

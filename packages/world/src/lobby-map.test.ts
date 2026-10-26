@@ -76,4 +76,15 @@ describe("lobbyMap", () => {
     expect(isWalkable(lobbyMap, { x: 42, y: 6 })).toBe(false);
     expect(isWalkable(lobbyMap, { x: 40, y: 35 })).toBe(false);
   });
+
+  it("blocks pedestrians from entering the Tennis court", () => {
+    for (const tile of [
+      { x: 2, y: 8 },
+      { x: 10, y: 20 },
+      { x: 18, y: 43 },
+    ]) {
+      expect(isWalkable(lobbyMap, tile)).toBe(false);
+    }
+    expect(isWalkable(lobbyMap, { x: 1, y: 20 })).toBe(true);
+  });
 });

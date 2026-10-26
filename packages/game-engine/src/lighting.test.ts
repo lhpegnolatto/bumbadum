@@ -27,9 +27,11 @@ describe("day-cycle light timing", () => {
     expect(lightAlpha(1, 0, 180)).toBe(0);
   });
 
-  it("keeps the lamp steady under reduced motion and follows the v7 flicker curve otherwise", () => {
-    expect(lampIntensity(3, false)).toBe(0.85);
-    expect(lampIntensity(6, false)).toBe(0.35);
+  it("keeps the lamp mostly steady with only occasional gentle faults", () => {
+    expect(lampIntensity(0, false)).toBe(1);
+    expect(lampIntensity(3, false)).toBe(1);
+    expect(lampIntensity(5, false)).toBe(0.92);
+    expect(lampIntensity(7, false)).toBe(0.72);
     expect(lampIntensity(6, true)).toBe(1);
   });
 });

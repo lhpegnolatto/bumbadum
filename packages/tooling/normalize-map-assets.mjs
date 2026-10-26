@@ -157,6 +157,17 @@ for (const layer of originalTiled.layers) {
 // Mark it blocked so the generated map's reachability invariant describes playable space.
 const canonicalCollision = originalTiled.layers.find(({ name }) => name === "collision");
 canonicalCollision.data[20 * originalTiled.width + 83] = 1775;
+const tennisCourt = originalTiled.layers
+  .find(({ name }) => name === "tennis-court")
+  ?.objects.find(({ name }) => name === "zone-court");
+if (!tennisCourt) throw new Error("v7 map is missing the Tennis court zone");
+// Pedestrians use the tile collision grid, while the Tennis activity places players directly
+// on its own court spawns. Block the whole fenced court so its interior cannot become reachable.
+for (let y = tennisCourt.y / 16; y < (tennisCourt.y + tennisCourt.height) / 16; y += 1) {
+  for (let x = tennisCourt.x / 16; x < (tennisCourt.x + tennisCourt.width) / 16; x += 1) {
+    canonicalCollision.data[y * originalTiled.width + x] ||= 1775;
+  }
+}
 originalTiled.layers.push({
   id: originalTiled.nextlayerid++,
   name: "spawn",
