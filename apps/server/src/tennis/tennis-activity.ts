@@ -77,6 +77,9 @@ export class TennisActivity {
   #match: TennisMatch | null = null;
   #celebrationEndsAt = 0;
   #soloQueuedAt = 0;
+  #coachRallyStartX = 0;
+  #coachMovementTargetX: number | null = null;
+  #coachMisses = false;
 
   constructor(room: TennisActivityRoom, options: TennisActivityOptions = {}) {
     this.#room = room;
@@ -248,7 +251,11 @@ export class TennisActivity {
         if (rally?.receivingSide !== side) continue;
         const step =
           this.#coachDifficulty.moveTilesPerSecond * this.#rules.court.tileSize * elapsedSeconds;
-        participant.x = moveToward(participant.x, rally.targetX, step);
+        participant.x = moveToward(
+          participant.x,
+          this.#coachMovementTargetX ?? rally.targetX,
+          step,
+        );
         participant.x = clamp(participant.x, spawnFor(side).xMin, spawnFor(side).xMax);
         continue;
       }
@@ -268,16 +275,13 @@ export class TennisActivity {
     const participant = this.#state.participants.get(receivingPlayerId);
     if (!participant) return;
 
-    const coachMisses =
-      receivingPlayerId === TENNIS_COACH_ID &&
-      shouldCoachMiss(
-        this.#random,
-        this.#match.rally?.speed ?? this.#rules.initialBallSpeed,
-        this.#rules,
-        this.#coachDifficulty,
-      );
-    const attemptX = coachMisses
-      ? participant.x + this.#rules.court.tileSize * (this.#rules.court.contactToleranceTiles + 1)
+    const attemptX = this.#coachMisses
+      ? coachMissTargetX(
+          this.#match.rally?.targetX ?? participant.x,
+          this.#coachRallyStartX,
+          this.#rules,
+          spawnFor(receivingSide),
+        )
       : participant.x;
     const result = attemptRebound(this.#match, receivingSide, attemptX, this.#random, this.#rules);
     this.#match = result.match;
@@ -327,6 +331,28 @@ export class TennisActivity {
     const fromPlayerId = this.#match.playerBySide[rally.fromSide];
     const fromParticipant = this.#state.participants.get(fromPlayerId);
     const startX = fromParticipant?.x ?? spawnFor(rally.fromSide).x;
+    const receivingPlayerId = this.#match.playerBySide[rally.receivingSide];
+    const receivingParticipant = this.#state.participants.get(receivingPlayerId);
+    this.#coachRallyStartX = receivingParticipant?.x ?? spawnFor(rally.receivingSide).x;
+    this.#coachMisses =
+      receivingPlayerId === TENNIS_COACH_ID &&
+      shouldCoachMiss(
+        this.#random,
+        rally.speed,
+        rally.targetX,
+        this.#coachRallyStartX,
+        this.#rules,
+        this.#coachDifficulty,
+      );
+    this.#coachMovementTargetX =
+      receivingPlayerId === TENNIS_COACH_ID && this.#coachMisses
+        ? coachMissTargetX(
+            rally.targetX,
+            this.#coachRallyStartX,
+            this.#rules,
+            spawnFor(rally.receivingSide),
+          )
+        : rally.targetX;
     const travelMs = (Math.abs(bottomSpawn.y - topSpawn.y) / rally.speed) * 1_000;
     const ball = new TennisBallState();
     ball.fromSide = rally.fromSide;
@@ -484,4 +510,15 @@ function clamp(value: number, min: number, max: number): number {
 function moveToward(current: number, target: number, distance: number): number {
   if (Math.abs(target - current) <= distance) return target;
   return current + Math.sign(target - current) * distance;
+}
+
+function coachMissTargetX(
+  targetX: number,
+  coachInitialX: number,
+  rules: TennisRules,
+  spawn: { xMin: number; xMax: number },
+): number {
+  const direction = Math.sign(targetX - coachInitialX) || 1;
+  const overshoot = rules.court.tileSize * (rules.contactToleranceTiles + 1);
+  return clamp(targetX + direction * overshoot, spawn.xMin, spawn.xMax);
 }

@@ -167,23 +167,43 @@ describe("Tennis Coach", () => {
   });
 
   it("uses the configured middle-ground miss chance", () => {
-    expect(coachMissChance(DEFAULT_TENNIS_RULES.initialBallSpeed)).toBe(0.05);
+    const coachInitialX = 168;
+    const farTargetX = 80;
+    expect(coachMissChance(DEFAULT_TENNIS_RULES.initialBallSpeed, farTargetX, coachInitialX)).toBe(
+      0.05,
+    );
     expect(
       coachMissChance(
         DEFAULT_TENNIS_RULES.initialBallSpeed * DEFAULT_TENNIS_RULES.maxSpeedMultiplier,
+        farTargetX,
+        coachInitialX,
       ),
     ).toBe(0.2);
     expect(
       coachMissChance(
         DEFAULT_TENNIS_RULES.initialBallSpeed * 1.5,
+        176,
+        coachInitialX,
         DEFAULT_TENNIS_RULES,
         FRIENDLY_COACH_DIFFICULTY,
       ),
-    ).toBeCloseTo(0.125);
-    expect(shouldCoachMiss({ next: () => 0.04 }, DEFAULT_TENNIS_RULES.initialBallSpeed)).toBe(true);
-    expect(shouldCoachMiss({ next: () => 0.05 }, DEFAULT_TENNIS_RULES.initialBallSpeed)).toBe(
-      false,
-    );
+    ).toBeCloseTo(0.056818, 5);
+    expect(
+      shouldCoachMiss(
+        { next: () => 0.04 },
+        DEFAULT_TENNIS_RULES.initialBallSpeed,
+        farTargetX,
+        coachInitialX,
+      ),
+    ).toBe(true);
+    expect(
+      shouldCoachMiss(
+        { next: () => 0.05 },
+        DEFAULT_TENNIS_RULES.initialBallSpeed,
+        farTargetX,
+        coachInitialX,
+      ),
+    ).toBe(false);
   });
 });
 
