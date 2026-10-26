@@ -43,6 +43,19 @@ describe("car driving", () => {
     expect(moving.input).toBe("right");
   });
 
+  it("turns without braking to zero first", () => {
+    const turning = advanceCar(
+      car({ velocityX: 180, driverId: "player-1", input: "up" }),
+      10,
+      openWorld,
+      [],
+      DEFAULT_CAR_CONFIG,
+    );
+
+    expect(turning.velocityX).toBe(0);
+    expect(turning.velocityY).toBeLessThan(-170);
+  });
+
   it("stops at map collision without tunneling through the wall", () => {
     const blocked = {
       ...openWorld,

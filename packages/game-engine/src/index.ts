@@ -12,6 +12,7 @@ export {
 export {
   type CarAnimationState,
   type CarFrame,
+  carEffectPose,
   carFrame,
   fxFrame,
 } from "./movement/car-animation.ts";

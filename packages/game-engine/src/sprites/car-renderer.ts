@@ -1,7 +1,7 @@
 import type { Direction } from "@bumbadum/world";
 import { Container, Rectangle, Sprite, Texture } from "pixi.js";
 import { carDepth } from "../depth.ts";
-import { carFrame, fxFrame } from "../movement/car-animation.ts";
+import { carEffectPose, carFrame, fxFrame } from "../movement/car-animation.ts";
 import type { CarPoint, CarPose } from "../movement/car-driving.ts";
 
 const CELL_SIZE = 48;
@@ -62,9 +62,9 @@ export class CarRenderer {
     this.smokeSheet = textures.fx?.smoke;
     this.dustSheet = textures.fx?.dust;
     this.speedLineSheet = textures.fx?.speedLines;
-    this.smoke = effectSprite(this.smokeSheet, SMOKE_CELL_SIZE, -19, -4);
-    this.dust = effectSprite(this.dustSheet, DUST_CELL_SIZE, 0, 0);
-    this.speedLines = effectSprite(this.speedLineSheet, SPEED_LINE_CELL_SIZE, 0, -18);
+    this.smoke = effectSprite(this.smokeSheet, SMOKE_CELL_SIZE);
+    this.dust = effectSprite(this.dustSheet, DUST_CELL_SIZE);
+    this.speedLines = effectSprite(this.speedLineSheet, SPEED_LINE_CELL_SIZE);
     for (const sprite of [this.smoke, this.dust, this.speedLines]) {
       if (sprite) {
         sprite.zIndex = 3;
@@ -80,6 +80,7 @@ export class CarRenderer {
     reducedMotion = false,
   ): void {
     const selected = carFrame(pose.direction, pose.speed, pose.drifting, now, reducedMotion);
+    const effectPose = carEffectPose(pose.direction);
     this.background.texture = sheetFrame(
       this.backgroundSheet,
       selected.row,
@@ -93,16 +94,22 @@ export class CarRenderer {
     // car's horizontal flip to the avatar as well would cancel that mirror.
 
     if (this.smoke) {
+      this.smoke.position.set(effectPose.smoke.x, effectPose.smoke.y);
+      this.smoke.rotation = effectPose.rotation;
       this.smoke.visible = !reducedMotion && pose.speed > 0.2;
       if (this.smokeSheet)
         this.smoke.texture = sheetFrame(this.smokeSheet, 0, fxFrame(now, 4, 90), SMOKE_CELL_SIZE);
     }
     if (this.dust) {
+      this.dust.position.set(effectPose.dust.x, effectPose.dust.y);
+      this.dust.rotation = effectPose.rotation;
       this.dust.visible = !reducedMotion && pose.drifting;
       if (this.dustSheet)
         this.dust.texture = sheetFrame(this.dustSheet, 0, fxFrame(now, 4, 90), DUST_CELL_SIZE);
     }
     if (this.speedLines) {
+      this.speedLines.position.set(effectPose.speedLines.x, effectPose.speedLines.y);
+      this.speedLines.rotation = effectPose.rotation;
       this.speedLines.visible = !reducedMotion && pose.speed > 5;
       if (this.speedLineSheet)
         this.speedLines.texture = sheetFrame(
@@ -132,14 +139,9 @@ export class CarRenderer {
   }
 }
 
-function effectSprite(
-  texture: Texture | undefined,
-  size: number,
-  x: number,
-  y: number,
-): Sprite | undefined {
+function effectSprite(texture: Texture | undefined, size: number): Sprite | undefined {
   if (!texture) return undefined;
-  const sprite = new Sprite({ texture: sheetFrame(texture, 0, 0, size), visible: false, x, y });
+  const sprite = new Sprite({ texture: sheetFrame(texture, 0, 0, size), visible: false });
   sprite.anchor.set(0.5);
   return sprite;
 }

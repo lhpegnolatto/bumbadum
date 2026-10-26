@@ -75,16 +75,10 @@ export function advanceCar(
     const direction = next.input;
     if (direction) {
       const offset = OFFSETS[direction];
-      next.velocityX = approach(
-        next.velocityX,
-        offset.x * config.maxSpeed,
-        config.acceleration * dt,
-      );
-      next.velocityY = approach(
-        next.velocityY,
-        offset.y * config.maxSpeed,
-        config.acceleration * dt,
-      );
+      const currentSpeed = Math.hypot(next.velocityX, next.velocityY);
+      const speed = approach(currentSpeed, config.maxSpeed, config.acceleration * dt);
+      next.velocityX = offset.x * speed;
+      next.velocityY = offset.y * speed;
     } else {
       next.velocityX = approach(next.velocityX, 0, config.braking * dt);
       next.velocityY = approach(next.velocityY, 0, config.braking * dt);

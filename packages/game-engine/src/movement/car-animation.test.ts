@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { carFrame, fxFrame } from "./car-animation.ts";
+import { carEffectPose, carFrame, fxFrame } from "./car-animation.ts";
 
 describe("carFrame", () => {
   it("uses the supplied direction rows and mirrors left", () => {
@@ -21,5 +21,16 @@ describe("fxFrame", () => {
     expect(fxFrame(0, 4, 90)).toBe(0);
     expect(fxFrame(90, 4, 90)).toBe(1);
     expect(fxFrame(360, 4, 90)).toBe(0);
+  });
+
+  it("turns exhaust and motion effects with the car", () => {
+    expect(carEffectPose("right")).toMatchObject({
+      smoke: { x: -19, y: 0 },
+      rotation: 0,
+    });
+    expect(carEffectPose("up")).toMatchObject({
+      smoke: { x: 0, y: 19 },
+      rotation: -Math.PI / 2,
+    });
   });
 });

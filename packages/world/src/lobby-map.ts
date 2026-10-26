@@ -3,6 +3,7 @@ import {
   PLAZA_V2_COLLISION_OBJECTS,
   PLAZA_V2_PARKING_SPOTS,
   PLAZA_V2_ROWS,
+  PLAZA_V2_TRACK_ROWS,
 } from "./plaza-v2-map.generated.ts";
 
 /** The lobby's map: the v2 music plaza, generated from its Tiled project (ADR-0016). */
@@ -18,6 +19,8 @@ export const lobbyCarCollisionWorld = {
     const onParkingSpot = lobbyParkingSpots.some(
       (spot) => Math.hypot(spot.x - x, spot.y - y) <= 20,
     );
+    const onAutodromeTrack = PLAZA_V2_TRACK_ROWS[tileY]?.[tileX] === "#";
+    if (onAutodromeTrack) return false;
     return (
       (!isWalkable(lobbyMap, { x: tileX, y: tileY }) && !onParkingSpot) ||
       this.isBlockedByObject(x, y)

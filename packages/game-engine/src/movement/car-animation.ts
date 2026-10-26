@@ -8,6 +8,13 @@ export interface CarFrame {
   mirrored: boolean;
 }
 
+export interface CarEffectPose {
+  smoke: { x: number; y: number };
+  dust: { x: number; y: number };
+  speedLines: { x: number; y: number };
+  rotation: number;
+}
+
 /** Maps the continuous driving state to the 3×3 car sheets supplied by the art pipeline. */
 export function carFrame(
   direction: Direction,
@@ -27,4 +34,26 @@ export function carFrame(
 export function fxFrame(now: number, frameCount: number, frameMs: number): number {
   if (frameCount <= 0) return 0;
   return Math.floor(Math.max(0, now) / frameMs) % frameCount;
+}
+
+/** Positions and rotates the effects behind the car's current travel direction. */
+export function carEffectPose(direction: Direction): CarEffectPose {
+  const vector =
+    direction === "left"
+      ? { x: -1, y: 0 }
+      : direction === "right"
+        ? { x: 1, y: 0 }
+        : direction === "up"
+          ? { x: 0, y: -1 }
+          : { x: 0, y: 1 };
+  const rear = {
+    x: vector.x === 0 ? 0 : -vector.x * 19,
+    y: vector.y === 0 ? 0 : -vector.y * 19,
+  };
+  return {
+    smoke: rear,
+    dust: { x: rear.x * 0.6, y: rear.y * 0.6 },
+    speedLines: { x: rear.x * 0.75, y: rear.y * 0.75 },
+    rotation: Math.atan2(vector.y, vector.x),
+  };
 }
