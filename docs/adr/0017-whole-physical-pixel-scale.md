@@ -1,5 +1,5 @@
 ---
-status: position rounding superseded by ADR-0031
+status: accepted
 ---
 
 # The world scales by whole physical pixels

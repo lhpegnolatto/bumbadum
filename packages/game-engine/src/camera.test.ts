@@ -22,6 +22,8 @@ describe("cameraOn", () => {
       sceneResolution: 0.5,
       x: -448,
       y: -320,
+      sceneX: 0,
+      sceneY: 0,
     });
   });
 
@@ -39,17 +41,23 @@ describe("cameraOn", () => {
     expect(cameraOn(map, { width: 1024, height: 640 }, focus, 1)).toEqual({
       scale: 2,
       sceneResolution: 0.5,
+      sceneX: 0,
+      sceneY: 0,
       ...offset,
     });
   });
 
-  it("rounds a gliding focus to whole scene texels", () => {
-    // Unrounded, the world would start at (-448.6, -321.4); a scene texel spans 2 screen pixels.
+  it("rounds a gliding focus to whole screen pixels", () => {
+    // Unrounded, the world would start at (-448.6, -321.4).
     expect(cameraOn(map, { width: 1024, height: 640 }, { x: 480.3, y: 320.7 }, 1)).toEqual({
       scale: 2,
       sceneResolution: 0.5,
-      x: -448,
-      y: -322,
+      x: -449,
+      y: -321,
+      // The scene's texels span 2 screen pixels: the texture starts 1 pixel before the viewport,
+      // which puts the world at (-448, -320) inside it, on whole texels.
+      sceneX: -1,
+      sceneY: -1,
     });
   });
 
@@ -59,6 +67,8 @@ describe("cameraOn", () => {
       sceneResolution: 0.5,
       x: -560,
       y: -390,
+      sceneX: 0,
+      sceneY: 0,
     });
   });
 
@@ -120,14 +130,32 @@ describe("cameraOn", () => {
 
   it.each([
     // Unrounded: (-2339.25, -719.07) and (-1680.6, -841.2) physical pixels.
-    [2.625, 412, 915, middle, { x: -2340, y: -720 }],
-    [3, 1280, 720, { x: 600.1, y: 320.2 }, { x: -1680, y: -840 }],
+    [2.625, 412, 915, middle, { x: -2339, y: -719 }],
+    [3, 1280, 720, { x: 600.1, y: 320.2 }, { x: -1681, y: -841 }],
   ])(
-    "on a ratio of %d rounds the world's offset to whole scene texels of 3 physical pixels",
+    "on a ratio of %d rounds the world's offset to whole physical pixels",
     (ratio, width, height, focus, physical) => {
       const camera = cameraOn(map, { width, height }, focus, ratio);
       expect(camera.x * ratio).toBeCloseTo(physical.x, 9);
       expect(camera.y * ratio).toBeCloseTo(physical.y, 9);
+    },
+  );
+
+  // The scene starts on the scene texel at or just before the world's offset, by whole physical
+  // pixels, so it slides with the camera while its art stays on its texels.
+  it.each([
+    // Texels of 3 physical pixels: the world at (-2339, -719) sits on texels at (-2337, -717).
+    [2.625, 412, 915, middle, { x: -2, y: -2 }],
+    // Texels of 3 physical pixels: the world at (-1681, -841) sits on texels at (-1680, -840).
+    [3, 1280, 720, { x: 600.1, y: 320.2 }, { x: -1, y: -1 }],
+    // Texels of 1 physical pixel: the scene starts where the world does.
+    [1.25, 1024, 640, { x: 480.3, y: 320.7 }, { x: 0, y: 0 }],
+  ])(
+    "on a ratio of %d starts the scene a part of a texel before the viewport",
+    (ratio, width, height, focus, physical) => {
+      const camera = cameraOn(map, { width, height }, focus, ratio);
+      expect(camera.sceneX * ratio).toBeCloseTo(physical.x, 9);
+      expect(camera.sceneY * ratio).toBeCloseTo(physical.y, 9);
     },
   );
 
@@ -136,14 +164,6 @@ describe("cameraOn", () => {
     const camera = cameraOn(map, { width: 1024, height: 640 }, { x: 960, y: 640 }, 1.25);
     expect(camera.x).toBeCloseTo(-1280, 9);
     expect(camera.y).toBeCloseTo(-896, 9);
-  });
-
-  it("stops at the last whole scene texel inside the Map's edges", () => {
-    // At 6 physical pixels per art pixel the Map's far edges sit at (-4678.5, -1438.125) physical
-    // pixels from a 412×915 viewport; the nearest texels of 3 inside them are (-4677, -1437).
-    const camera = cameraOn(map, { width: 412, height: 915 }, { x: 960, y: 640 }, 2.625);
-    expect(camera.x * 2.625).toBeCloseTo(-4677, 9);
-    expect(camera.y * 2.625).toBeCloseTo(-1437, 9);
   });
 
   describe("under a top inset, such as the Screen on a phone", () => {
@@ -158,6 +178,8 @@ describe("cameraOn", () => {
         sceneResolution: 0.5,
         x: -780,
         y: -120,
+        sceneX: 0,
+        sceneY: 0,
       });
     });
 
@@ -167,6 +189,8 @@ describe("cameraOn", () => {
         sceneResolution: 0.5,
         x: -780,
         y: 0,
+        sceneX: 0,
+        sceneY: 0,
       });
     });
 
@@ -176,6 +200,8 @@ describe("cameraOn", () => {
         sceneResolution: 0.5,
         x: -780,
         y: -500,
+        sceneX: 0,
+        sceneY: 0,
       });
     });
   });

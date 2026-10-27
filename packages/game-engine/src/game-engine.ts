@@ -25,7 +25,9 @@ import {
   ColorMatrixFilter,
   Container,
   Graphics,
+  MeshPlane,
   Rectangle,
+  RenderTexture,
   Sprite,
   Text,
   Texture,
@@ -469,18 +471,30 @@ export async function mountGameEngine(
     const light = windowViews[index];
     if (light) light.threshold = threshold;
   });
-  // The Ambient light casts the Time of day over the scene, which it renders at the camera's
-  // scene resolution: whole texels per art pixel keep pixel art sharp at a fraction of the fill
-  // (ADR-0031). Nicknames and speech bubbles live outside it.
+  // The Ambient light casts the Time of day over the scene, which renders into its own texture at
+  // the camera's scene resolution: whole texels per art pixel keep pixel art sharp at a fraction
+  // of the fill, and the texture slides with the camera by whole physical pixels (ADR-0031,
+  // ADR-0032).
+  // Nicknames and speech bubbles live outside it.
   const ambientLight = new ColorMatrixFilter();
   const scene = new Container({ filters: [ambientLight] });
   scene.addChild(new Sprite(floor), depthSorted, tennisLayer, confettiLayer);
+  const sceneTexture = RenderTexture.create({
+    width: 1,
+    height: 1,
+    dynamic: true,
+    scaleMode: "nearest",
+  });
+  // Drawn on its own rather than batched: the batch shader picks among many textures for every
+  // pixel, which across the whole screen costs a weak GPU as much as the scene itself.
+  const sceneView = new MeshPlane({ texture: sceneTexture, verticesX: 2, verticesY: 2 });
+  sceneView.geometry.batchMode = "no-batch";
   // The lamps' glow brightens whatever lies beneath it, avatars and confetti included, and stays
   // out of the Ambient light so it keeps its colour as the scene darkens.
   for (const light of lightSprites) light.sprite.blendMode = "add";
-  world.addChild(scene, lightLayer);
+  world.addChild(lightLayer);
   const labels = new Container();
-  app.stage.addChild(world, labels);
+  app.stage.addChild(sceneView, world, labels);
   const ambientNpcViews: AmbientNpcView[] = [...AMBIENT_NPCS, TENNIS_COACH_NPC].map((npc) => {
     const sprite = new AvatarSprite(textures, npc.avatar, soundNotes, confettiHand);
     const label = drawNickname(npc.name);
@@ -688,6 +702,19 @@ export async function mountGameEngine(
     const camera = cameraOn(map, app.screen, tileCentre(focus), app.renderer.resolution, topInset);
     world.scale.set(camera.scale);
     world.position.set(camera.x, camera.y);
+    // The scene sits on whole texels inside its texture, which covers the screen and one texel
+    // more, from where the camera says it lands.
+    const texel = 1 / camera.sceneResolution;
+    sceneTexture.resize(
+      Math.ceil(app.screen.width / texel + 1) * texel,
+      Math.ceil(app.screen.height / texel + 1) * texel,
+      camera.sceneResolution,
+    );
+    // A new pixel ratio can keep the texture's pixel size, which its source does not announce.
+    if (sceneTexture.frame.width !== sceneTexture.source.width) sceneTexture.update();
+    sceneView.position.set(camera.sceneX, camera.sceneY);
+    scene.scale.set(camera.scale);
+    scene.position.set(camera.x - camera.sceneX, camera.y - camera.sceneY);
     ambientLight.resolution = camera.sceneResolution;
     const daylight = daylightAt(timeOfDay());
     ambientLight.matrix = ambientLightMatrix(daylight.ambientLight);
@@ -859,6 +886,7 @@ export async function mountGameEngine(
       const label = avatars.get(id)?.label;
       return label && { x: label.x, y: label.y - label.height - BUBBLE_GAP };
     });
+    app.renderer.render({ container: scene, target: sceneTexture, clear: true });
   });
 
   return {
@@ -1024,6 +1052,9 @@ export async function mountGameEngine(
       resizeObserver.disconnect();
       stopWatchingRatio();
       app.destroy({ removeView: true }, { children: true });
+      // The scene renders off the stage, so the app does not destroy it.
+      scene.destroy({ children: true });
+      sceneTexture.destroy(true);
     },
   };
 }

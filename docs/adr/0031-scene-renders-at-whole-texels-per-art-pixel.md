@@ -1,5 +1,5 @@
 ---
-status: accepted
+status: position rounding superseded by ADR-0032
 ---
 
 # The scene renders at whole texels per art pixel
