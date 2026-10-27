@@ -65,30 +65,67 @@ Each probe below changed one thing on the Pixel 7 profile:
 | Ambient light at 2 texels per art pixel | 60.3 | 0 % | 10 | Full speed, sharp art, half-art-pixel motion |
 | Ambient light at 3 texels per art pixel | 58.0 | 4 % | 10 | Nearly full speed |
 
-The fix renders the filtered scene at a whole number of texels per art pixel. The Ambient light's texture is then scaled up with nearest sampling, and the world's offset is rounded to whole texels. Screenshots enlarged at native resolution showed art as sharp as before.
+The fix renders the filtered scene into its own texture at a whole number of texels per art pixel, scaled up to the screen with nearest sampling. Screenshots enlarged at native resolution showed art as sharp as before. The first version also rounded the camera to whole texels; the [follow-up below](#follow-up-the-walking-player-stuttered) explains why that changed.
 
 Where no bottleneck was measured, the rule stays conservative: motion steps half an art pixel at most. The desktop at a ratio of 1 is the one exception, because it was measured to stall and its art pixel is only 2 physical pixels.
 
 | Profile | Before | After |
 | --- | --- | --- |
-| Desktop, ratio 1 | 42.5–43.7 fps, 38–42 % long frames | 60.2–60.3 fps, 0 % |
-| Pixel 7, ratio 2.625 | 29.8–33.3 fps, 81–88 % long frames | 59.3–60.3 fps, 0–1 % |
+| Desktop, ratio 1 | 42.5–43.7 fps, 38–42 % long frames | 60.0–60.2 fps, 0 % |
+| Pixel 7, ratio 2.625 | 29.8–33.3 fps, 81–88 % long frames | 60.2 fps, 0 % |
+
+### Follow-up: the walking player stuttered
+
+After the first version shipped, a player on a desktop at 100 % and on notebooks at 125–150 % reported that their own character flickered and looked smeared while walking or driving. Other players walking past looked normal. The difference pointed at the camera, which only moves with the local player.
+
+The new loop held an arrow key in headless Chromium and measured how far the floor moved between consecutive frames, by matching a band of floor rows. The camera follows the walking player at about 1.6 art pixels a frame. With the first version it rounded to whole texels, which on that desktop are whole art pixels, so the world jumped in uneven steps.
+
+The first two metrics tried were dropped because they did not tell the versions apart: the avatar's outline (it also caught the nickname's dark background), and the face's position (the walk cycle moves it in both versions). The floor's steps did:
+
+| Version, desktop 1366×768 at ratio 1 | Floor steps per frame | Unevenness (sd / mean) |
+| --- | --- | --- |
+| Before the audit | 3 and 4 px | 0.12 |
+| First version (camera on whole texels) | 2 and 4 px | 0.31 |
+| Final (the scene's texture slides by whole pixels) | 3 and 4 px | 0.12 |
+
+On the Pixel 7 profile the final version steps 9 and 10 physical pixels, with an unevenness of 0.05.
+
+The final version ([ADR-0032](../adr/0032-scene-texture-slides-with-the-camera.md)) keeps the camera on whole physical pixels. The scene's texture starts on the world's texel grid at or just before the viewport's corner and slides with the camera, so the art stays on its texels while the scroll stays smooth.
+
+At 125 % and 150 % neither version changed the scroll. An art pixel there is 3 physical pixels, which no texel split divides, so the scene keeps the screen's resolution. The final build scrolls evenly there: steps of 4 and 5 px at 1.25 (unevenness 0.08), mostly 5 and 6 px at 1.5 (0.15). What the player saw on those notebooks is not explained by these measurements.
+
+Moving the scene into its own texture first brought the stutter back down but lost the speed again: 29.8 fps on the phone profile. One probe at a time located the cost:
+
+| Probe, Pixel 7 profile | FPS |
+| --- | --- |
+| Scene texture drawn with a sprite | 34.8 |
+| Without the Ambient light | 37.0 |
+| Without rendering the scene into the texture | 34.4 |
+| Without drawing the texture to the screen | 60.4 |
+
+A full-screen sprite goes through PixiJS's batch shader, which chooses among many textures for every pixel. Drawing the texture as an unbatched mesh, with a single-texture shader, brought both profiles back to 60 fps. The full-screen floor was batched before the audit too, so the same cost may account for part of the original slowdown; that was not measured.
 
 ### Still open: high ratios on weak GPUs
 
 A 1280×720 desktop at a ratio of 2 renders a 2560×1440 canvas. On SwiftShader it reached:
 
 - 10.0 fps originally
-- 15.5–17.2 fps with the conservative rule
-- 20.8 fps with texels of 4 physical pixels
+- 15.5–17.2 fps with the conservative rule, in the first version
+- 20.8 fps with texels of 4 physical pixels, in the first version
+- 19.0–19.3 fps in the final version
 
 The remaining cost is output at full resolution: the canvas itself, the additive Lamp glow, and the nicknames. Scene resolution does not reach any of that. SwiftShader does not represent a Mac's GPU, so this stays a watch item. Weak integrated GPUs at 200 % are the case to check if players report it.
 
 ## Validation of the change
 
-- **Camera tests.** `cameraOn` gained table-driven cases for the scene resolution at each ratio, the rounding to whole texels, and stopping at the last whole texel inside the Map's edges. All expected values were worked out by hand, and every test was written failing first.
+- **Camera tests.** `cameraOn` gained table-driven cases for the scene resolution at each ratio, and for where the scene's texture lands relative to the world. All expected values were worked out by hand, and every test was written failing first.
+- **Measurement loops.** The FPS and floor-step loops were re-run on the final build (above).
 - **`pnpm check`** is green across the workspace.
 - **E2E.** `pnpm test:e2e` passes everywhere the change could reach, with two notes:
   - One spec relied on slow frames to stay under the dance change rate. That was confirmed by relaxing the rate, and the spec now paces itself to the rate.
   - Six phone layout specs (`room.mobile`, `wardrobe-settings.mobile`) were already failing on `main` before the change, with identical results.
-- **Review.** A standards review and a spec review of the diff ran independently. Their findings (an inverted comment, loosened assertions, unclear units, an incomplete cost statement in the ADR) were fixed before commit.
+- **Review.** For each change, a standards review and a spec review of the diff ran independently, and their findings were fixed before commit. On the first version they found an inverted comment, loosened assertions, unclear units and an incomplete cost statement in the ADR. On the follow-up they found:
+  - an ADR rewritten in place instead of superseded;
+  - a scene texture that kept its old size when the pixel ratio changed without changing its pixel count;
+  - wrong coordinates in a test comment;
+  - a claim in this report that had not been measured.
