@@ -44,6 +44,7 @@ import { ambientLightMatrix, daylightAt } from "./daylight/daylight.ts";
 import { objectDepth, playerDepth } from "./depth.ts";
 import { listenToDirectionKeys, listenToTennisDirectionKeys } from "./keyboard.ts";
 import { lampIntensity, lightAlpha, lightTarget, lightThresholds } from "./lighting.ts";
+import { CarGlide } from "./movement/car-glide.ts";
 import { type Bump, bumpOffset, Glide, isBumping, type Point } from "./movement/glide.ts";
 import { Steering } from "./movement/steering.ts";
 import { type Pose, StepPredictor } from "./movement/step-predictor.ts";
@@ -188,10 +189,10 @@ interface PlayerView {
 interface CarView {
   renderer: CarRenderer;
   avatar: AvatarSprite;
+  glide: CarGlide;
+  /** Where the Car is drawn this frame, in world pixels. */
   x: number;
   y: number;
-  targetX: number;
-  targetY: number;
 }
 
 interface TennisParticipantView {
@@ -689,11 +690,12 @@ export async function mountGameEngine(
       ? tennisRenderSnapshot(tennisState, serverNow() ?? Date.now())
       : undefined;
     drawTennis(tennisSnapshot);
-    // Follows the glide, not the bump, so a blocked step does not shake the view.
-    const localCar = localCarId ? carSnapshots.get(localCarId) : undefined;
+    // Follows the Car where it is drawn, not the room's latest state, which moves at the patch rate.
+    const localCar = localCarId ? cars.get(localCarId)?.glide.at(now) : undefined;
     const tennisFocus = tennisState?.participants.has(sessionId)
       ? tennisSnapshot?.ball?.pose.position
       : undefined;
+    // Follows the glide, not the bump, so a blocked step does not shake the view.
     const focus = tennisFocus
       ? { x: tennisFocus.x / TILE_SIZE - 0.5, y: tennisFocus.y / TILE_SIZE - 1 }
       : localCar
@@ -822,8 +824,7 @@ export async function mountGameEngine(
       if (!state) continue;
       const direction = isDirection(state.direction) ? state.direction : "down";
       const speed = Math.hypot(state.velocityX, state.velocityY) / TILE_SIZE;
-      car.x += (car.targetX - car.x) * 0.35;
-      car.y += (car.targetY - car.y) * 0.35;
+      ({ x: car.x, y: car.y } = car.glide.at(now));
       car.renderer.placePixel({ x: car.x, y: car.y });
       car.renderer.update(
         { direction, speed, drifting: speed > 5 && Boolean(state.input) },
@@ -970,14 +971,21 @@ export async function mountGameEngine(
           avatar: avatar.view,
         });
         depthSorted.addChild(renderer.view);
-        cars.set(id, { renderer, avatar, x: car.x, y: car.y, targetX: car.x, targetY: car.y });
+        const glide = new CarGlide(
+          { x: car.x, y: car.y },
+          { x: car.velocityX, y: car.velocityY },
+          performance.now(),
+        );
+        cars.set(id, { renderer, avatar, glide, x: car.x, y: car.y });
       });
       state.cars.forEach((car, id) => {
-        const view = cars.get(id);
-        if (view) {
-          view.targetX = car.x;
-          view.targetY = car.y;
-        }
+        cars
+          .get(id)
+          ?.glide.update(
+            { x: car.x, y: car.y },
+            { x: car.velocityX, y: car.velocityY },
+            performance.now(),
+          );
       });
       for (const [id, car] of cars) {
         if (state.cars.has(id)) continue;
