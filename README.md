@@ -135,6 +135,10 @@ The Tiled project is the canonical map source. A generator produces the walkabil
 
 The desktop and compact room share one component tree. Below the compact breakpoint, the screen, chat, queue, and players become a sheet without remounting the PixiJS canvas or the YouTube player. This preserves playback and connection state while the layout changes around it.
 
+### Measured before optimised
+
+Performance work starts from a loop that can fail, not from a hunch. The [October 2026 audit](docs/benchmarks/2026-10-27-performance.md) used three of them: load bots against the server under Render's 0.1 CPU, frame timing in headless Chromium on a software GPU, and round trips to production. Each hypothesis was probed one variable at a time. Two findings came out of it. The server used a quarter of its budget with sixteen players and nine Cars. The browser stutter was GPU fill: rendering the lit scene at whole texels per art pixel took a phone profile from 30 to 60 fps with the pixel art unchanged ([ADR-0031](docs/adr/0031-scene-renders-at-whole-texels-per-art-pixel.md)).
+
 ## Architecture
 
 ```text
