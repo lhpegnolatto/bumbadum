@@ -83,16 +83,16 @@ describe("cameraOn", () => {
     },
   );
 
-  // Physical pixels per scene texel: the smallest divisor of the art pixel that is at least 3,
-  // or the whole art pixel when it has none.
+  // Physical pixels per scene texel: an art pixel splits into the fewest whole texels, at least two,
+  // so motion steps half an art pixel at most; an art pixel of 2 physical pixels is one texel.
   it.each([
     [1, 1024, 640, 2],
-    [1, 2560, 1440, 3],
-    [1.25, 1024, 640, 3],
-    [2, 1024, 640, 4],
+    [1, 2560, 1440, 1],
+    [1.25, 1024, 640, 1],
+    [2, 1024, 640, 2],
     [2, 3840, 2160, 4],
     [2.625, 412, 915, 3],
-    [2.625, 2560, 1440, 7],
+    [2.625, 2560, 1440, 1],
     [3, 1920, 1080, 3],
   ])(
     "on a ratio of %d renders a %ix%i viewport's scene at %i physical pixels per texel",
@@ -111,9 +111,15 @@ describe("cameraOn", () => {
     expect(cameraOn(map, { width: 1024, height: 640 }, middle, ratio).scale).toBeCloseTo(scale, 4);
   });
 
+  it("on a ratio of 1.25 rounds the world's offset to whole physical pixels", () => {
+    // Unrounded, the world would start at (-800.9, -562.1) physical pixels.
+    const camera = cameraOn(map, { width: 1024, height: 640 }, { x: 480.3, y: 320.7 }, 1.25);
+    expect(camera.x * 1.25).toBeCloseTo(-801, 9);
+    expect(camera.y * 1.25).toBeCloseTo(-562, 9);
+  });
+
   it.each([
-    // Unrounded: (-800.9, -562.1), (-2339.25, -719.07) and (-1680.6, -841.2) physical pixels.
-    [1.25, 1024, 640, { x: 480.3, y: 320.7 }, { x: -801, y: -561 }],
+    // Unrounded: (-2339.25, -719.07) and (-1680.6, -841.2) physical pixels.
     [2.625, 412, 915, middle, { x: -2340, y: -720 }],
     [3, 1280, 720, { x: 600.1, y: 320.2 }, { x: -1680, y: -840 }],
   ])(
@@ -125,12 +131,19 @@ describe("cameraOn", () => {
     },
   );
 
-  it("on a fractional ratio stops at the last whole scene texel inside the Map's edges", () => {
-    // At 2.4x the 1024×640 viewport sees the Map as 2304×1536 CSS px, so its far edges sit at
-    // (-1600, -1120) physical pixels; the nearest texels of 3 inside them are (-1599, -1119).
+  it("on a fractional ratio still stops at the Map's edges", () => {
+    // At 2.4x the 1024×640 viewport sees the Map as 2304×1536 CSS px.
     const camera = cameraOn(map, { width: 1024, height: 640 }, { x: 960, y: 640 }, 1.25);
-    expect(camera.x * 1.25).toBeCloseTo(-1599, 9);
-    expect(camera.y * 1.25).toBeCloseTo(-1119, 9);
+    expect(camera.x).toBeCloseTo(-1280, 9);
+    expect(camera.y).toBeCloseTo(-896, 9);
+  });
+
+  it("stops at the last whole scene texel inside the Map's edges", () => {
+    // At 6 physical pixels per art pixel the Map's far edges sit at (-4678.5, -1438.125) physical
+    // pixels from a 412×915 viewport; the nearest texels of 3 inside them are (-4677, -1437).
+    const camera = cameraOn(map, { width: 412, height: 915 }, { x: 960, y: 640 }, 2.625);
+    expect(camera.x * 2.625).toBeCloseTo(-4677, 9);
+    expect(camera.y * 2.625).toBeCloseTo(-1437, 9);
   });
 
   describe("under a top inset, such as the Screen on a phone", () => {

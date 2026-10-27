@@ -5,9 +5,6 @@ export const TILE_SIZE = 16;
 /** Below this CSS scale avatars are too small to read (ADR-0015). */
 const MIN_SCALE = 2;
 
-/** A scene texel covers at least this many physical pixels a side, which bounds the GPU's fill. */
-const MIN_PHYSICAL_PER_SCENE_TEXEL = 3;
-
 /**
  * How the world is drawn in the viewport: its scale and where its top-left corner lands, in CSS
  * pixels, and the resolution its scene renders at.
@@ -24,7 +21,7 @@ export interface Camera {
  * Frames the Map at the smallest whole number of physical pixels per art pixel that is at
  * least `ceil(2 × devicePixelRatio)` and covers the viewport, centred on `focus` (in world
  * pixels) but never showing beyond the Map's edges (ADR-0015, ADR-0017), and on whole scene
- * texels of a few physical pixels each (ADR-0031). The focus is centred
+ * texels (ADR-0031). The focus is centred
  * in the visible area below `topInset` CSS pixels, such as the Screen on a phone, while the
  * world still covers the whole viewport (ADR-0018).
  */
@@ -54,14 +51,15 @@ export function cameraOn(
 }
 
 /**
- * The smallest whole number of physical pixels that evenly divides an art pixel and is at least
- * `MIN_PHYSICAL_PER_SCENE_TEXEL`, or the whole art pixel when no smaller one does (ADR-0031).
+ * Splits an art pixel into the fewest whole texels, at least two, so motion steps half an art
+ * pixel at most; an art pixel of 2 physical pixels, the smallest, is one texel (ADR-0031).
  */
 function physicalPerSceneTexel(physicalPerArtPixel: number): number {
-  for (let candidate = MIN_PHYSICAL_PER_SCENE_TEXEL; candidate < physicalPerArtPixel; candidate++) {
-    if (physicalPerArtPixel % candidate === 0) return candidate;
+  if (physicalPerArtPixel <= 2) return physicalPerArtPixel;
+  for (let texels = 2; texels < physicalPerArtPixel; texels++) {
+    if (physicalPerArtPixel % texels === 0) return physicalPerArtPixel / texels;
   }
-  return physicalPerArtPixel;
+  return 1;
 }
 
 /**
