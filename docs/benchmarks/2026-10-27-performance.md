@@ -105,6 +105,21 @@ Moving the scene into its own texture first brought the stutter back down but lo
 
 A full-screen sprite goes through PixiJS's batch shader, which chooses among many textures for every pixel. Drawing the texture as an unbatched mesh, with a single-texture shader, brought both profiles back to 60 fps. The full-screen floor was batched before the audit too, so the same cost may account for part of the original slowdown; that was not measured.
 
+### Follow-up: driving stuttered at the patch rate
+
+The same player found driving still looked wrong after the walking fix, as it had before the audit. A screen recording they shared captured only a black window, so the loop had to reproduce it. A headless player walked the BFS route to a parked Car, entered it with Q and drove down, while the loop measured how far the floor moved each frame.
+
+While cruising, the floor moved `0 17 0 0 17 0 0 18 0 0 17 …` pixels per frame. It jumped about 17 px every third frame and stood still in between, which is the room's 20 Hz patch rate on a 60 Hz screen. The camera followed the room's latest Car state, which only changes when a patch arrives. The Car itself chased that state by a fixed share of the distance each frame, so the two drifted apart.
+
+The client now draws each Car from its last known position, carried on at the velocity the room already sends. It carries on for at most 100 ms without a newer state. A newer state that disagrees with where the Car is drawn eases in over 100 ms instead of jumping. A difference over 64 px, such as a respawn, is a jump. The camera follows the Car where it is drawn.
+
+| Version, desktop 1366×768 at ratio 1 | Floor steps per frame while cruising | Frames without movement |
+| --- | --- | --- |
+| Before | 0 and 17–23 px | 26 of 39 |
+| After | 5–7 px, mean 6 | 0 of 39 |
+
+This was measured against a local server, where patches arrive on time. In production, about 160 ms away, a gap between patches longer than 100 ms would still pause a Car briefly. The Driver also still feels a full round trip between input and response, because Cars do not yet predict the Driver's input.
+
 ### Still open: high ratios on weak GPUs
 
 A 1280×720 desktop at a ratio of 2 renders a 2560×1440 canvas. On SwiftShader it reached:
