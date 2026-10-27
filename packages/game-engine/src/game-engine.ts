@@ -469,9 +469,10 @@ export async function mountGameEngine(
     const light = windowViews[index];
     if (light) light.threshold = threshold;
   });
-  // The Ambient light casts the Time of day over the scene, at the screen's own resolution so
-  // pixel art stays sharp. Nicknames and speech bubbles live outside it.
-  const ambientLight = new ColorMatrixFilter({ resolution: "inherit" });
+  // The Ambient light casts the Time of day over the scene, which it renders at the camera's
+  // scene resolution: whole texels per art pixel keep pixel art sharp at a fraction of the fill
+  // (ADR-0031). Nicknames and speech bubbles live outside it.
+  const ambientLight = new ColorMatrixFilter();
   const scene = new Container({ filters: [ambientLight] });
   scene.addChild(new Sprite(floor), depthSorted, tennisLayer, confettiLayer);
   // The lamps' glow brightens whatever lies beneath it, avatars and confetti included, and stays
@@ -687,6 +688,7 @@ export async function mountGameEngine(
     const camera = cameraOn(map, app.screen, tileCentre(focus), app.renderer.resolution, topInset);
     world.scale.set(camera.scale);
     world.position.set(camera.x, camera.y);
+    ambientLight.resolution = camera.sceneResolution;
     const daylight = daylightAt(timeOfDay());
     ambientLight.matrix = ambientLightMatrix(daylight.ambientLight);
     for (const light of lightSprites) {
